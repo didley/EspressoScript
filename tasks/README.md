@@ -11,7 +11,7 @@ When you start a task, change ⬜ → 🟡 here and add your initials/date. When
 | #   | Task                                        | Status | Notes |
 |-----|---------------------------------------------|--------|-------|
 | T01 | Deno CLI skeleton                           | ✅    |       |
-| T02 | Checker skeleton (`npm:typescript`)         | ⬜    |       |
+| T02 | Checker skeleton (`npm:typescript`)         | ✅    |       |
 | T03 | Checker syntax rules                        | ⬜    |       |
 | T04 | Checker type rules                          | ⬜    |       |
 | T05 | Import allowlist rule                       | ⬜    |       |

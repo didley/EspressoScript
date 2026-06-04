@@ -1,0 +1,21 @@
+import type ts from "npm:typescript"
+
+export type Diagnostic = {
+    file: string
+    line: number
+    col: number
+    rule: string
+    message: string
+}
+
+export type Context = {
+    file: string
+    source: string
+    sourceFile: ts.SourceFile
+    push(d: Omit<Diagnostic, "file">): void
+}
+
+export type Rule = {
+    name: string
+    visit(node: ts.Node, ctx: Context): void
+}
