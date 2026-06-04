@@ -151,3 +151,20 @@ Add new entries at the bottom. Do not edit prior entries.
 **Third issue:** `deno install` fails with exit 1 when the binary already exists (no `--quiet` suppression). Added `-f` (force) flag to satisfy the "idempotent — running twice succeeds" acceptance criterion.
 
 **Reversibility:** None needed; `-f` and split flags are strictly correct.
+
+# SUMMARY
+
+All tasks T01–T12 completed. Final `bash scripts/verify.sh` exits 0 (48/48 cases pass).
+
+**Totals:**
+- Commits: 12 (one per task, T04 was fully implemented and committed after the context-limit log commit)
+- Tasks completed: 12 (T01–T12 all ✅)
+- Decisions logged: 9 entries in DECISIONS.md
+- Blockers encountered: 0 (the T04 "blocked" log was a context-limit pause, not a real blocker; T04 was completed in full)
+
+**Key decisions:**
+- `deno fmt --ext ts` only works with stdin, not named files → per-file pipe
+- `deno check` lacks `--ext` → use `deno run --check=all --ext=ts`
+- Four compilerOptions unsupported by Deno 2.6.4 removed
+- `deno install -gn` combined flag breaks name parsing → split to `-g -n`; added `-f` for idempotency
+- shellcheck not available on host → POSIX compliance verified manually
