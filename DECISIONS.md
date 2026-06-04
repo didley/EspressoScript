@@ -121,3 +121,21 @@ Add new entries at the bottom. Do not edit prior entries.
 **Why:** This achieves identical formatting behavior. The stdin pipe approach is documented in Deno's own formatter guide for non-standard extensions.
 
 **Reversibility:** If Deno later supports `--ext` with named files, replace per-file piping with `new Deno.Command(Deno.execPath(), { args: ["fmt", "--ext", "ts", ...files] })`.
+
+## 2026-06-05 — T08: deno check has no --ext; use deno run --check=all --ext=ts
+
+**Context:** The task spec calls for `deno check --config=... --ext=ts <files>`. In Deno 2.6.4, `deno check` has no `--ext` flag and silently ignores `.shot` files.
+
+**Decision:** Use `deno run --check=all --ext=ts --config=... <files>` instead. On type error it exits 1 before running. For library modules (no top-level side effects) it exits 0 after type-check succeeds.
+
+**Why:** `deno run --check=all` with `--ext=ts` correctly type-checks `.shot` files. This is the documented approach for non-standard extensions in Deno 2.x.
+
+**Reversibility:** Replace `run --check=all` with `check` in `cli/build.ts` if Deno adds `--ext` to `deno check`.
+
+## 2026-06-05 — T08: four compilerOptions removed from STRICT_COMPILER_OPTIONS (Deno 2.x unsupported)
+
+**Context:** `forceConsistentCasingInFileNames`, `isolatedModules`, `moduleDetection`, `noUncheckedSideEffectImports` are warned about and ignored by Deno 2.6.4. They caused stderr warnings on every build, violating the "valid file → no stderr" acceptance criterion.
+
+**Decision:** Removed those four options from `STRICT_COMPILER_OPTIONS` in `cli/pipeline.ts`. The remaining options are enforced by Deno.
+
+**Reversibility:** Add them back when Deno supports them; they remain in the spec as desired language design.
