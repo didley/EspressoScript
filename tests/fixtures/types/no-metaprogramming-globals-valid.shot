@@ -1,0 +1,1 @@
+export function test(): void { const m: Map<string, number> = new Map() }

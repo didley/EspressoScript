@@ -1,0 +1,4 @@
+import { jsonParse } from "shot:std"
+export async function main(): Promise<void> {
+    const [result, err] = await jsonParse("{}")
+}

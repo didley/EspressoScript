@@ -71,3 +71,43 @@ Add new entries at the bottom. Do not edit prior entries.
 **Why:** JSR requires version constraints on all specifiers and a license declaration for publishing. MIT is consistent with the project's open-source intent.
 
 **Reversibility:** Change import to `jsr:@std/cli/parse-args` (no constraint) and remove `license` field.
+
+## 2026-06-05 — T04: no-class defers abstract and decorated classes
+
+**Context:** `abstract class Foo {}` would fire both `no-class` and `no-abstract`. `@Dec class Foo {}` would fire both `no-class` and `no-decorators`. Each fixture must produce exactly 1 diagnostic.
+
+**Decision:** `no-class` skips class declarations/expressions that have `AbstractKeyword` or `Decorator` in their modifiers. Those classes are owned by `no-abstract` and `no-decorators` respectively.
+
+**Why:** Prevent double-reporting. The specialized rule carries the more actionable message.
+
+**Reversibility:** Remove the `hasAbstract`/`hasDecorator` early-return guards in `cli/checker/rules/no-class.ts`.
+
+## 2026-06-05 — T04: no-conditional-type defers to no-infer when infer is present
+
+**Context:** `infer` can only appear inside a conditional type. Any `no-infer` fixture would also fire `no-conditional-type`, producing 2 diagnostics.
+
+**Decision:** `no-conditional-type` skips conditional types that contain an `InferTypeNode` anywhere inside them. `no-infer` is the sole reporter for those cases.
+
+**Why:** Prevent double-reporting; `no-infer` is more specific when infer is the issue.
+
+**Reversibility:** Remove the `containsInfer` guard in `cli/checker/rules/no-conditional-type.ts`.
+
+## 2026-06-05 — T04: no-metaprogramming-globals has no scope stack (v1)
+
+**Context:** The task spec calls for a scope stack to distinguish global `Proxy`/`Reflect`/`Function`/`Symbol` from local shadows. Implementing a full scope stack duplicates `no-shadow`'s work.
+
+**Decision:** Flagging bare identifiers in expression position (parent is not TypeReferenceNode, ImportSpecifier, or property name) without verifying they resolve to the global.
+
+**Why:** V1 simplicity. `no-shadow` will separately flag any local that shadows these names, making the combination robust in practice.
+
+**Reversibility:** Add scope tracking in `cli/checker/rules/no-metaprogramming-globals.ts` when a shared scope context is available.
+
+## 2026-06-05 — T04: no-logical-assignment fixture updated for require-readonly-property
+
+**Context:** The T03 `no-logical-assignment-invalid.shot` fixture used `{ x: number | null }` as a type annotation. T04's `require-readonly-property` now fires for any PropertySignature without ReadonlyKeyword, causing 2 diagnostics.
+
+**Decision:** Added `readonly` to the property: `{ readonly x: number | null }`.
+
+**Why:** The fixture must produce exactly 1 diagnostic total across all rules. Since logical assignment to a `readonly` property is a type error but not an AST-checker error, the rule still fires correctly.
+
+**Reversibility:** Remove `readonly` from the fixture to restore the original (but it will break with T04 rules active).

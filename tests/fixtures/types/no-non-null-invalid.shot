@@ -1,0 +1,2 @@
+const s: string = "hi"
+const n: number = s!.length

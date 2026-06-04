@@ -1,2 +1,2 @@
-const obj: { x: number | null } = { x: null }
+const obj: { readonly x: number | null } = { x: null }
 obj.x ??= 1

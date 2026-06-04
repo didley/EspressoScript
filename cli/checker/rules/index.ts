@@ -52,6 +52,43 @@ import { noTaggedTemplates } from "./no-tagged-templates.ts"
 import { noThrowingGlobals } from "./no-throwing-globals.ts"
 import { noNewUserTypes } from "./no-new-user-types.ts"
 import { importsAllowlist } from "./imports-allowlist.ts"
+// T04 type rules
+import { noAny } from "./no-any.ts"
+import { noAssertion } from "./no-assertion.ts"
+import { noNonNull } from "./no-non-null.ts"
+import { noTsComment } from "./no-ts-comment.ts"
+import { noInterface } from "./no-interface.ts"
+import { noEnum } from "./no-enum.ts"
+import { noConditionalType } from "./no-conditional-type.ts"
+import { noMappedType } from "./no-mapped-type.ts"
+import { noTemplateLiteralType } from "./no-template-literal-type.ts"
+import { noInfer } from "./no-infer.ts"
+import { noClass } from "./no-class.ts"
+import { noAbstract } from "./no-abstract.ts"
+import { noDecorators } from "./no-decorators.ts"
+import { noThis } from "./no-this.ts"
+import { noUndefinedType } from "./no-undefined-type.ts"
+import { noOptionalProperty } from "./no-optional-property.ts"
+import { noOptionalParameter } from "./no-optional-parameter.ts"
+import { noDefaultParameter } from "./no-default-parameter.ts"
+import { noEmptyObjectType } from "./no-empty-object-type.ts"
+import { noObjectType } from "./no-object-type.ts"
+import { noFunctionType } from "./no-function-type.ts"
+import { requireReadonlyProperty } from "./require-readonly-property.ts"
+import { requireReadonlyArrays } from "./require-readonly-arrays.ts"
+import { requireExplicitReturnType } from "./require-explicit-return-type.ts"
+import { noSymbolType } from "./no-symbol-type.ts"
+import { noVariadicTuple } from "./no-variadic-tuple.ts"
+import { noArrayGeneric } from "./no-array-generic.ts"
+import { noReadonlyWrapper } from "./no-readonly-wrapper.ts"
+import { noBannedUtilityTypes } from "./no-banned-utility-types.ts"
+import { noIndexSignature } from "./no-index-signature.ts"
+import { noPrimitiveWrapperTypes } from "./no-primitive-wrapper-types.ts"
+import { noConstructorType } from "./no-constructor-type.ts"
+import { noMetaprogrammingGlobals } from "./no-metaprogramming-globals.ts"
+import { noLiteralBooleanType } from "./no-literal-boolean-type.ts"
+import { noIntersectionTypes } from "./no-intersection-types.ts"
+import { requireTupleDestructure } from "./require-tuple-destructure.ts"
 
 export const rules: Rule[] = [
     noArrowFunctions,
@@ -107,4 +144,41 @@ export const rules: Rule[] = [
     noThrowingGlobals,
     noNewUserTypes,
     importsAllowlist,
+    // T04 type rules
+    noAny,
+    noAssertion,
+    noNonNull,
+    noTsComment,
+    noInterface,
+    noEnum,
+    noConditionalType,
+    noMappedType,
+    noTemplateLiteralType,
+    noInfer,
+    noClass,
+    noAbstract,
+    noDecorators,
+    noThis,
+    noUndefinedType,
+    noOptionalProperty,
+    noOptionalParameter,
+    noDefaultParameter,
+    noEmptyObjectType,
+    noObjectType,
+    noFunctionType,
+    requireReadonlyProperty,
+    requireReadonlyArrays,
+    requireExplicitReturnType,
+    noSymbolType,
+    noVariadicTuple,
+    noArrayGeneric,
+    noReadonlyWrapper,
+    noBannedUtilityTypes,
+    noIndexSignature,
+    noPrimitiveWrapperTypes,
+    noConstructorType,
+    noMetaprogrammingGlobals,
+    noLiteralBooleanType,
+    noIntersectionTypes,
+    requireTupleDestructure,
 ]
