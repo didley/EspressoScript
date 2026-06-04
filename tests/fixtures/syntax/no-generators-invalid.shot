@@ -1,0 +1,3 @@
+function* gen(): void {
+    const x: number = 1
+}

@@ -1,0 +1,2 @@
+const p = Promise.resolve(1)
+p.then(function onResult(v: number): number { return v })

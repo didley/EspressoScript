@@ -1,0 +1,2 @@
+const condition: boolean = true
+condition && doThing()

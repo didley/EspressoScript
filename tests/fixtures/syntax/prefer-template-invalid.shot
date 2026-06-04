@@ -1,0 +1,2 @@
+const name: string = "world"
+const s: string = "hello " + name

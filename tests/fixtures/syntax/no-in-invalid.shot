@@ -1,0 +1,2 @@
+const obj = { a: 1 }
+const result: boolean = "a" in obj

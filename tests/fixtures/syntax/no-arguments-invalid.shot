@@ -1,0 +1,3 @@
+function f(): void {
+    const a = arguments[0]
+}

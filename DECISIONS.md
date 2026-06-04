@@ -20,6 +20,36 @@ Format per entry:
 
 Add new entries at the bottom. Do not edit prior entries.
 
+## 2026-06-05 01:00 — T03: no-new-user-types allows primitive wrappers to avoid double-reporting
+
+**Context:** `new String("hi")` triggers both `no-new-wrappers` (specifically for primitive wrappers) and `no-new-user-types` (everything not in allowlist), producing 2 diagnostics on a fixture that should produce 1.
+
+**Decision:** Added `String`, `Number`, `Boolean`, `Symbol` to `ALLOWED_CONSTRUCTORS` in `no-new-user-types.ts`. These are separately and more specifically handled by `no-new-wrappers`.
+
+**Why:** Rules should not double-report the same construct. `no-new-wrappers` carries the precise message for primitive wrappers; `no-new-user-types` covers user-defined class instantiation.
+
+**Reversibility:** Remove the 4 entries from `ALLOWED_CONSTRUCTORS`.
+
+## 2026-06-05 01:01 — T03: no-unused-expressions excludes &&/||/?? short-circuit expressions
+
+**Context:** `condition && doThing()` in an ExpressionStatement would be caught by BOTH `no-and-shorthand` AND `no-unused-expressions` (since `&&` is a non-assignment BinaryExpression), yielding 2 diagnostics.
+
+**Decision:** `no-unused-expressions` skips BinaryExpressions with `&&`, `||`, and `??` operators, since these can have side effects via their RHS and are separately handled by `no-and-shorthand`.
+
+**Why:** Prevent duplicate diagnostics; `no-and-shorthand` provides the more actionable message for this pattern.
+
+**Reversibility:** Remove the `SHORTCIRCUIT_OPS` exclusion from `no-unused-expressions.ts`.
+
+## 2026-06-05 01:02 — T03: no-throwing-globals flags fetch() without scope check
+
+**Context:** The task calls for using a scope stack to confirm that `fetch` resolves to the global. Implementing a full scope stack within `no-throwing-globals` would duplicate `no-shadow`'s scope tracking.
+
+**Decision:** Flagging any call to `fetch(...)` where `fetch` is a bare Identifier, without verifying it resolves to the global. This may produce false positives if a user defines a local `fetch` function (uncommon).
+
+**Why:** V1 simplicity. The `no-shadow` rule will separately flag any local `fetch` that shadows a used global, making the combination robust in practice.
+
+**Reversibility:** Add scope checking in `no-throwing-globals.ts` when a shared scope context is available.
+
 ---
 
 ## 2026-06-05 00:00 — T01: Deno not on PATH; used netlify deno

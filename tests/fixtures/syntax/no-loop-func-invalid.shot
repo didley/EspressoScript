@@ -1,0 +1,5 @@
+for (const item of [1, 2]) {
+    function handler(): void {
+        const y: number = item
+    }
+}

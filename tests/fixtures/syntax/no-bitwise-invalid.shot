@@ -1,0 +1,2 @@
+const x: number = 1
+const y: number = x & 2
