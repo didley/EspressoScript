@@ -40,9 +40,39 @@ Every task file contains:
 3. **Update this table:** mark the task 🟡.
 4. Implement.
 5. Run the verification commands.
-6. When all acceptance criteria pass, **mark the task ✅** in this table and commit.
+6. **Run regression check:** if `scripts/verify.sh` exists (after T11), run it. It must stay green.
+7. When all acceptance criteria pass AND no regressions, **mark the task ✅** in this table and commit.
 
 If a task turns out to be larger than expected, split it — but update this table so the new file is tracked.
+
+## Overnight autonomous protocol
+
+When running unattended, follow these conventions strictly:
+
+### Blockers — best-effort with a clear log
+- **Small ambiguity** (an AST detail, a flag name, a missing detail in a task file): make the reasonable judgment call. Append a one-paragraph entry to `DECISIONS.md` explaining what you chose and why. Continue.
+- **Structural blocker** (a fundamental design assumption is wrong, an external service is unreachable, the strict tsconfig is rejecting something that should work and you can't see why): append a clear entry to `BLOCKED.md`, mark the task 🚫 in the table, and *skip to the next task whose dependencies are still satisfied*. Do not halt the whole run.
+- **Never relax the language design** to make a task pass. If a rule is wrong, log it to `DECISIONS.md` for human review; don't delete the rule.
+
+### Validation cadence
+- Run the task's own verification commands before marking ✅.
+- After T11 completes, run `scripts/verify.sh` after **every** subsequent task commit. If it goes red, the task is not done — fix forward or revert.
+- Never mark a task ✅ if its verification commands fail.
+
+### Commit discipline
+- One commit per completed task (or per logically atomic sub-step if a task is split).
+- Commit message format: `T0X: <imperative one-liner>` (e.g. `T03: implement no-arrow-functions and 19 sibling syntax rules`).
+- **Local commits only overnight.** Do not `git push`. The human reviews and pushes in the morning.
+- If you have to abandon a partial implementation, commit a WIP with a clear message before moving on — never leave staging dirty across tasks.
+
+### Status visibility
+- Keep `tasks/README.md`'s table strictly in sync with reality. The morning-after status check (`bash scripts/status.sh`) reads this table.
+- Append to `DECISIONS.md` every time you make a non-trivial judgment call.
+- Append to `BLOCKED.md` every time you skip a task.
+
+### When the night ends
+- If all tasks are ✅, run `scripts/verify.sh` one final time. If green, write a short summary to the bottom of `DECISIONS.md` (`# SUMMARY` heading) listing total commits made, tasks completed, decisions logged, and blockers encountered. Stop.
+- If not all tasks are ✅, stop at the next sensible boundary (don't start a task you can't finish before context fills). Status table reflects exactly where you stopped.
 
 ## Architecture in one paragraph
 
