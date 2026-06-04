@@ -51,6 +51,7 @@ import { noLogicalAssignment } from "./no-logical-assignment.ts"
 import { noTaggedTemplates } from "./no-tagged-templates.ts"
 import { noThrowingGlobals } from "./no-throwing-globals.ts"
 import { noNewUserTypes } from "./no-new-user-types.ts"
+import { importsAllowlist } from "./imports-allowlist.ts"
 
 export const rules: Rule[] = [
     noArrowFunctions,
@@ -105,4 +106,5 @@ export const rules: Rule[] = [
     noTaggedTemplates,
     noThrowingGlobals,
     noNewUserTypes,
+    importsAllowlist,
 ]

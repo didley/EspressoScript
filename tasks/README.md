@@ -14,7 +14,7 @@ When you start a task, change ⬜ → 🟡 here and add your initials/date. When
 | T02 | Checker skeleton (`npm:typescript`)         | ✅    |       |
 | T03 | Checker syntax rules                        | ✅    |       |
 | T04 | Checker type rules                          | ⬜    |       |
-| T05 | Import allowlist rule                       | ⬜    |       |
+| T05 | Import allowlist rule                       | ✅    |       |
 | T06 | Wire `shot check`                           | ⬜    |       |
 | T07 | `shot fmt`                                  | ⬜    |       |
 | T08 | `shot build` pipeline                       | ⬜    |       |
