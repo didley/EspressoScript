@@ -111,3 +111,13 @@ Add new entries at the bottom. Do not edit prior entries.
 **Why:** The fixture must produce exactly 1 diagnostic total across all rules. Since logical assignment to a `readonly` property is a type error but not an AST-checker error, the rule still fires correctly.
 
 **Reversibility:** Remove `readonly` from the fixture to restore the original (but it will break with T04 rules active).
+
+## 2026-06-05 — T07: deno fmt --ext ts doesn't accept named .shot files in Deno 2.x
+
+**Context:** The task spec says `deno fmt --ext ts <file.shot>` treats .shot files as TypeScript. In Deno 2.6.4, `--ext` only applies to stdin (`-`), not named files — they are filtered by actual file extension.
+
+**Decision:** Implemented fmt as a per-file stdin/stdout pipe: read file, pipe through `deno fmt --ext ts -`, write formatted output back. Also uses `Deno.execPath()` instead of `"deno"` since Deno is not on PATH (see T01 decision).
+
+**Why:** This achieves identical formatting behavior. The stdin pipe approach is documented in Deno's own formatter guide for non-standard extensions.
+
+**Reversibility:** If Deno later supports `--ext` with named files, replace per-file piping with `new Deno.Command(Deno.execPath(), { args: ["fmt", "--ext", "ts", ...files] })`.

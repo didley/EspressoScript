@@ -16,7 +16,7 @@ When you start a task, change ⬜ → 🟡 here and add your initials/date. When
 | T04 | Checker type rules                          | ✅    |       |
 | T05 | Import allowlist rule                       | ✅    |       |
 | T06 | Wire `shot check`                           | ✅    |       |
-| T07 | `shot fmt`                                  | ⬜    |       |
+| T07 | `shot fmt`                                  | ✅    |       |
 | T08 | `shot build` pipeline                       | ⬜    |       |
 | T09 | `shot run` pipeline                         | ⬜    |       |
 | T10 | `shot:std` package                          | ⬜    |       |
