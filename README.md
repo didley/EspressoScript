@@ -3,8 +3,7 @@
 A subtractive superset of TypeScript. EspressoScript removes features instead of adding them — applying Go's philosophy ("one canonical way to do everything") to the TS/JS ecosystem.
 
 - **Tooling shorthand:** `shot` (CLI command + file extension)
-- **Target runtime:** Deno / edge runtimes
-- **Implementation:** Go binary + Deno-based checker
+- **Target runtime:** modern JS runtimes (edge, server, scripts)
 
 ## Quick taste
 
@@ -24,14 +23,29 @@ async function getUser(id: number): Promise<[User | null, Error | null]> {
 }
 ```
 
-No arrow functions. No `throw`. No `interface`. No `class`. No `any`. No `as`. No ternaries. No truthiness. No third-party imports outside the `shot:` namespace. The list of what's banned is the language.
+No arrow functions. No `throw`. No `interface`. No `class`. No `any`. No `as`. No ternaries. No third-party imports outside the `shot:` and `jsr:@espresso/*` namespaces (relative `.shot` imports allowed). The list of what's banned is the language.
+
+## Install
+
+```
+curl -fsSL https://espressoscript.dev/install.sh | sh
+```
+
+Verify:
+```
+shot --version
+```
+
+The installer is a small script that handles everything needed to run shot on your machine. Read it first if you prefer — it's published alongside every release.
+
+Windows installer and prebuilt binaries are on the roadmap.
 
 ## CLI
 
 ```
 shot check [files...]    Validate .shot files.
 shot fmt [files...]      Format in-place via deno fmt.
-shot build [files...]    Validate → emit .ts → type-check.
+shot build [files...]    Validate → type-check.
 shot run <file>          Validate → type-check → run via Deno.
 ```
 
