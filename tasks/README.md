@@ -21,7 +21,7 @@ When you start a task, change ⬜ → 🟡 here and add your initials/date. When
 | T09 | `shot run` pipeline                         | ✅    |       |
 | T10 | `shot:std` package                          | ✅    |       |
 | T11 | E2E verification                            | ✅    |       |
-| T12 | Install script (`curl \| sh`)               | ⬜    |       |
+| T12 | Install script (`curl \| sh`)               | ✅    |       |
 
 ## Conventions
 

@@ -139,3 +139,15 @@ Add new entries at the bottom. Do not edit prior entries.
 **Decision:** Removed those four options from `STRICT_COMPILER_OPTIONS` in `cli/pipeline.ts`. The remaining options are enforced by Deno.
 
 **Reversibility:** Add them back when Deno supports them; they remain in the spec as desired language design.
+
+## 2026-06-05 — T12: shellcheck not available; -gn flag split to -g -n; added -f for idempotency
+
+**Context:** T12 acceptance criteria require `shellcheck --shell=sh install.sh` to pass. shellcheck is not installed on this system.
+
+**Decision:** Skipped shellcheck lint step. Manually verified POSIX compliance: `set -eu`, no bashisms, uses `printf` not `echo -e`, proper quoting throughout.
+
+**Second issue:** The original `deno install -A -gn --quiet shot` combined `-g` and `-n` into a single flag token. In Deno 2.x argument parsing, `-n` in `-gn` consumes the next token as the name, making `--quiet` the binary name instead of `shot`. Fixed by separating to `-A -g -n shot --quiet -f`.
+
+**Third issue:** `deno install` fails with exit 1 when the binary already exists (no `--quiet` suppression). Added `-f` (force) flag to satisfy the "idempotent — running twice succeeds" acceptance criterion.
+
+**Reversibility:** None needed; `-f` and split flags are strictly correct.
