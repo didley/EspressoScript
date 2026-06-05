@@ -1,4 +1,4 @@
 import { jsonParse } from "shot:std"
-export async function main(): Promise<undefined> {
+export async function main(): Promise<void> {
     const result = await jsonParse("{}")
 }

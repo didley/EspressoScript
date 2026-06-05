@@ -1,6 +1,5 @@
-function yo(): undefined {
+function yo(): void {
     console.log(`hello`)
-    return undefined
 }
 
 yo()

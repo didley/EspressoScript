@@ -1,1 +1,1 @@
-export function test(): undefined { Object.create({}) }
+export function test(): void { Object.create({}) }

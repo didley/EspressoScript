@@ -1,1 +1,1 @@
-function f(): undefined {}
+function f(): void {}

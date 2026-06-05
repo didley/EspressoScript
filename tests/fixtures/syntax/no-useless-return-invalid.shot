@@ -1,5 +1,5 @@
 const x: number = 1
-function f(): undefined {
+function f(): void {
     const y: number = x
     return
 }

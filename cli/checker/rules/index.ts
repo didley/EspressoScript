@@ -52,7 +52,6 @@ import { noTaggedTemplates } from "./no-tagged-templates.ts"
 import { noThrowingGlobals } from "./no-throwing-globals.ts"
 import { noNewUserTypes } from "./no-new-user-types.ts"
 import { importsAllowlist } from "./imports-allowlist.ts"
-import { noVoidType } from "./no-void-type.ts"
 import { noOverloads } from "./no-overloads.ts"
 import { noNamespace } from "./no-namespace.ts"
 // T04 type rules
@@ -147,7 +146,6 @@ export const rules: Rule[] = [
     noThrowingGlobals,
     noNewUserTypes,
     importsAllowlist,
-    noVoidType,
     noOverloads,
     noNamespace,
     // T04 type rules

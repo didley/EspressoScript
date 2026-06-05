@@ -17,7 +17,7 @@ function divide(a: number, b: number): [number | null, Error | null] {
     return [a / b, null]
 }
 
-function main(): undefined {
+function main(): void {
     console.log(`10 + 5 = ${add(10, 5)}`)
     console.log(`10 - 5 = ${subtract(10, 5)}`)
     console.log(`10 * 5 = ${multiply(10, 5)}`)
@@ -36,8 +36,6 @@ function main(): undefined {
     if (zeroErr !== null) {
         console.log(`10 / 0 → ${zeroErr.message}`)
     }
-
-    return undefined
 }
 
 main()

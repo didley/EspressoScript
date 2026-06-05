@@ -23,7 +23,7 @@ async function fetchUser(id: number): Promise<[User | null, Error | null]> {
     return [user, null]
 }
 
-async function main(): Promise<undefined> {
+async function main(): Promise<void> {
     const [user, err] = await fetchUser(1)
     if (err !== null) {
         console.error(`error: ${err.message}`)
@@ -35,7 +35,6 @@ async function main(): Promise<undefined> {
     }
     console.log(`name:  ${user.name}`)
     console.log(`email: ${user.email}`)
-    return undefined
 }
 
 main()
