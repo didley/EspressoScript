@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>shot — fewer ways to write TypeScript</title>
+  <style>
+    :root {
+      --bg: #0d0d10;
+      --surface: #16161a;
+      --border: #2a2a32;
+      --text: #e8e8f0;
+      --muted: #7a7a90;
+      --accent: #c8702a;
+      --accent-dim: #7a4418;
+      --green: #4ec994;
+      --red: #e05c5c;
+      --keyword: #c792ea;
+      --string: #c3e88d;
+      --type: #82aaff;
+      --comment: #546e7a;
+      --fn: #82aaff;
+      --num: #f78c6c;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ── NAV ── */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 2rem;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      background: rgba(13,13,16,0.92);
+      backdrop-filter: blur(8px);
+      z-index: 10;
+    }
+
+    .nav-logo {
+      font-family: "SF Mono", "Fira Code", monospace;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.02em;
+    }
+
+    .nav-logo span { color: var(--accent); }
+
+    .nav-links {
+      display: flex;
+      gap: 1.75rem;
+      list-style: none;
+      font-size: 0.875rem;
+      color: var(--muted);
+    }
+
+    .nav-links a { color: var(--muted); }
+    .nav-links a:hover { color: var(--text); text-decoration: none; }
+
+    /* ── HERO ── */
+    .hero {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 6rem 2rem 4rem;
+      text-align: center;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      font-family: "SF Mono", "Fira Code", monospace;
+      font-size: 0.75rem;
+      color: var(--accent);
+      background: rgba(200,112,42,0.12);
+      border: 1px solid var(--accent-dim);
+      border-radius: 999px;
+      padding: 0.25rem 0.9rem;
+      margin-bottom: 1.5rem;
+      letter-spacing: 0.06em;
+    }
+
+    h1 {
+      font-size: clamp(2.2rem, 5vw, 3.4rem);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1.1;
+      margin-bottom: 1.25rem;
+    }
+
+    h1 em {
+      font-style: normal;
+      color: var(--accent);
+    }
+
+    .hero-sub {
+      font-size: 1.125rem;
+      color: var(--muted);
+      max-width: 540px;
+      margin: 0 auto 2.5rem;
+      line-height: 1.7;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 0.65rem 1.5rem;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+
+    .btn:hover { opacity: 0.85; text-decoration: none; }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--border);
+    }
+
+    .install-cmd {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.75rem 1.25rem;
+      font-family: "SF Mono", "Fira Code", monospace;
+      font-size: 0.825rem;
+      color: var(--text);
+      margin-top: 1.75rem;
+    }
+
+    .install-cmd .prompt { color: var(--accent); }
+    .install-cmd .cmd { color: var(--green); }
+
+    /* ── SECTION WRAPPER ── */
+    .section {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 4rem 2rem;
+    }
+
+    .section-header {
+      margin-bottom: 3rem;
+    }
+
+    .section-label {
+      font-family: "SF Mono", "Fira Code", monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    h2 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      margin-bottom: 0.5rem;
+    }
+
+    .section-desc {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    /* ── BEFORE / AFTER ── */
+    .comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 2.5rem;
+    }
+
+    @media (max-width: 700px) {
+      .comparison { grid-template-columns: 1fr; }
+    }
+
+    .pane-label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.6rem 1rem;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .pane-before .pane-label {
+      background: rgba(224,92,92,0.08);
+      color: var(--red);
+    }
+
+    .pane-after .pane-label {
+      background: rgba(78,201,148,0.08);
+      color: var(--green);
+      border-left: 1px solid var(--border);
+    }
+
+    .pane-before {
+      background: var(--surface);
+    }
+
+    .pane-after {
+      background: #131318;
+      border-left: 1px solid var(--border);
+    }
+
+    pre {
+      font-family: "SF Mono", "Fira Code", monospace;
+      font-size: 0.8rem;
+      line-height: 1.7;
+      padding: 1.25rem 1.25rem 1.5rem;
+      overflow-x: auto;
+      white-space: pre;
+    }
+
+    .dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; }
+    .dot-red { background: var(--red); opacity: 0.7; }
+    .dot-green { background: var(--green); opacity: 0.7; }
+
+    /* ── CODE TOKENS ── */
+    .kw { color: var(--keyword); }
+    .ty { color: var(--type); }
+    .fn { color: var(--fn); }
+    .st { color: var(--string); }
+    .cm { color: var(--comment); }
+    .nu { color: var(--num); }
+    .op { color: var(--muted); }
+    .id { color: var(--text); }
+
+    /* ── FEATURE CALLOUT ── */
+    .callout {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      font-size: 0.875rem;
+      color: var(--muted);
+      margin-bottom: 2.5rem;
+    }
+
+    .callout strong { color: var(--text); }
+
+    /* ── RULE GRID ── */
+    .rule-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      background: var(--border);
+    }
+
+    .rule-card {
+      background: var(--surface);
+      padding: 1.25rem 1.5rem;
+    }
+
+    .rule-name {
+      font-family: "SF Mono", "Fira Code", monospace;
+      font-size: 0.8rem;
+      color: var(--red);
+      margin-bottom: 0.35rem;
+    }
+
+    .rule-desc {
+      font-size: 0.875rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 2.5rem 2rem;
+      font-size: 0.825rem;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+    }
+
+    footer code {
+      font-family: "SF Mono", "Fira Code", monospace;
+      color: var(--text);
+      background: var(--surface);
+      padding: 0.1rem 0.4rem;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo"><span>shot</span> · EspressoScript</div>
+  <ul class="nav-links">
+    <li><a href="#why">Why</a></li>
+    <li><a href="#features">Features</a></li>
+    <li><a href="#rules">Rules</a></li>
+    <li><a href="docs/PHILOSOPHY.html">Docs</a></li>
+    <li><a href="https://github.com/espressoscript/espressoscript">GitHub</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">Pre-v1 · Open Source</div>
+  <h1>TypeScript,<br><em>minus the options.</em></h1>
+  <p class="hero-sub">
+    shot is a subtractive superset of TypeScript.
+    It removes features instead of adding them —
+    applying Go's "one canonical way" philosophy to the TS/JS ecosystem.
+  </p>
+  <div class="hero-actions">
+    <a href="#features" class="btn btn-primary">See the difference</a>
+    <a href="docs/LANGUAGE.html" class="btn btn-secondary">Language reference</a>
+  </div>
+  <div class="install-cmd">
+    <span class="prompt">$</span>
+    <span class="cmd">curl -fsSL https://espressoscript.dev/install.sh | sh</span>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- WHY SECTION -->
+<section class="section" id="why">
+  <div class="section-header">
+    <div class="section-label">The problem</div>
+    <h2>Too many ways to write the same thing.</h2>
+    <p class="section-desc">
+      TypeScript lets you declare variables three ways, write functions four ways,
+      handle errors five ways. Reading unfamiliar code is hard.
+      Code review is harder. Static analysis is hardest.
+    </p>
+  </div>
+
+  <div class="callout">
+    <strong>shot's answer:</strong> a strict lint pass that enforces one canonical form.
+    Every <code>.shot</code> file is valid TypeScript — so the full Deno ecosystem,
+    type system, and tooling work unchanged. We maintain a list of rules, not a compiler.
+  </div>
+
+  <div class="rule-grid">
+    <div class="rule-card">
+      <div class="rule-name">no-throw</div>
+      <div class="rule-desc">Errors are values — return <code>[T, Error | null]</code> tuples. No hidden control flow.</div>
+    </div>
+    <div class="rule-card">
+      <div class="rule-name">no-arrow-function</div>
+      <div class="rule-desc">Every function is named and grep-able. Callbacks become testable units.</div>
+    </div>
+    <div class="rule-card">
+      <div class="rule-name">no-ternary</div>
+      <div class="rule-desc">If/else forces names onto branches. Nesting disappears.</div>
+    </div>
+    <div class="rule-card">
+      <div class="rule-name">no-class</div>
+      <div class="rule-desc">Plain <code>type</code> + plain functions. No hidden state, no inheritance.</div>
+    </div>
+    <div class="rule-card">
+      <div class="rule-name">no-any / no-as</div>
+      <div class="rule-desc">Type safety is not optional. No escape hatches.</div>
+    </div>
+    <div class="rule-card">
+      <div class="rule-name">no-interface</div>
+      <div class="rule-desc">One way to define a shape: <code>type</code>.</div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- FEATURES SECTION -->
+<section class="section" id="features">
+  <div class="section-header">
+    <div class="section-label">Before / after</div>
+    <h2>What the simplifications look like.</h2>
+    <p class="section-desc">
+      Real patterns. The left column is TypeScript as commonly written;
+      the right column is the shot equivalent.
+    </p>
+  </div>
+
+  <!-- 1. Error handling -->
+  <p class="section-label" style="margin-bottom: 0.75rem">Error handling</p>
+  <div class="comparison">
+    <div class="pane-before">
+      <div class="pane-label"><span class="dot dot-red"></span>TypeScript</div>
+      <pre><span class="kw">async function</span> <span class="fn">getUser</span>(
+  <span class="id">id</span>: <span class="ty">number</span>
+): <span class="ty">Promise</span>&lt;<span class="ty">User</span>&gt; {
+  <span class="kw">try</span> {
+    <span class="kw">const</span> <span class="id">res</span> = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="st">`/users/<span class="op">${</span><span class="id">id</span><span class="op">}</span>`</span>)
+    <span class="kw">if</span> (!<span class="id">res</span>.<span class="id">ok</span>) <span class="kw">throw new</span> <span class="ty">Error</span>(
+      <span class="st">`HTTP <span class="op">${</span><span class="id">res</span>.<span class="id">status</span><span class="op">}</span>`</span>
+    )
+    <span class="kw">return</span> <span class="id">res</span>.<span class="fn">json</span>() <span class="kw">as</span> <span class="ty">User</span>
+  } <span class="kw">catch</span> (<span class="id">e</span>) {
+    <span class="kw">throw new</span> <span class="ty">Error</span>(<span class="st">`getUser failed: <span class="op">${</span><span class="id">e</span><span class="op">}</span>`</span>)
+  }
+}</pre>
+    </div>
+    <div class="pane-after">
+      <div class="pane-label"><span class="dot dot-green"></span>shot</div>
+      <pre><span class="kw">async function</span> <span class="fn">getUser</span>(
+  <span class="id">id</span>: <span class="ty">number</span>
+): <span class="ty">Promise</span>&lt;[<span class="ty">User</span> | <span class="kw">null</span>, <span class="ty">Error</span> | <span class="kw">null</span>]&gt; {
+  <span class="kw">const</span> [<span class="id">res</span>, <span class="id">err</span>] = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="st">`/users/<span class="op">${</span><span class="id">id</span><span class="op">}</span>`</span>)
+  <span class="kw">if</span> (<span class="id">err</span> !== <span class="kw">null</span>) {
+    <span class="kw">return</span> [<span class="kw">null</span>, <span class="id">err</span>]
+  }
+  <span class="kw">return</span> <span class="fn">jsonParse</span>&lt;<span class="ty">User</span>&gt;(<span class="kw">await</span> <span class="id">res</span>.<span class="fn">text</span>())
+}
+
+<span class="cm">// no throw · no try · no hidden control flow</span></pre>
+    </div>
+  </div>
+
+  <div class="callout">
+    <strong>Why it matters:</strong> thrown exceptions don't appear in function signatures.
+    Callers have no idea a function can fail without reading its source — or its documentation, if any exists.
+    shot's tuple return makes every failure path explicit and type-checked.
+  </div>
+
+  <!-- 2. Arrow functions -->
+  <p class="section-label" style="margin-bottom: 0.75rem">Callbacks</p>
+  <div class="comparison">
+    <div class="pane-before">
+      <div class="pane-label"><span class="dot dot-red"></span>TypeScript</div>
+      <pre><span class="kw">const</span> <span class="id">total</span> = <span class="id">items</span>
+  .<span class="fn">filter</span>(<span class="id">x</span> => <span class="id">x</span>.<span class="id">active</span>)
+  .<span class="fn">map</span>(<span class="id">x</span> => ({ ...<span class="id">x</span>, <span class="id">score</span>: <span class="id">x</span>.<span class="id">score</span> * <span class="nu">2</span> }))
+  .<span class="fn">reduce</span>((<span class="id">acc</span>, <span class="id">x</span>) => <span class="id">acc</span> + <span class="id">x</span>.<span class="id">score</span>, <span class="nu">0</span>)
+
+<span class="cm">// inline logic · untestable · no names to grep</span></pre>
+    </div>
+    <div class="pane-after">
+      <div class="pane-label"><span class="dot dot-green"></span>shot</div>
+      <pre><span class="kw">function</span> <span class="fn">isActive</span>(<span class="id">item</span>: <span class="ty">Item</span>): <span class="ty">boolean</span> {
+  <span class="kw">return</span> <span class="id">item</span>.<span class="id">active</span>
+}
+<span class="kw">function</span> <span class="fn">doubleScore</span>(<span class="id">item</span>: <span class="ty">Item</span>): <span class="ty">Item</span> {
+  <span class="kw">return</span> { ...<span class="id">item</span>, <span class="id">score</span>: <span class="id">item</span>.<span class="id">score</span> * <span class="nu">2</span> }
+}
+<span class="kw">function</span> <span class="fn">sumScore</span>(<span class="id">acc</span>: <span class="ty">number</span>, <span class="id">item</span>: <span class="ty">Item</span>): <span class="ty">number</span> {
+  <span class="kw">return</span> <span class="id">acc</span> + <span class="id">item</span>.<span class="id">score</span>
+}
+
+<span class="kw">const</span> <span class="id">total</span> = <span class="id">items</span>
+  .<span class="fn">filter</span>(<span class="fn">isActive</span>)
+  .<span class="fn">map</span>(<span class="fn">doubleScore</span>)
+  .<span class="fn">reduce</span>(<span class="fn">sumScore</span>, <span class="nu">0</span>)</pre>
+    </div>
+  </div>
+
+  <div class="callout">
+    <strong>Why it matters:</strong> named functions are testable in isolation, searchable with grep,
+    and show up in stack traces. Anonymous arrow callbacks disappear the moment they fail.
+  </div>
+
+  <!-- 3. Ternaries -->
+  <p class="section-label" style="margin-bottom: 0.75rem">Conditionals</p>
+  <div class="comparison">
+    <div class="pane-before">
+      <div class="pane-label"><span class="dot dot-red"></span>TypeScript</div>
+      <pre><span class="kw">const</span> <span class="id">label</span> = <span class="id">isAdmin</span>
+  ? (<span class="id">isSuperAdmin</span> ? <span class="st">"Super Admin"</span> : <span class="st">"Admin"</span>)
+  : <span class="st">"User"</span>
+
+<span class="cm">// nesting grows with every new role</span></pre>
+    </div>
+    <div class="pane-after">
+      <div class="pane-label"><span class="dot dot-green"></span>shot</div>
+      <pre><span class="kw">function</span> <span class="fn">roleLabel</span>(
+  <span class="id">isAdmin</span>: <span class="ty">boolean</span>,
+  <span class="id">isSuperAdmin</span>: <span class="ty">boolean</span>,
+): <span class="ty">string</span> {
+  <span class="kw">if</span> (<span class="id">isSuperAdmin</span>) {
+    <span class="kw">return</span> <span class="st">"Super Admin"</span>
+  }
+  <span class="kw">if</span> (<span class="id">isAdmin</span>) {
+    <span class="kw">return</span> <span class="st">"Admin"</span>
+  }
+  <span class="kw">return</span> <span class="st">"User"</span>
+}</pre>
+    </div>
+  </div>
+
+  <div class="callout">
+    <strong>Why it matters:</strong> each branch has a name. Adding a new role means adding a clause,
+    not untangling a nested expression. The complexity stays flat.
+  </div>
+
+  <!-- 4. Classes -->
+  <p class="section-label" style="margin-bottom: 0.75rem">Data + behaviour</p>
+  <div class="comparison">
+    <div class="pane-before">
+      <div class="pane-label"><span class="dot dot-red"></span>TypeScript</div>
+      <pre><span class="kw">class</span> <span class="ty">UserService</span> {
+  <span class="kw">private readonly</span> <span class="id">db</span>: <span class="ty">Database</span>
+
+  <span class="kw">constructor</span>(<span class="id">db</span>: <span class="ty">Database</span>) {
+    <span class="kw">this</span>.<span class="id">db</span> = <span class="id">db</span>
+  }
+
+  <span class="kw">async</span> <span class="fn">findById</span>(
+    <span class="id">id</span>: <span class="ty">number</span>
+  ): <span class="ty">Promise</span>&lt;<span class="ty">User</span> | <span class="kw">null</span>&gt; {
+    <span class="cm">// ...</span>
+  }
+}
+
+<span class="kw">const</span> <span class="id">svc</span> = <span class="kw">new</span> <span class="ty">UserService</span>(<span class="id">db</span>)</pre>
+    </div>
+    <div class="pane-after">
+      <div class="pane-label"><span class="dot dot-green"></span>shot</div>
+      <pre><span class="kw">type</span> <span class="ty">UserService</span> = { <span class="kw">readonly</span> <span class="id">db</span>: <span class="ty">Database</span> }
+
+<span class="kw">async function</span> <span class="fn">findUserById</span>(
+  <span class="id">svc</span>: <span class="ty">UserService</span>,
+  <span class="id">id</span>: <span class="ty">number</span>,
+): <span class="ty">Promise</span>&lt;[<span class="ty">User</span> | <span class="kw">null</span>, <span class="ty">Error</span> | <span class="kw">null</span>]&gt; {
+  <span class="cm">// ...</span>
+}
+
+<span class="kw">const</span> <span class="id">svc</span>: <span class="ty">UserService</span> = { <span class="id">db</span> }</pre>
+    </div>
+  </div>
+
+  <div class="callout">
+    <strong>Why it matters:</strong> a <code>type</code> is data. A function is behaviour.
+    There is no hidden state, no inheritance graph to trace, no <code>this</code> context to reason about.
+    Both are independently testable.
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- CLI SECTION -->
+<section class="section" id="cli">
+  <div class="section-header">
+    <div class="section-label">Tooling</div>
+    <h2>One command, four verbs.</h2>
+    <p class="section-desc">
+      shot's pipeline mirrors Go's: lint → type-check → run.
+      The program never executes if the types are wrong.
+    </p>
+  </div>
+
+  <div style="border: 1px solid var(--border); border-radius: 10px; overflow: hidden;">
+    <div style="background: var(--surface); border-bottom: 1px solid var(--border); padding: 0.6rem 1rem; font-size: 0.72rem; color: var(--muted); font-family: 'SF Mono','Fira Code',monospace;">terminal</div>
+    <pre style="background: #0a0a0d; padding: 1.5rem 1.5rem 2rem; font-size: 0.82rem; line-height: 2;"><span class="cm"># scaffold a project</span>
+<span class="op">$</span> <span class="id">shot</span> <span class="kw">init</span> <span class="st">my-app</span>
+
+<span class="cm"># type-check and lint</span>
+<span class="op">$</span> <span class="id">shot</span> <span class="kw">check</span> <span class="st">src/</span>
+
+<span class="cm"># format (delegates to deno fmt — zero config)</span>
+<span class="op">$</span> <span class="id">shot</span> <span class="kw">fmt</span>
+
+<span class="cm"># run (lint → check → execute)</span>
+<span class="op">$</span> <span class="id">shot</span> <span class="kw">run</span> <span class="st">src/main.shot</span>
+
+<span class="cm"># test (lint → check → run *.test.shot)</span>
+<span class="op">$</span> <span class="id">shot</span> <span class="kw">test</span></pre>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- FOOTER -->
+<footer>
+  <p>
+    shot is pre-v1 and open source.
+    See the <a href="docs/PHILOSOPHY.html">philosophy</a>,
+    <a href="docs/LANGUAGE.html">language reference</a>,
+    and <a href="https://github.com/espressoscript/espressoscript">source on GitHub</a>.
+  </p>
+  <p style="margin-top: 0.5rem;">
+    Install: <code>curl -fsSL https://espressoscript.dev/install.sh | sh</code>
+  </p>
+</footer>
+
+</body>
+</html>

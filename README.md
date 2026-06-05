@@ -1,4 +1,13 @@
-# EspressoScript
+```
+ ███████╗██╗  ██╗ ██████╗ ████████╗
+ ██╔════╝██║  ██║██╔═══██╗╚══██╔══╝
+ ███████╗███████║██║   ██║   ██║   
+ ╚════██║██╔══██║██║   ██║   ██║   
+ ███████║██║  ██║╚██████╔╝   ██║   
+ ╚══════╝╚═╝  ╚═╝ ╚═════╝    ╚═╝   
+```
+
+# EspressoScript — TypeScript, minus the options.
 
 A subtractive superset of TypeScript. EspressoScript removes features instead of adding them — applying Go's philosophy ("one canonical way to do everything") to the TS/JS ecosystem.
 
@@ -149,4 +158,3 @@ shot test [files...]     Validate → type-check → run *.test.shot files.
 ## Status
 
 Pre-v1. See [`tasks/`](tasks/) for the v1 implementation plan.
-# EspressoScript
