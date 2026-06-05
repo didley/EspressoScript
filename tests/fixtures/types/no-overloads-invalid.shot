@@ -1,0 +1,4 @@
+export function add(a: number): number
+export function add(a: number): number {
+    return a
+}

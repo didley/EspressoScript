@@ -1,1 +1,1 @@
-export function test(): void { const _: unknown = this }
+export function test(): undefined { const _: unknown = this }

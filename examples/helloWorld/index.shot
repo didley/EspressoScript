@@ -1,0 +1,6 @@
+function yo(): undefined {
+    console.log(`hello`)
+    return undefined
+}
+
+yo()

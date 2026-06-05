@@ -1,4 +1,4 @@
 const x: number = 1
-function f(): void {
+function f(): undefined {
     const x: number = 2
 }

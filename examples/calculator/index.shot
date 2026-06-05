@@ -1,0 +1,43 @@
+function add(a: number, b: number): number {
+    return a + b
+}
+
+function subtract(a: number, b: number): number {
+    return a - b
+}
+
+function multiply(a: number, b: number): number {
+    return a * b
+}
+
+function divide(a: number, b: number): [number | null, Error | null] {
+    if (b === 0) {
+        return [null, new Error(`division by zero`)]
+    }
+    return [a / b, null]
+}
+
+function main(): undefined {
+    console.log(`10 + 5 = ${add(10, 5)}`)
+    console.log(`10 - 5 = ${subtract(10, 5)}`)
+    console.log(`10 * 5 = ${multiply(10, 5)}`)
+
+    const [quotient, divErr] = divide(10, 5)
+    if (divErr !== null) {
+        console.error(`error: ${divErr.message}`)
+        Deno.exit(1)
+    }
+    if (quotient === null) {
+        Deno.exit(1)
+    }
+    console.log(`10 / 5 = ${quotient}`)
+
+    const [_result, zeroErr] = divide(10, 0)
+    if (zeroErr !== null) {
+        console.log(`10 / 0 → ${zeroErr.message}`)
+    }
+
+    return undefined
+}
+
+main()

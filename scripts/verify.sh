@@ -54,12 +54,12 @@ $SHOT check "$(tmp hello.shot)" > /dev/null 2>&1 && pass "shot check hello.shot"
 
 # Case 03: no-arrow-functions
 echo "Case 03: no-arrow-functions"
-printf 'export const fn = (): void => {}\n' > "$(tmp arrow.shot)"
+printf 'export const fn = (): undefined => {}\n' > "$(tmp arrow.shot)"
 diagnostic_check "no-arrow-functions" "no-arrow-functions" "$(tmp arrow.shot)"
 
 # Case 04: no-throw
 echo "Case 04: no-throw"
-printf 'export function f(): void { throw new Error("x") }\n' > "$(tmp throw.shot)"
+printf 'export function f(): undefined { throw new Error("x") }\n' > "$(tmp throw.shot)"
 diagnostic_check "no-throw" "no-throw" "$(tmp throw.shot)"
 
 # Case 05: no-interface
@@ -81,7 +81,7 @@ diagnostic_check "imports-allowlist" "imports-allowlist" "$(tmp npm.shot)"
 echo "Case 08: require-tuple-destructure"
 cat > "$(tmp no-destructure.shot)" << 'EOF'
 import { fetch } from "shot:std"
-export async function main(): Promise<void> {
+export async function main(): Promise<undefined> {
     const r = await fetch("https://example.com")
     console.log(r)
 }
@@ -92,7 +92,7 @@ diagnostic_check "require-tuple-destructure" "require-tuple-destructure" "$(tmp 
 echo "Case 09: noUnusedLocals (shot build)"
 cat > "$(tmp unused-err.shot)" << 'EOF'
 export function fallible(): [number | null, Error | null] { return [1, null] }
-export function test(): void {
+export function test(): undefined {
     const [v, err] = fallible()
     console.log(v)
 }
@@ -117,7 +117,7 @@ $SHOT fmt "$(tmp dirty.shot)" > /dev/null 2>&1 && grep -q "return x" "$(tmp dirt
 # Case 12: shot run hello world
 echo "Case 12: shot run hello world"
 cat > "$(tmp run-hello.shot)" << 'EOF'
-function main(): void { console.log("hello from shot") }
+function main(): undefined { console.log("hello from shot") }
 main()
 EOF
 out="$($SHOT run "$(tmp run-hello.shot)" 2>&1)"
@@ -166,7 +166,7 @@ diagnostic_check "no-optional-property" "no-optional-property" "$(tmp opt-prop.s
 
 # Case 17: no-default-parameter
 echo "Case 17: no-default-parameter"
-printf 'export function f(x: number = 5): void { console.log(x) }\n' > "$(tmp default-param.shot)"
+printf 'export function f(x: number = 5): undefined { console.log(x) }\n' > "$(tmp default-param.shot)"
 diagnostic_check "no-default-parameter" "no-default-parameter" "$(tmp default-param.shot)"
 
 # Case 18: strict tsconfig catches missing property
@@ -204,7 +204,7 @@ diagnostic_check "no-multi-var-decl" "no-multi-var-decl" "$(tmp multi.shot)"
 echo "Case 23: no-shadow"
 cat > "$(tmp shadow.shot)" << 'EOF'
 export const x: number = 1
-export function f(): void { const x: number = 2; console.log(x) }
+export function f(): undefined { const x: number = 2; console.log(x) }
 EOF
 diagnostic_check "no-shadow" "no-shadow" "$(tmp shadow.shot)"
 
@@ -224,7 +224,7 @@ diagnostic_check "no-param-reassign" "no-param-reassign" "$(tmp param-reassign.s
 
 # Case 26: no-empty
 echo "Case 26: no-empty"
-printf 'export function f(): void {}\n' > "$(tmp empty-fn.shot)"
+printf 'export function f(): undefined {}\n' > "$(tmp empty-fn.shot)"
 diagnostic_check "no-empty" "no-empty" "$(tmp empty-fn.shot)"
 
 # Case 27: no-self-compare
@@ -240,7 +240,7 @@ diagnostic_check "prefer-template" "prefer-template" "$(tmp str-concat.shot)"
 # Case 29: no-new-user-types (function-based constructor)
 echo "Case 29: no-new-user-types"
 cat > "$(tmp new-user.shot)" << 'EOF'
-export function Foo(): void {}
+export function Foo(): undefined {}
 export const f = new Foo()
 EOF
 diagnostic_check "no-new-user-types" "no-new-user-types" "$(tmp new-user.shot)"
@@ -249,7 +249,7 @@ diagnostic_check "no-new-user-types" "no-new-user-types" "$(tmp new-user.shot)"
 echo "Case 30: no-loop-func"
 cat > "$(tmp loop-func.shot)" << 'EOF'
 export const xs: readonly number[] = [1, 2]
-for (const x of xs) { function makeHandler(): void { console.log(x) } }
+for (const x of xs) { function makeHandler(): undefined { console.log(x) } }
 EOF
 diagnostic_check "no-loop-func" "no-loop-func" "$(tmp loop-func.shot)"
 
@@ -286,7 +286,7 @@ diagnostic_check "no-primitive-wrapper-types" "no-primitive-wrapper-types" "$(tm
 # Case 37: no-metaprogramming-globals (Proxy)
 echo "Case 37: no-metaprogramming-globals (Proxy)"
 cat > "$(tmp proxy.shot)" << 'EOF'
-export function test(): void { const p = new Proxy({}, {}) }
+export function test(): undefined { const p = new Proxy({}, {}) }
 EOF
 diagnostic_check "no-metaprogramming-globals" "no-metaprogramming-globals" "$(tmp proxy.shot)"
 
@@ -302,14 +302,14 @@ diagnostic_check "require-named-functions" "require-named-functions" "$(tmp anon
 
 # Case 40: no-do-while
 echo "Case 40: no-do-while"
-printf 'export function f(): void { do { const x: number = 1; console.log(x) } while (false) }\n' > "$(tmp do-while.shot)"
+printf 'export function f(): undefined { do { const x: number = 1; console.log(x) } while (false) }\n' > "$(tmp do-while.shot)"
 diagnostic_check "no-do-while" "no-do-while" "$(tmp do-while.shot)"
 
 # Case 41: no-labels
 echo "Case 41: no-labels"
 cat > "$(tmp labels.shot)" << 'EOF'
 export const xs: readonly number[] = [1]
-export function f(): void { outer: for (const x of xs) { console.log(x); break outer } }
+export function f(): undefined { outer: for (const x of xs) { console.log(x); break outer } }
 EOF
 diagnostic_check "no-labels" "no-labels" "$(tmp labels.shot)"
 
@@ -342,7 +342,7 @@ diagnostic_check "no-intersection-types" "no-intersection-types" "$(tmp intersec
 
 # Case 47: no-metaprogramming-globals (Object.assign)
 echo "Case 47: no-metaprogramming-globals (Object.assign)"
-printf 'export function f(): void { Object.assign({}, { x: 1 }) }\n' > "$(tmp obj-assign.shot)"
+printf 'export function f(): undefined { Object.assign({}, { x: 1 }) }\n' > "$(tmp obj-assign.shot)"
 diagnostic_check "no-metaprogramming-globals (Object.assign)" "no-metaprogramming-globals" "$(tmp obj-assign.shot)"
 
 # Case 48: no-parse-number-fns
@@ -350,9 +350,27 @@ echo "Case 48: no-parse-number-fns"
 printf 'export function f(): number { return Number.parseInt("42") }\n' > "$(tmp parse-int.shot)"
 diagnostic_check "no-parse-number-fns" "no-parse-number-fns" "$(tmp parse-int.shot)"
 
+# Case 49: no-void-type
+echo "Case 49: no-void-type"
+printf 'export function greet(): void { console.log(`hi`) }\n' > "$(tmp void-type.shot)"
+diagnostic_check "no-void-type" "no-void-type" "$(tmp void-type.shot)"
+
+# Case 50: no-overloads
+echo "Case 50: no-overloads"
+cat > "$(tmp overload.shot)" << 'EOF'
+export function add(a: number): number
+export function add(a: number): number { return a }
+EOF
+diagnostic_check "no-overloads" "no-overloads" "$(tmp overload.shot)"
+
+# Case 51: no-namespace
+echo "Case 51: no-namespace"
+printf 'namespace Util { export const v: string = `1.0` }\n' > "$(tmp ns.shot)"
+diagnostic_check "no-namespace" "no-namespace" "$(tmp ns.shot)"
+
 echo
 if [ $FAILS -eq 0 ]; then
-    echo "All 48 cases passed."
+    echo "All 51 cases passed."
     exit 0
 else
     echo "$FAILS case(s) failed."

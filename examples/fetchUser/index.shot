@@ -1,0 +1,41 @@
+import { fetch as httpGet, jsonParse } from "shot:std"
+
+type User = {
+    readonly id: number
+    readonly name: string
+    readonly email: string
+}
+
+async function fetchUser(id: number): Promise<[User | null, Error | null]> {
+    const url = `https://jsonplaceholder.typicode.com/users/${id}`
+    const [res, fetchErr] = await httpGet(url)
+    if (fetchErr !== null) {
+        return [null, fetchErr]
+    }
+    if (res === null || !res.ok) {
+        return [null, new Error(`HTTP error fetching user ${id}`)]
+    }
+    const body = await res.text()
+    const [user, parseErr] = jsonParse<User>(body)
+    if (parseErr !== null) {
+        return [null, parseErr]
+    }
+    return [user, null]
+}
+
+async function main(): Promise<undefined> {
+    const [user, err] = await fetchUser(1)
+    if (err !== null) {
+        console.error(`error: ${err.message}`)
+        Deno.exit(1)
+    }
+    if (user === null) {
+        console.error(`no user returned`)
+        Deno.exit(1)
+    }
+    console.log(`name:  ${user.name}`)
+    console.log(`email: ${user.email}`)
+    return undefined
+}
+
+main()
