@@ -14,6 +14,9 @@ const STRICT_COMPILER_OPTIONS = {
     noErrorTruncation: true,
     strictBuiltinIteratorReturn: true,
     verbatimModuleSyntax: true,
+    // Deno 2.8+ has a conflict in its own bundled node/https.d.cts types;
+    // skipLibCheck silences declaration-file errors without weakening user-code checks.
+    skipLibCheck: true,
 }
 
 export async function writeImportMap(): Promise<string> {
