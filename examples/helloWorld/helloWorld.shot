@@ -1,5 +1,9 @@
-function yo(): void {
-    console.log(`hello`)
+export function hello(): string {
+    return "hello"
 }
 
-yo()
+function main(): void {
+    console.log(hello())
+}
+
+main()

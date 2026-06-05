@@ -6,7 +6,7 @@ type User = {
     readonly email: string
 }
 
-async function fetchUser(id: number): Promise<[User | null, Error | null]> {
+export async function fetchUser(id: number): Promise<[User | null, Error | null]> {
     const url = `https://jsonplaceholder.typicode.com/users/${id}`
     const [res, fetchErr] = await httpGet(url)
     if (fetchErr !== null) {
@@ -37,4 +37,6 @@ async function main(): Promise<void> {
     console.log(`email: ${user.email}`)
 }
 
-main()
+if (import.meta.main) {
+    main()
+}
