@@ -899,7 +899,41 @@ v1 import allowlist:
 - `jsr:@espresso/*` (direct)
 - Relative paths ending in `.shot` (`./util.shot`, `../shared/helpers.shot`)
 
-Rules: `no-require`, `no-default-export`, `imports-allowlist`
+Rules: `no-require`, `no-default-export`, `imports-allowlist`, `no-index-import`
+
+### No barrel files or index imports
+
+Index files (`index.shot`) and barrel re-exports are not allowed. Every import must point to the specific file that contains the implementation.
+
+```ts
+// ❌
+import { add } from "./math/index.shot"   // index import
+import { add } from "./math"              // extensionless (caught by imports-allowlist)
+
+// ✅
+import { add } from "./math/add.shot"
+```
+
+### File naming convention
+
+Name each file after the directory it lives in. This mirrors Go's package convention and makes imports self-describing.
+
+```
+calculator/
+  calculator.shot   ✅  (matches directory name)
+  index.shot        ❌  (do not use)
+
+fetchUser/
+  fetchUser.shot    ✅
+```
+
+For multi-file modules, name each file after what it exports — no generic names like `utils.shot` or `helpers.shot`.
+
+```
+math/
+  add.shot
+  divide.shot
+```
 
 ## Equality
 
