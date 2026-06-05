@@ -1,0 +1,6 @@
+import { hello } from "./helloWorld.shot"
+import { assertEquals } from "shot:assert"
+
+Deno.test("hello returns greeting string", function testHello(): void {
+    assertEquals(hello(), "hello")
+})
