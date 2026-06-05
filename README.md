@@ -25,6 +25,93 @@ async function getUser(id: number): Promise<[User | null, Error | null]> {
 
 No arrow functions. No `throw`. No `interface`. No `class`. No `any`. No `as`. No ternaries. No third-party imports outside the `shot:` and `jsr:@espresso/*` namespaces (relative `.shot` imports allowed). The list of what's banned is the language.
 
+## What the simplifications look like
+
+**Error handling — tuples instead of exceptions**
+
+```ts
+// TypeScript
+async function getUser(id: number): Promise<User> {
+    try {
+        const res = await fetch(`/users/${id}`)
+        if (!res.ok) throw new Error(`HTTP ${res.status}`)
+        return res.json() as User
+    } catch (e) {
+        throw new Error(`getUser failed: ${e}`)
+    }
+}
+
+// EspressoScript — no throw, no try, no hidden control flow
+async function getUser(id: number): Promise<[User | null, Error | null]> {
+    const [res, fetchErr] = await fetch(`/users/${id}`)
+    if (fetchErr !== null) {
+        return [null, fetchErr]
+    }
+    return jsonParse<User>(await res.text())
+}
+```
+
+**No ternaries — if/else forces names on branches**
+
+```ts
+// TypeScript
+const label = isAdmin ? (isSuperAdmin ? "Super Admin" : "Admin") : "User"
+
+// EspressoScript — nesting is gone, each case is readable
+function roleLabel(isAdmin: boolean, isSuperAdmin: boolean): string {
+    if (isSuperAdmin) {
+        return "Super Admin"
+    }
+    if (isAdmin) {
+        return "Admin"
+    }
+    return "User"
+}
+```
+
+**No arrow functions — every callback is named and findable**
+
+```ts
+// TypeScript
+const results = items
+    .filter(x => x.active)
+    .map(x => ({ ...x, score: x.score * 2 }))
+    .reduce((acc, x) => acc + x.score, 0)
+
+// EspressoScript — every step is a named, testable function
+function isActive(item: Item): boolean {
+    return item.active
+}
+
+function doubleScore(item: Item): Item {
+    return { ...item, score: item.score * 2 }
+}
+
+function sumScore(acc: number, item: Item): number {
+    return acc + item.score
+}
+
+const results = items.filter(isActive).map(doubleScore).reduce(sumScore, 0)
+```
+
+**No classes — plain data types and functions**
+
+```ts
+// TypeScript
+class UserService {
+    private readonly db: Database
+    constructor(db: Database) { this.db = db }
+    async findById(id: number): Promise<User | null> { ... }
+}
+
+// EspressoScript — a type and a function, nothing hidden
+type UserService = { readonly db: Database }
+
+async function findUserById(svc: UserService, id: number): Promise<[User | null, Error | null]> {
+    return svc.db.query<User>(`SELECT * FROM users WHERE id = $1`, [id])
+}
+```
+
 ## Install
 
 ```
@@ -43,10 +130,12 @@ Windows installer and prebuilt binaries are on the roadmap.
 ## CLI
 
 ```
+shot init <name>         Scaffold a new project directory.
 shot check [files...]    Validate .shot files.
 shot fmt [files...]      Format in-place via deno fmt.
 shot build [files...]    Validate → type-check.
 shot run <file>          Validate → type-check → run via Deno.
+shot test [files...]     Validate → type-check → run *.test.shot files.
 ```
 
 ## Documentation
