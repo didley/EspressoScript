@@ -3,6 +3,8 @@ import { check } from "./check.ts"
 import { fmt } from "./fmt.ts"
 import { build } from "./build.ts"
 import { run } from "./run.ts"
+import { test } from "./test.ts"
+import { init } from "./init.ts"
 
 const VERSION = "0.0.0-dev"
 
@@ -12,10 +14,12 @@ USAGE:
   shot <subcommand> [args]
 
 SUBCOMMANDS:
+  init    <name>        Scaffold a new project directory
   check   <file.shot>   Lint a .shot file for violations
   fmt     [file.shot]   Format a .shot file (delegates to deno fmt)
   build   <file.shot>   Type-check a .shot file
   run     <file.shot>   Type-check and run a .shot file
+  test    [files]       Lint and run *.test.shot files (auto-discovers if no files given)
 
 FLAGS:
   --help      Show this help message
@@ -49,6 +53,10 @@ async function main(argv: string[]): Promise<number> {
             return await build(rest)
         case "run":
             return await run(rest)
+        case "test":
+            return await test(rest)
+        case "init":
+            return await init(rest)
         default:
             console.error(`shot: unknown subcommand "${subcommand}"`)
             console.error(`Run 'shot --help' for usage.`)

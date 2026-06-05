@@ -19,13 +19,14 @@ const STRICT_COMPILER_OPTIONS = {
     skipLibCheck: true,
 }
 
-export async function writeImportMap(): Promise<string> {
+export async function writeImportMap(extraImports: Record<string, string> = {}): Promise<string> {
     const dir = await Deno.makeTempDir({ prefix: "shot-" })
     const path = `${dir}/deno.json`
     const stdlibOverride = Deno.env.get("SHOT_STDLIB_LOCAL")
-    const imports = stdlibOverride !== undefined && stdlibOverride !== ""
+    const base = stdlibOverride !== undefined && stdlibOverride !== ""
         ? { "shot:std": stdlibOverride, "shot:": "jsr:@espresso/" }
         : { "shot:": "jsr:@espresso/" }
+    const imports = { ...base, ...extraImports }
     await Deno.writeTextFile(path, JSON.stringify({
         imports,
         compilerOptions: STRICT_COMPILER_OPTIONS,
