@@ -1,0 +1,2 @@
+import { add } from "./math/index.shot"
+export { add }

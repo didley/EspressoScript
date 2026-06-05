@@ -363,9 +363,14 @@ echo "Case 50: no-namespace"
 printf 'namespace Util { export const v: string = `1.0` }\n' > "$(tmp ns.shot)"
 diagnostic_check "no-namespace" "no-namespace" "$(tmp ns.shot)"
 
+# Case 51: no-index-import
+echo "Case 51: no-index-import"
+printf 'import { add } from "./math/index.shot"\nexport { add }\n' > "$(tmp idx-import.shot)"
+diagnostic_check "no-index-import" "no-index-import" "$(tmp idx-import.shot)"
+
 echo
 if [ $FAILS -eq 0 ]; then
-    echo "All 50 cases passed."
+    echo "All 51 cases passed."
     exit 0
 else
     echo "$FAILS case(s) failed."
