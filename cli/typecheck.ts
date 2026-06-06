@@ -34,7 +34,6 @@ interface Matchers {
     toBe(expected: unknown): void
     toEqual(expected: unknown): void
     toBeNull(): void
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     toBeInstanceOf(cls: new (...args: any[]) => unknown): void
     toContain(item: unknown): void
     not: Matchers
