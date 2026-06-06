@@ -93,7 +93,10 @@
                 color: var(--text);
                 text-decoration: none;
             }
-            .nav-sep { color: var(--border); list-style: none; }
+            .nav-sep {
+                color: var(--border);
+                list-style: none;
+            }
 
             .page-header {
                 max-width: 860px;
@@ -338,7 +341,7 @@
                 ><span>shot</span><span class="sep">·</span>lint</a
             >
             <ul class="nav-links">
-                <li><a href="/">home</a></li>
+                <li><a href="/">Home</a></li>
                 <li class="nav-sep">·</li>
                 <li><a href="/script/">ShotScript</a></li>
                 <li><a href="/lint/">ShotLint</a></li>
@@ -386,27 +389,113 @@
                     <span style="color: var(--muted)">"lint":</span>
                     <span class="cmd">"shot-lint 'src/**/*.ts'"</span>
                 </div>
-                <div class="hero-github" style="margin-top:1.25rem;">
-                    <a href="https://github.com/didley/shot-lint" class="ext">GitHub</a>
+                <div class="hero-github" style="margin-top: 1.25rem">
+                    <a href="https://github.com/didley/shot-lint" class="ext"
+                        >GitHub</a
+                    >
                     <span class="hero-github-sep">·</span>
-                    <a href="https://www.npmjs.com/package/shot-lint" class="ext">npm</a>
+                    <a
+                        href="https://www.npmjs.com/package/shot-lint"
+                        class="ext"
+                        >npm</a
+                    >
                 </div>
             </div>
         </section>
 
         <hr />
 
-        <section style="max-width: 960px; margin: 0 auto; padding: 3rem 2rem 0;">
-            <div style="font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.7rem; letter-spacing: 0.12em; color: var(--accent); text-transform: uppercase; margin-bottom: 0.5rem;">Example</div>
-            <h2 style="font-size: 1.5rem; font-weight: 700; letter-spacing: -0.025em; margin-bottom: 0.5rem;">What linting looks like.</h2>
-            <p style="color: var(--muted); font-size: 0.95rem; margin-bottom: 1.75rem;">
-                Run <code style="font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.85em; color: var(--type); background: rgba(130,170,255,0.08); padding: 0.05rem 0.3rem; border-radius: 3px;">npx shot-lint 'src/**/*.ts'</code> on any TypeScript file. Violations exit non-zero with precise diagnostics.
+        <section style="max-width: 960px; margin: 0 auto; padding: 3rem 2rem 0">
+            <div
+                style="
+                    font-family:
+                        &quot;SF Mono&quot;, &quot;Fira Code&quot;, monospace;
+                    font-size: 0.7rem;
+                    letter-spacing: 0.12em;
+                    color: var(--accent);
+                    text-transform: uppercase;
+                    margin-bottom: 0.5rem;
+                "
+            >
+                Example
+            </div>
+            <h2
+                style="
+                    font-size: 1.5rem;
+                    font-weight: 700;
+                    letter-spacing: -0.025em;
+                    margin-bottom: 0.5rem;
+                "
+            >
+                What linting looks like.
+            </h2>
+            <p
+                style="
+                    color: var(--muted);
+                    font-size: 0.95rem;
+                    margin-bottom: 1.75rem;
+                "
+            >
+                Run
+                <code
+                    style="
+                        font-family:
+                            &quot;SF Mono&quot;, &quot;Fira Code&quot;,
+                            monospace;
+                        font-size: 0.85em;
+                        color: var(--type);
+                        background: rgba(130, 170, 255, 0.08);
+                        padding: 0.05rem 0.3rem;
+                        border-radius: 3px;
+                    "
+                    >npx shot-lint 'src/**/*.ts'</code
+                >
+                on any TypeScript file. Violations exit non-zero with precise
+                diagnostics.
             </p>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 2.5rem;">
-                <div style="background: var(--surface);">
-                    <div style="display: flex; align-items: center; gap: 0.5rem; padding: 0.6rem 1rem; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; border-bottom: 1px solid var(--border); color: var(--muted); font-family: 'SF Mono', 'Fira Code', monospace;">src/user.ts</div>
-                    <pre style="font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.78rem; line-height: 1.75; padding: 1.25rem 1.25rem 1.5rem; overflow-x: auto;"><span style="color:var(--keyword)">import</span> { <span style="color:var(--type)">UserService</span> } <span style="color:var(--keyword)">from</span> <span style="color:var(--string)">"./services"</span>
+            <div
+                style="
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 0;
+                    border: 1px solid var(--border);
+                    border-radius: 10px;
+                    overflow: hidden;
+                    margin-bottom: 2.5rem;
+                "
+            >
+                <div style="background: var(--surface)">
+                    <div
+                        style="
+                            display: flex;
+                            align-items: center;
+                            gap: 0.5rem;
+                            padding: 0.6rem 1rem;
+                            font-size: 0.72rem;
+                            font-weight: 600;
+                            letter-spacing: 0.06em;
+                            text-transform: uppercase;
+                            border-bottom: 1px solid var(--border);
+                            color: var(--muted);
+                            font-family:
+                                &quot;SF Mono&quot;, &quot;Fira Code&quot;,
+                                monospace;
+                        "
+                    >
+                        src/user.ts
+                    </div>
+                    <pre
+                        style="
+                            font-family:
+                                &quot;SF Mono&quot;, &quot;Fira Code&quot;,
+                                monospace;
+                            font-size: 0.78rem;
+                            line-height: 1.75;
+                            padding: 1.25rem 1.25rem 1.5rem;
+                            overflow-x: auto;
+                        "
+                    ><span style="color:var(--keyword)">import</span> { <span style="color:var(--type)">UserService</span> } <span style="color:var(--keyword)">from</span> <span style="color:var(--string)">"./services"</span>
 
 <span style="color:var(--comment)">// ❌ arrow function, optional param</span>
 <span style="color:var(--keyword)">const</span> <span style="color:var(--fn)">getUser</span> = <span style="color:var(--keyword)">async</span> (id?: <span style="color:var(--type)">number</span>) =&gt; {
@@ -421,9 +510,42 @@
   }
 }</pre>
                 </div>
-                <div style="background: #0a0a0d; border-left: 1px solid var(--border);">
-                    <div style="display: flex; align-items: center; gap: 0.5rem; padding: 0.6rem 1rem; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; border-bottom: 1px solid var(--border); color: var(--muted); font-family: 'SF Mono', 'Fira Code', monospace;">terminal</div>
-                    <pre style="font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.76rem; line-height: 1.85; padding: 1.25rem 1.25rem 1.5rem; overflow-x: auto;"><span style="color:var(--muted)">$ npx shot-lint 'src/**/*.ts'</span>
+                <div
+                    style="
+                        background: #0a0a0d;
+                        border-left: 1px solid var(--border);
+                    "
+                >
+                    <div
+                        style="
+                            display: flex;
+                            align-items: center;
+                            gap: 0.5rem;
+                            padding: 0.6rem 1rem;
+                            font-size: 0.72rem;
+                            font-weight: 600;
+                            letter-spacing: 0.06em;
+                            text-transform: uppercase;
+                            border-bottom: 1px solid var(--border);
+                            color: var(--muted);
+                            font-family:
+                                &quot;SF Mono&quot;, &quot;Fira Code&quot;,
+                                monospace;
+                        "
+                    >
+                        terminal
+                    </div>
+                    <pre
+                        style="
+                            font-family:
+                                &quot;SF Mono&quot;, &quot;Fira Code&quot;,
+                                monospace;
+                            font-size: 0.76rem;
+                            line-height: 1.85;
+                            padding: 1.25rem 1.25rem 1.5rem;
+                            overflow-x: auto;
+                        "
+                    ><span style="color:var(--muted)">$ npx shot-lint 'src/**/*.ts'</span>
 
 <span style="color:var(--text)">src/user.ts</span><span style="color:var(--muted)">:4:7</span>   <span style="color:var(--red)">no-arrow-functions</span>
             Arrow functions are banned.
@@ -1292,11 +1414,16 @@
         </div>
 
         <footer>
-          <p>
-            Shot is pre-v1 and open source. ·
-            <a href="https://github.com/didley/ShotScript" class="ext">ShotScript on GitHub</a> ·
-            <a href="https://github.com/didley/shot-lint" class="ext">ShotLint on GitHub</a>
-          </p>
+            <p>
+                Shot is pre-v1 and open source. ·
+                <a href="https://github.com/didley/ShotScript" class="ext"
+                    >ShotScript on GitHub</a
+                >
+                ·
+                <a href="https://github.com/didley/shot-lint" class="ext"
+                    >ShotLint on GitHub</a
+                >
+            </p>
         </footer>
     </body>
 </html>

@@ -91,7 +91,10 @@
                 color: var(--text);
                 text-decoration: none;
             }
-            .nav-sep { color: var(--border); list-style: none; }
+            .nav-sep {
+                color: var(--border);
+                list-style: none;
+            }
 
             .page {
                 max-width: 1040px;
@@ -367,9 +370,11 @@
     </head>
     <body>
         <nav>
-            <a href="/" class="nav-logo"><span>shot</span><span class="sep">·</span>language</a>
+            <a href="/" class="nav-logo"
+                ><span>shot</span><span class="sep">·</span>language</a
+            >
             <ul class="nav-links">
-                <li><a href="/">home</a></li>
+                <li><a href="/">Home</a></li>
                 <li class="nav-sep">·</li>
                 <li><a href="/script/">ShotScript</a></li>
                 <li><a href="/lint/">ShotLint</a></li>
@@ -399,7 +404,7 @@
                     <div class="sidebar-label">Also</div>
                     <ul>
                         <li><a href="/stdlib/">Stdlib reference</a></li>
-                        
+
                         <li><a href="/lint/">ShotLint rules</a></li>
                     </ul>
                 </div>
@@ -1096,11 +1101,16 @@ math/
         </div>
 
         <footer>
-          <p>
-            Shot is pre-v1 and open source. ·
-            <a href="https://github.com/didley/ShotScript" class="ext">ShotScript on GitHub</a> ·
-            <a href="https://github.com/didley/shot-lint" class="ext">ShotLint on GitHub</a>
-          </p>
+            <p>
+                Shot is pre-v1 and open source. ·
+                <a href="https://github.com/didley/ShotScript" class="ext"
+                    >ShotScript on GitHub</a
+                >
+                ·
+                <a href="https://github.com/didley/shot-lint" class="ext"
+                    >ShotLint on GitHub</a
+                >
+            </p>
         </footer>
     </body>
 </html>
