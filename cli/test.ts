@@ -97,7 +97,7 @@ export async function test(args: string[]): Promise<number> {
 
     const tmpDir = await makeTempDir('shot-test-')
     try {
-        await copyTransform(projectFiles, tmpDir)
+        await copyTransform(projectFiles, tmpDir, path.dirname(path.resolve(testFiles[0] ?? '')))
         const tmpTestFiles = testFiles.map(
             (f) => path.join(tmpDir, path.basename(f).replace(/\.shot$/, '.ts')),
         )

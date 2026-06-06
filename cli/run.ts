@@ -75,7 +75,7 @@ export async function run(args: string[]): Promise<number> {
 
     const tmpDir = await makeTempDir('shot-run-')
     try {
-        await copyTransform(projectFiles, tmpDir)
+        await copyTransform(projectFiles, tmpDir, path.dirname(path.resolve(entry)))
         const entryBasename = path.basename(entry).replace(/\.shot$/, '.ts')
         const tsEntry = path.join(tmpDir, entryBasename)
 

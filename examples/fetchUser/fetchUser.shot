@@ -1,4 +1,11 @@
-import { fetch as httpGet, jsonParse } from "shot:std"
+import { fetch as httpGet, jsonParse } from 'shot:std'
+import { parse, z } from 'shot:zod'
+
+const userSchema = z.object({
+    id: z.number(),
+    name: z.string(),
+    email: z.string(),
+})
 
 type User = {
     readonly id: number
@@ -16,9 +23,13 @@ export async function fetchUser(id: number): Promise<[User | null, Error | null]
         return [null, new Error(`HTTP error fetching user ${id}`)]
     }
     const body = await res.text()
-    const [user, parseErr] = jsonParse<User>(body)
+    const [raw, parseErr] = jsonParse(body)
     if (parseErr !== null) {
         return [null, parseErr]
+    }
+    const [user, validErr] = parse<User>(userSchema, raw)
+    if (validErr !== null) {
+        return [null, validErr]
     }
     return [user, null]
 }
