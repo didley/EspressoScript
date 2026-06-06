@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Language Reference — ShotScript</title>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <style>
+    :root {
+      --bg: #0d0d10; --surface: #16161a; --border: #2a2a32;
+      --text: #e8e8f0; --muted: #7a7a90; --accent: #c8702a;
+      --keyword: #c792ea; --string: #c3e88d; --type: #82aaff;
+      --comment: #546e7a; --green: #4ec994;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: 16px; line-height: 1.7; }
+    nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.25rem 2rem; border-bottom: 1px solid var(--border);
+      position: sticky; top: 0; background: rgba(13,13,16,0.92);
+      backdrop-filter: blur(8px); z-index: 10;
+    }
+    .nav-logo { font-family: "SF Mono","Fira Code",monospace; font-size: 1.1rem; font-weight: 700; color: var(--text); text-decoration: none; letter-spacing: -0.02em; }
+    .nav-logo span { color: var(--accent); }
+    .nav-links { display: flex; gap: 1.75rem; list-style: none; font-size: 0.875rem; }
+    .nav-links a { color: var(--muted); text-decoration: none; }
+    .nav-links a:hover { color: var(--text); }
+    main { max-width: 760px; margin: 0 auto; padding: 4rem 2rem 6rem; }
+    #content h1 { font-size: 2rem; font-weight: 800; letter-spacing: -0.04em; margin-bottom: 2rem; }
+    #content h2 { font-size: 1.25rem; font-weight: 700; letter-spacing: -0.02em; margin: 2.5rem 0 0.75rem; color: var(--text); }
+    #content h3 { font-size: 1rem; font-weight: 600; margin: 2rem 0 0.5rem; color: var(--muted); }
+    #content p { margin-bottom: 1rem; color: var(--text); }
+    #content a { color: var(--accent); text-decoration: none; }
+    #content a:hover { text-decoration: underline; }
+    #content ul, #content ol { padding-left: 1.5rem; margin-bottom: 1rem; }
+    #content li { margin-bottom: 0.35rem; }
+    #content code { font-family: "SF Mono","Fira Code",monospace; font-size: 0.82em; background: var(--surface); border: 1px solid var(--border); padding: 0.1em 0.35em; border-radius: 4px; color: var(--green); }
+    #content pre { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
+    #content pre code { background: none; border: none; padding: 0; font-size: 0.8rem; line-height: 1.7; color: var(--text); }
+    #content table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; font-size: 0.9rem; }
+    #content th { text-align: left; padding: 0.6rem 1rem; background: var(--surface); border: 1px solid var(--border); color: var(--muted); font-weight: 600; }
+    #content td { padding: 0.6rem 1rem; border: 1px solid var(--border); }
+    #content hr { border: none; border-top: 1px solid var(--border); margin: 2rem 0; }
+    #content strong { color: var(--text); }
+    footer { text-align: center; padding: 2rem; font-size: 0.825rem; color: var(--muted); border-top: 1px solid var(--border); }
+  </style>
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="/"><span>shot</span> · ShotScript</a>
+  <ul class="nav-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/docs/LANGUAGE.html">Language</a></li>
+    <li><a href="/docs/STDLIB.html">Stdlib</a></li>
+    <li><a href="/docs/CLI.html">CLI</a></li>
+    <li><a href="https://github.com/didley/EspressoScript">GitHub</a></li>
+  </ul>
+</nav>
+<main><div id="content"><p style="color:var(--muted)">Loading…</p></div></main>
+<footer>shot is pre-v1 and open source.</footer>
+<script>
+  fetch('./LANGUAGE.md').then(r => r.text()).then(md => {
+    document.getElementById('content').innerHTML = marked.parse(md);
+  });
+</script>
+</body>
+</html>
