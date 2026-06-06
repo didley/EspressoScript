@@ -83,7 +83,8 @@ export function serve(
                 })
             }
             return res
-        } catch {
+        } catch (e) {
+            console.error("serve: unhandled error in handler", e)
             return new Response('{"error":"internal server error"}', {
                 status: 500,
                 headers: { "Content-Type": "application/json" },
