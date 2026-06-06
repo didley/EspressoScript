@@ -25,14 +25,14 @@ cli/                    Bun-based shot CLI
   init.ts               `shot init` — scaffold a new project
   pipeline.ts           Shared: .shot→.ts rewriting, import map, temp dirs
   checker/              AST rule checker (used by `shot check`)
-    mod.ts              check(file, source) → Diagnostic[]
+    index.ts            check(file, source) → Diagnostic[]
     types.ts            Rule, Diagnostic, Context types
     rules/              One file per rule (~94 rules)
       index.ts          Registers all rules
 lint/                   shot-lint submodule (npm package for users)
   src/checker/          Parallel copy of cli/checker/ for the npm package
 stdlib/                 shot standard library (published as @shotscript/std on npm)
-  mod.ts                fetch, jsonParse, jsonStringify, tryCatch, mutableRef, etc.
+  index.ts              safeFetch, jsonParse, jsonStringify, readFile, writeFile, wrapError, toResult, toPromiseResult
 tests/
   fixtures/             .shot files for rule fixture tests (syntax/, types/, imports/)
   run-syntax-fixtures.ts
@@ -64,22 +64,22 @@ The `cli/checker/rules/index.ts` imports use `.ts` extensions (Bun style). The `
 ## Running the CLI locally
 
 ```bash
-bun run cli/mod.ts --help
-bun run cli/mod.ts check path/to/file.shot
-bun run cli/mod.ts run path/to/file.shot
-bun run cli/mod.ts test path/to/dir/
+bun run cli/index.ts --help
+bun run cli/index.ts check path/to/file.shot
+bun run cli/index.ts run path/to/file.shot
+bun run cli/index.ts test path/to/dir/
 ```
 
 To point the CLI at the local stdlib instead of the published npm version:
 
 ```bash
-SHOT_STDLIB_LOCAL=$(pwd)/stdlib/mod.ts bun run cli/mod.ts run file.shot
+SHOT_STDLIB_LOCAL=$(pwd)/stdlib/index.ts bun run cli/index.ts run file.shot
 ```
 
 To inspect the temp directory the CLI creates during `build`/`run`/`test`:
 
 ```bash
-SHOT_KEEP_TEMP=1 bun run cli/mod.ts run file.shot
+SHOT_KEEP_TEMP=1 bun run cli/index.ts run file.shot
 ```
 
 ---
@@ -152,13 +152,13 @@ CI runs `bash scripts/verify.sh` for the root repo and all three npm commands fo
 
 | Variable | Effect |
 |---|---|
-| `SHOT_STDLIB_LOCAL` | Path to local stdlib `mod.ts` — bypasses npm for development |
+| `SHOT_STDLIB_LOCAL` | Path to local stdlib `index.ts` — bypasses npm for development |
 | `SHOT_KEEP_TEMP` | Set to `1` to leave the temp dir on disk after a command |
 
 ---
 
 ## Coding style in this repo
 
-The CLI itself (`cli/`, `stdlib/`) is written in idiomatic TypeScript for Bun — it does not follow shot lint (the CLI needs `try/catch`, classes, etc. to implement the toolchain). The `stdlib/mod.ts` is the one place in the entire codebase where `try/catch` is intentionally used to wrap throwing APIs for shot users.
+The CLI itself (`cli/`, `stdlib/`) is written in idiomatic TypeScript for Bun — it does not follow shot lint (the CLI needs `try/catch`, classes, etc. to implement the toolchain). The `stdlib/index.ts` is the one place in the entire codebase where `try/catch` is intentionally used to wrap throwing APIs for shot users.
 
 The `lint/` submodule source should follow shot lint where possible, but the checker implementation necessarily uses TypeScript AST APIs that require patterns shot bans (indexing, casting, etc.) — use guarded patterns with `noUncheckedIndexedAccess` in mind.
