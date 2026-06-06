@@ -13,7 +13,7 @@
       "name": "@shotscript/shot",
       "version": "0.0.0",
       "bin": {
-        "shot": "./mod.ts",
+        "shot": "./index.ts",
       },
       "dependencies": {
         "@biomejs/biome": "^2.0.0",
@@ -24,7 +24,7 @@
     },
     "lint": {
       "name": "shot-lint",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "dependencies": {
         "glob": "^11.0.0",
         "typescript": "^5.8.0",

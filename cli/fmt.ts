@@ -1,4 +1,5 @@
 import * as fs from 'node:fs/promises'
+import { existsSync } from 'node:fs'
 import { glob } from 'glob'
 
 async function fmtFile(filePath: string): Promise<boolean> {
@@ -10,7 +11,10 @@ async function fmtFile(filePath: string): Promise<boolean> {
 }
 
 async function runBiome(source: string): Promise<string | null> {
-    const biomeBin = new URL('./node_modules/.bin/biome', import.meta.url).pathname
+    // Biome lands in cli/node_modules (direct install) or root/node_modules (workspace hoist)
+    const localBin = new URL('./node_modules/.bin/biome', import.meta.url).pathname
+    const rootBin = new URL('../node_modules/.bin/biome', import.meta.url).pathname
+    const biomeBin = existsSync(localBin) ? localBin : rootBin
     const biomeConfig = new URL(import.meta.resolve('shot-lint/biome')).pathname
     const proc = Bun.spawn(
         [biomeBin, 'format', '--config-path', biomeConfig, '--stdin-file-path=virtual.ts', '--no-errors-on-unmatched', '-'],
