@@ -1,26 +1,5 @@
 import { check } from "./checker/mod.ts"
-import { writeImportMap, cleanup } from "./pipeline.ts"
-
-function hasRelativeShotImports(source: string): boolean {
-    return /(["']\.[^"']*?)\.shot(["'])/.test(source)
-}
-
-function rewriteShotImports(source: string): string {
-    return source.replace(/(["']\.[^"']*?)\.shot(["'])/g, "$1.ts$2")
-}
-
-async function discoverProjectFiles(entry: string): Promise<string[]> {
-    const parts = entry.split("/")
-    parts.pop()
-    const dir = parts.length > 0 ? parts.join("/") : "."
-    const files: string[] = []
-    for await (const e of Deno.readDir(dir)) {
-        if (e.isFile && e.name.endsWith(".shot") && !e.name.endsWith(".test.shot")) {
-            files.push(`${dir}/${e.name}`)
-        }
-    }
-    return files
-}
+import { writeImportMap, cleanup, hasShotImports, shotFilesInDir, copyTransform } from "./pipeline.ts"
 
 export async function run(args: string[]): Promise<number> {
     const sep = args.indexOf("--")
@@ -44,9 +23,16 @@ export async function run(args: string[]): Promise<number> {
             console.error(`shot run: cannot read ${entry}: ${(e as Error).message}`)
             return 2
         }
-        projectFiles = hasRelativeShotImports(entrySource)
-            ? await discoverProjectFiles(entry)
-            : [entry]
+        if (hasShotImports(entrySource)) {
+            const parts = entry.split("/")
+            parts.pop()
+            const dir = parts.length > 0 ? parts.join("/") : "."
+            projectFiles = (await shotFilesInDir(dir)).filter(function notTest(f: string): boolean {
+                return !f.endsWith(".test.shot")
+            })
+        } else {
+            projectFiles = [entry]
+        }
     } else {
         projectFiles = positional
     }
@@ -96,12 +82,7 @@ export async function run(args: string[]): Promise<number> {
     // Multi-file: copy all .shot files to a temp dir as .ts, rewriting relative imports
     const tmpDir = await Deno.makeTempDir({ prefix: "shot-run-" })
     try {
-        for (const file of projectFiles) {
-            const source = await Deno.readTextFile(file)
-            const transformed = rewriteShotImports(source)
-            const basename = file.split("/").pop()!.replace(/\.shot$/, ".ts")
-            await Deno.writeTextFile(`${tmpDir}/${basename}`, transformed)
-        }
+        await copyTransform(projectFiles, tmpDir)
         const entryBasename = entry.split("/").pop()!.replace(/\.shot$/, ".ts")
         const cmd = new Deno.Command(Deno.execPath(), {
             args: [

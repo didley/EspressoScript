@@ -1,4 +1,5 @@
-import { jsonParse, jsonStringify, ShotPromise, wrapError } from 'shot:std'
+import { jsonParse, jsonStringify, wrapError } from 'shot:std'
+import type { ShotPromise } from 'shot:std'
 import {
   createTodo,
   deleteTodo,

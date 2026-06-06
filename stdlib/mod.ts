@@ -6,6 +6,12 @@
 // Custom error shapes: type DbError = { readonly message: string; readonly code: number }
 export type ShotPromise<T, E = Error> = Promise<[T | null, E | null]>
 
+// mutableRef returns a single-slot mutable cell — the canonical way to hold
+// module-level state in .shot without `let` (which is banned outside for-headers).
+export function mutableRef<T>(initial: T): { value: T } {
+    return { value: initial }
+}
+
 // wrapError adds context to a propagated error — the shot equivalent of Go's fmt.Errorf("context: %w", err).
 export function wrapError(message: string, cause: Error): Error {
     const err = new Error(message)

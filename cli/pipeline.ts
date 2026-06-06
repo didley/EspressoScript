@@ -34,6 +34,37 @@ export async function writeImportMap(extraImports: Record<string, string> = {}):
     return path
 }
 
+// Returns true when a .shot file has at least one relative .shot import.
+export function hasShotImports(source: string): boolean {
+    return /(["']\.[^"']*?)\.shot(["'])/.test(source)
+}
+
+// Rewrites `"./foo.shot"` → `"./foo.ts"` throughout source text.
+export function rewriteShotImports(source: string): string {
+    return source.replace(/(["']\.[^"']*?)\.shot(["'])/g, "$1.ts$2")
+}
+
+// Returns all .shot files in dir (non-recursive, one level only).
+export async function shotFilesInDir(dir: string): Promise<string[]> {
+    const files: string[] = []
+    for await (const e of Deno.readDir(dir)) {
+        if (e.isFile && e.name.endsWith(".shot")) {
+            files.push(`${dir}/${e.name}`)
+        }
+    }
+    return files
+}
+
+// Copies shot files into tmpDir as .ts, rewriting relative .shot imports.
+export async function copyTransform(files: string[], tmpDir: string): Promise<void> {
+    for (const file of files) {
+        const source = await Deno.readTextFile(file)
+        const transformed = rewriteShotImports(source)
+        const basename = file.split("/").pop()!.replace(/\.shot$/, ".ts")
+        await Deno.writeTextFile(`${tmpDir}/${basename}`, transformed)
+    }
+}
+
 export async function cleanup(configPath: string): Promise<void> {
     if (Deno.env.get("SHOT_KEEP_TEMP") === "1") {
         console.error(`SHOT_KEEP_TEMP: leaving ${configPath}`)

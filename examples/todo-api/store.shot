@@ -1,83 +1,76 @@
-import { wrapError } from 'shot:std'
+import { wrapError, mutableRef } from "shot:std"
 
 export type Todo = {
-  readonly id: number
-  readonly title: string
-  readonly done: boolean
+    readonly id: number
+    readonly title: string
+    readonly done: boolean
 }
 
 export type CreateInput = {
-  readonly title: string
+    readonly title: string
 }
 
 export type UpdateInput = {
-  readonly done: boolean
+    readonly done: boolean
 }
 
-let todos: readonly Todo[] = []
-let nextId: number = 1
+const _todos = mutableRef<readonly Todo[]>([])
+const _nextId = mutableRef(1)
 
 export function listTodos(): readonly Todo[] {
-  return todos
+    return _todos.value
 }
 
 export function getTodo(id: number): [Todo | null, Error | null] {
-  for (const todo of todos) {
-    if (todo.id === id) {
-      return [todo, null]
+    for (const todo of _todos.value) {
+        if (todo.id === id) {
+            return [todo, null]
+        }
     }
-  }
-  return [null, new Error(`todo ${id} not found`)]
+    return [null, new Error(`todo ${id} not found`)]
 }
 
 export function createTodo(input: CreateInput): [Todo | null, Error | null] {
-  const title = input.title.trim()
-  if (title.length === 0) {
-    return [null, new Error('title must not be empty')]
-  }
-  const todo: Todo = { id: nextId, title, done: false }
-  nextId = nextId + 1
-  todos = [...todos, todo]
-  return [todo, null]
+    const title = input.title.trim()
+    if (title.length === 0) {
+        return [null, new Error("title must not be empty")]
+    }
+    const todo: Todo = { id: _nextId.value, title, done: false }
+    _nextId.value = _nextId.value + 1
+    _todos.value = [..._todos.value, todo]
+    return [todo, null]
 }
 
-export function updateTodo(
-  id: number,
-  input: UpdateInput,
-): [Todo | null, Error | null] {
-  const [existing, findErr] = getTodo(id)
-  if (findErr !== null) {
-    return [null, wrapError(`update todo ${id}`, findErr)]
-  }
-  if (existing === null) {
-    return [null, new Error(`todo ${id} not found`)]
-  }
-  const updated: Todo = {
-    id: existing.id,
-    title: existing.title,
-    done: input.done,
-  }
-  todos = todos.map(function remapTodo(t: Todo): Todo {
-    if (t.id === id) {
-      return updated
+export function updateTodo(id: number, input: UpdateInput): [Todo | null, Error | null] {
+    const [existing, findErr] = getTodo(id)
+    if (findErr !== null) {
+        return [null, wrapError(`update todo ${id}`, findErr)]
     }
-    return t
-  })
-  return [updated, null]
+    if (existing === null) {
+        return [null, new Error(`todo ${id} not found`)]
+    }
+    const updated: Todo = { id: existing.id, title: existing.title, done: input.done }
+    _todos.value = _todos.value.map(function remapTodo(t: Todo): Todo {
+        if (t.id === id) {
+            return updated
+        }
+        return t
+    })
+    return [updated, null]
 }
 
 export function deleteTodo(id: number): [null, Error | null] {
-  const [_found, findErr] = getTodo(id)
-  if (findErr !== null) {
-    return [null, wrapError(`delete todo ${id}`, findErr)]
-  }
-  todos = todos.filter(function excludeDeleted(t: Todo): boolean {
-    return t.id !== id
-  })
-  return [null, null]
+    const [_found, findErr] = getTodo(id)
+    if (findErr !== null) {
+        return [null, wrapError(`delete todo ${id}`, findErr)]
+    }
+    _todos.value = _todos.value.filter(function excludeDeleted(t: Todo): boolean {
+        return t.id !== id
+    })
+    return [null, null]
 }
 
 export function clearTodos(): void {
-  todos = []
-  nextId = 1
+    _todos.value = []
+    _nextId.value = 1
 }

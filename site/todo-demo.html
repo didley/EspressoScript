@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>todo — shot example</title>
+  <style>
+    :root {
+      --bg: #0d0d10;
+      --surface: #16161a;
+      --border: #2a2a32;
+      --text: #e8e8f0;
+      --muted: #7a7a90;
+      --accent: #c8702a;
+      --green: #4ec994;
+      --red: #e05c5c;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 14px;
+      padding: 1.5rem;
+      min-height: 100vh;
+    }
+    h1 {
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 1.25rem;
+    }
+    .input-row {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.25rem;
+    }
+    input[type="text"] {
+      flex: 1;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      font-size: 0.875rem;
+      padding: 0.5rem 0.75rem;
+      outline: none;
+      font-family: inherit;
+    }
+    input[type="text"]:focus { border-color: var(--accent); }
+    input[type="text"]::placeholder { color: var(--muted); }
+    button.add-btn {
+      background: var(--accent);
+      border: none;
+      border-radius: 6px;
+      color: #fff;
+      cursor: pointer;
+      font-size: 0.875rem;
+      font-weight: 600;
+      padding: 0.5rem 1rem;
+    }
+    button.add-btn:hover { opacity: 0.85; }
+    .error-msg {
+      color: var(--red);
+      font-size: 0.8rem;
+      margin-bottom: 0.75rem;
+      min-height: 1.1rem;
+    }
+    ul { list-style: none; }
+    li {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      padding: 0.6rem 0.75rem;
+      margin-bottom: 0.5rem;
+      background: var(--surface);
+    }
+    li.done .todo-title {
+      text-decoration: line-through;
+      color: var(--muted);
+    }
+    .check-btn {
+      width: 18px; height: 18px;
+      border: 1.5px solid var(--border);
+      border-radius: 4px;
+      background: transparent;
+      cursor: pointer;
+      flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--green);
+      font-size: 11px;
+      padding: 0;
+    }
+    li.done .check-btn { background: rgba(78,201,148,0.15); border-color: var(--green); }
+    .todo-title { flex: 1; font-size: 0.875rem; }
+    .del-btn {
+      background: transparent;
+      border: none;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 1rem;
+      line-height: 1;
+      padding: 0 0.15rem;
+    }
+    .del-btn:hover { color: var(--red); }
+    .empty {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.82rem;
+      padding: 1.5rem 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>todo list</h1>
+  <div class="input-row">
+    <input id="input" type="text" placeholder="What needs doing?" />
+    <button class="add-btn" id="addBtn">Add</button>
+  </div>
+  <div class="error-msg" id="errorMsg"></div>
+  <ul id="list"></ul>
+
+  <script>
+    // --- pure logic (mirrors todo.shot) ---
+
+    function mutableRef(initial) {
+      return { value: initial };
+    }
+
+    function wrapError(message, cause) {
+      const err = new Error(message);
+      err.cause = cause;
+      return err;
+    }
+
+    const _todos = mutableRef([]);
+    const _nextId = mutableRef(1);
+
+    function allTodos() {
+      return _todos.value;
+    }
+
+    function addTodo(title) {
+      const trimmed = title.trim();
+      if (trimmed.length === 0) {
+        return [null, new Error("title must not be empty")];
+      }
+      const todo = { id: _nextId.value, title: trimmed, done: false };
+      _nextId.value = _nextId.value + 1;
+      _todos.value = [..._todos.value, todo];
+      return [todo, null];
+    }
+
+    function toggleTodo(id) {
+      const [found, findErr] = findById(id);
+      if (findErr !== null) {
+        return [null, wrapError("toggle todo " + id, findErr)];
+      }
+      if (found === null) {
+        return [null, new Error("todo " + id + " not found")];
+      }
+      const updated = { id: found.id, title: found.title, done: !found.done };
+      _todos.value = _todos.value.map(function remapToggle(t) {
+        if (t.id === id) { return updated; }
+        return t;
+      });
+      return [updated, null];
+    }
+
+    function removeTodo(id) {
+      const [_found, findErr] = findById(id);
+      if (findErr !== null) {
+        return [null, wrapError("remove todo " + id, findErr)];
+      }
+      _todos.value = _todos.value.filter(function keepOthers(t) {
+        return t.id !== id;
+      });
+      return [null, null];
+    }
+
+    function findById(id) {
+      for (const todo of _todos.value) {
+        if (todo.id === id) { return [todo, null]; }
+      }
+      return [null, new Error("todo " + id + " not found")];
+    }
+
+    // --- DOM layer ---
+
+    function render() {
+      const list = document.getElementById("list");
+      const todos = allTodos();
+      if (todos.length === 0) {
+        list.innerHTML = '<li class="empty" style="border:none;background:transparent;">No todos yet — add one above.</li>';
+        return;
+      }
+      list.innerHTML = "";
+      for (const todo of todos) {
+        const li = document.createElement("li");
+        if (todo.done) { li.className = "done"; }
+
+        const checkBtn = document.createElement("button");
+        checkBtn.className = "check-btn";
+        checkBtn.innerHTML = todo.done ? "✓" : "";
+        checkBtn.setAttribute("aria-label", todo.done ? "Mark undone" : "Mark done");
+        checkBtn.addEventListener("click", function handleToggle() {
+          const [_result, err] = toggleTodo(todo.id);
+          if (err !== null) { showError(err.message); return; }
+          render();
+        });
+
+        const span = document.createElement("span");
+        span.className = "todo-title";
+        span.textContent = todo.title;
+
+        const delBtn = document.createElement("button");
+        delBtn.className = "del-btn";
+        delBtn.innerHTML = "×";
+        delBtn.setAttribute("aria-label", "Delete");
+        delBtn.addEventListener("click", function handleDelete() {
+          const [_result, err] = removeTodo(todo.id);
+          if (err !== null) { showError(err.message); return; }
+          render();
+        });
+
+        li.appendChild(checkBtn);
+        li.appendChild(span);
+        li.appendChild(delBtn);
+        list.appendChild(li);
+      }
+    }
+
+    function showError(msg) {
+      const el = document.getElementById("errorMsg");
+      el.textContent = msg;
+      setTimeout(function clearError() { el.textContent = ""; }, 2500);
+    }
+
+    function handleAdd() {
+      const input = document.getElementById("input");
+      const [_todo, err] = addTodo(input.value);
+      if (err !== null) { showError(err.message); return; }
+      input.value = "";
+      render();
+    }
+
+    document.getElementById("addBtn").addEventListener("click", handleAdd);
+    document.getElementById("input").addEventListener("keydown", function handleKey(e) {
+      if (e.key === "Enter") { handleAdd(); }
+    });
+
+    render();
+  </script>
+</body>
+</html>

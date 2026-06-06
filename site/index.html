@@ -205,6 +205,7 @@
 
     @media (max-width: 700px) {
       .comparison { grid-template-columns: 1fr; }
+      .demo-grid { grid-template-columns: 1fr !important; }
     }
 
     .pane-label {
@@ -338,6 +339,7 @@
     <li><a href="#why">Why</a></li>
     <li><a href="#features">Features</a></li>
     <li><a href="#rules">Rules</a></li>
+    <li><a href="#demo">Demo</a></li>
     <li><a href="docs/PHILOSOPHY.html">Docs</a></li>
     <li><a href="https://github.com/didley/ShotScript">GitHub</a></li>
   </ul>
@@ -670,6 +672,78 @@
 <span class="cm"># test (lint → check → run *.test.shot)</span>
 <span class="op">$</span> <span class="id">shot</span> <span class="kw">test</span></pre>
   </div>
+</section>
+
+<hr class="divider" />
+
+<!-- DEMO SECTION -->
+<section class="section" id="demo">
+  <div class="section-header">
+    <div class="section-label">Live example</div>
+    <h2>A working todo app.</h2>
+    <p class="section-desc">
+      Full CRUD — add, complete, delete. The logic runs directly from the
+      compiled <code style="font-size:0.85em;color:var(--type)">.shot</code> source on the left.
+    </p>
+  </div>
+
+  <div class="demo-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;align-items:start;">
+
+    <!-- Source code -->
+    <div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;">
+      <div style="background:var(--surface);border-bottom:1px solid var(--border);padding:0.6rem 1rem;font-size:0.72rem;color:var(--muted);font-family:'SF Mono','Fira Code',monospace;">todo.shot</div>
+      <pre style="background:#0a0a0d;padding:1.25rem 1.5rem;font-size:0.78rem;line-height:1.75;overflow-x:auto;"><span style="color:var(--keyword)">import</span> <span style="color:var(--text)">{ mutableRef, wrapError }</span> <span style="color:var(--keyword)">from</span> <span style="color:var(--string)">"shot:std"</span>
+
+<span style="color:var(--keyword)">type</span> <span style="color:var(--type)">Todo</span> <span style="color:var(--text)">=</span> <span style="color:var(--text)">{</span>
+  <span style="color:var(--keyword)">readonly</span> <span style="color:var(--text)">id</span><span style="color:var(--text)">:</span> <span style="color:var(--type)">number</span>
+  <span style="color:var(--keyword)">readonly</span> <span style="color:var(--text)">title</span><span style="color:var(--text)">:</span> <span style="color:var(--type)">string</span>
+  <span style="color:var(--keyword)">readonly</span> <span style="color:var(--text)">done</span><span style="color:var(--text)">:</span> <span style="color:var(--type)">boolean</span>
+<span style="color:var(--text)">}</span>
+
+<span style="color:var(--keyword)">const</span> <span style="color:var(--text)">_todos</span> <span style="color:var(--text)">=</span> <span style="color:var(--fn)">mutableRef</span><span style="color:var(--text)">&lt;</span><span style="color:var(--keyword)">readonly</span> <span style="color:var(--type)">Todo</span><span style="color:var(--text)">[]&gt;([])</span>
+<span style="color:var(--keyword)">const</span> <span style="color:var(--text)">_nextId</span> <span style="color:var(--text)">=</span> <span style="color:var(--fn)">mutableRef</span><span style="color:var(--text)">(</span><span style="color:var(--num)">1</span><span style="color:var(--text)">)</span>
+
+<span style="color:var(--keyword)">export function</span> <span style="color:var(--fn)">addTodo</span><span style="color:var(--text)">(</span><span style="color:var(--text)">title</span><span style="color:var(--text)">:</span> <span style="color:var(--type)">string</span><span style="color:var(--text)">):</span> <span style="color:var(--text)">[</span><span style="color:var(--type)">Todo</span> <span style="color:var(--text)">|</span> <span style="color:var(--keyword)">null</span><span style="color:var(--text)">,</span> <span style="color:var(--type)">Error</span> <span style="color:var(--text)">|</span> <span style="color:var(--keyword)">null</span><span style="color:var(--text)">]</span> <span style="color:var(--text)">{</span>
+  <span style="color:var(--keyword)">const</span> <span style="color:var(--text)">trimmed</span> <span style="color:var(--text)">=</span> <span style="color:var(--text)">title.</span><span style="color:var(--fn)">trim</span><span style="color:var(--text)">()</span>
+  <span style="color:var(--keyword)">if</span> <span style="color:var(--text)">(trimmed.length</span> <span style="color:var(--text)">===</span> <span style="color:var(--num)">0</span><span style="color:var(--text)">)</span> <span style="color:var(--text)">{</span>
+    <span style="color:var(--keyword)">return</span> <span style="color:var(--text)">[</span><span style="color:var(--keyword)">null</span><span style="color:var(--text)">,</span> <span style="color:var(--keyword)">new</span> <span style="color:var(--type)">Error</span><span style="color:var(--text)">(</span><span style="color:var(--string)">"title must not be empty"</span><span style="color:var(--text)">)]</span>
+  <span style="color:var(--text)">}</span>
+  <span style="color:var(--keyword)">const</span> <span style="color:var(--text)">todo</span><span style="color:var(--text)">:</span> <span style="color:var(--type)">Todo</span> <span style="color:var(--text)">= {</span> <span style="color:var(--text)">id: _nextId.value, title: trimmed, done:</span> <span style="color:var(--keyword)">false</span> <span style="color:var(--text)">}</span>
+  <span style="color:var(--text)">_nextId.value</span> <span style="color:var(--text)">=</span> <span style="color:var(--text)">_nextId.value</span> <span style="color:var(--text)">+</span> <span style="color:var(--num)">1</span>
+  <span style="color:var(--text)">_todos.value</span> <span style="color:var(--text)">= [..._todos.value, todo]</span>
+  <span style="color:var(--keyword)">return</span> <span style="color:var(--text)">[todo,</span> <span style="color:var(--keyword)">null</span><span style="color:var(--text)">]</span>
+<span style="color:var(--text)">}</span>
+
+<span style="color:var(--keyword)">export function</span> <span style="color:var(--fn)">toggleTodo</span><span style="color:var(--text)">(</span><span style="color:var(--text)">id</span><span style="color:var(--text)">:</span> <span style="color:var(--type)">number</span><span style="color:var(--text)">):</span> <span style="color:var(--text)">[</span><span style="color:var(--type)">Todo</span> <span style="color:var(--text)">|</span> <span style="color:var(--keyword)">null</span><span style="color:var(--text)">,</span> <span style="color:var(--type)">Error</span> <span style="color:var(--text)">|</span> <span style="color:var(--keyword)">null</span><span style="color:var(--text)">]</span> <span style="color:var(--text)">{</span>
+  <span style="color:var(--keyword)">const</span> <span style="color:var(--text)">[found, findErr]</span> <span style="color:var(--text)">=</span> <span style="color:var(--fn)">findById</span><span style="color:var(--text)">(id)</span>
+  <span style="color:var(--keyword)">if</span> <span style="color:var(--text)">(findErr</span> <span style="color:var(--text)">!==</span> <span style="color:var(--keyword)">null</span><span style="color:var(--text)">)</span> <span style="color:var(--keyword)">return</span> <span style="color:var(--text)">[</span><span style="color:var(--keyword)">null</span><span style="color:var(--text)">,</span> <span style="color:var(--fn)">wrapError</span><span style="color:var(--text)">(</span><span style="color:var(--string)">`toggle ${id}`</span><span style="color:var(--text)">, findErr)]</span>
+  <span style="color:var(--comment)">// ...</span>
+<span style="color:var(--text)">}</span>
+
+<span style="color:var(--keyword)">export function</span> <span style="color:var(--fn)">removeTodo</span><span style="color:var(--text)">(</span><span style="color:var(--text)">id</span><span style="color:var(--text)">:</span> <span style="color:var(--type)">number</span><span style="color:var(--text)">):</span> <span style="color:var(--text)">[</span><span style="color:var(--keyword)">null</span><span style="color:var(--text)">,</span> <span style="color:var(--type)">Error</span> <span style="color:var(--text)">|</span> <span style="color:var(--keyword)">null</span><span style="color:var(--text)">]</span> <span style="color:var(--text)">{</span>
+  <span style="color:var(--keyword)">const</span> <span style="color:var(--text)">[_found, findErr]</span> <span style="color:var(--text)">=</span> <span style="color:var(--fn)">findById</span><span style="color:var(--text)">(id)</span>
+  <span style="color:var(--keyword)">if</span> <span style="color:var(--text)">(findErr</span> <span style="color:var(--text)">!==</span> <span style="color:var(--keyword)">null</span><span style="color:var(--text)">)</span> <span style="color:var(--keyword)">return</span> <span style="color:var(--text)">[</span><span style="color:var(--keyword)">null</span><span style="color:var(--text)">,</span> <span style="color:var(--fn)">wrapError</span><span style="color:var(--text)">(</span><span style="color:var(--string)">`remove ${id}`</span><span style="color:var(--text)">, findErr)]</span>
+  <span style="color:var(--text)">_todos.value</span> <span style="color:var(--text)">=</span> <span style="color:var(--text)">_todos.value.</span><span style="color:var(--fn)">filter</span><span style="color:var(--text)">(</span>
+    <span style="color:var(--keyword)">function</span> <span style="color:var(--fn)">keepOthers</span><span style="color:var(--text)">(</span><span style="color:var(--text)">t</span><span style="color:var(--text)">)</span> <span style="color:var(--text)">{</span> <span style="color:var(--keyword)">return</span> <span style="color:var(--text)">t.id</span> <span style="color:var(--text)">!==</span> <span style="color:var(--text)">id</span> <span style="color:var(--text)">}</span>
+  <span style="color:var(--text)">)</span>
+  <span style="color:var(--keyword)">return</span> <span style="color:var(--text)">[</span><span style="color:var(--keyword)">null</span><span style="color:var(--text)">,</span> <span style="color:var(--keyword)">null</span><span style="color:var(--text)">]</span>
+<span style="color:var(--text)">}</span></pre>
+    </div>
+
+    <!-- Live demo -->
+    <div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;position:sticky;top:5rem;">
+      <div style="background:var(--surface);border-bottom:1px solid var(--border);padding:0.6rem 1rem;font-size:0.72rem;color:var(--muted);font-family:'SF Mono','Fira Code',monospace;">live demo — runs in your browser</div>
+      <iframe
+        src="./todo-demo.html"
+        style="width:100%;height:420px;border:none;display:block;"
+        title="ShotScript todo demo"
+      ></iframe>
+    </div>
+  </div>
+
+  <p style="margin-top:1.25rem;font-size:0.8rem;color:var(--muted);">
+    The demo JS mirrors the <code style="color:var(--type)">.shot</code> source exactly — same named functions, same tuple returns, same no-throw contract. Types strip away; the patterns stay.
+  </p>
 </section>
 
 <hr class="divider" />

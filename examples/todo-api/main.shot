@@ -1,4 +1,5 @@
-import { serve, ShotPromise } from 'shot:std'
+import { serve } from 'shot:std'
+import type { ShotPromise } from 'shot:std'
 import {
   handleCreate,
   handleDelete,
