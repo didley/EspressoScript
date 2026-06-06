@@ -504,23 +504,23 @@
 
   <div class="product-grid">
     <div class="product-card">
-      <div class="product-tag">runtime · toolchain</div>
+      <div class="product-tag">experimental · toolchain</div>
       <div class="product-name">ShotScript</div>
-      <p class="product-desc">A full toolchain for <code>.shot</code> files — compile, run, test, and bundle with the rules built in from the start.</p>
+      <p class="product-desc">A fully locked-down TypeScript environment. TypeScript is never written or seen directly — <code>.shot</code> files enforce every rule at the toolchain level, not as an afterthought.</p>
       <ul class="product-features">
         <li><code>shot run</code> — execute any <code>.shot</code> file directly</li>
         <li><code>shot build</code> — compile to plain TypeScript</li>
         <li><code>shot test</code> — built-in test runner</li>
-        <li>Strict lint pass enforced on every file</li>
+        <li>No config surface — the rules are the runtime</li>
       </ul>
       <a class="product-link" href="/script/">→ ShotScript</a>
     </div>
     <div class="product-card">
       <div class="product-tag">linter</div>
       <div class="product-name">ShotLint</div>
-      <p class="product-desc">A standalone linter that brings shot discipline to any existing <code>.ts</code> or <code>.tsx</code> project — no migration required.</p>
+      <p class="product-desc">Shot's rules as a standalone linter for TypeScript projects. Write TypeScript, enforce the discipline — no compiler or toolchain swap required.</p>
       <ul class="product-features">
-        <li>Standalone TypeScript linter — no ESLint required</li>
+        <li>Standalone — no ESLint required</li>
         <li>React and TSX support</li>
         <li>Enable rules incrementally</li>
       </ul>
