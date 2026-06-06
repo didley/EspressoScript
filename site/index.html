@@ -493,13 +493,56 @@
   <p class="hero-desc">
     TypeScript, one way. Shot extracts features from TypeScript, applying Go's "one canonical way" philosophy to the TS/JS ecosystem. Making coding easier for humans and LLMs.
   </p>
-  <ul class="hero-links">
-    <li><a href="/script/">ShotScript</a></li>
-    <li><a href="/lint/">ShotLint</a></li>
-    <li><a href="/language/">Language</a></li>
-    <li><a href="/stdlib/">Stdlib</a></li>
-    <li><a href="https://github.com/didley/ShotScript" class="ext">GitHub</a></li>
-  </ul>
+</section>
+
+<section class="eco-section">
+  <div class="eco-heading">
+    <span class="section-label">Ecosystem</span>
+    <h2>Two tools, one philosophy.</h2>
+    <p>Start fresh or enforce discipline on an existing codebase.</p>
+  </div>
+
+  <div class="product-grid">
+    <div class="product-card">
+      <div class="product-tag">runtime · toolchain</div>
+      <div class="product-name">ShotScript</div>
+      <p class="product-desc">A full toolchain for <code>.shot</code> files — compile, run, test, and bundle with the rules built in from the start.</p>
+      <ul class="product-features">
+        <li><code>shot run</code> — execute any <code>.shot</code> file directly</li>
+        <li><code>shot build</code> — compile to plain TypeScript</li>
+        <li><code>shot test</code> — built-in test runner</li>
+        <li>Strict lint pass enforced on every file</li>
+      </ul>
+      <a class="product-link" href="/script/">→ ShotScript</a>
+    </div>
+    <div class="product-card">
+      <div class="product-tag">linter</div>
+      <div class="product-name">ShotLint</div>
+      <p class="product-desc">The same rules as an ESLint plugin. Bring shot discipline to any existing <code>.ts</code> or <code>.tsx</code> project — no migration required.</p>
+      <ul class="product-features">
+        <li>Drop-in ESLint plugin</li>
+        <li>Works with your existing config</li>
+        <li>React and TSX support</li>
+        <li>Enable rules incrementally</li>
+      </ul>
+      <a class="product-link" href="/lint/">→ ShotLint</a>
+    </div>
+  </div>
+
+  <div class="doc-grid">
+    <div class="doc-card">
+      <div class="doc-tag">Reference</div>
+      <div class="doc-name">Language</div>
+      <p class="doc-desc">The full rule set — what's banned, what's required, and why each constraint exists. Start here to understand shot's reasoning.</p>
+      <a class="doc-link" href="/language/">→ Language reference</a>
+    </div>
+    <div class="doc-card">
+      <div class="doc-tag">Reference</div>
+      <div class="doc-name">Standard library</div>
+      <p class="doc-desc">Built-in utilities via <code>shot:std</code> — <code>safeFetch</code>, <code>jsonParse</code>, <code>PromiseResult</code>, and helpers for the result-tuple pattern.</p>
+      <a class="doc-link" href="/stdlib/">→ Stdlib reference</a>
+    </div>
+  </div>
 </section>
 
 <hr class="divider" />
