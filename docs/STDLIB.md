@@ -8,7 +8,7 @@ Every function in `shot:std` returns a tuple — never throws. Internal `try`/`c
 
 ```ts
 import { fetch, jsonParse, jsonStringify, readFile, writeFile, wrapError } from "shot:std"
-import type { ShotPromise } from "shot:std"
+import type { Result, PromiseResult } from "shot:std"
 ```
 
 ### `fetch(url, opts?)`
@@ -58,17 +58,23 @@ if (err !== null) {
 }
 ```
 
-### `ShotPromise<T, E = Error>` _(type)_
-The canonical return type for async fallible functions. Equivalent to `Promise<[T | null, E | null]>`.
+### `Result<T, E extends Error = Error>` _(type)_
+The canonical return type for synchronous fallible functions. A tuple of `[T, null]` on success or `[null, E]` on failure.
 ```ts
-type ShotPromise<T, E = Error> = Promise<[T | null, E | null]>
+type Result<T, E extends Error = Error> = [T, null] | [null, E]
 ```
-`E` has no `extends Error` constraint — custom error shapes are plain `type` declarations, no class hierarchy required:
-```ts
-type DbError = { readonly message: string; readonly code: number }
 
-async function queryUser(id: number): ShotPromise<User, DbError> {
-    return [null, { message: "not found", code: 404 }]
+### `PromiseResult<T, E extends Error = Error>` _(type)_
+The canonical return type for async fallible functions. Equivalent to `Promise<Result<T, E>>`.
+```ts
+type PromiseResult<T, E extends Error = Error> = Promise<Result<T, E>>
+```
+Use it to type async functions that return errors as values:
+```ts
+async function queryUser(id: number): PromiseResult<User> {
+    const [res, err] = await safeFetch(`/users/${id.toString()}`)
+    if (err !== null) { return [null, err] }
+    return jsonParse<User>(await res.text())
 }
 ```
 
@@ -97,8 +103,8 @@ async function downloadUser(id: number, outPath: string): Promise<[null, Error |
 ## Implementation conventions
 
 - All wrappers internally use `try`/`catch` to convert thrown errors into the second tuple slot. The ban on `try`/`catch` applies to `.shot` user code; stdlib is `.ts` and exempt.
-- Errors from stdlib wrappers are returned as `Error` instances. User code may use any plain `type` as the `E` parameter of `ShotPromise<T, E>` — no class hierarchy needed.
-- Async functions return `Promise<[T | null, Error | null]>`. Sync functions return `[T | null, Error | null]`.
+- Errors from stdlib wrappers are returned as `Error` instances. User code may use any `Error` subtype as the `E` parameter of `PromiseResult<T, E>` or `Result<T, E>`.
+- Async functions return `PromiseResult<T>`. Sync functions return `Result<T>`.
 
 ## Out of scope for v1
 
