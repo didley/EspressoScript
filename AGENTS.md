@@ -13,7 +13,7 @@ cli/                    Deno-based shot CLI
   build.ts              `shot build` — type-check only
   run.ts                `shot run` — type-check + execute
   test.ts               `shot test` — discover and run *.test.shot
-  fmt.ts                `shot fmt` — delegates to deno fmt
+  fmt.ts                `shot fmt` — formats .shot files in place
   init.ts               `shot init` — scaffold a new project
   pipeline.ts           Shared: .shot→.ts rewriting, import map, temp dirs
   checker/              AST rule checker (used by `shot check`)

@@ -72,7 +72,7 @@ Windows installer and prebuilt binaries are on the roadmap.
 ```
 shot init <name>         Scaffold a new project directory.
 shot check [files...]    Validate .shot files.
-shot fmt [files...]      Format in-place via deno fmt.
+shot fmt [files...]      Format in-place via shot fmt.
 shot build [files...]    Validate → type-check.
 shot run <file>          Validate → type-check → run via Deno.
 shot test [files...]     Validate → type-check → run *.test.shot files.

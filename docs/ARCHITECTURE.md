@@ -139,7 +139,7 @@ The two-layer split exists so ShotScript's UX never leaks "this is a Deno script
 ## What we don't do
 
 - No custom parser. Ever.
-- No custom formatter. `shot fmt` delegates to `deno fmt --ext ts`.
+- `shot fmt` is the canonical formatter — zero config, opinionated output.
 - No source rewriting. Import resolution happens at Deno's resolver layer via import maps.
 - No source maps needed. The `.shot` file is what Deno parses.
 - No type-aware rules in v1. Upgrading to `ts.createProgram()` is a v2 candidate.

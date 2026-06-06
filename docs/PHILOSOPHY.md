@@ -46,7 +46,7 @@ If we ever added even one transform (e.g. auto-wrapping throwing third-party cal
 
 | Go | shot |
 |---|---|
-| `gofmt`, no config | `shot fmt` (delegates to `deno fmt`) |
+| `gofmt`, no config | `shot fmt` — zero config, one canonical output |
 | Multiple return values for errors | `[T, Error \| null]` tuples |
 | No exceptions | `throw`/`try`/`catch` banned |
 | Capitalized = exported, lowercase = private | Named exports only, no defaults |

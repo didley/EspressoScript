@@ -38,7 +38,7 @@ src/main.shot:3:5  no-arrow-functions  Arrow functions are not allowed. Use the 
 
 ## `shot fmt [files...]`
 
-Format `.shot` files in place. Zero config — delegates to `deno fmt --ext ts`.
+Format `.shot` files in place. Zero config — one canonical output.
 
 ```
 $ shot fmt src/main.shot
