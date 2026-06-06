@@ -6,8 +6,8 @@ pass() { echo "  ✓ $1"; }
 fail() { echo "  ✗ $1"; FAILS=$((FAILS+1)); }
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-SHOT="bun run $ROOT/cli/mod.ts"
-STDLIB="$ROOT/stdlib/mod.ts"
+SHOT="bun run $ROOT/cli/index.ts"
+STDLIB="$ROOT/stdlib/index.ts"
 TMPDIR_CASES="$(mktemp -d)"
 trap 'rm -rf "$TMPDIR_CASES"' EXIT
 
@@ -136,7 +136,7 @@ echo "Case 14: shell wrapper script"
 INSTALL_DIR="$(tmp install-bin)"
 mkdir -p "$INSTALL_DIR"
 SHOT_SCRIPT="$INSTALL_DIR/shot"
-printf '#!/usr/bin/env bash\nexec bun run "%s/cli/mod.ts" "$@"\n' "$ROOT" > "$SHOT_SCRIPT"
+printf '#!/usr/bin/env bash\nexec bun run "%s/cli/index.ts" "$@"\n' "$ROOT" > "$SHOT_SCRIPT"
 chmod +x "$SHOT_SCRIPT"
 if "$SHOT_SCRIPT" --version > /dev/null 2>&1; then
     pass "shot wrapper script runnable"

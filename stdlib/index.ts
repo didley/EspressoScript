@@ -1,5 +1,3 @@
-import * as fs from 'node:fs/promises'
-
 // stdlib is the only place in the shot codebase where try/catch is used.
 // These wrappers hide throws from .shot user code via the tuple-return pattern.
 
@@ -64,23 +62,6 @@ export function jsonStringify(
 ): Result<string> {
     try {
         return [JSON.stringify(value, null, indent), null]
-    } catch (e) {
-        return [null, e instanceof Error ? e : new Error(String(e))]
-    }
-}
-
-export async function readFile(path: string): PromiseResult<string> {
-    try {
-        return [await fs.readFile(path, 'utf-8'), null]
-    } catch (e) {
-        return [null, e instanceof Error ? e : new Error(String(e))]
-    }
-}
-
-export async function writeFile(path: string, data: string): Promise<[null, Error | null]> {
-    try {
-        await fs.writeFile(path, data, 'utf-8')
-        return [null, null]
     } catch (e) {
         return [null, e instanceof Error ? e : new Error(String(e))]
     }

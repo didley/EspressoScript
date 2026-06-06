@@ -62,13 +62,13 @@ async function dispatch(req: Request): Promise<[Response | null, Error | null]> 
   ]
 }
 
-async function handler(req: Request): Promise<Response> {
-  const [res, err] = await dispatch(req)
-  if (err !== null || res === null) {
-    return new Response('{"error":"internal server error"}', { status: 500, headers: { 'Content-Type': 'application/json' } })
-  }
-  return res
-}
-
 console.log('notes backend listening on :8000')
-Bun.serve({ fetch: handler })
+Bun.serve({
+  async fetch(req: Request): Promise<Response> {
+    const [res, err] = await dispatch(req)
+    if (err !== null || res === null) {
+      return new Response('{"error":"internal server error"}', { status: 500, headers: { 'Content-Type': 'application/json' } })
+    }
+    return res
+  },
+})

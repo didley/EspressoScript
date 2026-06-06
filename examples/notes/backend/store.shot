@@ -12,20 +12,19 @@ export type CreateInput = {
   readonly body: string
 }
 
-const _notes: { value: readonly Note[] } = { value: [] }
-const _nextId: { value: number } = { value: 1 }
+const _notes: Map<number, Note> = new Map()
+const _nextId: [number] = [1]
 
 export function listNotes(): readonly Note[] {
-  return _notes.value
+  return Array.from(_notes.values())
 }
 
 export function getNote(id: number): [Note | null, Error | null] {
-  for (const note of _notes.value) {
-    if (note.id === id) {
-      return [note, null]
-    }
+  const note = _notes.get(id)
+  if (note === undefined) {
+    return [null, new Error(`note ${id} not found`)]
   }
-  return [null, new Error(`note ${id} not found`)]
+  return [note, null]
 }
 
 export function createNote(input: CreateInput): [Note | null, Error | null] {
@@ -33,14 +32,15 @@ export function createNote(input: CreateInput): [Note | null, Error | null] {
   if (title.length === 0) {
     return [null, new Error('title must not be empty')]
   }
+  const id = _nextId[0]
   const note: Note = {
-    id: _nextId.value,
+    id,
     title,
     body: input.body,
     createdAt: new Date().toISOString(),
   }
-  _nextId.value = _nextId.value + 1
-  _notes.value = [..._notes.value, note]
+  _notes.set(id, note)
+  _nextId[0] = id + 1
   return [note, null]
 }
 
@@ -49,13 +49,11 @@ export function deleteNote(id: number): [null, Error | null] {
   if (findErr !== null) {
     return [null, wrapError(`delete note ${id}`, findErr)]
   }
-  _notes.value = _notes.value.filter(function excludeDeleted(n: Note): boolean {
-    return n.id !== id
-  })
+  _notes.delete(id)
   return [null, null]
 }
 
 export function clearNotes(): void {
-  _notes.value = []
-  _nextId.value = 1
+  _notes.clear()
+  _nextId[0] = 1
 }

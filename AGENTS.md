@@ -16,7 +16,7 @@ This is the ShotScript toolchain repository. ShotScript is a TypeScript dialect 
 
 ```
 cli/                    Bun-based shot CLI
-  mod.ts                Entry point — routes subcommands
+  index.ts              Entry point — routes subcommands
   check.ts              `shot check` — AST lint
   build.ts              `shot build` — type-check only
   run.ts                `shot run` — type-check + execute
