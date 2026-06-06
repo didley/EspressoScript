@@ -1,0 +1,16 @@
+{
+    "name": "@shotscript/shot",
+    "version": "0.0.0",
+    "license": "MIT",
+    "type": "module",
+    "exports": "./mod.ts",
+    "bin": {
+        "shot": "./mod.ts"
+    },
+    "dependencies": {
+        "@biomejs/biome": "^2.0.0",
+        "glob": "^11.0.0",
+        "shot-lint": "workspace:*",
+        "typescript": "^5.8.0"
+    }
+}

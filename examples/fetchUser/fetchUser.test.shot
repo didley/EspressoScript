@@ -1,20 +1,20 @@
-import { fetchUser } from "./fetchUser.shot"
-import { assertEquals, assertNotEquals, assertInstanceOf } from "shot:assert"
+import { fetchUser } from './fetchUser.shot'
+import { test, expect } from 'bun:test'
 
-Deno.test("fetchUser returns a user for a valid id", async function testFetchUserValid(): Promise<void> {
+test('fetchUser returns a user for a valid id', async function testFetchUserValid(): Promise<void> {
     const [user, err] = await fetchUser(1)
-    assertEquals(err, null)
-    assertNotEquals(user, null)
+    expect(err).toBeNull()
+    expect(user).not.toBeNull()
     if (user === null) {
         return
     }
-    assertEquals(user.id, 1)
-    assertNotEquals(user.name, "")
-    assertNotEquals(user.email, "")
+    expect(user.id).toBe(1)
+    expect(user.name).not.toBe('')
+    expect(user.email).not.toBe('')
 })
 
-Deno.test("fetchUser returns error for invalid id", async function testFetchUserInvalid(): Promise<void> {
+test('fetchUser returns error for invalid id', async function testFetchUserInvalid(): Promise<void> {
     const [user, err] = await fetchUser(999999)
-    assertEquals(user, null)
-    assertInstanceOf(err, Error)
+    expect(user).toBeNull()
+    expect(err).toBeInstanceOf(Error)
 })

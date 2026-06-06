@@ -27,11 +27,11 @@ async function main(): Promise<void> {
     const [user, err] = await fetchUser(1)
     if (err !== null) {
         console.error(`error: ${err.message}`)
-        Deno.exit(1)
+        process.exit(1)
     }
     if (user === null) {
         console.error(`no user returned`)
-        Deno.exit(1)
+        process.exit(1)
     }
     console.log(`name:  ${user.name}`)
     console.log(`email: ${user.email}`)

@@ -1,4 +1,4 @@
-import ts from "npm:typescript"
+import ts from 'typescript'
 import type { Diagnostic, Context } from "./types.ts"
 import { rules } from "./rules/index.ts"
 

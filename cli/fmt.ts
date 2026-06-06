@@ -1,46 +1,66 @@
-import { walk } from "jsr:@std/fs@^1.0.0/walk"
+import * as fs from 'node:fs/promises'
+import { spawn } from 'node:child_process'
+import { glob } from 'glob'
 
-async function fmtFile(path: string): Promise<boolean> {
-    const source = await Deno.readTextFile(path)
-    const cmd = new Deno.Command(Deno.execPath(), {
-        args: ["fmt", "--ext", "ts", "--options-no-semicolons", "--options-single-quote", "--options-indent-width", "4", "-"],
-        stdin: "piped",
-        stdout: "piped",
-        stderr: "inherit",
-    })
-    const child = cmd.spawn()
-    const writer = child.stdin.getWriter()
-    await writer.write(new TextEncoder().encode(source))
-    await writer.close()
-    const { code, stdout } = await child.output()
-    if (code !== 0) return false
-    await Deno.writeTextFile(path, new TextDecoder().decode(stdout))
+async function fmtFile(filePath: string): Promise<boolean> {
+    const source = await fs.readFile(filePath, 'utf-8')
+    const formatted = await runBiome(source)
+    if (formatted === null) return false
+    await fs.writeFile(filePath, formatted)
     return true
 }
 
-export async function fmt(files: string[]): Promise<number> {
-    const targets: string[] = []
-    if (files.length === 0) {
-        for await (const entry of walk(".", { exts: [".shot"] })) {
-            targets.push(entry.path)
-        }
-    } else {
-        for (const f of files) {
-            if (f.endsWith(".shot")) {
-                targets.push(f)
-            } else {
-                console.error(`shot fmt: skipping non-.shot file: ${f}`)
+function runBiome(source: string): Promise<string | null> {
+    return new Promise((resolve) => {
+        const biomeBin = new URL('./node_modules/.bin/biome', import.meta.url).pathname
+        const biomeConfig = new URL(import.meta.resolve('shot-lint/biome')).pathname
+        const proc = spawn(
+            biomeBin,
+            [
+                'format',
+                '--config-path',
+                biomeConfig,
+                '--stdin-file-path=virtual.ts',
+                '--no-errors-on-unmatched',
+                '-',
+            ],
+            { stdio: ['pipe', 'pipe', 'inherit'] },
+        )
+        const chunks: Buffer[] = []
+        proc.stdout.on('data', (chunk: Buffer) => chunks.push(chunk))
+        proc.stdin.write(source)
+        proc.stdin.end()
+        proc.on('close', (code) => {
+            if (code !== 0) {
+                resolve(null)
+                return
             }
-        }
-    }
+            resolve(Buffer.concat(chunks).toString('utf-8'))
+        })
+    })
+}
+
+export async function fmt(files: string[]): Promise<number> {
+    const targets: string[] =
+        files.length === 0
+            ? await glob('**/*.shot', { ignore: 'node_modules/**' })
+            : files.filter((f) => {
+                  if (!f.endsWith('.shot')) {
+                      console.error(`shot fmt: skipping non-.shot file: ${f}`)
+                      return false
+                  }
+                  return true
+              })
+
     if (targets.length === 0) {
-        console.error("shot fmt: no .shot files found")
+        console.error('shot fmt: no .shot files found')
         return 1
     }
+
     let ok = true
-    for (const path of targets) {
-        console.log(path)
-        const success = await fmtFile(path)
+    for (const filePath of targets) {
+        console.log(filePath)
+        const success = await fmtFile(filePath)
         if (!success) ok = false
     }
     return ok ? 0 : 1

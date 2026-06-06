@@ -1,30 +1,33 @@
-import { add, subtract, multiply, divide } from "./calculator.shot"
-import { assertEquals, assertInstanceOf } from "shot:assert"
+import { add, subtract, multiply, divide } from './calculator.shot'
+import { test, expect } from 'bun:test'
 
-Deno.test("add returns sum", function testAdd(): void {
-    assertEquals(add(10, 5), 15)
-    assertEquals(add(-3, 3), 0)
+test('add returns sum', function testAdd(): void {
+    expect(add(10, 5)).toBe(15)
+    expect(add(-3, 3)).toBe(0)
 })
 
-Deno.test("subtract returns difference", function testSubtract(): void {
-    assertEquals(subtract(10, 5), 5)
-    assertEquals(subtract(3, 7), -4)
+test('subtract returns difference', function testSubtract(): void {
+    expect(subtract(10, 5)).toBe(5)
+    expect(subtract(3, 7)).toBe(-4)
 })
 
-Deno.test("multiply returns product", function testMultiply(): void {
-    assertEquals(multiply(4, 5), 20)
-    assertEquals(multiply(-2, 3), -6)
+test('multiply returns product', function testMultiply(): void {
+    expect(multiply(4, 5)).toBe(20)
+    expect(multiply(-2, 3)).toBe(-6)
 })
 
-Deno.test("divide returns quotient", function testDivide(): void {
+test('divide returns quotient', function testDivide(): void {
     const [result, err] = divide(10, 2)
-    assertEquals(err, null)
-    assertEquals(result, 5)
+    expect(err).toBeNull()
+    expect(result).toBe(5)
 })
 
-Deno.test("divide by zero returns error", function testDivideByZero(): void {
+test('divide by zero returns error', function testDivideByZero(): void {
     const [result, err] = divide(10, 0)
-    assertEquals(result, null)
-    assertInstanceOf(err, Error)
-    assertEquals(err.message, "division by zero")
+    expect(result).toBeNull()
+    expect(err).toBeInstanceOf(Error)
+    if (err === null) {
+        return
+    }
+    expect(err.message).toBe('division by zero')
 })

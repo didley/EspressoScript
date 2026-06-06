@@ -1,12 +1,12 @@
-import { parseArgs } from "jsr:@std/cli@^1.0.30/parse-args"
-import { check } from "./check.ts"
-import { fmt } from "./fmt.ts"
-import { build } from "./build.ts"
-import { run } from "./run.ts"
-import { test } from "./test.ts"
-import { init } from "./init.ts"
+import { parseArgs } from 'node:util'
+import { check } from './check.ts'
+import { fmt } from './fmt.ts'
+import { build } from './build.ts'
+import { run } from './run.ts'
+import { test } from './test.ts'
+import { init } from './init.ts'
 
-const VERSION = "0.0.0-dev"
+const VERSION = '0.0.0-dev'
 
 const HELP = `shot — ShotScript toolchain
 
@@ -16,7 +16,7 @@ USAGE:
 SUBCOMMANDS:
   init    <name>        Scaffold a new project directory
   check   <file.shot>   Lint a .shot file for violations
-  fmt     [file.shot]   Format a .shot file (delegates to deno fmt)
+  fmt     [file.shot]   Format a .shot file
   build   <file.shot>   Type-check a .shot file
   run     <file.shot>   Type-check and run a .shot file
   test    [files]       Lint and run *.test.shot files (auto-discovers if no files given)
@@ -27,38 +27,42 @@ FLAGS:
 `
 
 async function main(argv: string[]): Promise<number> {
-    const args = parseArgs(argv, {
-        boolean: ["help", "version"],
-        stopEarly: true,
+    const { values, positionals } = parseArgs({
+        args: argv,
+        options: {
+            help: { type: 'boolean' },
+            version: { type: 'boolean' },
+        },
+        allowPositionals: true,
+        strict: false,
     })
 
-    if (args["version"]) {
+    if (values['version']) {
         console.log(VERSION)
         return 0
     }
 
-    if (args["help"] || args._.length === 0) {
+    if (values['help'] || positionals.length === 0) {
         console.log(HELP)
         return 0
     }
 
-    const [subcommand] = args._ as string[]
-    // Slice from the raw argv to preserve "--" and passthrough flags that parseArgs strips
+    const [subcommand] = positionals
     const subcommandIdx = argv.indexOf(subcommand as string)
     const rest = subcommandIdx >= 0 ? argv.slice(subcommandIdx + 1) : []
 
     switch (subcommand) {
-        case "check":
+        case 'check':
             return await check(rest)
-        case "fmt":
+        case 'fmt':
             return await fmt(rest)
-        case "build":
+        case 'build':
             return await build(rest)
-        case "run":
+        case 'run':
             return await run(rest)
-        case "test":
+        case 'test':
             return await test(rest)
-        case "init":
+        case 'init':
             return await init(rest)
         default:
             console.error(`shot: unknown subcommand "${subcommand}"`)
@@ -67,4 +71,4 @@ async function main(argv: string[]): Promise<number> {
     }
 }
 
-Deno.exit(await main(Deno.args))
+process.exit(await main(process.argv.slice(2)))

@@ -25,10 +25,10 @@ function main(): void {
     const [quotient, divErr] = divide(10, 5)
     if (divErr !== null) {
         console.error(`error: ${divErr.message}`)
-        Deno.exit(1)
+        process.exit(1)
     }
     if (quotient === null) {
-        Deno.exit(1)
+        process.exit(1)
     }
     console.log(`10 / 5 = ${quotient}`)
 

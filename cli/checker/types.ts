@@ -1,4 +1,4 @@
-import type ts from "npm:typescript"
+import type ts from 'typescript'
 
 export type Diagnostic = {
     file: string

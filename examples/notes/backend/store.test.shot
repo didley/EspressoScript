@@ -1,101 +1,101 @@
 import { clearNotes, createNote, deleteNote, getNote, listNotes } from './store.shot'
-import { assertEquals, assertInstanceOf, assertNotEquals } from 'shot:assert'
+import { test, expect } from 'bun:test'
 
-Deno.test('createNote adds a note with trimmed title', function testCreateNote(): void {
-  clearNotes()
-  const [note, err] = createNote({ title: '  buy milk  ', body: 'from the shop' })
-  assertEquals(err, null)
-  assertNotEquals(note, null)
-  if (note === null) {
-    return
-  }
-  assertEquals(note.title, 'buy milk')
-  assertEquals(note.body, 'from the shop')
-  assertNotEquals(note.id, 0)
-  assertNotEquals(note.createdAt, '')
+test('createNote adds a note with trimmed title', function testCreateNote(): void {
+    clearNotes()
+    const [note, err] = createNote({ title: '  buy milk  ', body: 'from the shop' })
+    expect(err).toBeNull()
+    expect(note).not.toBeNull()
+    if (note === null) {
+        return
+    }
+    expect(note.title).toBe('buy milk')
+    expect(note.body).toBe('from the shop')
+    expect(note.id).not.toBe(0)
+    expect(note.createdAt).not.toBe('')
 })
 
-Deno.test('createNote rejects empty title', function testCreateNoteEmpty(): void {
-  clearNotes()
-  const [note, err] = createNote({ title: '   ', body: '' })
-  assertEquals(note, null)
-  assertInstanceOf(err, Error)
-  if (err === null) {
-    return
-  }
-  assertEquals(err.message, 'title must not be empty')
+test('createNote rejects empty title', function testCreateNoteEmpty(): void {
+    clearNotes()
+    const [note, err] = createNote({ title: '   ', body: '' })
+    expect(note).toBeNull()
+    expect(err).toBeInstanceOf(Error)
+    if (err === null) {
+        return
+    }
+    expect(err.message).toBe('title must not be empty')
 })
 
-Deno.test('createNote assigns incrementing ids', function testCreateNoteIds(): void {
-  clearNotes()
-  const [first, firstErr] = createNote({ title: 'first', body: '' })
-  const [second, secondErr] = createNote({ title: 'second', body: '' })
-  assertEquals(firstErr, null)
-  assertEquals(secondErr, null)
-  if (first === null || second === null) {
-    return
-  }
-  assertNotEquals(first.id, second.id)
+test('createNote assigns incrementing ids', function testCreateNoteIds(): void {
+    clearNotes()
+    const [first, firstErr] = createNote({ title: 'first', body: '' })
+    const [second, secondErr] = createNote({ title: 'second', body: '' })
+    expect(firstErr).toBeNull()
+    expect(secondErr).toBeNull()
+    if (first === null || second === null) {
+        return
+    }
+    expect(first.id).not.toBe(second.id)
 })
 
-Deno.test('listNotes returns all notes in insertion order', function testListNotes(): void {
-  clearNotes()
-  createNote({ title: 'alpha', body: '' })
-  createNote({ title: 'beta', body: '' })
-  createNote({ title: 'gamma', body: '' })
-  const all = listNotes()
-  assertEquals(all.length, 3)
-  const first = all[0]
-  const third = all[2]
-  if (first === undefined || third === undefined) {
-    return
-  }
-  assertEquals(first.title, 'alpha')
-  assertEquals(third.title, 'gamma')
+test('listNotes returns all notes in insertion order', function testListNotes(): void {
+    clearNotes()
+    createNote({ title: 'alpha', body: '' })
+    createNote({ title: 'beta', body: '' })
+    createNote({ title: 'gamma', body: '' })
+    const all = listNotes()
+    expect(all.length).toBe(3)
+    const first = all[0]
+    const third = all[2]
+    if (first === undefined || third === undefined) {
+        return
+    }
+    expect(first.title).toBe('alpha')
+    expect(third.title).toBe('gamma')
 })
 
-Deno.test('getNote returns the matching note', function testGetNote(): void {
-  clearNotes()
-  const [created, createErr] = createNote({ title: 'find me', body: 'here' })
-  assertEquals(createErr, null)
-  if (created === null) {
-    return
-  }
-  const [found, findErr] = getNote(created.id)
-  assertEquals(findErr, null)
-  assertNotEquals(found, null)
-  if (found === null) {
-    return
-  }
-  assertEquals(found.id, created.id)
-  assertEquals(found.title, 'find me')
+test('getNote returns the matching note', function testGetNote(): void {
+    clearNotes()
+    const [created, createErr] = createNote({ title: 'find me', body: 'here' })
+    expect(createErr).toBeNull()
+    if (created === null) {
+        return
+    }
+    const [found, findErr] = getNote(created.id)
+    expect(findErr).toBeNull()
+    expect(found).not.toBeNull()
+    if (found === null) {
+        return
+    }
+    expect(found.id).toBe(created.id)
+    expect(found.title).toBe('find me')
 })
 
-Deno.test('getNote returns error for unknown id', function testGetNoteMissing(): void {
-  clearNotes()
-  const [note, err] = getNote(99999)
-  assertEquals(note, null)
-  assertInstanceOf(err, Error)
+test('getNote returns error for unknown id', function testGetNoteMissing(): void {
+    clearNotes()
+    const [note, err] = getNote(99999)
+    expect(note).toBeNull()
+    expect(err).toBeInstanceOf(Error)
 })
 
-Deno.test('deleteNote removes the note', function testDeleteNote(): void {
-  clearNotes()
-  const [created, createErr] = createNote({ title: 'delete me', body: '' })
-  assertEquals(createErr, null)
-  if (created === null) {
-    return
-  }
-  const [_result, deleteErr] = deleteNote(created.id)
-  assertEquals(deleteErr, null)
-  assertEquals(listNotes().length, 0)
+test('deleteNote removes the note', function testDeleteNote(): void {
+    clearNotes()
+    const [created, createErr] = createNote({ title: 'delete me', body: '' })
+    expect(createErr).toBeNull()
+    if (created === null) {
+        return
+    }
+    const [_result, deleteErr] = deleteNote(created.id)
+    expect(deleteErr).toBeNull()
+    expect(listNotes().length).toBe(0)
 })
 
-Deno.test('deleteNote returns wrapped error for unknown id', function testDeleteNoteMissing(): void {
-  clearNotes()
-  const [_result, err] = deleteNote(99999)
-  assertInstanceOf(err, Error)
-  if (err === null) {
-    return
-  }
-  assertNotEquals(err.message.indexOf('delete note'), -1)
+test('deleteNote returns wrapped error for unknown id', function testDeleteNoteMissing(): void {
+    clearNotes()
+    const [_result, err] = deleteNote(99999)
+    expect(err).toBeInstanceOf(Error)
+    if (err === null) {
+        return
+    }
+    expect(err.message.indexOf('delete note')).not.toBe(-1)
 })

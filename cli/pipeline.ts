@@ -1,75 +1,52 @@
-// Options that Deno 2.x ignores (warns about) are excluded:
-// forceConsistentCasingInFileNames, isolatedModules, moduleDetection, noUncheckedSideEffectImports
-const STRICT_COMPILER_OPTIONS = {
-    strict: true,
-    noImplicitReturns: true,
-    noFallthroughCasesInSwitch: true,
-    noUnusedLocals: true,
-    noUnusedParameters: true,
-    noUncheckedIndexedAccess: true,
-    noPropertyAccessFromIndexSignature: true,
-    exactOptionalPropertyTypes: true,
-    allowUnreachableCode: false,
-    allowUnusedLabels: false,
-    noErrorTruncation: true,
-    strictBuiltinIteratorReturn: true,
-    verbatimModuleSyntax: true,
-    // Deno 2.8+ has a conflict in its own bundled node/https.d.cts types;
-    // skipLibCheck silences declaration-file errors without weakening user-code checks.
-    skipLibCheck: true,
-}
-
-export async function writeImportMap(extraImports: Record<string, string> = {}): Promise<string> {
-    const dir = await Deno.makeTempDir({ prefix: "shot-" })
-    const path = `${dir}/deno.json`
-    const stdlibOverride = Deno.env.get("SHOT_STDLIB_LOCAL")
-    const base = stdlibOverride !== undefined && stdlibOverride !== ""
-        ? { "shot:std": stdlibOverride, "shot:": "jsr:@shotscript/" }
-        : { "shot:": "jsr:@shotscript/" }
-    const imports = { ...base, ...extraImports }
-    await Deno.writeTextFile(path, JSON.stringify({
-        imports,
-        compilerOptions: STRICT_COMPILER_OPTIONS,
-    }))
-    return path
-}
+import * as fs from 'node:fs/promises'
+import * as os from 'node:os'
+import * as path from 'node:path'
 
 // Returns true when a .shot file has at least one relative .shot import.
 export function hasShotImports(source: string): boolean {
     return /(["']\.[^"']*?)\.shot(["'])/.test(source)
 }
 
-// Rewrites `"./foo.shot"` → `"./foo.ts"` throughout source text.
+// Rewrites `"./foo.shot"` → `"./foo.ts"` in relative imports.
 export function rewriteShotImports(source: string): string {
-    return source.replace(/(["']\.[^"']*?)\.shot(["'])/g, "$1.ts$2")
+    return source.replace(/(["']\.[^"']*?)\.shot(["'])/g, '$1.ts$2')
+}
+
+// Rewrites `"shot:std"` → `"@shotscript/std"` (or SHOT_STDLIB_LOCAL when set).
+export function rewriteShotSpecifiers(source: string): string {
+    const stdlibOverride = process.env['SHOT_STDLIB_LOCAL']
+    return source.replace(/"shot:([^"]+)"/g, (_: string, name: string) => {
+        if (name === 'std' && stdlibOverride) return `"${stdlibOverride}"`
+        return `"@shotscript/${name}"`
+    })
 }
 
 // Returns all .shot files in dir (non-recursive, one level only).
 export async function shotFilesInDir(dir: string): Promise<string[]> {
-    const files: string[] = []
-    for await (const e of Deno.readDir(dir)) {
-        if (e.isFile && e.name.endsWith(".shot")) {
-            files.push(`${dir}/${e.name}`)
-        }
-    }
-    return files
+    const entries = await fs.readdir(dir, { withFileTypes: true })
+    return entries
+        .filter((e) => e.isFile() && e.name.endsWith('.shot'))
+        .map((e) => path.join(dir, e.name))
 }
 
-// Copies shot files into tmpDir as .ts, rewriting relative .shot imports.
+// Copies .shot files into tmpDir as .ts, rewriting relative and shot: imports.
 export async function copyTransform(files: string[], tmpDir: string): Promise<void> {
     for (const file of files) {
-        const source = await Deno.readTextFile(file)
-        const transformed = rewriteShotImports(source)
-        const basename = file.split("/").pop()!.replace(/\.shot$/, ".ts")
-        await Deno.writeTextFile(`${tmpDir}/${basename}`, transformed)
+        const source = await fs.readFile(file, 'utf-8')
+        const transformed = rewriteShotSpecifiers(rewriteShotImports(source))
+        const basename = path.basename(file).replace(/\.shot$/, '.ts')
+        await fs.writeFile(path.join(tmpDir, basename), transformed)
     }
 }
 
-export async function cleanup(configPath: string): Promise<void> {
-    if (Deno.env.get("SHOT_KEEP_TEMP") === "1") {
-        console.error(`SHOT_KEEP_TEMP: leaving ${configPath}`)
+export async function makeTempDir(prefix: string): Promise<string> {
+    return fs.mkdtemp(path.join(os.tmpdir(), prefix))
+}
+
+export async function removeTempDir(dir: string): Promise<void> {
+    if (process.env['SHOT_KEEP_TEMP'] === '1') {
+        console.error(`SHOT_KEEP_TEMP: leaving ${dir}`)
         return
     }
-    const dir = configPath.replace(/\/deno\.json$/, "")
-    await Deno.remove(dir, { recursive: true })
+    await fs.rm(dir, { recursive: true })
 }

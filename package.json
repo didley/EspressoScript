@@ -1,0 +1,10 @@
+{
+    "name": "espressoscript",
+    "version": "0.0.0",
+    "private": true,
+    "workspaces": ["cli", "lint"],
+    "devDependencies": {
+        "glob": "^11.0.0",
+        "typescript": "^5.8.0"
+    }
+}
