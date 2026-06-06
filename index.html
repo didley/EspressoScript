@@ -385,7 +385,7 @@
   <div class="rule-grid">
     <div class="rule-card">
       <div class="rule-name">no-throw</div>
-      <div class="rule-desc">Errors are values — return <code>[T, Error | null]</code> tuples. No hidden control flow.</div>
+      <div class="rule-desc">Errors are values — return <code>ShotPromise&lt;T, E&gt;</code> tuples. No hidden control flow, no class hierarchy.</div>
     </div>
     <div class="rule-card">
       <div class="rule-name">no-arrow-function</div>
@@ -444,9 +444,12 @@
     </div>
     <div class="pane-after">
       <div class="pane-label"><span class="dot dot-green"></span>shot</div>
-      <pre><span class="kw">async function</span> <span class="fn">getUser</span>(
+      <pre><span class="kw">import</span> { <span class="fn">fetch</span>, <span class="fn">jsonParse</span> } <span class="kw">from</span> <span class="st">"shot:std"</span>
+<span class="kw">import type</span> { <span class="ty">ShotPromise</span> } <span class="kw">from</span> <span class="st">"shot:std"</span>
+
+<span class="kw">async function</span> <span class="fn">getUser</span>(
   <span class="id">id</span>: <span class="ty">number</span>
-): <span class="ty">Promise</span>&lt;[<span class="ty">User</span> | <span class="kw">null</span>, <span class="ty">Error</span> | <span class="kw">null</span>]&gt; {
+): <span class="ty">ShotPromise</span>&lt;<span class="ty">User</span>&gt; {
   <span class="kw">const</span> [<span class="id">res</span>, <span class="id">err</span>] = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="st">`/users/<span class="op">${</span><span class="id">id</span><span class="op">}</span>`</span>)
   <span class="kw">if</span> (<span class="id">err</span> !== <span class="kw">null</span>) {
     <span class="kw">return</span> [<span class="kw">null</span>, <span class="id">err</span>]
@@ -461,7 +464,65 @@
   <div class="callout">
     <strong>Why it matters:</strong> thrown exceptions don't appear in function signatures.
     Callers have no idea a function can fail without reading its source — or its documentation, if any exists.
-    shot's tuple return makes every failure path explicit and type-checked.
+    <code>ShotPromise&lt;T, E&gt;</code> makes every failure path explicit in the type, enforced by the checker.
+  </div>
+
+  <!-- 1b. Custom errors -->
+  <p class="section-label" style="margin-bottom: 0.75rem">Custom error types</p>
+  <div class="comparison">
+    <div class="pane-before">
+      <div class="pane-label"><span class="dot dot-red"></span>TypeScript</div>
+      <pre><span class="kw">class</span> <span class="ty">ApiError</span> <span class="kw">extends</span> <span class="ty">Error</span> {
+  <span class="id">statusCode</span>: <span class="ty">number</span>
+  <span class="kw">constructor</span>(<span class="id">msg</span>: <span class="ty">string</span>, <span class="id">code</span>: <span class="ty">number</span>) {
+    <span class="kw">super</span>(<span class="id">msg</span>)
+    <span class="kw">this</span>.<span class="id">statusCode</span> = <span class="id">code</span>
+  }
+}
+
+<span class="kw">async function</span> <span class="fn">getUser</span>(
+  <span class="id">id</span>: <span class="ty">number</span>
+): <span class="ty">Promise</span>&lt;<span class="ty">User</span>&gt; {
+  <span class="kw">const</span> <span class="id">res</span> = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="st">`/users/<span class="op">${</span><span class="id">id</span><span class="op">}</span>`</span>)
+  <span class="kw">if</span> (!<span class="id">res</span>.<span class="id">ok</span>) <span class="kw">throw new</span> <span class="ty">ApiError</span>(
+    <span class="st">"not found"</span>, <span class="id">res</span>.<span class="id">status</span>
+  )
+  <span class="kw">return</span> <span class="id">res</span>.<span class="fn">json</span>() <span class="kw">as</span> <span class="ty">User</span>
+}
+
+<span class="cm">// caller doesn't know this throws</span></pre>
+    </div>
+    <div class="pane-after">
+      <div class="pane-label"><span class="dot dot-green"></span>shot</div>
+      <pre><span class="kw">type</span> <span class="ty">ApiError</span> = {
+  <span class="kw">readonly</span> <span class="id">message</span>: <span class="ty">string</span>
+  <span class="kw">readonly</span> <span class="id">statusCode</span>: <span class="ty">number</span>
+}
+
+<span class="kw">async function</span> <span class="fn">getUser</span>(
+  <span class="id">id</span>: <span class="ty">number</span>
+): <span class="ty">ShotPromise</span>&lt;<span class="ty">User</span>, <span class="ty">ApiError</span>&gt; {
+  <span class="kw">const</span> [<span class="id">res</span>, <span class="id">err</span>] = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="st">`/users/<span class="op">${</span><span class="id">id</span><span class="op">}</span>`</span>)
+  <span class="kw">if</span> (<span class="id">err</span> !== <span class="kw">null</span>) {
+    <span class="kw">return</span> [<span class="kw">null</span>, { <span class="id">message</span>: <span class="id">err</span>.<span class="id">message</span>, <span class="id">statusCode</span>: <span class="nu">500</span> }]
+  }
+  <span class="kw">if</span> (!<span class="id">res</span>.<span class="id">ok</span>) {
+    <span class="kw">return</span> [<span class="kw">null</span>, { <span class="id">message</span>: <span class="st">"not found"</span>, <span class="id">statusCode</span>: <span class="id">res</span>.<span class="id">status</span> }]
+  }
+  <span class="kw">return</span> <span class="fn">jsonParse</span>&lt;<span class="ty">User</span>&gt;(<span class="kw">await</span> <span class="id">res</span>.<span class="fn">text</span>())
+}
+
+<span class="cm">// caller sees ApiError in the signature</span></pre>
+    </div>
+  </div>
+
+  <div class="callout">
+    <strong>No class hierarchy needed.</strong> Custom error shapes are plain <code>type</code> declarations —
+    no <code>extends</code>, no <code>constructor</code>, no <code>this</code>.
+    The error type <code>E</code> in <code>ShotPromise&lt;T, E&gt;</code> can be anything: a plain type, or a
+    discriminated union when a function has multiple failure modes.
+    To add context when propagating, use <code>wrapError(message, cause)</code> from <code>shot:std</code>
+    — the shot equivalent of Go's <code>fmt.Errorf("context: %w", err)</code>.
   </div>
 
   <!-- 2. Arrow functions -->
