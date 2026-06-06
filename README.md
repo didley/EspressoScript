@@ -126,7 +126,7 @@ async function findUserById(svc: UserService, id: number): Promise<[User | null,
 ## Install
 
 ```
-curl -fsSL https://shotscript.dev/install.sh | sh
+curl -fsSL https://shot.didley.dev/install.sh | sh
 ```
 
 Verify:

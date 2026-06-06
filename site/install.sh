@@ -1,6 +1,6 @@
 #!/bin/sh
-# ShotScript installer — https://shotscript.dev/install.sh
-# Usage: curl -fsSL https://shotscript.dev/install.sh | sh
+# ShotScript installer — https://shot.didley.dev/install.sh
+# Usage: curl -fsSL https://shot.didley.dev/install.sh | sh
 set -eu
 
 SHOT_VERSION="${SHOT_VERSION:-}"
