@@ -80,29 +80,16 @@ function roleLabel(isAdmin: boolean, isSuperAdmin: boolean): string {
 }
 ```
 
-**No arrow functions — every callback is named and findable**
+**`null` is the only absent value**
 
 ```ts
-// TypeScript
-const results = items
-    .filter(x => x.active)
-    .map(x => ({ ...x, score: x.score * 2 }))
-    .reduce((acc, x) => acc + x.score, 0)
+// TypeScript — three ways to say "nothing": undefined, ?, | undefined
+type User = { id: number; avatar?: string; deletedAt?: Date }
+function getUser(id?: number): User | undefined { ... }
 
-// ShotScript — every step is a named, testable function
-function isActive(item: Item): boolean {
-    return item.active
-}
-
-function doubleScore(item: Item): Item {
-    return { ...item, score: item.score * 2 }
-}
-
-function sumScore(acc: number, item: Item): number {
-    return acc + item.score
-}
-
-const results = items.filter(isActive).map(doubleScore).reduce(sumScore, 0)
+// ShotScript — undefined never appears; every absence is explicit and typed
+type User = { readonly id: number; readonly avatar: string | null; readonly deletedAt: Date | null }
+function getUser(id: number): [User | null, Error | null] { ... }
 ```
 
 **No classes — plain data types and functions**
