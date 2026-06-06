@@ -6,16 +6,16 @@ This is the ShotScript toolchain repository. ShotScript is a TypeScript dialect 
 
 ## ShotScript vs ShotLint
 
-**ShotScript** (this repo) is the full opinionated toolchain. It requires Deno, uses `.shot` files instead of `.ts`, enforces Shot principles at the runtime level, and ships its own CLI (`shot init` · `check` · `fmt` · `build` · `run` · `test`) and stdlib (`shot:std`). Users adopt ShotScript by starting a new project with `shot init` — there is no config, no overrides.
+**ShotScript** (this repo) is the full opinionated toolchain. It requires Bun, uses `.shot` files instead of `.ts`, enforces Shot principles at the runtime level, and ships its own CLI (`shot init` · `check` · `fmt` · `build` · `run` · `test`) and stdlib (`shot:std`). Users adopt ShotScript by starting a new project with `shot init` — there is no config, no overrides.
 
-**ShotLint** (`lint/` submodule, published as `shot-lint` on npm) is the package for existing TypeScript projects. It brings Shot principles via a TypeScript language-server plugin (rules surface as `tsc` errors in CI and editor squiggles), a shareable Biome config, and safe util wrappers. No `.shot` extension, no Deno, no CLI required — just `npm install shot-lint`.
+**ShotLint** (`lint/` submodule, published as `shot-lint` on npm) is the package for existing TypeScript projects. It brings Shot principles via a TypeScript language-server plugin (rules surface as `tsc` errors in CI and editor squiggles), a shareable Biome config, and safe util wrappers. No `.shot` extension, no Bun, no CLI required — just `npm install shot-lint`.
 
 ---
 
 ## Repo layout
 
 ```
-cli/                    Deno-based shot CLI
+cli/                    Bun-based shot CLI
   mod.ts                Entry point — routes subcommands
   check.ts              `shot check` — AST lint
   build.ts              `shot build` — type-check only
@@ -52,34 +52,34 @@ There are two parallel copies of the rule checker:
 
 | Location | Used by | Runtime |
 |---|---|---|
-| `cli/checker/` | `shot check` CLI command | Deno (`npm:typescript`) |
+| `cli/checker/` | `shot check` CLI command | Bun |
 | `lint/src/checker/` | `shot-lint` npm package | Node.js |
 
 Both have the same rule files, types, and structure. When you add or change a rule, **you must update both**. The `lint/` submodule is what users install via npm; `cli/checker/` is what the CLI uses directly.
 
-The `cli/checker/rules/index.ts` imports use `.ts` extensions (Deno style). The `lint/src/checker/rules/index.ts` imports use `.js` extensions (NodeNext/ESM style).
+The `cli/checker/rules/index.ts` imports use `.ts` extensions (Bun style). The `lint/src/checker/rules/index.ts` imports use `.js` extensions (NodeNext/ESM style).
 
 ---
 
 ## Running the CLI locally
 
 ```bash
-deno run -A cli/mod.ts --help
-deno run -A cli/mod.ts check path/to/file.shot
-deno run -A cli/mod.ts run path/to/file.shot
-deno run -A cli/mod.ts test path/to/dir/
+bun run cli/mod.ts --help
+bun run cli/mod.ts check path/to/file.shot
+bun run cli/mod.ts run path/to/file.shot
+bun run cli/mod.ts test path/to/dir/
 ```
 
 To point the CLI at the local stdlib instead of the published npm version:
 
 ```bash
-SHOT_STDLIB_LOCAL=$(pwd)/stdlib/mod.ts deno run -A cli/mod.ts run file.shot
+SHOT_STDLIB_LOCAL=$(pwd)/stdlib/mod.ts bun run cli/mod.ts run file.shot
 ```
 
 To inspect the temp directory the CLI creates during `build`/`run`/`test`:
 
 ```bash
-SHOT_KEEP_TEMP=1 deno run -A cli/mod.ts run file.shot
+SHOT_KEEP_TEMP=1 bun run cli/mod.ts run file.shot
 ```
 
 ---
@@ -95,9 +95,9 @@ bash scripts/verify.sh
 **Rule fixture tests** — fast, no CLI needed, runs the checker directly:
 
 ```bash
-deno run -A tests/run-syntax-fixtures.ts
-deno run -A tests/run-types-fixtures.ts
-deno run -A tests/run-imports-fixtures.ts
+bun run tests/run-syntax-fixtures.ts
+bun run tests/run-types-fixtures.ts
+bun run tests/run-imports-fixtures.ts
 ```
 
 **shot-lint submodule tests** (from inside `lint/`):
@@ -119,11 +119,12 @@ CI runs `bash scripts/verify.sh` for the root repo and all three npm commands fo
 
 1. Read the `.shot` source file(s)
 2. Rewrite relative `.shot` imports to `.ts` (e.g. `"./util.shot"` → `"./util.ts"`)
-3. Copy transformed source into a temp directory
-4. Write a `deno.json` import map pointing `shot:` → `npm:@shotscript/` (or local override) and embedding strict `compilerOptions`
-5. Run `deno check` or `deno run` against the temp copy
+3. Rewrite `shot:` specifiers to `@shotscript/` (or local override via `SHOT_STDLIB_LOCAL`)
+4. Copy transformed source into a temp directory
+5. Type-check in-process via the TypeScript compiler API (`cli/typecheck.ts`) with strict options
+6. Execute with `bun run` against the temp entry file
 
-`shot check` skips Deno entirely — it runs the AST rule checker in `cli/checker/` directly.
+`shot check` skips type-checking entirely — it runs the AST rule checker in `cli/checker/` directly.
 
 ---
 
@@ -152,13 +153,12 @@ CI runs `bash scripts/verify.sh` for the root repo and all three npm commands fo
 | Variable | Effect |
 |---|---|
 | `SHOT_STDLIB_LOCAL` | Path to local stdlib `mod.ts` — bypasses npm for development |
-| `SHOT_KEEP_TEMP` | Set to `1` to leave the temp `deno.json` dir on disk after a command |
-| `DENO_EXEC` | Override the deno binary used by `scripts/verify.sh` |
+| `SHOT_KEEP_TEMP` | Set to `1` to leave the temp dir on disk after a command |
 
 ---
 
 ## Coding style in this repo
 
-The CLI itself (`cli/`, `stdlib/`) is written in idiomatic TypeScript for Deno — it does not follow shot lint (the CLI needs `try/catch`, classes, etc. to implement the toolchain). The `stdlib/mod.ts` is the one place in the entire codebase where `try/catch` is intentionally used to wrap throwing APIs for shot users.
+The CLI itself (`cli/`, `stdlib/`) is written in idiomatic TypeScript for Bun — it does not follow shot lint (the CLI needs `try/catch`, classes, etc. to implement the toolchain). The `stdlib/mod.ts` is the one place in the entire codebase where `try/catch` is intentionally used to wrap throwing APIs for shot users.
 
 The `lint/` submodule source should follow shot lint where possible, but the checker implementation necessarily uses TypeScript AST APIs that require patterns shot bans (indexing, casting, etc.) — use guarded patterns with `noUncheckedIndexedAccess` in mind.

@@ -89,13 +89,13 @@ export async function writeFile(path: string, data: string): Promise<[null, Erro
     }
 }
 
-// serve bridges the ShotPromise<Response> handler to Deno.serve's expected signature.
+// serve bridges the ShotPromise<Response> handler to Bun.serve's expected signature.
 // A [null, Error] result becomes a 500; a [Response, null] result is returned as-is.
 export function serve(
     handler: (req: Request) => ShotPromise<Response>,
     port?: number,
 ): void {
-    async function serveHandler(req: Request): Promise<Response> {
+    async function fetch(req: Request): Promise<Response> {
         try {
             const [res, err] = await handler(req)
             if (err !== null || res === null) {
@@ -113,9 +113,5 @@ export function serve(
             })
         }
     }
-    if (port !== undefined) {
-        Deno.serve({ port }, serveHandler)
-    } else {
-        Deno.serve(serveHandler)
-    }
+    Bun.serve({ port, fetch })
 }

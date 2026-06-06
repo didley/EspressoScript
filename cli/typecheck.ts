@@ -2,7 +2,7 @@ import ts from 'typescript'
 import * as fs from 'node:fs'
 import * as path from 'node:path'
 
-// Written to tmpDir to provide global Bun/Deno stubs.
+// Written to tmpDir to provide global Bun stubs.
 const BUN_GLOBALS_SOURCE = `
 declare global {
     interface ImportMeta {
@@ -18,11 +18,8 @@ declare global {
         cwd(): string
         exit(code?: number): never
     }
-    var Deno: {
-        readTextFile(path: string): Promise<string>
-        writeTextFile(path: string, data: string): Promise<void>
-        serve(handler: (req: Request) => Response | Promise<Response>): void
-        serve(options: { port?: number }, handler: (req: Request) => Response | Promise<Response>): void
+    var Bun: {
+        serve(options: { port?: number; fetch: (req: Request) => Response | Promise<Response> }): void
     }
 }
 export {}

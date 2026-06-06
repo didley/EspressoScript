@@ -56,7 +56,7 @@ import type { ShotPromise } from "shot:std"
 JSON.parse(s)         // ❌  →  jsonParse<T>(s)        ✅
 JSON.stringify(v)     // ❌  →  jsonStringify(v)        ✅
 fetch(url)            // ❌  →  await fetch(url)        ✅  (returns tuple)
-Deno.readTextFile(p)  // ❌  →  await readFile(p)       ✅
+Bun.file(p).text()    // ❌  →  await readFile(p)       ✅
 ```
 
 ## Other key rules

@@ -208,7 +208,7 @@ const [rows, err] = await toPromiseResult(() => db.query(sql))
 
 ## Strict typing — the baseline
 
-`shot build` and `shot run` write a strict `compilerOptions` into the transient `deno.json` for every invocation. You don't configure it; it's part of the language.
+`shot build` and `shot run` apply a strict `compilerOptions` via the TypeScript compiler API for every invocation. You don't configure it; it's part of the language.
 
 ```json
 "compilerOptions": {
@@ -663,8 +663,8 @@ Functions that throw at the API boundary break the no-throw philosophy at every 
 const data = JSON.parse(text)
 const json = JSON.stringify(value)
 const res = await fetch(url)
-const content = await Deno.readTextFile(path)
-await Deno.writeTextFile(path, data)
+const content = await Bun.file(path).text()
+await Bun.write(path, data)
 
 // ✅
 import { jsonParse, jsonStringify, fetch, readFile, writeFile } from "shot:std"
@@ -673,7 +673,7 @@ const [res, fetchErr] = await fetch(url)
 // etc.
 ```
 
-Banned identifiers: `JSON.parse`, `JSON.stringify`, bare `fetch` (and `globalThis.fetch`), `Deno.readTextFile`, `Deno.writeTextFile`.
+Banned identifiers: `JSON.parse`, `JSON.stringify`, bare `fetch` (and `globalThis.fetch`), `Bun.file`, `Bun.write`.
 
 Rule: `no-throwing-globals`
 

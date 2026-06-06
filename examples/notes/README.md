@@ -4,7 +4,7 @@ A fullstack example combining a ShotScript backend with a React client that uses
 
 ```
 notes/
-├── backend/        ShotScript HTTP API (Deno)
+├── backend/        ShotScript HTTP API (Bun)
 │   ├── main.shot
 │   ├── handlers.shot
 │   ├── store.shot
@@ -24,7 +24,7 @@ notes/
 
 ## Prerequisites
 
-- [Deno 2](https://deno.com) — for the backend
+- [Bun](https://bun.sh) — for the backend
 - [Node.js 20+](https://nodejs.org) — for the client
 
 ## Running
@@ -32,7 +32,6 @@ notes/
 **Backend** (terminal 1):
 ```bash
 shot run backend/main.shot
-# or: deno run -A ../../cli/mod.ts run backend/main.shot
 ```
 
 **Client** (terminal 2):
