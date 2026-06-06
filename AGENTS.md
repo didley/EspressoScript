@@ -162,3 +162,47 @@ CI runs `bash scripts/verify.sh` for the root repo and all three npm commands fo
 The CLI itself (`cli/`, `stdlib/`) is written in idiomatic TypeScript for Bun — it does not follow shot lint (the CLI needs `try/catch`, classes, etc. to implement the toolchain). The `stdlib/index.ts` is the one place in the entire codebase where `try/catch` is intentionally used to wrap throwing APIs for shot users.
 
 The `lint/` submodule source should follow shot lint where possible, but the checker implementation necessarily uses TypeScript AST APIs that require patterns shot bans (indexing, casting, etc.) — use guarded patterns with `noUncheckedIndexedAccess` in mind.
+
+---
+
+## Releasing a new version of shot-lint
+
+The `lint/` directory is a separate git submodule with its own repo and npm publish pipeline. The root `package.json` does **not** manage versioning — all version bumps and publishing happen inside `lint/`.
+
+**To release a patch/minor/major version:**
+
+```bash
+# 1. Enter the submodule
+cd lint
+
+# 2. Bump the version in lint/package.json manually, or use npm:
+npm version patch   # 0.1.1 → 0.1.2
+npm version minor   # 0.1.1 → 0.2.0
+npm version major   # 0.1.1 → 1.0.0
+
+# npm version also creates a git commit and tag automatically.
+
+# 3. Push the commit AND the tag to the submodule remote:
+git push && git push --tags
+
+# The publish.yml workflow fires on the pushed tag and runs:
+#   npm ci → npm run build → npm publish --provenance --access public
+```
+
+**Lint scripts** live in `lint/package.json` (not the root):
+
+```bash
+cd lint
+npm run build    # tsc + esbuild plugin bundle
+npm run test     # fixture runner + utils tests
+npm run check    # tsc --noEmit
+```
+
+After the submodule push, update the root repo's submodule pointer:
+
+```bash
+# Back in the repo root:
+git add lint
+git commit -m "Bump shot-lint to vX.Y.Z"
+git push
+```
