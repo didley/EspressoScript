@@ -1,3 +1,5 @@
+import * as fs from 'node:fs/promises'
+
 // stdlib is the only place in the shot codebase where try/catch is used.
 // These wrappers hide throws from .shot user code via the tuple-return pattern.
 
@@ -17,6 +19,26 @@ export function wrapError(message: string, cause: Error): Error {
     const err = new Error(message)
     err.cause = cause
     return err
+}
+
+// toResult wraps any synchronous third-party call that might throw.
+// Use when importing bun:* or node:* APIs that don't return tuples.
+export function toResult<T>(fn: () => T): [T | null, Error | null] {
+    try {
+        return [fn(), null]
+    } catch (e) {
+        return [null, e instanceof Error ? e : new Error(String(e))]
+    }
+}
+
+// toPromiseResult wraps any async third-party call that might reject.
+// Use when importing bun:* or node:* APIs that return plain Promises.
+export async function toPromiseResult<T>(fn: () => Promise<T>): Promise<[T | null, Error | null]> {
+    try {
+        return [await fn(), null]
+    } catch (e) {
+        return [null, e instanceof Error ? e : new Error(String(e))]
+    }
 }
 
 export async function fetch(
@@ -52,7 +74,7 @@ export function jsonStringify(
 
 export async function readFile(path: string): Promise<[string | null, Error | null]> {
     try {
-        return [await Deno.readTextFile(path), null]
+        return [await fs.readFile(path, 'utf-8'), null]
     } catch (e) {
         return [null, e instanceof Error ? e : new Error(String(e))]
     }
@@ -60,7 +82,7 @@ export async function readFile(path: string): Promise<[string | null, Error | nu
 
 export async function writeFile(path: string, data: string): Promise<[null, Error | null]> {
     try {
-        await Deno.writeTextFile(path, data)
+        await fs.writeFile(path, data, 'utf-8')
         return [null, null]
     } catch (e) {
         return [null, e instanceof Error ? e : new Error(String(e))]

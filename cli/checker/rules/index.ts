@@ -7,6 +7,7 @@ import { noUnaryPlus } from "../../../lint/src/checker/rules/no-unary-plus.ts"
 import { noThrow } from "../../../lint/src/checker/rules/no-throw.ts"
 import { noTry } from "../../../lint/src/checker/rules/no-try.ts"
 import { noPromiseChain } from "../../../lint/src/checker/rules/no-promise-chain.ts"
+import { noPromise } from "../../../lint/src/checker/rules/no-promise.ts"
 import { noLooseEquality } from "../../../lint/src/checker/rules/no-loose-equality.ts"
 import { noAndShorthand } from "../../../lint/src/checker/rules/no-and-shorthand.ts"
 import { noDoubleBang } from "../../../lint/src/checker/rules/no-double-bang.ts"
@@ -103,6 +104,7 @@ export const rules: Rule[] = [
     noThrow,
     noTry,
     noPromiseChain,
+    noPromise,
     noLooseEquality,
     noAndShorthand,
     noDoubleBang,

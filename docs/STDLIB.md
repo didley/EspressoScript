@@ -7,8 +7,8 @@ Every function in `shot:std` returns a tuple — never throws. Internal `try`/`c
 ## v1 surface
 
 ```ts
-import { fetch, jsonParse, jsonStringify, readFile, writeFile, wrapError } from "shot:std"
-import type { Result, PromiseResult } from "shot:std"
+import { fetch, jsonParse, jsonStringify, readFile, writeFile, wrapError, mutableRef, toResult, toPromiseResult } from "shot:std"
+import type { ShotPromise } from "shot:std"
 ```
 
 ### `fetch(url, opts?)`
@@ -33,13 +33,13 @@ function jsonStringify(value: unknown, indent?: number): [string | null, Error |
 ```
 
 ### `readFile(path)`
-Wraps `Deno.readTextFile`.
+Wraps `node:fs/promises` `readFile`.
 ```ts
 function readFile(path: string): Promise<[string | null, Error | null]>
 ```
 
 ### `writeFile(path, data)`
-Wraps `Deno.writeTextFile`.
+Wraps `node:fs/promises` `writeFile`.
 ```ts
 function writeFile(path: string, data: string): Promise<[null, Error | null]>
 ```
@@ -58,21 +58,43 @@ if (err !== null) {
 }
 ```
 
-### `Result<T, E extends Error = Error>` _(type)_
-The canonical return type for synchronous fallible functions. A tuple of `[T, null]` on success or `[null, E]` on failure.
+### `mutableRef<T>(initial)`
+Returns a single-slot mutable cell — the canonical way to hold mutable state when `no-let-outside-for` bans `let` in function bodies and module scope.
 ```ts
-type Result<T, E extends Error = Error> = [T, null] | [null, E]
+function mutableRef<T>(initial: T): { value: T }
+```
+```ts
+const count = mutableRef(0)
+count.value += 1
 ```
 
-### `PromiseResult<T, E extends Error = Error>` _(type)_
-The canonical return type for async fallible functions. Equivalent to `Promise<Result<T, E>>`.
+### `toResult<T>(fn)`
+Wraps any synchronous third-party call that might throw. Use when importing `bun:*` or `node:*` APIs that don't return tuples.
 ```ts
-type PromiseResult<T, E extends Error = Error> = Promise<Result<T, E>>
+function toResult<T>(fn: () => T): [T | null, Error | null]
+```
+```ts
+const [parsed, err] = toResult(() => someLib.parseSync(input))
+```
+
+### `toPromiseResult<T>(fn)`
+Wraps any async third-party call that might reject. Use when importing `bun:*` or `node:*` APIs that return plain Promises.
+```ts
+function toPromiseResult<T>(fn: () => Promise<T>): Promise<[T | null, Error | null]>
+```
+```ts
+const [result, err] = await toPromiseResult(() => db.query(sql))
+```
+
+### `ShotPromise<T, E>` _(type)_
+The canonical return type for async fallible functions.
+```ts
+type ShotPromise<T, E = Error> = Promise<[T | null, E | null]>
 ```
 Use it to type async functions that return errors as values:
 ```ts
-async function queryUser(id: number): PromiseResult<User> {
-    const [res, err] = await safeFetch(`/users/${id.toString()}`)
+async function queryUser(id: number): ShotPromise<User> {
+    const [res, err] = await fetch(`/users/${id.toString()}`)
     if (err !== null) { return [null, err] }
     return jsonParse<User>(await res.text())
 }
@@ -103,15 +125,15 @@ async function downloadUser(id: number, outPath: string): Promise<[null, Error |
 ## Implementation conventions
 
 - All wrappers internally use `try`/`catch` to convert thrown errors into the second tuple slot. The ban on `try`/`catch` applies to `.shot` user code; stdlib is `.ts` and exempt.
-- Errors from stdlib wrappers are returned as `Error` instances. User code may use any `Error` subtype as the `E` parameter of `PromiseResult<T, E>` or `Result<T, E>`.
-- Async functions return `PromiseResult<T>`. Sync functions return `Result<T>`.
+- Errors from stdlib wrappers are returned as `Error` instances.
+- Async functions return `ShotPromise<T>`. Sync functions return `[T | null, Error | null]`.
 
 ## Out of scope for v1
 
 - Streams, sockets, child processes
 - Cryptography helpers
 - Path manipulation utilities
-- HTTP server helpers
-- Anything beyond the five functions listed above
+- HTTP server (`serve` is deferred — needs a cross-runtime API)
+- Anything beyond the functions listed above
 
 Future stdlib additions should follow the same tuple convention and be added to this document.

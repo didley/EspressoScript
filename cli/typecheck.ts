@@ -28,6 +28,12 @@ declare global {
 export {}
 `
 
+// Written to tmpDir and mapped via paths so 'node:fs/promises' resolves correctly.
+const NODE_FS_SHIM_SOURCE = `
+export declare function readFile(path: string, encoding: 'utf-8'): Promise<string>
+export declare function writeFile(path: string, data: string, encoding: 'utf-8'): Promise<void>
+`
+
 // Written to tmpDir and mapped via paths so 'bun:test' resolves correctly.
 const BUN_TEST_SHIM_SOURCE = `
 interface Matchers {
@@ -45,8 +51,10 @@ export declare function expect(value: unknown): Matchers
 export function typecheckFiles(files: string[], tmpDir: string): readonly ts.Diagnostic[] {
     const globalsPath = path.join(tmpDir, '__shot_globals__.d.ts')
     const shimPath = path.join(tmpDir, '__shot_bun_test__.d.ts')
+    const nodeFsShimPath = path.join(tmpDir, '__shot_node_fs__.d.ts')
     fs.writeFileSync(globalsPath, BUN_GLOBALS_SOURCE)
     fs.writeFileSync(shimPath, BUN_TEST_SHIM_SOURCE)
+    fs.writeFileSync(nodeFsShimPath, NODE_FS_SHIM_SOURCE)
 
     const options: ts.CompilerOptions = {
         strict: true,
@@ -69,7 +77,10 @@ export function typecheckFiles(files: string[], tmpDir: string): readonly ts.Dia
         module: ts.ModuleKind.ESNext,
         moduleResolution: ts.ModuleResolutionKind.Bundler,
         baseUrl: tmpDir,
-        paths: { 'bun:test': ['./__shot_bun_test__'] },
+        paths: {
+            'bun:test': ['./__shot_bun_test__'],
+            'node:fs/promises': ['./__shot_node_fs__'],
+        },
     }
 
     const program = ts.createProgram([globalsPath, ...files], options)
