@@ -60,7 +60,7 @@
 <main><div id="content"><p style="color:var(--muted)">Loading…</p></div></main>
 <footer>shot is pre-v1 and open source.</footer>
 <script>
-  fetch('https://raw.githubusercontent.com/didley/ShotScript/main/docs/ARCHITECTURE.md').then(r => r.text()).then(md => {
+  fetch('./ARCHITECTURE.md').then(r => r.text()).then(md => {
     document.getElementById('content').innerHTML = marked.parse(md);
   });
 </script>
