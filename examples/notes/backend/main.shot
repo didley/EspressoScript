@@ -1,0 +1,68 @@
+import { serve } from 'shot:std'
+import type { ShotPromise } from 'shot:std'
+import { handleCreate, handleDelete, handleGet, handleList } from './handlers.shot'
+
+function matchNoteId(path: string): number | null {
+  const parts = path.split('/')
+  if (parts.length !== 3 || parts[0] !== '' || parts[1] !== 'notes') {
+    return null
+  }
+  const id = Number(parts[2])
+  if (isNaN(id) || id <= 0) {
+    return null
+  }
+  return id
+}
+
+async function dispatch(req: Request): ShotPromise<Response> {
+  const url = new URL(req.url)
+  const path = url.pathname
+  const method = req.method
+
+  if (method === 'OPTIONS') {
+    return [
+      new Response(null, {
+        status: 204,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET, POST, DELETE, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type',
+        },
+      }),
+      null,
+    ]
+  }
+
+  if (method === 'GET' && path === '/notes') {
+    return handleList()
+  }
+
+  if (method === 'POST' && path === '/notes') {
+    return handleCreate(req)
+  }
+
+  const id = matchNoteId(path)
+
+  if (id !== null) {
+    if (method === 'GET') {
+      return handleGet(id)
+    }
+    if (method === 'DELETE') {
+      return handleDelete(id)
+    }
+  }
+
+  return [
+    new Response('{"error":"not found"}', {
+      status: 404,
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+      },
+    }),
+    null,
+  ]
+}
+
+console.log('notes backend listening on :8000')
+serve(dispatch)

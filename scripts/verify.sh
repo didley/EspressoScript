@@ -384,9 +384,18 @@ EOF
 $SHOT check "$(tmp async-valid.shot)" > /dev/null 2>&1
 check_exit "require-async-tuple-return valid" 0
 
+# Case 54: notes example backend lints clean
+echo "Case 54: notes example backend lints clean"
+NOTES_DIR="$ROOT/examples/notes/backend"
+$SHOT check "$NOTES_DIR/store.shot" "$NOTES_DIR/handlers.shot" "$NOTES_DIR/main.shot" > /dev/null 2>&1 && pass "shot check notes backend" || fail "shot check notes backend"
+
+# Case 55: notes example backend tests pass
+echo "Case 55: notes example backend tests"
+SHOT_STDLIB_LOCAL="$STDLIB" $SHOT test "$NOTES_DIR/store.test.shot" > /dev/null 2>&1 && pass "shot test notes store" || fail "shot test notes store"
+
 echo
 if [ $FAILS -eq 0 ]; then
-    echo "All 53 cases passed."
+    echo "All 55 cases passed."
     exit 0
 else
     echo "$FAILS case(s) failed."

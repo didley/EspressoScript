@@ -1,0 +1,101 @@
+import { clearNotes, createNote, deleteNote, getNote, listNotes } from './store.shot'
+import { assertEquals, assertInstanceOf, assertNotEquals } from 'shot:assert'
+
+Deno.test('createNote adds a note with trimmed title', function testCreateNote(): void {
+  clearNotes()
+  const [note, err] = createNote({ title: '  buy milk  ', body: 'from the shop' })
+  assertEquals(err, null)
+  assertNotEquals(note, null)
+  if (note === null) {
+    return
+  }
+  assertEquals(note.title, 'buy milk')
+  assertEquals(note.body, 'from the shop')
+  assertNotEquals(note.id, 0)
+  assertNotEquals(note.createdAt, '')
+})
+
+Deno.test('createNote rejects empty title', function testCreateNoteEmpty(): void {
+  clearNotes()
+  const [note, err] = createNote({ title: '   ', body: '' })
+  assertEquals(note, null)
+  assertInstanceOf(err, Error)
+  if (err === null) {
+    return
+  }
+  assertEquals(err.message, 'title must not be empty')
+})
+
+Deno.test('createNote assigns incrementing ids', function testCreateNoteIds(): void {
+  clearNotes()
+  const [first, firstErr] = createNote({ title: 'first', body: '' })
+  const [second, secondErr] = createNote({ title: 'second', body: '' })
+  assertEquals(firstErr, null)
+  assertEquals(secondErr, null)
+  if (first === null || second === null) {
+    return
+  }
+  assertNotEquals(first.id, second.id)
+})
+
+Deno.test('listNotes returns all notes in insertion order', function testListNotes(): void {
+  clearNotes()
+  createNote({ title: 'alpha', body: '' })
+  createNote({ title: 'beta', body: '' })
+  createNote({ title: 'gamma', body: '' })
+  const all = listNotes()
+  assertEquals(all.length, 3)
+  const first = all[0]
+  const third = all[2]
+  if (first === undefined || third === undefined) {
+    return
+  }
+  assertEquals(first.title, 'alpha')
+  assertEquals(third.title, 'gamma')
+})
+
+Deno.test('getNote returns the matching note', function testGetNote(): void {
+  clearNotes()
+  const [created, createErr] = createNote({ title: 'find me', body: 'here' })
+  assertEquals(createErr, null)
+  if (created === null) {
+    return
+  }
+  const [found, findErr] = getNote(created.id)
+  assertEquals(findErr, null)
+  assertNotEquals(found, null)
+  if (found === null) {
+    return
+  }
+  assertEquals(found.id, created.id)
+  assertEquals(found.title, 'find me')
+})
+
+Deno.test('getNote returns error for unknown id', function testGetNoteMissing(): void {
+  clearNotes()
+  const [note, err] = getNote(99999)
+  assertEquals(note, null)
+  assertInstanceOf(err, Error)
+})
+
+Deno.test('deleteNote removes the note', function testDeleteNote(): void {
+  clearNotes()
+  const [created, createErr] = createNote({ title: 'delete me', body: '' })
+  assertEquals(createErr, null)
+  if (created === null) {
+    return
+  }
+  const [_result, deleteErr] = deleteNote(created.id)
+  assertEquals(deleteErr, null)
+  assertEquals(listNotes().length, 0)
+})
+
+Deno.test('deleteNote returns wrapped error for unknown id', function testDeleteNoteMissing(): void {
+  clearNotes()
+  const [_result, err] = deleteNote(99999)
+  assertInstanceOf(err, Error)
+  if (err === null) {
+    return
+  }
+  assertNotEquals(err.message.indexOf('delete note'), -1)
+})

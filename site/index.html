@@ -314,6 +314,58 @@
       border-top: 1px solid var(--border);
     }
 
+    /* ── EXAMPLES GRID ── */
+    .example-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      background: var(--border);
+    }
+
+    .example-card {
+      background: var(--surface);
+      padding: 1.25rem 1.5rem;
+    }
+
+    .example-card.example-featured {
+      background: #131318;
+      border-left: 3px solid var(--accent);
+    }
+
+    .example-name {
+      font-family: "SF Mono", "Fira Code", monospace;
+      font-size: 0.82rem;
+      color: var(--green);
+      margin-bottom: 0.35rem;
+    }
+
+    .example-featured .example-name {
+      color: var(--accent);
+    }
+
+    .example-tag {
+      display: inline-block;
+      font-family: "SF Mono", "Fira Code", monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: rgba(200,112,42,0.12);
+      border: 1px solid var(--accent-dim);
+      border-radius: 4px;
+      padding: 0.1em 0.45em;
+      margin-bottom: 0.5rem;
+    }
+
+    .example-desc {
+      font-size: 0.875rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
     /* ── FOOTER ── */
     footer {
       text-align: center;
@@ -342,6 +394,7 @@
     <li><a href="#features">Features</a></li>
     <li><a href="#demo">Demo</a></li>
     <li><a href="#ecosystem">Ecosystem</a></li>
+    <li><a href="#examples">Examples</a></li>
     <li><a href="docs/PHILOSOPHY.html">Docs</a></li>
     <li><a href="https://github.com/didley/ShotScript" class="ext">GitHub</a></li>
     <li><a href="lint/">ShotLint ↗</a></li>
@@ -947,6 +1000,47 @@ A package registry for the Shot ecosystem
   const { svg } = await mermaid.render('eco', diagram)
   document.getElementById('ecosystem-diagram').innerHTML = svg
 </script>
+
+<hr class="divider" />
+
+<!-- EXAMPLES SECTION -->
+<section class="section" id="examples">
+  <div class="section-header">
+    <div class="section-label">Examples</div>
+    <h2>See it in practice.</h2>
+    <p class="section-desc">
+      All examples are in the repo under <code style="color:var(--type)">examples/</code>.
+      Each one is a self-contained project you can run with <code style="color:var(--type)">shot run</code>.
+    </p>
+  </div>
+  <div class="example-grid">
+    <div class="example-card">
+      <div class="example-name">helloWorld</div>
+      <p class="example-desc">A single exported function and a test. The smallest valid ShotScript project.</p>
+    </div>
+    <div class="example-card">
+      <div class="example-name">calculator</div>
+      <p class="example-desc">Arithmetic with explicit error returns. Shows the <code>[T&nbsp;|&nbsp;null,&nbsp;Error&nbsp;|&nbsp;null]</code> tuple pattern for fallible operations.</p>
+    </div>
+    <div class="example-card">
+      <div class="example-name">fetchUser</div>
+      <p class="example-desc">Async HTTP + JSON parsing via <code>shot:std</code>. Demonstrates chained tuple unwrapping without try/catch.</p>
+    </div>
+    <div class="example-card">
+      <div class="example-name">todo-api</div>
+      <p class="example-desc">A multi-file REST API with in-memory state. Store, handlers, router, and tests — the full backend pattern.</p>
+    </div>
+    <div class="example-card example-featured">
+      <div class="example-tag">Fullstack</div>
+      <div class="example-name">notes</div>
+      <p class="example-desc">
+        ShotScript backend + colocated React client using ShotLint.
+        The client enforces the same discipline — named functions, result tuples, no throw —
+        via <code>shot-lint</code> on TypeScript/TSX.
+      </p>
+    </div>
+  </div>
+</section>
 
 <hr class="divider" />
 
