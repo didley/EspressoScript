@@ -179,15 +179,15 @@ shot test [files...]     Validate → type-check → run *.test.shot files.
 
 ```mermaid
 graph TD
-    SR["**shot-lint**\ngithub.com/didley/shot-lint\n─────────────────────────────\n• 90+ portable AST rules\n• npm package / standalone CLI\n• No Deno, no shot: dependency\n• Apply to any TypeScript project"]
+    SL["**ShotLint**  ·  github.com/didley/shot-lint\n──────────────────────────────────\nGo-style linting for any TypeScript project\n• 90+ AST rules · standalone CLI · npm · jsr\n• No Deno required\n• Runtime utils — jsonParse, safeFetch, tryCatch"]
 
-    SS["**ShotScript / shot**\n─────────────────────────────\n• .shot file extension\n• shot CLI — check, run, build, test, fmt\n• shot:std standard library\n• Import allowlist (shot:* only)\n• Deno runtime\n• Locked-down tsconfig (no user override)\n• Go-style opinionated toolchain"]
+    SS["**ShotScript**  ·  github.com/didley/ShotScript\n──────────────────────────────────\nThe full opinionated Go-style toolchain\n• .shot files · shot CLI · Deno runtime\n• shot:std standard library · import allowlist\n• Locked tsconfig — no user overrides"]
 
-    TS["Your TypeScript project\n(any runtime, any framework)"]
+    TS["**Your TypeScript project**\n(any runtime · any framework)"]
 
-    SR -->|"embedded as\nlint/ submodule"| SS
-    SS -->|"shot check calls\nchecker for .shot files"| SR
-    SR -->|"npx shot-lint\nor global install"| TS
+    SL -->|"embedded as lint/ submodule"| SS
+    SS -->|"shot check calls ShotLint checker"| SL
+    SL -->|"npx shot-lint 'src/**/*.ts'"| TS
 ```
 
 ShotScript is the full opinionated language — `.shot` files, `shot:std`, Deno runtime, locked config, all-or-nothing. `shot-lint` is the rule engine extracted so you can apply the same discipline to an existing TypeScript project without committing to the Shot ecosystem. Changes to rules flow from `shot-lint` into ShotScript automatically via the submodule.
