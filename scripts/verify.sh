@@ -6,17 +6,7 @@ pass() { echo "  ✓ $1"; }
 fail() { echo "  ✗ $1"; FAILS=$((FAILS+1)); }
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-DENO="${DENO_EXEC:-deno}"
-# Find deno if not on PATH
-if ! command -v "$DENO" &>/dev/null; then
-    for candidate in \
-        "$HOME/.config/netlify/deno-cli/deno" \
-        "$HOME/.deno/bin/deno" \
-        "/usr/local/bin/deno"; do
-        if [ -x "$candidate" ]; then DENO="$candidate"; break; fi
-    done
-fi
-SHOT="$DENO run -A $ROOT/cli/mod.ts"
+SHOT="bun run $ROOT/cli/mod.ts"
 STDLIB="$ROOT/stdlib/mod.ts"
 TMPDIR_CASES="$(mktemp -d)"
 trap 'rm -rf "$TMPDIR_CASES"' EXIT
@@ -134,24 +124,24 @@ if (writeErr !== null) { console.log(writeErr.message) }
 const x: number = "this is a type error"
 console.log(x)
 EOF
-SHOT_STDLIB_LOCAL="$STDLIB" $SHOT run "$(tmp bad-types.shot)" -- --allow-write > /dev/null 2>&1 || true
+SHOT_STDLIB_LOCAL="$STDLIB" $SHOT run "$(tmp bad-types.shot)" > /dev/null 2>&1 || true
 if [ ! -f "$SENTINEL" ]; then
     pass "sentinel not written (type error blocked execution)"
 else
     fail "sentinel was written (type error did NOT block execution)"
 fi
 
-# Case 14: local install
-# The installed wrapper calls `exec deno run ...` — prepend deno's directory to PATH
-echo "Case 14: local install"
+# Case 14: shell wrapper script works
+echo "Case 14: shell wrapper script"
 INSTALL_DIR="$(tmp install-bin)"
 mkdir -p "$INSTALL_DIR"
-DENO_DIR="$(dirname "$DENO")"
-$DENO install --root "$INSTALL_DIR" -A -gn shot "$ROOT/cli/mod.ts" > /dev/null 2>&1
-if PATH="$DENO_DIR:$PATH" "$INSTALL_DIR/bin/shot" --version > /dev/null 2>&1; then
-    pass "deno install + shot --version"
+SHOT_SCRIPT="$INSTALL_DIR/shot"
+printf '#!/usr/bin/env bash\nexec bun run "%s/cli/mod.ts" "$@"\n' "$ROOT" > "$SHOT_SCRIPT"
+chmod +x "$SHOT_SCRIPT"
+if "$SHOT_SCRIPT" --version > /dev/null 2>&1; then
+    pass "shot wrapper script runnable"
 else
-    fail "deno install (shot binary not functional)"
+    fail "shot wrapper script (not functional)"
 fi
 
 # Case 15: no-undefined-type

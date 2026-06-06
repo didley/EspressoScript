@@ -16,18 +16,18 @@ jobs:
         with:
           submodules: recursive
 
-      - uses: denoland/setup-deno@v2
+      - uses: oven-sh/setup-bun@v2
         with:
-          deno-version: "2.x"
+          bun-version: latest
 
-      - name: Cache Deno dependencies
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.deno
-            ~/.cache/deno
-          key: deno-${{ hashFiles('cli/deno.lock') }}
-          restore-keys: deno-
+      - name: Install dependencies
+        run: bun install
+
+      - name: Run fixture tests
+        run: |
+          bun run tests/run-syntax-fixtures.ts
+          bun run tests/run-types-fixtures.ts
+          bun run tests/run-imports-fixtures.ts
 
       - name: Run integration tests
         run: bash scripts/verify.sh

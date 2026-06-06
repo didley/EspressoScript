@@ -1,5 +1,4 @@
 import { serve } from 'shot:std'
-import type { ShotPromise } from 'shot:std'
 import { handleCreate, handleDelete, handleGet, handleList } from './handlers.shot'
 
 function matchNoteId(path: string): number | null {
@@ -14,7 +13,7 @@ function matchNoteId(path: string): number | null {
   return id
 }
 
-async function dispatch(req: Request): ShotPromise<Response> {
+async function dispatch(req: Request): Promise<[Response | null, Error | null]> {
   const url = new URL(req.url)
   const path = url.pathname
   const method = req.method

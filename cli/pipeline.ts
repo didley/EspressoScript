@@ -15,9 +15,9 @@ export function rewriteShotImports(source: string): string {
 // Rewrites `"shot:std"` → `"@shotscript/std"` (or SHOT_STDLIB_LOCAL when set).
 export function rewriteShotSpecifiers(source: string): string {
     const stdlibOverride = process.env['SHOT_STDLIB_LOCAL']
-    return source.replace(/"shot:([^"]+)"/g, (_: string, name: string) => {
-        if (name === 'std' && stdlibOverride) return `"${stdlibOverride}"`
-        return `"@shotscript/${name}"`
+    return source.replace(/(['"])shot:([^'"]+)\1/g, (_: string, q: string, name: string) => {
+        if (name === 'std' && stdlibOverride) return `${q}${stdlibOverride}${q}`
+        return `${q}@shotscript/${name}${q}`
     })
 }
 

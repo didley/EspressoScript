@@ -1,29 +1,9 @@
 import ts from 'typescript'
+import * as fs from 'node:fs'
+import * as path from 'node:path'
 
-const STRICT_OPTIONS: ts.CompilerOptions = {
-    strict: true,
-    noImplicitReturns: true,
-    noFallthroughCasesInSwitch: true,
-    noUnusedLocals: true,
-    noUnusedParameters: true,
-    noUncheckedIndexedAccess: true,
-    noPropertyAccessFromIndexSignature: true,
-    exactOptionalPropertyTypes: true,
-    allowUnreachableCode: false,
-    allowUnusedLabels: false,
-    noErrorTruncation: true,
-    strictBuiltinIteratorReturn: true,
-    verbatimModuleSyntax: true,
-    skipLibCheck: true,
-    noEmit: true,
-    target: ts.ScriptTarget.ESNext,
-    module: ts.ModuleKind.ESNext,
-    moduleResolution: ts.ModuleResolutionKind.Bundler,
-}
-
-// Bun-specific globals not in standard TypeScript lib.
-const BUN_AMBIENT_PATH = '__shot_bun_ambient__.d.ts'
-const BUN_AMBIENT_SOURCE = `
+// Written to tmpDir to provide global Bun/Deno stubs.
+const BUN_GLOBALS_SOURCE = `
 declare global {
     interface ImportMeta {
         readonly main: boolean
@@ -38,38 +18,62 @@ declare global {
         cwd(): string
         exit(code?: number): never
     }
+    var Deno: {
+        readTextFile(path: string): Promise<string>
+        writeTextFile(path: string, data: string): Promise<void>
+        serve(handler: (req: Request) => Response | Promise<Response>): void
+        serve(options: { port?: number }, handler: (req: Request) => Response | Promise<Response>): void
+    }
 }
 export {}
 `
 
-export function typecheckFiles(files: string[]): readonly ts.Diagnostic[] {
-    const host = ts.createCompilerHost(STRICT_OPTIONS)
-    const origGetSourceFile = host.getSourceFile.bind(host)
-    host.getSourceFile = (
-        fileName: string,
-        languageVersion: ts.ScriptTarget,
-        onError?: (message: string) => void,
-        shouldCreateNewSourceFile?: boolean,
-    ) => {
-        if (fileName === BUN_AMBIENT_PATH) {
-            return ts.createSourceFile(BUN_AMBIENT_PATH, BUN_AMBIENT_SOURCE, languageVersion)
-        }
-        return origGetSourceFile(fileName, languageVersion, onError, shouldCreateNewSourceFile)
-    }
-    host.fileExists = (fileName: string) => {
-        if (fileName === BUN_AMBIENT_PATH) return true
-        return ts.sys.fileExists(fileName)
-    }
-    host.readFile = (fileName: string) => {
-        if (fileName === BUN_AMBIENT_PATH) return BUN_AMBIENT_SOURCE
-        return ts.sys.readFile(fileName)
+// Written to tmpDir and mapped via paths so 'bun:test' resolves correctly.
+const BUN_TEST_SHIM_SOURCE = `
+interface Matchers {
+    toBe(expected: unknown): void
+    toEqual(expected: unknown): void
+    toBeNull(): void
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    toBeInstanceOf(cls: new (...args: any[]) => unknown): void
+    toContain(item: unknown): void
+    not: Matchers
+}
+export declare function test(name: string, fn: () => void | Promise<void>): void
+export declare function expect(value: unknown): Matchers
+`
+
+export function typecheckFiles(files: string[], tmpDir: string): readonly ts.Diagnostic[] {
+    const globalsPath = path.join(tmpDir, '__shot_globals__.d.ts')
+    const shimPath = path.join(tmpDir, '__shot_bun_test__.d.ts')
+    fs.writeFileSync(globalsPath, BUN_GLOBALS_SOURCE)
+    fs.writeFileSync(shimPath, BUN_TEST_SHIM_SOURCE)
+
+    const options: ts.CompilerOptions = {
+        strict: true,
+        noImplicitReturns: true,
+        noFallthroughCasesInSwitch: true,
+        noUnusedLocals: true,
+        noUnusedParameters: true,
+        noUncheckedIndexedAccess: true,
+        noPropertyAccessFromIndexSignature: true,
+        exactOptionalPropertyTypes: true,
+        allowUnreachableCode: false,
+        allowUnusedLabels: false,
+        noErrorTruncation: true,
+        strictBuiltinIteratorReturn: true,
+        verbatimModuleSyntax: true,
+        skipLibCheck: true,
+        noEmit: true,
+        allowImportingTsExtensions: true,
+        target: ts.ScriptTarget.ESNext,
+        module: ts.ModuleKind.ESNext,
+        moduleResolution: ts.ModuleResolutionKind.Bundler,
+        baseUrl: tmpDir,
+        paths: { 'bun:test': ['./__shot_bun_test__'] },
     }
 
-    const program = ts.createProgram(
-        [BUN_AMBIENT_PATH, ...files],
-        STRICT_OPTIONS,
-        host,
-    )
+    const program = ts.createProgram([globalsPath, ...files], options)
     return ts.getPreEmitDiagnostics(program)
 }
 

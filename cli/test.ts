@@ -106,7 +106,7 @@ export async function test(args: string[]): Promise<number> {
         const allTsFiles = projectFiles.map((f) =>
             path.join(tmpDir, path.basename(f).replace(/\.shot$/, '.ts')),
         )
-        const typeDiags = typecheckFiles(allTsFiles)
+        const typeDiags = typecheckFiles(allTsFiles, tmpDir)
         if (typeDiags.length > 0) {
             process.stderr.write(formatTypeDiagnostics(typeDiags))
             return 1

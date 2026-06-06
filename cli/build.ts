@@ -35,7 +35,7 @@ export async function build(files: string[]): Promise<number> {
         const tsFiles = files.map((f) =>
             path.join(tmpDir, path.basename(f).replace(/\.shot$/, '.ts')),
         )
-        const diagnostics = typecheckFiles(tsFiles)
+        const diagnostics = typecheckFiles(tsFiles, tmpDir)
         if (diagnostics.length > 0) {
             process.stderr.write(formatTypeDiagnostics(diagnostics))
             return 1
