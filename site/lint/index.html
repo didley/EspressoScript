@@ -337,20 +337,15 @@
                 ><span>shot</span><span class="sep">·</span>lint</a
             >
             <ul class="nav-links">
+                <li><a href="/script/">ShotScript</a></li>
+                <li><a href="/lint/">ShotLint</a></li>
+                <li><a href="/language/">Language</a></li>
+                <li><a href="/stdlib/">Stdlib</a></li>
                 <li>
                     <a href="https://github.com/didley/shot-lint" class="ext"
                         >GitHub</a
                     >
                 </li>
-                <li>
-                    <a
-                        href="https://www.npmjs.com/package/shot-lint"
-                        class="ext"
-                        >npm</a
-                    >
-                </li>
-                <li><a href="/language/">Language</a></li>
-                <li><a href="/script/">ShotScript ↗</a></li>
             </ul>
         </nav>
 
@@ -397,6 +392,59 @@
         </section>
 
         <hr />
+
+        <section style="max-width: 960px; margin: 0 auto; padding: 3rem 2rem 0;">
+            <div style="font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.7rem; letter-spacing: 0.12em; color: var(--accent); text-transform: uppercase; margin-bottom: 0.5rem;">Example</div>
+            <h2 style="font-size: 1.5rem; font-weight: 700; letter-spacing: -0.025em; margin-bottom: 0.5rem;">What linting looks like.</h2>
+            <p style="color: var(--muted); font-size: 0.95rem; margin-bottom: 1.75rem;">
+                Run <code style="font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.85em; color: var(--type); background: rgba(130,170,255,0.08); padding: 0.05rem 0.3rem; border-radius: 3px;">npx shot-lint 'src/**/*.ts'</code> on any TypeScript file. Violations exit non-zero with precise diagnostics.
+            </p>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 2.5rem;">
+                <div style="background: var(--surface);">
+                    <div style="display: flex; align-items: center; gap: 0.5rem; padding: 0.6rem 1rem; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; border-bottom: 1px solid var(--border); color: var(--muted); font-family: 'SF Mono', 'Fira Code', monospace;">src/user.ts</div>
+                    <pre style="font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.78rem; line-height: 1.75; padding: 1.25rem 1.25rem 1.5rem; overflow-x: auto;"><span style="color:var(--keyword)">import</span> { <span style="color:var(--type)">UserService</span> } <span style="color:var(--keyword)">from</span> <span style="color:var(--string)">"./services"</span>
+
+<span style="color:var(--comment)">// ❌ arrow function, optional param</span>
+<span style="color:var(--keyword)">const</span> <span style="color:var(--fn)">getUser</span> = <span style="color:var(--keyword)">async</span> (id?: <span style="color:var(--type)">number</span>) =&gt; {
+  <span style="color:var(--comment)">// ❌ try/catch</span>
+  <span style="color:var(--keyword)">try</span> {
+    <span style="color:var(--keyword)">const</span> res = <span style="color:var(--keyword)">await</span> <span style="color:var(--fn)">fetch</span>(`/users/${id}`)
+    <span style="color:var(--comment)">// ❌ type assertion</span>
+    <span style="color:var(--keyword)">return</span> res.<span style="color:var(--fn)">json</span>() <span style="color:var(--keyword)">as</span> <span style="color:var(--type)">User</span>
+  } <span style="color:var(--keyword)">catch</span> (e) {
+    <span style="color:var(--comment)">// ❌ throw</span>
+    <span style="color:var(--keyword)">throw new</span> <span style="color:var(--type)">Error</span>(`Failed: ${e}`)
+  }
+}</pre>
+                </div>
+                <div style="background: #0a0a0d; border-left: 1px solid var(--border);">
+                    <div style="display: flex; align-items: center; gap: 0.5rem; padding: 0.6rem 1rem; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; border-bottom: 1px solid var(--border); color: var(--muted); font-family: 'SF Mono', 'Fira Code', monospace;">terminal</div>
+                    <pre style="font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.76rem; line-height: 1.85; padding: 1.25rem 1.25rem 1.5rem; overflow-x: auto;"><span style="color:var(--muted)">$ npx shot-lint 'src/**/*.ts'</span>
+
+<span style="color:var(--text)">src/user.ts</span><span style="color:var(--muted)">:4:7</span>   <span style="color:var(--red)">no-arrow-functions</span>
+            Arrow functions are banned.
+
+<span style="color:var(--text)">src/user.ts</span><span style="color:var(--muted)">:4:20</span>  <span style="color:var(--red)">no-optional-parameter</span>
+            Optional parameters are banned.
+            Use <span style="color:var(--type)">id: number | null</span>.
+
+<span style="color:var(--text)">src/user.ts</span><span style="color:var(--muted)">:6:3</span>   <span style="color:var(--red)">no-try</span>
+            try/catch is banned. Return errors
+            as values instead.
+
+<span style="color:var(--text)">src/user.ts</span><span style="color:var(--muted)">:9:26</span>  <span style="color:var(--red)">no-assertion</span>
+            Type assertions (as T) are banned.
+
+<span style="color:var(--text)">src/user.ts</span><span style="color:var(--muted)">:12:5</span>  <span style="color:var(--red)">no-throw</span>
+            throw is banned. Return
+            <span style="color:var(--type)">[null, new Error(...)]</span>.
+
+<span style="color:var(--muted)">──────────────────────────────────</span>
+<span style="color:var(--red)">5 violations</span> · exit 1</pre>
+                </div>
+            </div>
+        </section>
 
         <div class="page">
             <nav class="sidebar" aria-label="Rule categories">

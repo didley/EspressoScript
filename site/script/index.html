@@ -102,26 +102,6 @@
       line-height: 1.7;
     }
 
-    .page-actions {
-      display: flex;
-      gap: 0.75rem;
-      justify-content: center;
-      flex-wrap: wrap;
-      margin-bottom: 1.5rem;
-    }
-
-    .btn {
-      display: inline-block;
-      padding: 0.6rem 1.35rem;
-      border-radius: 6px;
-      font-size: 0.875rem;
-      font-weight: 600;
-      transition: opacity 0.15s;
-    }
-    .btn:hover { opacity: 0.85; text-decoration: none; }
-    .btn-primary { background: var(--accent); color: #fff; }
-    .btn-secondary { background: transparent; color: var(--muted); border: 1px solid var(--border); }
-
     .install-cmd {
       display: inline-flex;
       align-items: center;
@@ -145,7 +125,7 @@
       padding: 4rem 2rem;
     }
 
-    .section-header { margin-bottom: 3rem; }
+    .section-header { margin-bottom: 2.5rem; }
 
     .section-label {
       font-family: 'SF Mono', 'Fira Code', monospace;
@@ -163,39 +143,7 @@
       margin-bottom: 0.5rem;
     }
 
-    .section-desc { color: var(--muted); font-size: 0.95rem; }
-
-    .comparison {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      overflow: hidden;
-      margin-bottom: 2.5rem;
-    }
-
-    @media (max-width: 700px) {
-      .comparison { grid-template-columns: 1fr; }
-      .demo-grid { grid-template-columns: 1fr !important; }
-    }
-
-    .pane-label {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.6rem 1rem;
-      font-size: 0.72rem;
-      font-weight: 600;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .pane-before .pane-label { background: rgba(224,92,92,0.08); color: var(--red); }
-    .pane-after .pane-label { background: rgba(78,201,148,0.08); color: var(--green); border-left: 1px solid var(--border); }
-    .pane-before { background: var(--surface); }
-    .pane-after { background: #131318; border-left: 1px solid var(--border); }
+    .section-desc { color: var(--muted); font-size: 0.95rem; line-height: 1.65; }
 
     pre {
       font-family: 'SF Mono', 'Fira Code', monospace;
@@ -206,10 +154,6 @@
       white-space: pre;
     }
 
-    .dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; }
-    .dot-red { background: var(--red); opacity: 0.7; }
-    .dot-green { background: var(--green); opacity: 0.7; }
-
     .kw { color: var(--keyword); }
     .ty { color: var(--type); }
     .fn { color: var(--fn); }
@@ -219,6 +163,49 @@
     .op { color: var(--muted); }
     .id { color: var(--text); }
 
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      background: var(--border);
+      margin-bottom: 2rem;
+    }
+
+    .feature-card {
+      background: var(--surface);
+      padding: 1.5rem 1.75rem 1.75rem;
+    }
+
+    .feature-card:nth-child(even) {
+      background: #131318;
+    }
+
+    .feature-title {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+
+    .feature-desc {
+      font-size: 0.875rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .feature-desc code {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 0.8em;
+      color: var(--type);
+      background: rgba(130,170,255,0.08);
+      padding: 0.05rem 0.3rem;
+      border-radius: 3px;
+    }
+
     .callout {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -227,67 +214,17 @@
       padding: 1rem 1.25rem;
       font-size: 0.875rem;
       color: var(--muted);
-      margin-bottom: 2.5rem;
+      margin-bottom: 2rem;
     }
     .callout strong { color: var(--text); }
-
-    .rule-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 1px;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      overflow: hidden;
-      background: var(--border);
-    }
-
-    .rule-card { background: var(--surface); padding: 1.25rem 1.5rem; }
-
-    .rule-name {
+    .callout code {
       font-family: 'SF Mono', 'Fira Code', monospace;
-      font-size: 0.8rem;
-      color: var(--red);
-      margin-bottom: 0.35rem;
+      font-size: 0.8em;
+      color: var(--type);
+      background: rgba(130,170,255,0.08);
+      padding: 0.05rem 0.3rem;
+      border-radius: 3px;
     }
-
-    .rule-desc { font-size: 0.875rem; color: var(--muted); line-height: 1.5; }
-
-    .example-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      gap: 1px;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      overflow: hidden;
-      background: var(--border);
-    }
-
-    .example-card { background: var(--surface); padding: 1.25rem 1.5rem; }
-    .example-card.example-featured { background: #131318; border-left: 3px solid var(--accent); }
-
-    .example-name {
-      font-family: 'SF Mono', 'Fira Code', monospace;
-      font-size: 0.82rem;
-      color: var(--green);
-      margin-bottom: 0.35rem;
-    }
-    .example-featured .example-name { color: var(--accent); }
-
-    .example-tag {
-      display: inline-block;
-      font-family: 'SF Mono', 'Fira Code', monospace;
-      font-size: 0.65rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--accent);
-      background: rgba(200,112,42,0.12);
-      border: 1px solid var(--accent-dim);
-      border-radius: 4px;
-      padding: 0.1em 0.45em;
-      margin-bottom: 0.5rem;
-    }
-
-    .example-desc { font-size: 0.875rem; color: var(--muted); line-height: 1.5; }
 
     footer {
       text-align: center;
@@ -310,14 +247,11 @@
 <nav>
   <a href="/" class="nav-logo"><span>shot</span><span class="sep">·</span>script</a>
   <ul class="nav-links">
-    <li><a href="#why">Why</a></li>
-    <li><a href="#features">Features</a></li>
-    <li><a href="#demo">Demo</a></li>
-    <li><a href="/script/cli/">CLI</a></li>
+    <li><a href="/script/">ShotScript</a></li>
+    <li><a href="/lint/">ShotLint</a></li>
     <li><a href="/language/">Language</a></li>
     <li><a href="/stdlib/">Stdlib</a></li>
     <li><a href="https://github.com/didley/ShotScript" class="ext">GitHub</a></li>
-    <li><a href="/lint/">ShotLint ↗</a></li>
   </ul>
 </nav>
 
@@ -325,14 +259,9 @@
   <div class="page-badge">ShotScript</div>
   <h1>Full toolchain.<br>No configuration.</h1>
   <p class="sub">
-    <code>.shot</code> files, the <code>shot</code> CLI, and a standard library that never throws —
+    <code style="font-family:'SF Mono','Fira Code',monospace;color:var(--type)">.shot</code> files, the <code style="font-family:'SF Mono','Fira Code',monospace;color:var(--type)">shot</code> CLI, and a standard library that never throws —
     all with Shot's rules enforced by default.
   </p>
-  <div class="page-actions">
-    <a href="#why" class="btn btn-primary">See the rules</a>
-    <a href="/language/" class="btn btn-secondary">Language ref</a>
-    <a href="/stdlib/" class="btn btn-secondary">Stdlib</a>
-  </div>
   <div class="install-cmd">
     <span class="prompt">$</span>
     <span class="cmd">curl -fsSL https://shot.didley.dev/install.sh | sh</span>
@@ -341,331 +270,71 @@
 
 <hr class="divider" />
 
-<section class="section" id="why">
+<section class="section" id="toolchain">
   <div class="section-header">
-    <div class="section-label">The problem</div>
-    <h2>Too many ways to write the same thing.</h2>
+    <div class="section-label">The toolchain</div>
+    <h2>What ShotScript adds.</h2>
     <p class="section-desc">
-      TypeScript lets you declare variables three ways, write functions four ways,
-      handle errors five ways. Reading unfamiliar code is hard.
-      Code review is harder. LLM-assisted generation amplifies every inconsistency —
-      more valid forms means more ways to generate subtly wrong code.
+      ShotLint is the portable rule engine — drop it into any TypeScript project.
+      ShotScript goes further: a full, locked-down environment where the rules are the runtime.
     </p>
   </div>
 
   <div class="callout">
-    <strong>shot's answer:</strong> a strict lint pass that enforces one canonical form.
-    Every <code>.shot</code> file is valid TypeScript — so the full ecosystem,
-    type system, and tooling work unchanged. We maintain a list of rules, not a compiler.
+    <strong>ShotLint vs ShotScript:</strong> ShotLint enforces Shot's rules on any <code>.ts</code> file.
+    ShotScript enforces those rules <em>plus</em> strict import isolation, a baked-in tsconfig, the <code>shot:std</code> standard library, and the <code>shot</code> CLI pipeline — with no configuration surface at all.
   </div>
 
-  <div class="rule-grid">
-    <div class="rule-card">
-      <div class="rule-name">no-throw / no-try</div>
-      <div class="rule-desc">Errors are values — return <code>ShotPromise&lt;T, E&gt;</code> tuples. Failure is in the type signature, not the air.</div>
+  <div class="feature-grid">
+    <div class="feature-card">
+      <div class="feature-title">Strict import isolation</div>
+      <p class="feature-desc">
+        <code>.shot</code> files may only import from <code>shot:*</code> (the standard library),
+        <code>bun:*</code> (Bun built-ins), or relative paths ending in <code>.shot</code>.
+        No arbitrary npm imports. Third-party dependencies are adapted via <code>shot_modules/</code>
+        adapters that wrap external code in a Shot-compliant interface.
+      </p>
     </div>
-    <div class="rule-card">
-      <div class="rule-name">no-undefined-type / no-optional-property</div>
-      <div class="rule-desc"><code>null</code> is the only absent value. No <code>?</code>, no <code>| undefined</code> — one way to say "nothing."</div>
+    <div class="feature-card">
+      <div class="feature-title">Zero configuration</div>
+      <p class="feature-desc">
+        No <code>tsconfig.json</code>. No <code>.eslintrc</code>. No config files to manage or drift.
+        The <code>shot</code> CLI bakes in its own compiler options and rule set on every invocation.
+        Rules are part of the language, not a preference — you can't turn them off.
+      </p>
     </div>
-    <div class="rule-card">
-      <div class="rule-name">require-readonly-property / require-readonly-arrays</div>
-      <div class="rule-desc">Every field and array is readonly by default. Mutation is opt-in and explicit.</div>
+    <div class="feature-card">
+      <div class="feature-title">The .shot extension</div>
+      <p class="feature-desc">
+        Every <code>.shot</code> file is valid TypeScript — the full type system, ecosystem, and tooling
+        work unchanged. The extension signals Shot compliance the same way <code>.go</code> signals Go:
+        this file plays by the rules of the environment.
+      </p>
     </div>
-    <div class="rule-card">
-      <div class="rule-name">no-any / no-assertion / no-non-null</div>
-      <div class="rule-desc">Type safety is not optional. <code>any</code>, <code>as</code>, <code>!</code>, and <code>@ts-ignore</code> are all banned.</div>
+    <div class="feature-card">
+      <div class="feature-title">shot:std</div>
+      <p class="feature-desc">
+        A standard library for I/O, HTTP, and JSON — all returning result tuples, none of which throw.
+        <code>fetch</code>, <code>jsonParse</code>, <code>readFile</code>, <code>writeFile</code>,
+        <code>wrapError</code>, <code>mutableRef</code>. The same pattern as your own code.
+      </p>
     </div>
-    <div class="rule-card">
-      <div class="rule-name">no-class / no-this</div>
-      <div class="rule-desc">Plain <code>type</code> + plain functions. No hidden state, no inheritance, no <code>this</code>.</div>
+    <div class="feature-card">
+      <div class="feature-title">Gated pipeline</div>
+      <p class="feature-desc">
+        <code>shot run</code> and <code>shot test</code> gate on correctness before execution:
+        lint fails → type errors → never runs. Build output is guaranteed clean.
+        No separate pre-commit hooks needed.
+      </p>
     </div>
-    <div class="rule-card">
-      <div class="rule-name">no-arrow-functions</div>
-      <div class="rule-desc">Every function is named and grep-able. Callbacks become testable, findable units.</div>
+    <div class="feature-card">
+      <div class="feature-title">shot_modules/ adapters</div>
+      <p class="feature-desc">
+        When you need a third-party library, place a <code>.shot</code> adapter in <code>shot_modules/</code>.
+        The adapter wraps the external API in Shot's tuple-return contract. Your project code
+        stays pure; the adapter is the only boundary.
+      </p>
     </div>
-    <div class="rule-card">
-      <div class="rule-name">no-interface / no-enum</div>
-      <div class="rule-desc">One way to define a shape: <code>type</code>. No parallel declaration syntax.</div>
-    </div>
-    <div class="rule-card">
-      <div class="rule-name">no-ternary</div>
-      <div class="rule-desc">If/else forces names onto branches. Nesting disappears.</div>
-    </div>
-  </div>
-</section>
-
-<hr class="divider" />
-
-<section class="section" id="features">
-  <div class="section-header">
-    <div class="section-label">Before / after</div>
-    <h2>What the simplifications look like.</h2>
-    <p class="section-desc">
-      Real patterns. The left column is TypeScript as commonly written;
-      the right column is the shot equivalent.
-    </p>
-  </div>
-
-  <p class="section-label" style="margin-bottom: 0.75rem">Error handling</p>
-  <div class="comparison">
-    <div class="pane-before">
-      <div class="pane-label"><span class="dot dot-red"></span>TypeScript</div>
-      <pre><span class="kw">async function</span> <span class="fn">getUser</span>(
-  <span class="id">id</span>: <span class="ty">number</span>
-): <span class="ty">Promise</span>&lt;<span class="ty">User</span>&gt; {
-  <span class="kw">try</span> {
-    <span class="kw">const</span> <span class="id">res</span> = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="st">`/users/<span class="op">${</span><span class="id">id</span><span class="op">}</span>`</span>)
-    <span class="kw">if</span> (!<span class="id">res</span>.<span class="id">ok</span>) <span class="kw">throw new</span> <span class="ty">Error</span>(
-      <span class="st">`HTTP <span class="op">${</span><span class="id">res</span>.<span class="id">status</span><span class="op">}</span>`</span>
-    )
-    <span class="kw">return</span> <span class="id">res</span>.<span class="fn">json</span>() <span class="kw">as</span> <span class="ty">User</span>
-  } <span class="kw">catch</span> (<span class="id">e</span>) {
-    <span class="kw">throw new</span> <span class="ty">Error</span>(<span class="st">`getUser failed: <span class="op">${</span><span class="id">e</span><span class="op">}</span>`</span>)
-  }
-}</pre>
-    </div>
-    <div class="pane-after">
-      <div class="pane-label"><span class="dot dot-green"></span>shot</div>
-      <pre><span class="kw">import</span> { <span class="fn">fetch</span>, <span class="fn">jsonParse</span> } <span class="kw">from</span> <span class="st">"shot:std"</span>
-<span class="kw">import type</span> { <span class="ty">ShotPromise</span> } <span class="kw">from</span> <span class="st">"shot:std"</span>
-
-<span class="kw">async function</span> <span class="fn">getUser</span>(
-  <span class="id">id</span>: <span class="ty">number</span>
-): <span class="ty">ShotPromise</span>&lt;<span class="ty">User</span>&gt; {
-  <span class="kw">const</span> [<span class="id">res</span>, <span class="id">err</span>] = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="st">`/users/<span class="op">${</span><span class="id">id</span><span class="op">}</span>`</span>)
-  <span class="kw">if</span> (<span class="id">err</span> !== <span class="kw">null</span>) {
-    <span class="kw">return</span> [<span class="kw">null</span>, <span class="id">err</span>]
-  }
-  <span class="kw">return</span> <span class="fn">jsonParse</span>&lt;<span class="ty">User</span>&gt;(<span class="kw">await</span> <span class="id">res</span>.<span class="fn">text</span>())
-}
-
-<span class="cm">// no throw · no try · no hidden control flow</span></pre>
-    </div>
-  </div>
-
-  <div class="callout">
-    <strong>Why it matters:</strong> thrown exceptions don't appear in function signatures.
-    Callers have no idea a function can fail without reading its source.
-    <code>ShotPromise&lt;T, E&gt;</code> makes every failure path explicit in the type, enforced by the checker.
-  </div>
-
-  <p class="section-label" style="margin-bottom: 0.75rem">Absent values</p>
-  <div class="comparison">
-    <div class="pane-before">
-      <div class="pane-label"><span class="dot dot-red"></span>TypeScript</div>
-      <pre><span class="cm">// three ways to say "nothing"</span>
-<span class="kw">type</span> <span class="ty">User</span> = {
-  <span class="id">id</span>: <span class="ty">number</span>
-  <span class="id">avatar</span>?: <span class="ty">string</span>
-  <span class="id">deletedAt</span>?: <span class="ty">Date</span>
-}
-
-<span class="kw">function</span> <span class="fn">findUser</span>(
-  <span class="id">id</span>?: <span class="ty">number</span>
-): <span class="ty">User</span> | <span class="kw">undefined</span> { <span class="cm">/* ... */</span> }</pre>
-    </div>
-    <div class="pane-after">
-      <div class="pane-label"><span class="dot dot-green"></span>shot</div>
-      <pre><span class="cm">// one way — null is the only absent value</span>
-<span class="kw">type</span> <span class="ty">User</span> = {
-  <span class="kw">readonly</span> <span class="id">id</span>: <span class="ty">number</span>
-  <span class="kw">readonly</span> <span class="id">avatar</span>: <span class="ty">string</span> | <span class="kw">null</span>
-  <span class="kw">readonly</span> <span class="id">deletedAt</span>: <span class="ty">Date</span> | <span class="kw">null</span>
-}
-
-<span class="kw">function</span> <span class="fn">findUser</span>(
-  <span class="id">id</span>: <span class="ty">number</span>
-): [<span class="ty">User</span> | <span class="kw">null</span>, <span class="ty">Error</span> | <span class="kw">null</span>] { <span class="cm">/* ... */</span> }</pre>
-    </div>
-  </div>
-
-  <div class="callout">
-    <strong>Why it matters:</strong> TypeScript has three ways to express "this might not exist" —
-    <code>?</code>, <code>| undefined</code>, and <code>| null</code> — and most codebases mix all three.
-    shot picks one: <code>null</code>. Every optional field is <code>T | null</code>, every fallible return is
-    <code>[T | null, Error | null]</code>. No more checking for both.
-  </div>
-
-  <p class="section-label" style="margin-bottom: 0.75rem">Type complexity</p>
-  <div class="comparison">
-    <div class="pane-before">
-      <div class="pane-label"><span class="dot dot-red"></span>TypeScript</div>
-      <pre><span class="cm">// intersection to "extend" a base type</span>
-<span class="kw">type</span> <span class="ty">User</span> = {
-  <span class="kw">readonly</span> <span class="id">id</span>: <span class="ty">number</span>
-  <span class="kw">readonly</span> <span class="id">name</span>: <span class="ty">string</span>
-}
-
-<span class="kw">type</span> <span class="ty">AdminUser</span> =
-  <span class="ty">User</span> & { <span class="kw">readonly</span> <span class="id">role</span>: <span class="st">'admin'</span> }
-
-<span class="cm">// what fields does AdminUser have?</span>
-<span class="cm">// depends on what User is today</span></pre>
-    </div>
-    <div class="pane-after">
-      <div class="pane-label"><span class="dot dot-green"></span>shot</div>
-      <pre><span class="cm">// embed as a named field — Go/Rust-style</span>
-<span class="kw">type</span> <span class="ty">User</span> = {
-  <span class="kw">readonly</span> <span class="id">id</span>: <span class="ty">number</span>
-  <span class="kw">readonly</span> <span class="id">name</span>: <span class="ty">string</span>
-}
-
-<span class="kw">type</span> <span class="ty">AdminUser</span> = {
-  <span class="kw">readonly</span> <span class="id">user</span>: <span class="ty">User</span>
-  <span class="kw">readonly</span> <span class="id">role</span>: <span class="st">'admin'</span>
-}
-
-<span class="cm">// access: admin.user.id</span></pre>
-    </div>
-  </div>
-
-  <div class="callout">
-    <strong>Why it matters:</strong> intersection types hide fields behind indirection.
-    shot bans <code>&</code>, conditional types, mapped types, and <code>infer</code>.
-    Instead of extending, embed: give the base type a named field.
-    Every shape is self-contained and readable where it's defined.
-  </div>
-
-  <p class="section-label" style="margin-bottom: 0.75rem">Immutable by default</p>
-  <div class="comparison">
-    <div class="pane-before">
-      <div class="pane-label"><span class="dot dot-red"></span>TypeScript</div>
-      <pre><span class="kw">type</span> <span class="ty">Config</span> = {
-  <span class="id">host</span>: <span class="ty">string</span>
-  <span class="id">port</span>: <span class="ty">number</span>
-}
-
-<span class="kw">const</span> <span class="id">ids</span>: <span class="ty">number</span>[] = []
-
-<span class="cm">// any function can mutate these</span>
-<span class="cm">// nothing in the types stops it</span></pre>
-    </div>
-    <div class="pane-after">
-      <div class="pane-label"><span class="dot dot-green"></span>shot</div>
-      <pre><span class="kw">type</span> <span class="ty">Config</span> = {
-  <span class="kw">readonly</span> <span class="id">host</span>: <span class="ty">string</span>
-  <span class="kw">readonly</span> <span class="id">port</span>: <span class="ty">number</span>
-}
-
-<span class="kw">const</span> <span class="id">ids</span>: <span class="kw">readonly</span> <span class="ty">number</span>[] = []
-
-<span class="cm">// compiler rejects any write to these</span></pre>
-    </div>
-  </div>
-
-  <div class="callout">
-    <strong>Why it matters:</strong> mutable data structures mean any function, at any call site,
-    can change state you didn't expect. <code>readonly</code> makes the
-    compiler enforce immutability — mutation becomes opt-in, visible, and intentional.
-  </div>
-
-  <p class="section-label" style="margin-bottom: 0.75rem">Data + behaviour</p>
-  <div class="comparison">
-    <div class="pane-before">
-      <div class="pane-label"><span class="dot dot-red"></span>TypeScript</div>
-      <pre><span class="kw">class</span> <span class="ty">UserService</span> {
-  <span class="kw">private readonly</span> <span class="id">db</span>: <span class="ty">Database</span>
-
-  <span class="kw">constructor</span>(<span class="id">db</span>: <span class="ty">Database</span>) {
-    <span class="kw">this</span>.<span class="id">db</span> = <span class="id">db</span>
-  }
-
-  <span class="kw">async</span> <span class="fn">findById</span>(
-    <span class="id">id</span>: <span class="ty">number</span>
-  ): <span class="ty">Promise</span>&lt;<span class="ty">User</span> | <span class="kw">null</span>&gt; {
-    <span class="cm">// ...</span>
-  }
-}
-
-<span class="kw">const</span> <span class="id">svc</span> = <span class="kw">new</span> <span class="ty">UserService</span>(<span class="id">db</span>)</pre>
-    </div>
-    <div class="pane-after">
-      <div class="pane-label"><span class="dot dot-green"></span>shot</div>
-      <pre><span class="kw">type</span> <span class="ty">UserService</span> = { <span class="kw">readonly</span> <span class="id">db</span>: <span class="ty">Database</span> }
-
-<span class="kw">async function</span> <span class="fn">findUserById</span>(
-  <span class="id">svc</span>: <span class="ty">UserService</span>,
-  <span class="id">id</span>: <span class="ty">number</span>,
-): <span class="ty">Promise</span>&lt;[<span class="ty">User</span> | <span class="kw">null</span>, <span class="ty">Error</span> | <span class="kw">null</span>]&gt; {
-  <span class="cm">// ...</span>
-}
-
-<span class="kw">const</span> <span class="id">svc</span>: <span class="ty">UserService</span> = { <span class="id">db</span> }</pre>
-    </div>
-  </div>
-
-  <div class="callout">
-    <strong>Why it matters:</strong> a <code>type</code> is data. A function is behaviour.
-    There is no hidden state, no inheritance graph to trace, no <code>this</code> context to reason about.
-    Both are independently testable.
-  </div>
-
-  <p class="section-label" style="margin-bottom: 0.75rem">Callbacks</p>
-  <div class="comparison">
-    <div class="pane-before">
-      <div class="pane-label"><span class="dot dot-red"></span>TypeScript</div>
-      <pre><span class="kw">const</span> <span class="id">total</span> = <span class="id">items</span>
-  .<span class="fn">filter</span>(<span class="id">x</span> => <span class="id">x</span>.<span class="id">active</span>)
-  .<span class="fn">map</span>(<span class="id">x</span> => ({ ...<span class="id">x</span>, <span class="id">score</span>: <span class="id">x</span>.<span class="id">score</span> * <span class="nu">2</span> }))
-  .<span class="fn">reduce</span>((<span class="id">acc</span>, <span class="id">x</span>) => <span class="id">acc</span> + <span class="id">x</span>.<span class="id">score</span>, <span class="nu">0</span>)
-
-<span class="cm">// inline logic · untestable · no names to grep</span></pre>
-    </div>
-    <div class="pane-after">
-      <div class="pane-label"><span class="dot dot-green"></span>shot</div>
-      <pre><span class="kw">function</span> <span class="fn">isActive</span>(<span class="id">item</span>: <span class="ty">Item</span>): <span class="ty">boolean</span> {
-  <span class="kw">return</span> <span class="id">item</span>.<span class="id">active</span>
-}
-<span class="kw">function</span> <span class="fn">doubleScore</span>(<span class="id">item</span>: <span class="ty">Item</span>): <span class="ty">Item</span> {
-  <span class="kw">return</span> { ...<span class="id">item</span>, <span class="id">score</span>: <span class="id">item</span>.<span class="id">score</span> * <span class="nu">2</span> }
-}
-<span class="kw">function</span> <span class="fn">sumScore</span>(<span class="id">acc</span>: <span class="ty">number</span>, <span class="id">item</span>: <span class="ty">Item</span>): <span class="ty">number</span> {
-  <span class="kw">return</span> <span class="id">acc</span> + <span class="id">item</span>.<span class="id">score</span>
-}
-
-<span class="kw">const</span> <span class="id">total</span> = <span class="id">items</span>
-  .<span class="fn">filter</span>(<span class="fn">isActive</span>)
-  .<span class="fn">map</span>(<span class="fn">doubleScore</span>)
-  .<span class="fn">reduce</span>(<span class="fn">sumScore</span>, <span class="nu">0</span>)</pre>
-    </div>
-  </div>
-
-  <div class="callout">
-    <strong>Why it matters:</strong> named functions are testable in isolation, searchable with grep,
-    and show up in stack traces. Anonymous arrow callbacks disappear the moment they fail.
-  </div>
-
-  <p class="section-label" style="margin-bottom: 0.75rem">Conditionals</p>
-  <div class="comparison">
-    <div class="pane-before">
-      <div class="pane-label"><span class="dot dot-red"></span>TypeScript</div>
-      <pre><span class="kw">const</span> <span class="id">label</span> = <span class="id">isAdmin</span>
-  ? (<span class="id">isSuperAdmin</span> ? <span class="st">"Super Admin"</span> : <span class="st">"Admin"</span>)
-  : <span class="st">"User"</span>
-
-<span class="cm">// nesting grows with every new role</span></pre>
-    </div>
-    <div class="pane-after">
-      <div class="pane-label"><span class="dot dot-green"></span>shot</div>
-      <pre><span class="kw">function</span> <span class="fn">roleLabel</span>(
-  <span class="id">isAdmin</span>: <span class="ty">boolean</span>,
-  <span class="id">isSuperAdmin</span>: <span class="ty">boolean</span>,
-): <span class="ty">string</span> {
-  <span class="kw">if</span> (<span class="id">isSuperAdmin</span>) {
-    <span class="kw">return</span> <span class="st">"Super Admin"</span>
-  }
-  <span class="kw">if</span> (<span class="id">isAdmin</span>) {
-    <span class="kw">return</span> <span class="st">"Admin"</span>
-  }
-  <span class="kw">return</span> <span class="st">"User"</span>
-}</pre>
-    </div>
-  </div>
-
-  <div class="callout">
-    <strong>Why it matters:</strong> each branch has a name. Adding a new role means adding a clause,
-    not untangling a nested expression. The complexity stays flat.
   </div>
 </section>
 
@@ -703,107 +372,12 @@
   </p>
 </section>
 
-<hr class="divider" />
-
-<section class="section" id="demo">
-  <div class="section-header">
-    <div class="section-label">Live example</div>
-    <h2>A working todo app.</h2>
-    <p class="section-desc">
-      Full CRUD — add, complete, delete. The logic runs directly from the
-      compiled <code style="font-size:0.85em;color:var(--type)">.shot</code> source on the left.
-    </p>
-  </div>
-
-  <div class="demo-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;align-items:start;">
-    <div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;">
-      <div style="background:var(--surface);border-bottom:1px solid var(--border);padding:0.6rem 1rem;font-size:0.72rem;color:var(--muted);font-family:'SF Mono','Fira Code',monospace;">todo.shot</div>
-      <pre style="background:#0a0a0d;padding:1.25rem 1.5rem;font-size:0.78rem;line-height:1.75;overflow-x:auto;"><span style="color:var(--keyword)">import</span> <span style="color:var(--text)">{ mutableRef, wrapError }</span> <span style="color:var(--keyword)">from</span> <span style="color:var(--string)">"shot:std"</span>
-
-<span style="color:var(--keyword)">type</span> <span style="color:var(--type)">Todo</span> <span style="color:var(--text)">=</span> <span style="color:var(--text)">{</span>
-  <span style="color:var(--keyword)">readonly</span> <span style="color:var(--text)">id</span><span style="color:var(--text)">:</span> <span style="color:var(--type)">number</span>
-  <span style="color:var(--keyword)">readonly</span> <span style="color:var(--text)">title</span><span style="color:var(--text)">:</span> <span style="color:var(--type)">string</span>
-  <span style="color:var(--keyword)">readonly</span> <span style="color:var(--text)">done</span><span style="color:var(--text)">:</span> <span style="color:var(--type)">boolean</span>
-<span style="color:var(--text)">}</span>
-
-<span style="color:var(--keyword)">const</span> <span style="color:var(--text)">_todos</span> <span style="color:var(--text)">=</span> <span style="color:var(--fn)">mutableRef</span><span style="color:var(--text)">&lt;</span><span style="color:var(--keyword)">readonly</span> <span style="color:var(--type)">Todo</span><span style="color:var(--text)">[]&gt;([])</span>
-<span style="color:var(--keyword)">const</span> <span style="color:var(--text)">_nextId</span> <span style="color:var(--text)">=</span> <span style="color:var(--fn)">mutableRef</span><span style="color:var(--text)">(</span><span style="color:var(--num)">1</span><span style="color:var(--text)">)</span>
-
-<span style="color:var(--keyword)">export function</span> <span style="color:var(--fn)">addTodo</span><span style="color:var(--text)">(</span><span style="color:var(--text)">title</span><span style="color:var(--text)">:</span> <span style="color:var(--type)">string</span><span style="color:var(--text)">):</span> <span style="color:var(--text)">[</span><span style="color:var(--type)">Todo</span> <span style="color:var(--text)">|</span> <span style="color:var(--keyword)">null</span><span style="color:var(--text)">,</span> <span style="color:var(--type)">Error</span> <span style="color:var(--text)">|</span> <span style="color:var(--keyword)">null</span><span style="color:var(--text)">]</span> <span style="color:var(--text)">{</span>
-  <span style="color:var(--keyword)">const</span> <span style="color:var(--text)">trimmed</span> <span style="color:var(--text)">=</span> <span style="color:var(--text)">title.</span><span style="color:var(--fn)">trim</span><span style="color:var(--text)">()</span>
-  <span style="color:var(--keyword)">if</span> <span style="color:var(--text)">(trimmed.length</span> <span style="color:var(--text)">===</span> <span style="color:var(--num)">0</span><span style="color:var(--text)">)</span> <span style="color:var(--text)">{</span>
-    <span style="color:var(--keyword)">return</span> <span style="color:var(--text)">[</span><span style="color:var(--keyword)">null</span><span style="color:var(--text)">,</span> <span style="color:var(--keyword)">new</span> <span style="color:var(--type)">Error</span><span style="color:var(--text)">(</span><span style="color:var(--string)">"title must not be empty"</span><span style="color:var(--text)">)]</span>
-  <span style="color:var(--text)">}</span>
-  <span style="color:var(--keyword)">const</span> <span style="color:var(--text)">todo</span><span style="color:var(--text)">:</span> <span style="color:var(--type)">Todo</span> <span style="color:var(--text)">= {</span> <span style="color:var(--text)">id: _nextId.value, title: trimmed, done:</span> <span style="color:var(--keyword)">false</span> <span style="color:var(--text)">}</span>
-  <span style="color:var(--text)">_todos.value</span> <span style="color:var(--text)">= [..._todos.value, todo]</span>
-  <span style="color:var(--keyword)">return</span> <span style="color:var(--text)">[todo,</span> <span style="color:var(--keyword)">null</span><span style="color:var(--text)">]</span>
-<span style="color:var(--text)">}</span></pre>
-    </div>
-
-    <div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;position:sticky;top:5rem;">
-      <div style="background:var(--surface);border-bottom:1px solid var(--border);padding:0.6rem 1rem;font-size:0.72rem;color:var(--muted);font-family:'SF Mono','Fira Code',monospace;">live demo — runs in your browser</div>
-      <iframe
-        src="/todo-demo.html"
-        style="width:100%;height:420px;border:none;display:block;"
-        title="ShotScript todo demo"
-      ></iframe>
-    </div>
-  </div>
-
-  <p style="margin-top:1.25rem;font-size:0.8rem;color:var(--muted);">
-    The demo JS mirrors the <code style="color:var(--type)">.shot</code> source exactly — same named functions, same tuple returns, same no-throw contract. Types strip away; the patterns stay.
-  </p>
-</section>
-
-<hr class="divider" />
-
-<section class="section" id="examples">
-  <div class="section-header">
-    <div class="section-label">Examples</div>
-    <h2>See it in practice.</h2>
-    <p class="section-desc">
-      All examples are in the repo under <code style="color:var(--type)">examples/</code>.
-      Each one is a self-contained project you can run with <code style="color:var(--type)">shot run</code>.
-    </p>
-  </div>
-  <div class="example-grid">
-    <div class="example-card">
-      <div class="example-name">helloWorld</div>
-      <p class="example-desc">A single exported function and a test. The smallest valid ShotScript project.</p>
-    </div>
-    <div class="example-card">
-      <div class="example-name">calculator</div>
-      <p class="example-desc">Arithmetic with explicit error returns. Shows the <code>[T&nbsp;|&nbsp;null,&nbsp;Error&nbsp;|&nbsp;null]</code> tuple pattern for fallible operations.</p>
-    </div>
-    <div class="example-card">
-      <div class="example-name">fetchUser</div>
-      <p class="example-desc">Async HTTP + JSON parsing via <code>shot:std</code>. Demonstrates chained tuple unwrapping without try/catch.</p>
-    </div>
-    <div class="example-card">
-      <div class="example-name">todo-api</div>
-      <p class="example-desc">A multi-file REST API with in-memory state. Store, handlers, router, and tests — the full backend pattern.</p>
-    </div>
-    <div class="example-card example-featured">
-      <div class="example-tag">Fullstack</div>
-      <div class="example-name">notes</div>
-      <p class="example-desc">
-        ShotScript backend + colocated React client using ShotLint.
-        The client enforces the same discipline — named functions, result tuples, no throw —
-        via <code>shot-lint</code> on TypeScript/TSX.
-      </p>
-    </div>
-  </div>
-</section>
-
 <footer>
   <p>
     ShotScript is pre-v1 and open source.
     See the <a href="/language/">language reference</a>,
     <a href="/stdlib/">stdlib</a>,
     and <a href="https://github.com/didley/ShotScript" class="ext">source on GitHub</a>.
-  </p>
-  <p style="margin-top: 0.5rem;">
-    Install: <code>curl -fsSL https://shot.didley.dev/install.sh | sh</code>
   </p>
 </footer>
 

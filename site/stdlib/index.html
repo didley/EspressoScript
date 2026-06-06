@@ -19,6 +19,8 @@
                 --string: #c3e88d;
                 --type: #82aaff;
                 --comment: #546e7a;
+                --fn: #82aaff;
+                --num: #f78c6c;
             }
 
             * {
@@ -72,6 +74,10 @@
             }
             .nav-logo span {
                 color: var(--accent);
+            }
+            .nav-logo .sep {
+                color: var(--border);
+                margin: 0 0.35rem;
             }
 
             .nav-links {
@@ -280,7 +286,7 @@
     </head>
     <body>
         <nav>
-            <a href="/" class="nav-logo"><span>shot</span></a>
+            <a href="/" class="nav-logo"><span>shot</span><span class="sep">·</span>stdlib</a>
             <ul class="nav-links">
                 <li><a href="/script/">ShotScript</a></li>
                 <li><a href="/lint/">ShotLint</a></li>
