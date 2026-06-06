@@ -74,6 +74,20 @@ type User = { readonly id: number; readonly avatar: string | null; readonly dele
 function getUser(id: number): [User | null, Error | null] { ... }
 ```
 
+**No complex types — types are shapes, not programs**
+
+```ts
+// TypeScript — type-level programs; require knowing advanced TS to read
+type Flatten<T> = T extends Array<infer U> ? U : T
+type Merged = UserBase & UserProfile & { readonly role: string }
+type ReadonlyRecord<K extends string, V> = { readonly [P in K]: V }
+
+// ShotScript — plain shapes; readable at a glance
+type FlatItem = string | number
+type User = { readonly id: number; readonly name: string; readonly role: string }
+type Config = { readonly [key: string]: string }
+```
+
 **Immutable by default**
 
 ```ts
@@ -165,18 +179,18 @@ shot test [files...]     Validate → type-check → run *.test.shot files.
 
 ```mermaid
 graph TD
-    SR["**shot-rules**\ngithub.com/didley/shot-rules\n─────────────────────────────\n• 90+ portable AST rules\n• npm package / standalone CLI\n• No Deno, no shot: dependency\n• Apply to any TypeScript project"]
+    SR["**shot-lint**\ngithub.com/didley/shot-lint\n─────────────────────────────\n• 90+ portable AST rules\n• npm package / standalone CLI\n• No Deno, no shot: dependency\n• Apply to any TypeScript project"]
 
     SS["**ShotScript / shot**\n─────────────────────────────\n• .shot file extension\n• shot CLI — check, run, build, test, fmt\n• shot:std standard library\n• Import allowlist (shot:* only)\n• Deno runtime\n• Locked-down tsconfig (no user override)\n• Go-style opinionated toolchain"]
 
     TS["Your TypeScript project\n(any runtime, any framework)"]
 
-    SR -->|"embedded as\nrules/ submodule"| SS
+    SR -->|"embedded as\nlint/ submodule"| SS
     SS -->|"shot check calls\nchecker for .shot files"| SR
-    SR -->|"npx shot-rules\nor global install"| TS
+    SR -->|"npx shot-lint\nor global install"| TS
 ```
 
-ShotScript is the full opinionated language — `.shot` files, `shot:std`, Deno runtime, locked config, all-or-nothing. `shot-rules` is the rule engine extracted so you can apply the same discipline to an existing TypeScript project without committing to the Shot ecosystem. Changes to rules flow from `shot-rules` into ShotScript automatically via the submodule.
+ShotScript is the full opinionated language — `.shot` files, `shot:std`, Deno runtime, locked config, all-or-nothing. `shot-lint` is the rule engine extracted so you can apply the same discipline to an existing TypeScript project without committing to the Shot ecosystem. Changes to rules flow from `shot-lint` into ShotScript automatically via the submodule.
 
 ## Documentation
 
