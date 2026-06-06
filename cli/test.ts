@@ -2,7 +2,7 @@ import * as fs from 'node:fs/promises'
 import * as path from 'node:path'
 import { spawn } from 'node:child_process'
 import { glob } from 'glob'
-import { check } from './checker/mod.ts'
+import { check } from './checker/index.ts'
 import {
     hasShotImports,
     shotFilesInDir,

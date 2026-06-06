@@ -3,9 +3,9 @@
     "version": "0.0.0",
     "license": "MIT",
     "type": "module",
-    "exports": "./mod.ts",
+    "exports": "./index.ts",
     "bin": {
-        "shot": "./mod.ts"
+        "shot": "./index.ts"
     },
     "dependencies": {
         "@biomejs/biome": "^2.0.0",

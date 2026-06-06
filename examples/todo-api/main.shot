@@ -1,5 +1,4 @@
-import { serve } from 'shot:std'
-import type { ShotPromise } from 'shot:std'
+import type { PromiseResult } from 'shot:std'
 import {
   handleCreate,
   handleDelete,
@@ -20,7 +19,15 @@ function matchTodoId(path: string): number | null {
   return id
 }
 
-async function dispatch(req: Request): ShotPromise<Response> {
+async function handler(req: Request): Promise<Response> {
+  const [res, err] = await dispatch(req)
+  if (err !== null || res === null) {
+    return new Response('{"error":"internal server error"}', { status: 500, headers: { 'Content-Type': 'application/json' } })
+  }
+  return res
+}
+
+async function dispatch(req: Request): PromiseResult<Response> {
   const url = new URL(req.url)
   const path = url.pathname
   const method = req.method
@@ -57,4 +64,4 @@ async function dispatch(req: Request): ShotPromise<Response> {
 }
 
 console.log('todo-api listening on :8000')
-serve(dispatch)
+Bun.serve({ fetch: handler })

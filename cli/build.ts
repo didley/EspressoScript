@@ -1,6 +1,6 @@
 import * as fs from 'node:fs/promises'
 import * as path from 'node:path'
-import { check as runCheck } from './checker/mod.ts'
+import { check as runCheck } from './checker/index.ts'
 import { copyTransform, makeTempDir, removeTempDir } from './pipeline.ts'
 import { typecheckFiles, formatTypeDiagnostics } from './typecheck.ts'
 

@@ -1,5 +1,5 @@
 import * as fs from 'node:fs/promises'
-import { check as runCheck } from './checker/mod.ts'
+import { check as runCheck } from './checker/index.ts'
 
 export async function check(files: string[]): Promise<number> {
     if (files.length === 0) {

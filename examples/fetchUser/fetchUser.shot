@@ -1,4 +1,4 @@
-import { fetch as httpGet, jsonParse } from 'shot:std'
+import { safeFetch, jsonParse } from 'shot:std'
 import { parse, z } from 'shot:zod'
 
 const userSchema = z.object({
@@ -15,7 +15,7 @@ type User = {
 
 export async function fetchUser(id: number): Promise<[User | null, Error | null]> {
     const url = `https://jsonplaceholder.typicode.com/users/${id}`
-    const [res, fetchErr] = await httpGet(url)
+    const [res, fetchErr] = await safeFetch(url)
     if (fetchErr !== null) {
         return [null, fetchErr]
     }

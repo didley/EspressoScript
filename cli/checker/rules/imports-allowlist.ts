@@ -1,6 +1,6 @@
 import ts from 'typescript'
 import type { Rule } from "../types.ts"
-import { posOf } from "../mod.ts"
+import { posOf } from "../index.ts"
 
 function isAllowed(spec: string): boolean {
     if (spec.startsWith('shot:')) return true

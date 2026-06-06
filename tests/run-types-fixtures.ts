@@ -1,6 +1,6 @@
 import * as fs from 'node:fs/promises'
 import { glob } from 'glob'
-import { check } from '../cli/checker/mod.ts'
+import { check } from '../cli/checker/index.ts'
 
 let fails = 0
 const files = await glob('tests/fixtures/types/**/*.shot')

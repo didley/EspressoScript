@@ -1,4 +1,4 @@
-import { mutableRef, wrapError } from "shot:std"
+import { wrapError } from "shot:std"
 
 export type Todo = {
     readonly id: number
@@ -6,8 +6,8 @@ export type Todo = {
     readonly done: boolean
 }
 
-const _todos = mutableRef<readonly Todo[]>([])
-const _nextId = mutableRef(1)
+const _todos: { value: readonly Todo[] } = { value: [] }
+const _nextId: { value: number } = { value: 1 }
 
 export function allTodos(): readonly Todo[] {
     return _todos.value

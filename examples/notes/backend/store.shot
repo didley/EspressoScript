@@ -1,4 +1,4 @@
-import { mutableRef, wrapError } from 'shot:std'
+import { wrapError } from 'shot:std'
 
 export type Note = {
   readonly id: number
@@ -12,8 +12,8 @@ export type CreateInput = {
   readonly body: string
 }
 
-const _notes = mutableRef<readonly Note[]>([])
-const _nextId = mutableRef(1)
+const _notes: { value: readonly Note[] } = { value: [] }
+const _nextId: { value: number } = { value: 1 }
 
 export function listNotes(): readonly Note[] {
   return _notes.value

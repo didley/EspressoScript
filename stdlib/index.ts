@@ -3,16 +3,13 @@ import * as fs from 'node:fs/promises'
 // stdlib is the only place in the shot codebase where try/catch is used.
 // These wrappers hide throws from .shot user code via the tuple-return pattern.
 
-// ShotPromise<T, E> is the canonical return type for async fallible functions.
+// Result<T, E> is the canonical return type for synchronous fallible functions.
 // E defaults to Error but can be any plain type — no class extension required.
 // Custom error shapes: type DbError = { readonly message: string; readonly code: number }
-export type ShotPromise<T, E = Error> = Promise<[T | null, E | null]>
+export type Result<T, E = Error> = [T, null] | [null, E]
 
-// mutableRef returns a single-slot mutable cell — the canonical way to hold
-// module-level state in .shot without `let` (which is banned outside for-headers).
-export function mutableRef<T>(initial: T): { value: T } {
-    return { value: initial }
-}
+// PromiseResult<T, E> is the canonical return type for async fallible functions.
+export type PromiseResult<T, E = Error> = Promise<Result<T, E>>
 
 // wrapError adds context to a propagated error — the shot equivalent of Go's fmt.Errorf("context: %w", err).
 export function wrapError(message: string, cause: Error): Error {
@@ -23,7 +20,7 @@ export function wrapError(message: string, cause: Error): Error {
 
 // toResult wraps any synchronous third-party call that might throw.
 // Use when importing bun:* or node:* APIs that don't return tuples.
-export function toResult<T>(fn: () => T): [T | null, Error | null] {
+export function toResult<T>(fn: () => T): Result<T> {
     try {
         return [fn(), null]
     } catch (e) {
@@ -33,7 +30,7 @@ export function toResult<T>(fn: () => T): [T | null, Error | null] {
 
 // toPromiseResult wraps any async third-party call that might reject.
 // Use when importing bun:* or node:* APIs that return plain Promises.
-export async function toPromiseResult<T>(fn: () => Promise<T>): Promise<[T | null, Error | null]> {
+export async function toPromiseResult<T>(fn: () => Promise<T>): PromiseResult<T> {
     try {
         return [await fn(), null]
     } catch (e) {
@@ -41,10 +38,10 @@ export async function toPromiseResult<T>(fn: () => Promise<T>): Promise<[T | nul
     }
 }
 
-export async function fetch(
+export async function safeFetch(
     input: string | URL,
     init?: RequestInit,
-): Promise<[Response | null, Error | null]> {
+): PromiseResult<Response> {
     try {
         const res = await globalThis.fetch(input, init)
         return [res, null]
@@ -53,7 +50,7 @@ export async function fetch(
     }
 }
 
-export function jsonParse<T>(str: string): [T | null, Error | null] {
+export function jsonParse<T>(str: string): Result<T> {
     try {
         return [JSON.parse(str) as T, null]
     } catch (e) {
@@ -64,7 +61,7 @@ export function jsonParse<T>(str: string): [T | null, Error | null] {
 export function jsonStringify(
     value: unknown,
     indent?: number,
-): [string | null, Error | null] {
+): Result<string> {
     try {
         return [JSON.stringify(value, null, indent), null]
     } catch (e) {
@@ -72,7 +69,7 @@ export function jsonStringify(
     }
 }
 
-export async function readFile(path: string): Promise<[string | null, Error | null]> {
+export async function readFile(path: string): PromiseResult<string> {
     try {
         return [await fs.readFile(path, 'utf-8'), null]
     } catch (e) {
@@ -87,31 +84,4 @@ export async function writeFile(path: string, data: string): Promise<[null, Erro
     } catch (e) {
         return [null, e instanceof Error ? e : new Error(String(e))]
     }
-}
-
-// serve bridges the ShotPromise<Response> handler to Bun.serve's expected signature.
-// A [null, Error] result becomes a 500; a [Response, null] result is returned as-is.
-export function serve(
-    handler: (req: Request) => ShotPromise<Response>,
-    port?: number,
-): void {
-    async function fetch(req: Request): Promise<Response> {
-        try {
-            const [res, err] = await handler(req)
-            if (err !== null || res === null) {
-                return new Response('{"error":"internal server error"}', {
-                    status: 500,
-                    headers: { "Content-Type": "application/json" },
-                })
-            }
-            return res
-        } catch (e) {
-            console.error("serve: unhandled error in handler", e)
-            return new Response('{"error":"internal server error"}', {
-                status: 500,
-                headers: { "Content-Type": "application/json" },
-            })
-        }
-    }
-    Bun.serve({ port, fetch })
 }
