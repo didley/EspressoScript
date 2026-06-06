@@ -1,0 +1,1 @@
+import { thing } from "https://cdn.example.com/lib.js"

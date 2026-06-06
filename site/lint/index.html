@@ -368,7 +368,6 @@
                         >npm</a
                     >
                 </li>
-                <li><a href="https://jsr.io/@shot/lint" class="ext">jsr</a></li>
                 <li><a href="../index.html">ShotScript ↗</a></li>
             </ul>
         </nav>
@@ -387,11 +386,6 @@
                     ><img
                         src="https://img.shields.io/npm/v/shot-lint?style=flat-square&color=c8702a&labelColor=1a1a1e&label=npm"
                         alt="npm version"
-                /></a>
-                <a href="https://jsr.io/@shot/lint"
-                    ><img
-                        src="https://img.shields.io/jsr/v/%40shot%2Flint?style=flat-square&color=c8702a&labelColor=1a1a1e&label=jsr"
-                        alt="jsr version"
                 /></a>
             </div>
             <h1>Strict linting<br />for <em>any TypeScript.</em></h1>
@@ -423,14 +417,6 @@
                     <span class="prompt">$</span>
                     <span class="cmd">npm install --save-dev shot-lint</span>
                 </div>
-                <div
-                    class="install-cmd"
-                    style="display: block; margin-bottom: 0.75rem"
-                >
-                    <span class="prompt">$</span>
-                    <span class="cmd">deno add jsr:@shot/lint</span>
-                </div>
-
                 <div
                     style="
                         font-family:
@@ -1418,7 +1404,7 @@
             >
                 ShotLint is the portable rule engine. ShotScript is the full
                 toolchain built on top of it. A ShotScript registry is planned —
-                native packages and jsr/npm wrappers with error-tuple guarantees
+                native packages and npm wrappers with error-tuple guarantees
                 throughout.
             </p>
             <div
@@ -1454,7 +1440,7 @@
     SL["<b>ShotLint</b>  ·  github.com/didley/shot-lint
 ────────────────────────────────
 Go-style linting for any TypeScript project
-• 90+ AST rules · standalone CLI · npm · jsr
+• 90+ AST rules · standalone CLI · npm
 • No Deno required
 • Runtime utils — jsonParse, safeFetch, tryCatch"]
 
@@ -1479,7 +1465,7 @@ Zero-throw guarantee — every failure path is in the type
 ────────────────────────────────
 A package registry for the Shot ecosystem
 • Native .shot packages with full type guarantees
-• jsr/npm packages wrapped in error-tuple handlers
+• npm packages wrapped in error-tuple handlers
 • Every import returns  T | null, Error | null  — no surprises"]
 
     SL -->|"embedded as lint/ submodule"| SS
@@ -1506,7 +1492,7 @@ A package registry for the Shot ecosystem
                 <a href="https://www.npmjs.com/package/shot-lint" class="ext"
                     >npm</a
                 >
-                · <a href="https://jsr.io/@shot/lint" class="ext">jsr</a> ·
+                ·
                 <a href="/">ShotScript</a>
             </p>
         </footer>
