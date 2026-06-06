@@ -52,7 +52,7 @@ async function getUser(id: number): Promise<User> {
     }
 }
 
-// ShotScript — no throw, no try, no hidden control flow
+// ShotScript — failure is in the return type; the compiler tracks it
 async function getUser(id: number): Promise<[User | null, Error | null]> {
     const [res, fetchErr] = await fetch(`/users/${id}`)
     if (fetchErr !== null) {
@@ -62,37 +62,31 @@ async function getUser(id: number): Promise<[User | null, Error | null]> {
 }
 ```
 
-**No ternaries — if/else forces names on branches**
-
-```ts
-// TypeScript
-const label = isAdmin ? (isSuperAdmin ? "Super Admin" : "Admin") : "User"
-
-// ShotScript — nesting is gone, each case is readable
-function roleLabel(isAdmin: boolean, isSuperAdmin: boolean): string {
-    if (isSuperAdmin) {
-        return "Super Admin"
-    }
-    if (isAdmin) {
-        return "Admin"
-    }
-    return "User"
-}
-```
-
-**`null` is the only absent value**
+**`null` only — no `undefined`**
 
 ```ts
 // TypeScript — three ways to say "nothing": undefined, ?, | undefined
 type User = { id: number; avatar?: string; deletedAt?: Date }
 function getUser(id?: number): User | undefined { ... }
 
-// ShotScript — undefined never appears; every absence is explicit and typed
+// ShotScript — one absence value, used consistently everywhere
 type User = { readonly id: number; readonly avatar: string | null; readonly deletedAt: Date | null }
 function getUser(id: number): [User | null, Error | null] { ... }
 ```
 
-**No classes — plain data types and functions**
+**Immutable by default**
+
+```ts
+// TypeScript — any function can mutate these; nothing in the type stops it
+type Config = { host: string; port: number }
+const ids: number[] = []
+
+// ShotScript — readonly at the type level; the compiler enforces it
+type Config = { readonly host: string; readonly port: number }
+const ids: ReadonlyArray<number> = []
+```
+
+**No classes — plain data and functions**
 
 ```ts
 // TypeScript
@@ -107,6 +101,37 @@ type UserService = { readonly db: Database }
 
 async function findUserById(svc: UserService, id: number): Promise<[User | null, Error | null]> {
     return svc.db.query<User>(`SELECT * FROM users WHERE id = $1`, [id])
+}
+```
+
+**Named functions only — every callback is findable**
+
+```ts
+// TypeScript
+const results = items
+    .filter(x => x.active)
+    .map(x => ({ ...x, score: x.score * 2 }))
+    .reduce((acc, x) => acc + x.score, 0)
+
+// ShotScript — every step is named, testable, and grep-able
+function isActive(item: Item): boolean { return item.active }
+function doubleScore(item: Item): Item { return { ...item, score: item.score * 2 } }
+function sumScore(acc: number, item: Item): number { return acc + item.score }
+
+const results = items.filter(isActive).map(doubleScore).reduce(sumScore, 0)
+```
+
+**No ternaries — if/else forces names on branches**
+
+```ts
+// TypeScript
+const label = isAdmin ? (isSuperAdmin ? "Super Admin" : "Admin") : "User"
+
+// ShotScript — nesting is gone, each case is readable
+function roleLabel(isAdmin: boolean, isSuperAdmin: boolean): string {
+    if (isSuperAdmin) { return "Super Admin" }
+    if (isAdmin) { return "Admin" }
+    return "User"
 }
 ```
 
