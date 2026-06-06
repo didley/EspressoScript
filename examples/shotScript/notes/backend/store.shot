@@ -1,59 +1,59 @@
 import { wrapError } from 'shot:std'
 
 export type Note = {
-  readonly id: number
-  readonly title: string
-  readonly body: string
-  readonly createdAt: string
+    readonly id: number
+    readonly title: string
+    readonly body: string
+    readonly createdAt: string
 }
 
 export type CreateInput = {
-  readonly title: string
-  readonly body: string
+    readonly title: string
+    readonly body: string
 }
 
 const _notes: Map<number, Note> = new Map()
 const _nextId: [number] = [1]
 
 export function listNotes(): readonly Note[] {
-  return Array.from(_notes.values())
+    return Array.from(_notes.values())
 }
 
 export function getNote(id: number): [Note | null, Error | null] {
-  const note = _notes.get(id)
-  if (note === undefined) {
-    return [null, new Error(`note ${id} not found`)]
-  }
-  return [note, null]
+    const note = _notes.get(id)
+    if (note === undefined) {
+        return [null, new Error(`note ${id} not found`)]
+    }
+    return [note, null]
 }
 
 export function createNote(input: CreateInput): [Note | null, Error | null] {
-  const title = input.title.trim()
-  if (title.length === 0) {
-    return [null, new Error('title must not be empty')]
-  }
-  const id = _nextId[0]
-  const note: Note = {
-    id,
-    title,
-    body: input.body,
-    createdAt: new Date().toISOString(),
-  }
-  _notes.set(id, note)
-  _nextId[0] = id + 1
-  return [note, null]
+    const title = input.title.trim()
+    if (title.length === 0) {
+        return [null, new Error('title must not be empty')]
+    }
+    const id = _nextId[0]
+    const note: Note = {
+        id,
+        title,
+        body: input.body,
+        createdAt: new Date().toISOString(),
+    }
+    _notes.set(id, note)
+    _nextId[0] = id + 1
+    return [note, null]
 }
 
 export function deleteNote(id: number): [null, Error | null] {
-  const [_found, findErr] = getNote(id)
-  if (findErr !== null) {
-    return [null, wrapError(`delete note ${id}`, findErr)]
-  }
-  _notes.delete(id)
-  return [null, null]
+    const [_found, findErr] = getNote(id)
+    if (findErr !== null) {
+        return [null, wrapError(`delete note ${id}`, findErr)]
+    }
+    _notes.delete(id)
+    return [null, null]
 }
 
 export function clearNotes(): void {
-  _notes.clear()
-  _nextId[0] = 1
+    _notes.clear()
+    _nextId[0] = 1
 }

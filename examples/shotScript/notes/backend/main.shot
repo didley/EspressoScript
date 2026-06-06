@@ -1,74 +1,77 @@
 import { handleCreate, handleDelete, handleGet, handleList } from './handlers.shot'
 
 function matchNoteId(path: string): number | null {
-  const parts = path.split('/')
-  if (parts.length !== 3 || parts[0] !== '' || parts[1] !== 'notes') {
-    return null
-  }
-  const id = Number(parts[2])
-  if (isNaN(id) || id <= 0) {
-    return null
-  }
-  return id
+    const parts = path.split('/')
+    if (parts.length !== 3 || parts[0] !== '' || parts[1] !== 'notes') {
+        return null
+    }
+    const id = Number(parts[2])
+    if (isNaN(id) || id <= 0) {
+        return null
+    }
+    return id
 }
 
 async function dispatch(req: Request): Promise<[Response | null, Error | null]> {
-  const url = new URL(req.url)
-  const path = url.pathname
-  const method = req.method
+    const url = new URL(req.url)
+    const path = url.pathname
+    const method = req.method
 
-  if (method === 'OPTIONS') {
+    if (method === 'OPTIONS') {
+        return [
+            new Response(null, {
+                status: 204,
+                headers: {
+                    'Access-Control-Allow-Origin': '*',
+                    'Access-Control-Allow-Methods': 'GET, POST, DELETE, OPTIONS',
+                    'Access-Control-Allow-Headers': 'Content-Type',
+                },
+            }),
+            null,
+        ]
+    }
+
+    if (method === 'GET' && path === '/notes') {
+        return handleList()
+    }
+
+    if (method === 'POST' && path === '/notes') {
+        return handleCreate(req)
+    }
+
+    const id = matchNoteId(path)
+
+    if (id !== null) {
+        if (method === 'GET') {
+            return handleGet(id)
+        }
+        if (method === 'DELETE') {
+            return handleDelete(id)
+        }
+    }
+
     return [
-      new Response(null, {
-        status: 204,
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Methods': 'GET, POST, DELETE, OPTIONS',
-          'Access-Control-Allow-Headers': 'Content-Type',
-        },
-      }),
-      null,
+        new Response('{"error":"not found"}', {
+            status: 404,
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+            },
+        }),
+        null,
     ]
-  }
-
-  if (method === 'GET' && path === '/notes') {
-    return handleList()
-  }
-
-  if (method === 'POST' && path === '/notes') {
-    return handleCreate(req)
-  }
-
-  const id = matchNoteId(path)
-
-  if (id !== null) {
-    if (method === 'GET') {
-      return handleGet(id)
-    }
-    if (method === 'DELETE') {
-      return handleDelete(id)
-    }
-  }
-
-  return [
-    new Response('{"error":"not found"}', {
-      status: 404,
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-      },
-    }),
-    null,
-  ]
 }
 
 console.log('notes backend listening on :8000')
 Bun.serve({
-  async fetch(req: Request): Promise<Response> {
-    const [res, err] = await dispatch(req)
-    if (err !== null || res === null) {
-      return new Response('{"error":"internal server error"}', { status: 500, headers: { 'Content-Type': 'application/json' } })
-    }
-    return res
-  },
+    async fetch(req: Request): Promise<Response> {
+        const [res, err] = await dispatch(req)
+        if (err !== null || res === null) {
+            return new Response('{"error":"internal server error"}', {
+                status: 500,
+                headers: { 'Content-Type': 'application/json' },
+            })
+        }
+        return res
+    },
 })
