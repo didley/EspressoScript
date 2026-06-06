@@ -35,5 +35,10 @@
       "integrity": "sha512-y2TvuxSZPDyQakkFRPZHKFm+KKVqIisdg9/CZwm9ftvKXLP8NRWj38/ODjNbr43SsoXqNuAisEf1GdCxqWcdBw==",
       "bin": true
     }
+  },
+  "workspace": {
+    "dependencies": [
+      "npm:typescript@*"
+    ]
   }
 }

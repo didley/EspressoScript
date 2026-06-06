@@ -8,7 +8,9 @@
  ShotScript — TypeScript, one way.
 ```
 
-Four ways to write a function. Three ways to handle errors. Two ways to declare a type. Most codebases use all of them. shot keeps one of each.
+Shot is a subtractive superset of TypeScript. It removes features instead of adding them — applying Go's "one canonical way" philosophy to the TS/JS ecosystem. One canonical form per construct makes code easier for humans to review and LLMs to generate correctly.
+
+Four ways to write a function. Three ways to handle errors. Two ways to declare a type. Most codebases use all of them. Shot keeps one of each.
 
 - **File extension / CLI:** `.shot` + `shot` command
 - **Runtime:** Deno — validates and type-checks before running
@@ -45,7 +47,7 @@ Verify:
 shot --version
 ```
 
-The installer is a small script that handles everything needed to run shot on your machine. Read it first if you prefer — it's published alongside every release.
+The installer is a small script that handles everything needed to run Shot on your machine. Read it first if you prefer — it's published alongside every release.
 
 Windows installer and prebuilt binaries are on the roadmap.
 
@@ -179,7 +181,7 @@ function roleLabel(isAdmin: boolean, isSuperAdmin: boolean): string {
 graph TD
     SL["**ShotLint**  ·  github.com/didley/shot-lint\n──────────────────────────────────\nStrict linting for any TypeScript project\n• 90+ AST rules · standalone CLI · npm · jsr\n• No Deno required\n• Runtime utils — jsonParse, safeFetch, tryCatch"]
 
-    SS["**ShotScript**  ·  github.com/didley/ShotScript\n──────────────────────────────────\nThe full opinionated lint toolchain\n• .shot files · shot CLI · Deno runtime\n• shot:std standard library · import allowlist\n• Locked tsconfig — no user overrides"]
+    SS["**ShotScript**  ·  github.com/didley/ShotScript\n──────────────────────────────────\nThe full opinionated lint toolchain\n• .shot files · Shot CLI · Deno runtime\n• shot:std standard library · import allowlist\n• Locked tsconfig — no user overrides"]
 
     TS["**Your TypeScript project**\n(any runtime · any framework)"]
 
@@ -188,7 +190,7 @@ graph TD
     REG["**ShotScript Registry**  ·  planned\n──────────────────────────────────\nA package registry for the Shot ecosystem\n• Native .shot packages with full type guarantees\n• jsr/npm packages wrapped in error-tuple handlers\n• Every import returns  T | null, Error | null  — no surprises"]
 
     SL -->|"embedded as lint/ submodule"| SS
-    SS -->|"shot check calls ShotLint checker"| SL
+    SS -->|"Shot check calls ShotLint checker"| SL
     SL -->|"npx shot-lint 'src/**/*.ts'"| TS
     SS -->|"shot run / check / build / test"| SP
     REG -->|"shot add"| SP
@@ -200,7 +202,7 @@ ShotScript is the full opinionated language — `.shot` files, `shot:std`, Deno 
 
 ## Documentation
 
-- [`docs/PHILOSOPHY.md`](docs/PHILOSOPHY.md) — what shot is and isn't
+- [`docs/PHILOSOPHY.md`](docs/PHILOSOPHY.md) — what Shot is and isn't
 - [`docs/LANGUAGE.md`](docs/LANGUAGE.md) — full rule list with examples
 - [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — how the toolchain works
 - [`docs/STDLIB.md`](docs/STDLIB.md) — the `shot:std` v1 surface

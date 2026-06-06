@@ -1,4 +1,4 @@
-# EspressoScript — Agent Context
+# ShotScript — Agent Context
 
 This is the ShotScript toolchain repository. ShotScript is a TypeScript dialect that enforces lint constraints: one canonical way to write every construct. `.shot` files are valid TypeScript with a different extension — no new syntax, only stricter rules enforced at lint and build time.
 

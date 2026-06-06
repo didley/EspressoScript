@@ -1,865 +1,1456 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ShotLint — TypeScript linter for any project</title>
-  <style>
-    :root {
-      --bg: #0d0d10;
-      --surface: #16161a;
-      --border: #2a2a32;
-      --text: #e8e8f0;
-      --muted: #7a7a90;
-      --accent: #c8702a;
-      --accent-dim: #7a4418;
-      --green: #4ec994;
-      --red: #e05c5c;
-      --keyword: #c792ea;
-      --string: #c3e88d;
-      --type: #82aaff;
-      --comment: #546e7a;
-      --fn: #82aaff;
-      --num: #f78c6c;
-    }
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>ShotLint — TypeScript linter for any project</title>
+        <style>
+            :root {
+                --bg: #0d0d10;
+                --surface: #16161a;
+                --border: #2a2a32;
+                --text: #e8e8f0;
+                --muted: #7a7a90;
+                --accent: #c8702a;
+                --accent-dim: #7a4418;
+                --green: #4ec994;
+                --red: #e05c5c;
+                --keyword: #c792ea;
+                --string: #c3e88d;
+                --type: #82aaff;
+                --comment: #546e7a;
+                --fn: #82aaff;
+                --num: #f78c6c;
+            }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
 
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      font-size: 16px;
-      line-height: 1.6;
-    }
+            body {
+                background: var(--bg);
+                color: var(--text);
+                font-family:
+                    -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+                font-size: 16px;
+                line-height: 1.6;
+            }
 
-    a { color: var(--accent); text-decoration: none; }
-    a:hover { text-decoration: underline; }
+            a {
+                color: var(--accent);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
 
-    /* ── NAV ── */
-    nav {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 1.25rem 2rem;
-      border-bottom: 1px solid var(--border);
-      position: sticky;
-      top: 0;
-      background: rgba(13,13,16,0.92);
-      backdrop-filter: blur(8px);
-      z-index: 10;
-    }
+            /* ── NAV ── */
+            nav {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 1.25rem 2rem;
+                border-bottom: 1px solid var(--border);
+                position: sticky;
+                top: 0;
+                background: rgba(13, 13, 16, 0.92);
+                backdrop-filter: blur(8px);
+                z-index: 10;
+            }
 
-    .nav-logo {
-      font-family: "SF Mono", "Fira Code", monospace;
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: var(--text);
-      letter-spacing: -0.02em;
-    }
+            .nav-logo {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 1.1rem;
+                font-weight: 700;
+                color: var(--text);
+                letter-spacing: -0.02em;
+            }
 
-    .nav-logo span { color: var(--accent); }
+            .nav-logo span {
+                color: var(--accent);
+            }
 
-    .nav-links {
-      display: flex;
-      gap: 1.75rem;
-      list-style: none;
-      font-size: 0.875rem;
-      color: var(--muted);
-    }
+            .nav-links {
+                display: flex;
+                gap: 1.75rem;
+                list-style: none;
+                font-size: 0.875rem;
+                color: var(--muted);
+            }
 
-    .nav-links a { color: var(--muted); }
-    .nav-links a:hover { color: var(--text); text-decoration: none; }
-    .nav-links a.active { color: var(--text); }
+            .nav-links a {
+                color: var(--muted);
+            }
+            .nav-links a:hover {
+                color: var(--text);
+                text-decoration: none;
+            }
+            .nav-links a.active {
+                color: var(--text);
+            }
 
-    a.ext::after { content: ' ↗'; font-size: 0.75em; opacity: 0.5; }
+            a.ext::after {
+                content: " ↗";
+                font-size: 0.75em;
+                opacity: 0.5;
+            }
 
-    /* ── HERO ── */
-    .hero {
-      max-width: 860px;
-      margin: 0 auto;
-      padding: 5rem 2rem 3.5rem;
-      text-align: center;
-    }
+            /* ── HERO ── */
+            .hero {
+                max-width: 860px;
+                margin: 0 auto;
+                padding: 5rem 2rem 3.5rem;
+                text-align: center;
+            }
 
-    .hero-badge {
-      display: inline-block;
-      font-family: "SF Mono", "Fira Code", monospace;
-      font-size: 0.75rem;
-      color: var(--accent);
-      background: rgba(200,112,42,0.12);
-      border: 1px solid var(--accent-dim);
-      border-radius: 999px;
-      padding: 0.25rem 0.9rem;
-      margin-bottom: 1.5rem;
-      letter-spacing: 0.06em;
-    }
+            .hero-badge {
+                display: inline-block;
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.75rem;
+                color: var(--accent);
+                background: rgba(200, 112, 42, 0.12);
+                border: 1px solid var(--accent-dim);
+                border-radius: 999px;
+                padding: 0.25rem 0.9rem;
+                margin-bottom: 1.5rem;
+                letter-spacing: 0.06em;
+            }
 
-    h1 {
-      font-size: clamp(2rem, 4.5vw, 3rem);
-      font-weight: 800;
-      letter-spacing: -0.04em;
-      line-height: 1.1;
-      margin-bottom: 1.25rem;
-    }
+            h1 {
+                font-size: clamp(2rem, 4.5vw, 3rem);
+                font-weight: 800;
+                letter-spacing: -0.04em;
+                line-height: 1.1;
+                margin-bottom: 1.25rem;
+            }
 
-    h1 em { font-style: normal; color: var(--accent); }
+            h1 em {
+                font-style: normal;
+                color: var(--accent);
+            }
 
-    .hero-sub {
-      font-size: 1.05rem;
-      color: var(--muted);
-      max-width: 560px;
-      margin: 0 auto 2rem;
-      line-height: 1.7;
-    }
+            .hero-sub {
+                font-size: 1.05rem;
+                color: var(--muted);
+                max-width: 560px;
+                margin: 0 auto 2rem;
+                line-height: 1.7;
+            }
 
-    .install-row {
-      display: flex;
-      gap: 1rem;
-      justify-content: center;
-      flex-wrap: wrap;
-      margin-bottom: 0.75rem;
-    }
+            .install-row {
+                display: flex;
+                gap: 1rem;
+                justify-content: center;
+                flex-wrap: wrap;
+                margin-bottom: 0.75rem;
+            }
 
-    .install-cmd {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.75rem;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 0.65rem 1.1rem;
-      font-family: "SF Mono", "Fira Code", monospace;
-      font-size: 0.8rem;
-      color: var(--text);
-    }
+            .install-cmd {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.75rem;
+                background: var(--surface);
+                border: 1px solid var(--border);
+                border-radius: 8px;
+                padding: 0.65rem 1.1rem;
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.8rem;
+                color: var(--text);
+            }
 
-    .install-cmd .prompt { color: var(--muted); }
-    .install-cmd .cmd { color: var(--green); }
-    .install-cmd .label {
-      font-family: -apple-system, sans-serif;
-      font-size: 0.7rem;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-right: 0.25rem;
-    }
+            .install-cmd .prompt {
+                color: var(--muted);
+            }
+            .install-cmd .cmd {
+                color: var(--green);
+            }
+            .install-cmd .label {
+                font-family: -apple-system, sans-serif;
+                font-size: 0.7rem;
+                color: var(--muted);
+                text-transform: uppercase;
+                letter-spacing: 0.08em;
+                margin-right: 0.25rem;
+            }
 
-    /* ── LAYOUT ── */
-    .page {
-      max-width: 1040px;
-      margin: 0 auto;
-      padding: 3rem 2rem 5rem;
-      display: grid;
-      grid-template-columns: 220px 1fr;
-      gap: 3rem;
-      align-items: start;
-    }
+            /* ── LAYOUT ── */
+            .page {
+                max-width: 1040px;
+                margin: 0 auto;
+                padding: 3rem 2rem 5rem;
+                display: grid;
+                grid-template-columns: 220px 1fr;
+                gap: 3rem;
+                align-items: start;
+            }
 
-    @media (max-width: 800px) {
-      .page { grid-template-columns: 1fr; }
-      .sidebar { display: none; }
-    }
+            @media (max-width: 800px) {
+                .page {
+                    grid-template-columns: 1fr;
+                }
+                .sidebar {
+                    display: none;
+                }
+            }
 
-    /* ── SIDEBAR ── */
-    .sidebar {
-      position: sticky;
-      top: 5rem;
-    }
+            /* ── SIDEBAR ── */
+            .sidebar {
+                position: sticky;
+                top: 5rem;
+            }
 
-    .sidebar-section {
-      margin-bottom: 1.75rem;
-    }
+            .sidebar-section {
+                margin-bottom: 1.75rem;
+            }
 
-    .sidebar-label {
-      font-family: "SF Mono", "Fira Code", monospace;
-      font-size: 0.65rem;
-      letter-spacing: 0.12em;
-      color: var(--accent);
-      text-transform: uppercase;
-      margin-bottom: 0.5rem;
-    }
+            .sidebar-label {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.65rem;
+                letter-spacing: 0.12em;
+                color: var(--accent);
+                text-transform: uppercase;
+                margin-bottom: 0.5rem;
+            }
 
-    .sidebar ul {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 0.1rem;
-    }
+            .sidebar ul {
+                list-style: none;
+                display: flex;
+                flex-direction: column;
+                gap: 0.1rem;
+            }
 
-    .sidebar a {
-      font-size: 0.82rem;
-      color: var(--muted);
-      display: block;
-      padding: 0.2rem 0;
-    }
+            .sidebar a {
+                font-size: 0.82rem;
+                color: var(--muted);
+                display: block;
+                padding: 0.2rem 0;
+            }
 
-    .sidebar a:hover { color: var(--text); text-decoration: none; }
+            .sidebar a:hover {
+                color: var(--text);
+                text-decoration: none;
+            }
 
-    /* ── CONTENT ── */
-    .content {}
+            /* ── CONTENT ── */
+            .content {
+            }
 
-    .rule-section {
-      margin-bottom: 3.5rem;
-    }
+            .rule-section {
+                margin-bottom: 3.5rem;
+            }
 
-    .rule-section-header {
-      display: flex;
-      align-items: baseline;
-      gap: 0.75rem;
-      margin-bottom: 1.25rem;
-      padding-bottom: 0.75rem;
-      border-bottom: 1px solid var(--border);
-    }
+            .rule-section-header {
+                display: flex;
+                align-items: baseline;
+                gap: 0.75rem;
+                margin-bottom: 1.25rem;
+                padding-bottom: 0.75rem;
+                border-bottom: 1px solid var(--border);
+            }
 
-    .rule-section-header h2 {
-      font-size: 1.1rem;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-    }
+            .rule-section-header h2 {
+                font-size: 1.1rem;
+                font-weight: 700;
+                letter-spacing: -0.02em;
+            }
 
-    .rule-count {
-      font-family: "SF Mono", "Fira Code", monospace;
-      font-size: 0.7rem;
-      color: var(--muted);
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      padding: 0.1rem 0.55rem;
-    }
+            .rule-count {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.7rem;
+                color: var(--muted);
+                background: var(--surface);
+                border: 1px solid var(--border);
+                border-radius: 999px;
+                padding: 0.1rem 0.55rem;
+            }
 
-    .rule-list {
-      display: flex;
-      flex-direction: column;
-      gap: 0;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      overflow: hidden;
-    }
+            .rule-list {
+                display: flex;
+                flex-direction: column;
+                gap: 0;
+                border: 1px solid var(--border);
+                border-radius: 10px;
+                overflow: hidden;
+            }
 
-    .rule-item {
-      display: grid;
-      grid-template-columns: 240px 1fr;
-      gap: 1rem;
-      padding: 0.9rem 1.25rem;
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      align-items: start;
-    }
+            .rule-item {
+                display: grid;
+                grid-template-columns: 240px 1fr;
+                gap: 1rem;
+                padding: 0.9rem 1.25rem;
+                background: var(--surface);
+                border-bottom: 1px solid var(--border);
+                align-items: start;
+            }
 
-    .rule-item:last-child { border-bottom: none; }
-    .rule-item:nth-child(even) { background: #131318; }
+            .rule-item:last-child {
+                border-bottom: none;
+            }
+            .rule-item:nth-child(even) {
+                background: #131318;
+            }
 
-    .rule-name {
-      font-family: "SF Mono", "Fira Code", monospace;
-      font-size: 0.78rem;
-      color: var(--red);
-      padding-top: 0.05rem;
-    }
+            .rule-name {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.78rem;
+                color: var(--red);
+                padding-top: 0.05rem;
+            }
 
-    .rule-desc {
-      font-size: 0.875rem;
-      color: var(--muted);
-      line-height: 1.55;
-    }
+            .rule-desc {
+                font-size: 0.875rem;
+                color: var(--muted);
+                line-height: 1.55;
+            }
 
-    .rule-desc code {
-      font-family: "SF Mono", "Fira Code", monospace;
-      font-size: 0.8em;
-      color: var(--type);
-      background: rgba(130,170,255,0.08);
-      padding: 0.05rem 0.3rem;
-      border-radius: 3px;
-    }
+            .rule-desc code {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.8em;
+                color: var(--type);
+                background: rgba(130, 170, 255, 0.08);
+                padding: 0.05rem 0.3rem;
+                border-radius: 3px;
+            }
 
-    .rule-desc .use {
-      color: var(--green);
-      font-size: 0.8em;
-      font-family: "SF Mono", "Fira Code", monospace;
-    }
+            .rule-desc .use {
+                color: var(--green);
+                font-size: 0.8em;
+                font-family: "SF Mono", "Fira Code", monospace;
+            }
 
-    /* ── DIVIDER ── */
-    hr { border: none; border-top: 1px solid var(--border); }
+            /* ── DIVIDER ── */
+            hr {
+                border: none;
+                border-top: 1px solid var(--border);
+            }
 
-    /* ── FOOTER ── */
-    footer {
-      text-align: center;
-      padding: 2.5rem 2rem;
-      font-size: 0.825rem;
-      color: var(--muted);
-      border-top: 1px solid var(--border);
-    }
+            /* ── FOOTER ── */
+            footer {
+                text-align: center;
+                padding: 2.5rem 2rem;
+                font-size: 0.825rem;
+                color: var(--muted);
+                border-top: 1px solid var(--border);
+            }
 
-    footer code {
-      font-family: "SF Mono", "Fira Code", monospace;
-      color: var(--text);
-      background: var(--surface);
-      padding: 0.1rem 0.4rem;
-      border-radius: 4px;
-    }
+            footer code {
+                font-family: "SF Mono", "Fira Code", monospace;
+                color: var(--text);
+                background: var(--surface);
+                padding: 0.1rem 0.4rem;
+                border-radius: 4px;
+            }
 
-    @media (max-width: 640px) {
-      .rule-item { grid-template-columns: 1fr; gap: 0.25rem; }
-    }
-  </style>
-</head>
-<body>
+            @media (max-width: 640px) {
+                .rule-item {
+                    grid-template-columns: 1fr;
+                    gap: 0.25rem;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <!-- NAV -->
+        <nav>
+            <div class="nav-logo"><span>Shot</span>Lint</div>
+            <ul class="nav-links">
+                <li>
+                    <a href="https://github.com/didley/shot-lint" class="ext"
+                        >GitHub</a
+                    >
+                </li>
+                <li>
+                    <a
+                        href="https://www.npmjs.com/package/shot-lint"
+                        class="ext"
+                        >npm</a
+                    >
+                </li>
+                <li><a href="https://jsr.io/@shot/lint" class="ext">jsr</a></li>
+                <li><a href="../index.html">ShotScript ↗</a></li>
+            </ul>
+        </nav>
 
-<!-- NAV -->
-<nav>
-  <div class="nav-logo"><span>Shot</span>Lint</div>
-  <ul class="nav-links">
-    <li><a href="https://github.com/didley/shot-lint" class="ext">GitHub</a></li>
-    <li><a href="https://www.npmjs.com/package/shot-lint" class="ext">npm</a></li>
-    <li><a href="https://jsr.io/@shot/lint" class="ext">jsr</a></li>
-    <li><a href="../index.html">ShotScript ↗</a></li>
-  </ul>
-</nav>
+        <!-- HERO -->
+        <section class="hero">
+            <div
+                style="
+                    display: flex;
+                    gap: 0.5rem;
+                    justify-content: center;
+                    margin-bottom: 1.5rem;
+                "
+            >
+                <a href="https://www.npmjs.com/package/shot-lint"
+                    ><img
+                        src="https://img.shields.io/npm/v/shot-lint?style=flat-square&color=c8702a&labelColor=1a1a1e&label=npm"
+                        alt="npm version"
+                /></a>
+                <a href="https://jsr.io/@shot/lint"
+                    ><img
+                        src="https://img.shields.io/jsr/v/%40shot%2Flint?style=flat-square&color=c8702a&labelColor=1a1a1e&label=jsr"
+                        alt="jsr version"
+                /></a>
+            </div>
+            <h1>Go-style linting<br />for <em>TypeScript.</em></h1>
+            <p class="hero-sub">
+                90+ rules that enforce one canonical form per construct. Drop it
+                into any TypeScript project and lint your source directly.
+            </p>
 
-<!-- HERO -->
-<section class="hero">
-  <div style="display:flex;gap:0.5rem;justify-content:center;margin-bottom:1.5rem;">
-    <a href="https://www.npmjs.com/package/shot-lint"><img src="https://img.shields.io/npm/v/shot-lint?style=flat-square&color=c8702a&labelColor=1a1a1e&label=npm" alt="npm version"></a>
-    <a href="https://jsr.io/@shot/lint"><img src="https://img.shields.io/jsr/v/%40shot%2Flint?style=flat-square&color=c8702a&labelColor=1a1a1e&label=jsr" alt="jsr version"></a>
-  </div>
-  <h1>Go-style linting<br>for <em>TypeScript.</em></h1>
-  <p class="hero-sub">
-    90+ rules that enforce one canonical form per construct.
-    Drop it into any TypeScript project and lint your source directly.
-  </p>
+            <!-- Install block -->
+            <div style="max-width: 480px; margin: 0 auto; text-align: left">
+                <div
+                    style="
+                        font-family:
+                            &quot;SF Mono&quot;, &quot;Fira Code&quot;,
+                            monospace;
+                        font-size: 0.65rem;
+                        letter-spacing: 0.12em;
+                        color: var(--accent);
+                        text-transform: uppercase;
+                        margin-bottom: 0.6rem;
+                    "
+                >
+                    Install
+                </div>
+                <div
+                    class="install-cmd"
+                    style="display: block; margin-bottom: 0.5rem"
+                >
+                    <span class="prompt">$</span>
+                    <span class="cmd">npm install --save-dev shot-lint</span>
+                </div>
+                <div
+                    class="install-cmd"
+                    style="display: block; margin-bottom: 0.75rem"
+                >
+                    <span class="prompt">$</span>
+                    <span class="cmd">deno add jsr:@shot/lint</span>
+                </div>
 
-  <!-- Install block -->
-  <div style="max-width:480px;margin:0 auto;text-align:left;">
-    <div style="font-family:'SF Mono','Fira Code',monospace;font-size:0.65rem;letter-spacing:0.12em;color:var(--accent);text-transform:uppercase;margin-bottom:0.6rem;">Install</div>
-    <div class="install-cmd" style="display:block;margin-bottom:0.5rem;">
-      <span class="prompt">$</span> <span class="cmd">npm install --save-dev shot-lint</span>
-    </div>
-    <div class="install-cmd" style="display:block;margin-bottom:0.75rem;">
-      <span class="prompt">$</span> <span class="cmd">deno add jsr:@shot/lint</span>
-    </div>
+                <div
+                    style="
+                        font-family:
+                            &quot;SF Mono&quot;, &quot;Fira Code&quot;,
+                            monospace;
+                        font-size: 0.65rem;
+                        letter-spacing: 0.12em;
+                        color: var(--accent);
+                        text-transform: uppercase;
+                        margin-bottom: 0.6rem;
+                        margin-top: 1.25rem;
+                    "
+                >
+                    Run
+                </div>
+                <div
+                    class="install-cmd"
+                    style="display: block; margin-bottom: 0.5rem"
+                >
+                    <span class="prompt">$</span>
+                    <span class="cmd"
+                        >npx shot-lint
+                        <span style="color: var(--muted)"
+                            >'src/**/*.ts'</span
+                        ></span
+                    >
+                </div>
+                <div
+                    style="
+                        font-size: 0.78rem;
+                        color: var(--muted);
+                        margin-top: 0.5rem;
+                    "
+                >
+                    Exits
+                    <code
+                        style="
+                            font-family:
+                                &quot;SF Mono&quot;, &quot;Fira Code&quot;,
+                                monospace;
+                            color: var(--text);
+                            background: var(--surface);
+                            padding: 0.1rem 0.3rem;
+                            border-radius: 3px;
+                        "
+                        >0</code
+                    >
+                    when clean,
+                    <code
+                        style="
+                            font-family:
+                                &quot;SF Mono&quot;, &quot;Fira Code&quot;,
+                                monospace;
+                            color: var(--text);
+                            background: var(--surface);
+                            padding: 0.1rem 0.3rem;
+                            border-radius: 3px;
+                        "
+                        >1</code
+                    >
+                    when violations are found. Add
+                    <code
+                        style="
+                            font-family:
+                                &quot;SF Mono&quot;, &quot;Fira Code&quot;,
+                                monospace;
+                            color: var(--text);
+                            background: var(--surface);
+                            padding: 0.1rem 0.3rem;
+                            border-radius: 3px;
+                        "
+                        >--json</code
+                    >
+                    for machine-readable output.
+                </div>
 
-    <div style="font-family:'SF Mono','Fira Code',monospace;font-size:0.65rem;letter-spacing:0.12em;color:var(--accent);text-transform:uppercase;margin-bottom:0.6rem;margin-top:1.25rem;">Run</div>
-    <div class="install-cmd" style="display:block;margin-bottom:0.5rem;">
-      <span class="prompt">$</span> <span class="cmd">npx shot-lint <span style="color:var(--muted)">'src/**/*.ts'</span></span>
-    </div>
-    <div style="font-size:0.78rem;color:var(--muted);margin-top:0.5rem;">
-      Exits <code style="font-family:'SF Mono','Fira Code',monospace;color:var(--text);background:var(--surface);padding:0.1rem 0.3rem;border-radius:3px;">0</code> when clean,
-      <code style="font-family:'SF Mono','Fira Code',monospace;color:var(--text);background:var(--surface);padding:0.1rem 0.3rem;border-radius:3px;">1</code> when violations are found.
-      Add <code style="font-family:'SF Mono','Fira Code',monospace;color:var(--text);background:var(--surface);padding:0.1rem 0.3rem;border-radius:3px;">--json</code> for machine-readable output.
-    </div>
+                <div
+                    style="
+                        font-family:
+                            &quot;SF Mono&quot;, &quot;Fira Code&quot;,
+                            monospace;
+                        font-size: 0.65rem;
+                        letter-spacing: 0.12em;
+                        color: var(--accent);
+                        text-transform: uppercase;
+                        margin-bottom: 0.6rem;
+                        margin-top: 1.25rem;
+                    "
+                >
+                    Add to package.json
+                </div>
+                <div class="install-cmd" style="display: block">
+                    <span style="color: var(--muted)">"lint":</span>
+                    <span class="cmd">"shot-lint 'src/**/*.ts'"</span>
+                </div>
+            </div>
+        </section>
 
-    <div style="font-family:'SF Mono','Fira Code',monospace;font-size:0.65rem;letter-spacing:0.12em;color:var(--accent);text-transform:uppercase;margin-bottom:0.6rem;margin-top:1.25rem;">Add to package.json</div>
-    <div class="install-cmd" style="display:block;">
-      <span style="color:var(--muted)">"lint":</span> <span class="cmd">"shot-lint 'src/**/*.ts'"</span>
-    </div>
-  </div>
-</section>
+        <hr />
 
-<hr />
+        <!-- RULES CONTENT -->
+        <div class="page">
+            <!-- SIDEBAR -->
+            <nav class="sidebar" aria-label="Rule categories">
+                <div class="sidebar-section">
+                    <div class="sidebar-label">Categories</div>
+                    <ul>
+                        <li><a href="#functions">Functions</a></li>
+                        <li><a href="#errors">Error handling</a></li>
+                        <li><a href="#variables">Variables</a></li>
+                        <li><a href="#control-flow">Control flow</a></li>
+                        <li><a href="#types">Types</a></li>
+                        <li><a href="#imports">Imports &amp; exports</a></li>
+                        <li><a href="#style">Style &amp; clarity</a></li>
+                    </ul>
+                </div>
+                <div class="sidebar-section">
+                    <div class="sidebar-label">Package</div>
+                    <ul>
+                        <li>
+                            <a
+                                href="https://github.com/didley/shot-lint"
+                                class="ext"
+                                >GitHub</a
+                            >
+                        </li>
+                        <li>
+                            <a
+                                href="https://www.npmjs.com/package/shot-lint"
+                                class="ext"
+                                >npm</a
+                            >
+                        </li>
+                    </ul>
+                </div>
+            </nav>
 
-<!-- RULES CONTENT -->
-<div class="page">
+            <!-- CONTENT -->
+            <div class="content">
+                <!-- FUNCTIONS -->
+                <section class="rule-section" id="functions">
+                    <div class="rule-section-header">
+                        <h2>Functions</h2>
+                        <span class="rule-count">4 rules</span>
+                    </div>
+                    <div class="rule-list">
+                        <div class="rule-item">
+                            <div class="rule-name">no-arrow-functions</div>
+                            <div class="rule-desc">
+                                Arrow functions are banned. Use named
+                                <code>function</code> declarations or
+                                expressions — they show up in stack traces, are
+                                grep-able, and are testable in isolation.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">require-named-functions</div>
+                            <div class="rule-desc">
+                                Function expressions passed as arguments must be
+                                named. Anonymous callbacks disappear in stack
+                                traces.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">
+                                require-explicit-return-type
+                            </div>
+                            <div class="rule-desc">
+                                Every function declaration must have an explicit
+                                return type annotation. Inference hides
+                                contracts from callers.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-default-parameter</div>
+                            <div class="rule-desc">
+                                Default parameters are banned. Accept
+                                <code>T | null</code> and handle the null branch
+                                explicitly inside the body.
+                            </div>
+                        </div>
+                    </div>
+                </section>
 
-  <!-- SIDEBAR -->
-  <nav class="sidebar" aria-label="Rule categories">
-    <div class="sidebar-section">
-      <div class="sidebar-label">Categories</div>
-      <ul>
-        <li><a href="#functions">Functions</a></li>
-        <li><a href="#errors">Error handling</a></li>
-        <li><a href="#variables">Variables</a></li>
-        <li><a href="#control-flow">Control flow</a></li>
-        <li><a href="#types">Types</a></li>
-        <li><a href="#imports">Imports &amp; exports</a></li>
-        <li><a href="#style">Style &amp; clarity</a></li>
-      </ul>
-    </div>
-    <div class="sidebar-section">
-      <div class="sidebar-label">Package</div>
-      <ul>
-        <li><a href="https://github.com/didley/shot-lint" class="ext">GitHub</a></li>
-        <li><a href="https://www.npmjs.com/package/shot-lint" class="ext">npm</a></li>
-      </ul>
-    </div>
-  </nav>
+                <!-- ERROR HANDLING -->
+                <section class="rule-section" id="errors">
+                    <div class="rule-section-header">
+                        <h2>Error handling</h2>
+                        <span class="rule-count">5 rules</span>
+                    </div>
+                    <div class="rule-list">
+                        <div class="rule-item">
+                            <div class="rule-name">no-throw</div>
+                            <div class="rule-desc">
+                                Throwing is banned. Return
+                                <code>[null, new Error(...)]</code> — errors
+                                belong in the type signature, not in hidden
+                                control flow.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-try</div>
+                            <div class="rule-desc">
+                                <code>try</code>/<code>catch</code> is banned.
+                                Wrap third-party throwing code with
+                                <code>tryCatch</code> or
+                                <code>tryCatchAsync</code> from
+                                <code>shot-lint/utils</code>.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-promise-chain</div>
+                            <div class="rule-desc">
+                                <code>.then()</code> and
+                                <code>.catch()</code> chains are banned. Use
+                                <code>await</code> with tuple destructuring.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">
+                                require-tuple-destructure
+                            </div>
+                            <div class="rule-desc">
+                                Calls to functions that return a
+                                <code>[T | null, E | null]</code> tuple must be
+                                destructured immediately —
+                                <code>const [val, err] = fn()</code>. Storing
+                                the pair in a single variable defeats the
+                                pattern.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">
+                                require-async-tuple-return
+                            </div>
+                            <div class="rule-desc">
+                                Async functions must return
+                                <code>Promise&lt;void&gt;</code>,
+                                <code>ShotPromise&lt;T, E&gt;</code>, or an
+                                explicit tuple form. A bare
+                                <code>Promise&lt;User&gt;</code> hides the
+                                failure path from callers.
+                            </div>
+                        </div>
+                    </div>
+                </section>
 
-  <!-- CONTENT -->
-  <div class="content">
+                <!-- VARIABLES -->
+                <section class="rule-section" id="variables">
+                    <div class="rule-section-header">
+                        <h2>Variables</h2>
+                        <span class="rule-count">8 rules</span>
+                    </div>
+                    <div class="rule-list">
+                        <div class="rule-item">
+                            <div class="rule-name">no-var</div>
+                            <div class="rule-desc">
+                                <code>var</code> is banned. Use
+                                <code>const</code>.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-let-outside-for</div>
+                            <div class="rule-desc">
+                                <code>let</code> is only allowed inside
+                                <code>for</code> loop headers. Everything else
+                                is <code>const</code>.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-multi-var-decl</div>
+                            <div class="rule-desc">
+                                Multiple declarators in one statement (<code
+                                    >const a = 1, b = 2</code
+                                >) are banned. One declaration per statement.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-increment-decrement</div>
+                            <div class="rule-desc">
+                                <code>++</code> and <code>--</code> are banned.
+                                Use <code>+= 1</code> and <code>-= 1</code>.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-shadow</div>
+                            <div class="rule-desc">
+                                Variable shadowing is banned. Inner scopes
+                                cannot declare names that already exist in outer
+                                scopes.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-param-reassign</div>
+                            <div class="rule-desc">
+                                Reassigning function parameters is banned. Use a
+                                new <code>const</code> with a distinct name.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-multi-assign</div>
+                            <div class="rule-desc">
+                                Chained assignment (<code>a = b = 1</code>) is
+                                banned.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-return-assign</div>
+                            <div class="rule-desc">
+                                Assignment inside a
+                                <code>return</code> statement is banned.
+                            </div>
+                        </div>
+                    </div>
+                </section>
 
-    <!-- FUNCTIONS -->
-    <section class="rule-section" id="functions">
-      <div class="rule-section-header">
-        <h2>Functions</h2>
-        <span class="rule-count">4 rules</span>
-      </div>
-      <div class="rule-list">
-        <div class="rule-item">
-          <div class="rule-name">no-arrow-functions</div>
-          <div class="rule-desc">Arrow functions are banned. Use named <code>function</code> declarations or expressions — they show up in stack traces, are grep-able, and are testable in isolation.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">require-named-functions</div>
-          <div class="rule-desc">Function expressions passed as arguments must be named. Anonymous callbacks disappear in stack traces.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">require-explicit-return-type</div>
-          <div class="rule-desc">Every function declaration must have an explicit return type annotation. Inference hides contracts from callers.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-default-parameter</div>
-          <div class="rule-desc">Default parameters are banned. Accept <code>T | null</code> and handle the null branch explicitly inside the body.</div>
-        </div>
-      </div>
-    </section>
+                <!-- CONTROL FLOW -->
+                <section class="rule-section" id="control-flow">
+                    <div class="rule-section-header">
+                        <h2>Control flow</h2>
+                        <span class="rule-count">14 rules</span>
+                    </div>
+                    <div class="rule-list">
+                        <div class="rule-item">
+                            <div class="rule-name">no-ternary</div>
+                            <div class="rule-desc">
+                                Ternary expressions are banned. Use
+                                <code>if</code>/<code>else</code> or extract a
+                                named function — each branch gets a name.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-and-shorthand</div>
+                            <div class="rule-desc">
+                                <code>condition &amp;&amp; doThing()</code> for
+                                side effects is banned. Use
+                                <code
+                                    >if (condition === true) { doThing() }</code
+                                >.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-loose-equality</div>
+                            <div class="rule-desc">
+                                <code>==</code> and <code>!=</code> are banned.
+                                Use <code>===</code> and <code>!==</code> only.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-for-in</div>
+                            <div class="rule-desc">
+                                <code>for...in</code> is banned. Use
+                                <code>for...of Object.keys()</code> or
+                                <code>for...of Object.entries()</code>.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-do-while</div>
+                            <div class="rule-desc">
+                                <code>do...while</code> is banned. Use a
+                                <code>while</code> loop.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-labels</div>
+                            <div class="rule-desc">
+                                Labelled statements and <code>break</code>/<code
+                                    >continue</code
+                                >
+                                with labels are banned. Extract a function and
+                                <code>return</code> instead.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">switch-no-fallthrough</div>
+                            <div class="rule-desc">
+                                Every <code>switch</code> case must end with
+                                <code>break</code>, <code>return</code>, or
+                                <code>throw</code>. Implicit fallthrough is
+                                banned.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-logical-assignment</div>
+                            <div class="rule-desc">
+                                Logical assignment operators (<code>??=</code>,
+                                <code>||=</code>, <code>&amp;&amp;=</code>) are
+                                banned.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">
+                                no-destructuring-default
+                            </div>
+                            <div class="rule-desc">
+                                Defaults inside destructuring patterns (<code
+                                    >const { x = 5 } = obj</code
+                                >) are banned. Use explicit null checks.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-generators</div>
+                            <div class="rule-desc">
+                                Generator functions (<code>function*</code>) and
+                                <code>yield</code> are banned.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-loop-func</div>
+                            <div class="rule-desc">
+                                Function declarations or expressions inside
+                                loops are banned — they close over a mutable
+                                loop variable.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-eval</div>
+                            <div class="rule-desc">
+                                <code>eval()</code> is banned.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-self-compare</div>
+                            <div class="rule-desc">
+                                Comparing a value to itself (<code>x === x</code
+                                >) is always a bug.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-self-assign</div>
+                            <div class="rule-desc">
+                                Assigning a variable to itself (<code
+                                    >x = x</code
+                                >) is always a bug.
+                            </div>
+                        </div>
+                    </div>
+                </section>
 
-    <!-- ERROR HANDLING -->
-    <section class="rule-section" id="errors">
-      <div class="rule-section-header">
-        <h2>Error handling</h2>
-        <span class="rule-count">5 rules</span>
-      </div>
-      <div class="rule-list">
-        <div class="rule-item">
-          <div class="rule-name">no-throw</div>
-          <div class="rule-desc">Throwing is banned. Return <code>[null, new Error(...)]</code> — errors belong in the type signature, not in hidden control flow.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-try</div>
-          <div class="rule-desc"><code>try</code>/<code>catch</code> is banned. Wrap third-party throwing code with <code>tryCatch</code> or <code>tryCatchAsync</code> from <code>shot-lint/utils</code>.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-promise-chain</div>
-          <div class="rule-desc"><code>.then()</code> and <code>.catch()</code> chains are banned. Use <code>await</code> with tuple destructuring.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">require-tuple-destructure</div>
-          <div class="rule-desc">Calls to functions that return a <code>[T | null, E | null]</code> tuple must be destructured immediately — <code>const [val, err] = fn()</code>. Storing the pair in a single variable defeats the pattern.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">require-async-tuple-return</div>
-          <div class="rule-desc">Async functions must return <code>Promise&lt;void&gt;</code>, <code>ShotPromise&lt;T, E&gt;</code>, or an explicit tuple form. A bare <code>Promise&lt;User&gt;</code> hides the failure path from callers.</div>
-        </div>
-      </div>
-    </section>
+                <!-- TYPES -->
+                <section class="rule-section" id="types">
+                    <div class="rule-section-header">
+                        <h2>Types</h2>
+                        <span class="rule-count">35 rules</span>
+                    </div>
+                    <div class="rule-list">
+                        <div class="rule-item">
+                            <div class="rule-name">no-interface</div>
+                            <div class="rule-desc">
+                                Interfaces are banned. Use
+                                <code>type</code> exclusively — one way to
+                                define a shape.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-class</div>
+                            <div class="rule-desc">
+                                Classes are banned. Use a plain
+                                <code>type</code> for data and plain functions
+                                for behaviour.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-abstract</div>
+                            <div class="rule-desc">
+                                <code>abstract</code> classes and members are
+                                banned.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-enum</div>
+                            <div class="rule-desc">
+                                <code>enum</code> is banned. Use an
+                                <code>as const</code> object and a
+                                <code>typeof</code> type alias instead.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-any</div>
+                            <div class="rule-desc">
+                                <code>any</code> is banned. Use
+                                <code>unknown</code> and narrow explicitly.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-assertion</div>
+                            <div class="rule-desc">
+                                Type assertions (<code>value as T</code>) are
+                                banned. Parse and validate at boundaries; return
+                                a <code>Result</code>.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-non-null</div>
+                            <div class="rule-desc">
+                                Non-null assertions (<code>value!</code>) are
+                                banned. Check for null explicitly.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-ts-comment</div>
+                            <div class="rule-desc">
+                                <code>@ts-ignore</code>,
+                                <code>@ts-expect-error</code>, and
+                                <code>@ts-nocheck</code> are banned. Fix the
+                                type error.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-undefined-type</div>
+                            <div class="rule-desc">
+                                <code>undefined</code> in type annotations is
+                                banned. The only nullable value is
+                                <code>null</code>.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-optional-property</div>
+                            <div class="rule-desc">
+                                Optional properties (<code>prop?: T</code>) are
+                                banned. Use <code>prop: T | null</code> —
+                                explicit absence is a first-class value.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-optional-parameter</div>
+                            <div class="rule-desc">
+                                Optional parameters (<code>x?: T</code>) are
+                                banned. Use <code>x: T | null</code>.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">
+                                require-readonly-property
+                            </div>
+                            <div class="rule-desc">
+                                Every object type property must be
+                                <code>readonly</code>. Mutation is explicit, not
+                                the default.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">require-readonly-arrays</div>
+                            <div class="rule-desc">
+                                Array type annotations must use
+                                <code>readonly T[]</code>. Not <code>T[]</code>,
+                                not <code>Array&lt;T&gt;</code>.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-array-generic</div>
+                            <div class="rule-desc">
+                                <code>Array&lt;T&gt;</code> and
+                                <code>ReadonlyArray&lt;T&gt;</code> in
+                                annotations are banned. Use
+                                <code>readonly T[]</code>.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-intersection-types</div>
+                            <div class="rule-desc">
+                                Intersection types (<code>A &amp; B</code>) are
+                                banned. Spell out the combined fields, or
+                                compose by value.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-conditional-type</div>
+                            <div class="rule-desc">
+                                Conditional types (<code
+                                    >T extends U ? X : Y</code
+                                >) are banned.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-mapped-type</div>
+                            <div class="rule-desc">
+                                Mapped types (<code
+                                    >{ [K in keyof T]: ... }</code
+                                >) are banned.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">
+                                no-template-literal-type
+                            </div>
+                            <div class="rule-desc">
+                                Template literal types
+                                (<code>`prefix-${T}`</code>) are banned.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-infer</div>
+                            <div class="rule-desc">
+                                <code>infer</code> inside conditional types is
+                                banned (follows from
+                                <code>no-conditional-type</code>).
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-variadic-tuple</div>
+                            <div class="rule-desc">
+                                Variadic tuple types (<code>[...T]</code>) are
+                                banned.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-index-signature</div>
+                            <div class="rule-desc">
+                                Index signatures (<code>[k: string]: T</code>)
+                                are banned. Use <code>Map&lt;K, V&gt;</code>.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-banned-utility-types</div>
+                            <div class="rule-desc">
+                                <code>Partial</code>, <code>Required</code>,
+                                <code>Record</code>, <code>InstanceType</code>,
+                                <code>ConstructorParameters</code>, and
+                                <code>ThisType</code> are banned. Spell out the
+                                shape.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-readonly-wrapper</div>
+                            <div class="rule-desc">
+                                <code>Readonly&lt;T&gt;</code> wrapper is
+                                banned. Mark each property
+                                <code>readonly</code> directly.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">
+                                no-primitive-wrapper-types
+                            </div>
+                            <div class="rule-desc">
+                                Boxed primitive types (<code>String</code>,
+                                <code>Number</code>, <code>Boolean</code>,
+                                <code>Symbol</code>, <code>BigInt</code>) are
+                                banned. Use the lowercase primitives.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-constructor-type</div>
+                            <div class="rule-desc">
+                                Constructor type signatures (<code
+                                    >new (...args): T</code
+                                >) are banned.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-function-type</div>
+                            <div class="rule-desc">
+                                The <code>Function</code> type is banned. Use an
+                                explicit call signature type.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-object-type</div>
+                            <div class="rule-desc">
+                                The <code>object</code> type is banned. Use an
+                                explicit type shape.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-empty-object-type</div>
+                            <div class="rule-desc">
+                                The empty object type <code>{}</code> in
+                                annotations is banned.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-symbol-type</div>
+                            <div class="rule-desc">
+                                The <code>symbol</code> type is banned.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-literal-boolean-type</div>
+                            <div class="rule-desc">
+                                <code>true | false</code> is banned — it is just
+                                <code>boolean</code>.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-overloads</div>
+                            <div class="rule-desc">
+                                Function overload signatures are banned. Use a
+                                union parameter type and handle variants inside
+                                the body.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-namespace</div>
+                            <div class="rule-desc">
+                                TypeScript namespaces and modules (<code
+                                    >namespace</code
+                                >
+                                / <code>module</code> declarations) are banned.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-decorators</div>
+                            <div class="rule-desc">Decorators are banned.</div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-this</div>
+                            <div class="rule-desc">
+                                <code>this</code> is banned in all forms — no
+                                method context, no <code>this</code> parameters.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-abstract</div>
+                            <div class="rule-desc">
+                                <code>abstract</code> classes and members are
+                                banned.
+                            </div>
+                        </div>
+                    </div>
+                </section>
 
-    <!-- VARIABLES -->
-    <section class="rule-section" id="variables">
-      <div class="rule-section-header">
-        <h2>Variables</h2>
-        <span class="rule-count">8 rules</span>
-      </div>
-      <div class="rule-list">
-        <div class="rule-item">
-          <div class="rule-name">no-var</div>
-          <div class="rule-desc"><code>var</code> is banned. Use <code>const</code>.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-let-outside-for</div>
-          <div class="rule-desc"><code>let</code> is only allowed inside <code>for</code> loop headers. Everything else is <code>const</code>.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-multi-var-decl</div>
-          <div class="rule-desc">Multiple declarators in one statement (<code>const a = 1, b = 2</code>) are banned. One declaration per statement.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-increment-decrement</div>
-          <div class="rule-desc"><code>++</code> and <code>--</code> are banned. Use <code>+= 1</code> and <code>-= 1</code>.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-shadow</div>
-          <div class="rule-desc">Variable shadowing is banned. Inner scopes cannot declare names that already exist in outer scopes.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-param-reassign</div>
-          <div class="rule-desc">Reassigning function parameters is banned. Use a new <code>const</code> with a distinct name.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-multi-assign</div>
-          <div class="rule-desc">Chained assignment (<code>a = b = 1</code>) is banned.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-return-assign</div>
-          <div class="rule-desc">Assignment inside a <code>return</code> statement is banned.</div>
-        </div>
-      </div>
-    </section>
+                <!-- IMPORTS -->
+                <section class="rule-section" id="imports">
+                    <div class="rule-section-header">
+                        <h2>Imports &amp; exports</h2>
+                        <span class="rule-count">4 rules</span>
+                    </div>
+                    <div class="rule-list">
+                        <div class="rule-item">
+                            <div class="rule-name">no-default-export</div>
+                            <div class="rule-desc">
+                                Default exports are banned. Named exports only —
+                                every export is addressable and tree-shakeable.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-require</div>
+                            <div class="rule-desc">
+                                <code>require()</code> is banned. ESM
+                                <code>import</code> only.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-index-import</div>
+                            <div class="rule-desc">
+                                Importing from an <code>index</code> file or a
+                                bare directory is banned. Import the specific
+                                file.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-useless-empty-export</div>
+                            <div class="rule-desc">
+                                Empty <code>export {}</code> statements that
+                                serve no purpose are banned.
+                            </div>
+                        </div>
+                    </div>
+                </section>
 
-    <!-- CONTROL FLOW -->
-    <section class="rule-section" id="control-flow">
-      <div class="rule-section-header">
-        <h2>Control flow</h2>
-        <span class="rule-count">14 rules</span>
-      </div>
-      <div class="rule-list">
-        <div class="rule-item">
-          <div class="rule-name">no-ternary</div>
-          <div class="rule-desc">Ternary expressions are banned. Use <code>if</code>/<code>else</code> or extract a named function — each branch gets a name.</div>
+                <!-- STYLE -->
+                <section class="rule-section" id="style">
+                    <div class="rule-section-header">
+                        <h2>Style &amp; clarity</h2>
+                        <span class="rule-count">20 rules</span>
+                    </div>
+                    <div class="rule-list">
+                        <div class="rule-item">
+                            <div class="rule-name">prefer-template</div>
+                            <div class="rule-desc">
+                                String concatenation with <code>+</code> is
+                                banned when a template literal would work. Use
+                                <code>`hello ${name}`</code>.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-double-bang</div>
+                            <div class="rule-desc">
+                                <code>!!value</code> is banned. Use
+                                <code>Boolean(value)</code>.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-unary-plus</div>
+                            <div class="rule-desc">
+                                Unary <code>+</code> for coercion is banned. Use
+                                <code>Number(value)</code>.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-parse-number-fns</div>
+                            <div class="rule-desc">
+                                <code>parseInt</code> and
+                                <code>parseFloat</code> are banned. Use
+                                <code>Number(str)</code>.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-throwing-globals</div>
+                            <div class="rule-desc">
+                                <code>JSON.parse</code>,
+                                <code>JSON.stringify</code>, and bare
+                                <code>fetch</code> are banned. Use the safe
+                                wrappers from <code>shot-lint/utils</code>.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">
+                                no-metaprogramming-globals
+                            </div>
+                            <div class="rule-desc">
+                                <code>Proxy</code>, <code>Reflect</code>,
+                                <code>Object.assign</code>,
+                                <code>Object.create</code>,
+                                <code>Object.defineProperty</code>, and similar
+                                metaprogramming APIs are banned.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-new-wrappers</div>
+                            <div class="rule-desc">
+                                <code>new String()</code>,
+                                <code>new Number()</code>,
+                                <code>new Boolean()</code> are banned.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-new-user-types</div>
+                            <div class="rule-desc">
+                                <code>new</code> on user-defined constructors is
+                                banned. No classes means no <code>new</code>.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-delete</div>
+                            <div class="rule-desc">
+                                The <code>delete</code> operator is banned.
+                                Build a new object without the key.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-in</div>
+                            <div class="rule-desc">
+                                The <code>in</code> operator is banned. Use
+                                explicit property checks or discriminated
+                                unions.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-bitwise</div>
+                            <div class="rule-desc">
+                                Bitwise operators (<code>&amp;</code>,
+                                <code>|</code>, <code>^</code>, <code>~</code>,
+                                <code>&lt;&lt;</code>, <code>&gt;&gt;</code>,
+                                <code>&gt;&gt;&gt;</code>) are banned.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-comma-operator</div>
+                            <div class="rule-desc">
+                                The comma operator is banned.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-arguments</div>
+                            <div class="rule-desc">
+                                The <code>arguments</code> object is banned. Use
+                                explicit rest parameters.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-void</div>
+                            <div class="rule-desc">
+                                <code>void</code> as an expression (e.g.
+                                <code>void someCall()</code>) is banned.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-tagged-templates</div>
+                            <div class="rule-desc">
+                                Tagged template literals are banned.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-empty</div>
+                            <div class="rule-desc">
+                                Empty block bodies (<code>{}</code>) on
+                                functions, <code>if</code>, <code>while</code>,
+                                etc. are banned.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-empty-pattern</div>
+                            <div class="rule-desc">
+                                Empty destructuring patterns (<code
+                                    >const {} = x</code
+                                >, <code>const [] = x</code>) are banned.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-lone-blocks</div>
+                            <div class="rule-desc">
+                                Standalone block statements (<code
+                                    >{ ... }</code
+                                >
+                                not attached to control flow) are banned.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-unused-expressions</div>
+                            <div class="rule-desc">
+                                Expressions whose result is not used are banned.
+                                Every expression must be assigned, returned, or
+                                have a deliberate side effect.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-useless-rename</div>
+                            <div class="rule-desc">
+                                Renaming an import or export to the same name
+                                (<code>import { x as x }</code>) is banned.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-useless-return</div>
+                            <div class="rule-desc">
+                                A bare <code>return</code> at the end of a
+                                <code>void</code> function is banned.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-useless-concat</div>
+                            <div class="rule-desc">
+                                Concatenation of two string literals (<code
+                                    >"a" + "b"</code
+                                >) is banned — just write <code>"ab"</code>.
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-name">no-useless-computed-key</div>
+                            <div class="rule-desc">
+                                Computed property keys that are string literals
+                                (<code>{ ["x"]: 1 }</code>) are banned.
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <!-- /content -->
         </div>
-        <div class="rule-item">
-          <div class="rule-name">no-and-shorthand</div>
-          <div class="rule-desc"><code>condition &amp;&amp; doThing()</code> for side effects is banned. Use <code>if (condition === true) { doThing() }</code>.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-loose-equality</div>
-          <div class="rule-desc"><code>==</code> and <code>!=</code> are banned. Use <code>===</code> and <code>!==</code> only.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-for-in</div>
-          <div class="rule-desc"><code>for...in</code> is banned. Use <code>for...of Object.keys()</code> or <code>for...of Object.entries()</code>.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-do-while</div>
-          <div class="rule-desc"><code>do...while</code> is banned. Use a <code>while</code> loop.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-labels</div>
-          <div class="rule-desc">Labelled statements and <code>break</code>/<code>continue</code> with labels are banned. Extract a function and <code>return</code> instead.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">switch-no-fallthrough</div>
-          <div class="rule-desc">Every <code>switch</code> case must end with <code>break</code>, <code>return</code>, or <code>throw</code>. Implicit fallthrough is banned.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-logical-assignment</div>
-          <div class="rule-desc">Logical assignment operators (<code>??=</code>, <code>||=</code>, <code>&amp;&amp;=</code>) are banned.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-destructuring-default</div>
-          <div class="rule-desc">Defaults inside destructuring patterns (<code>const { x = 5 } = obj</code>) are banned. Use explicit null checks.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-generators</div>
-          <div class="rule-desc">Generator functions (<code>function*</code>) and <code>yield</code> are banned.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-loop-func</div>
-          <div class="rule-desc">Function declarations or expressions inside loops are banned — they close over a mutable loop variable.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-eval</div>
-          <div class="rule-desc"><code>eval()</code> is banned.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-self-compare</div>
-          <div class="rule-desc">Comparing a value to itself (<code>x === x</code>) is always a bug.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-self-assign</div>
-          <div class="rule-desc">Assigning a variable to itself (<code>x = x</code>) is always a bug.</div>
-        </div>
-      </div>
-    </section>
+        <!-- /page -->
 
-    <!-- TYPES -->
-    <section class="rule-section" id="types">
-      <div class="rule-section-header">
-        <h2>Types</h2>
-        <span class="rule-count">35 rules</span>
-      </div>
-      <div class="rule-list">
-        <div class="rule-item">
-          <div class="rule-name">no-interface</div>
-          <div class="rule-desc">Interfaces are banned. Use <code>type</code> exclusively — one way to define a shape.</div>
+        <!-- ECOSYSTEM -->
+        <div style="max-width: 1040px; margin: 0 auto; padding: 3rem 2rem">
+            <div
+                style="
+                    font-family:
+                        &quot;SF Mono&quot;, &quot;Fira Code&quot;, monospace;
+                    font-size: 0.65rem;
+                    letter-spacing: 0.12em;
+                    color: var(--accent);
+                    text-transform: uppercase;
+                    margin-bottom: 0.5rem;
+                "
+            >
+                Ecosystem
+            </div>
+            <h2
+                style="
+                    font-size: 1.1rem;
+                    font-weight: 700;
+                    letter-spacing: -0.02em;
+                    margin-bottom: 0.75rem;
+                "
+            >
+                How the pieces fit together.
+            </h2>
+            <p
+                style="
+                    font-size: 0.875rem;
+                    color: var(--muted);
+                    margin-bottom: 1.5rem;
+                "
+            >
+                ShotLint is the portable rule engine. ShotScript is the full
+                toolchain built on top of it. A ShotScript registry is planned —
+                native packages and jsr/npm wrappers with error-tuple guarantees
+                throughout.
+            </p>
+            <div
+                id="ecosystem-diagram"
+                style="
+                    background: var(--surface);
+                    border: 1px solid var(--border);
+                    border-radius: 10px;
+                    padding: 2rem;
+                    overflow-x: auto;
+                "
+            ></div>
         </div>
-        <div class="rule-item">
-          <div class="rule-name">no-class</div>
-          <div class="rule-desc">Classes are banned. Use a plain <code>type</code> for data and plain functions for behaviour.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-abstract</div>
-          <div class="rule-desc"><code>abstract</code> classes and members are banned.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-enum</div>
-          <div class="rule-desc"><code>enum</code> is banned. Use an <code>as const</code> object and a <code>typeof</code> type alias instead.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-any</div>
-          <div class="rule-desc"><code>any</code> is banned. Use <code>unknown</code> and narrow explicitly.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-assertion</div>
-          <div class="rule-desc">Type assertions (<code>value as T</code>) are banned. Parse and validate at boundaries; return a <code>Result</code>.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-non-null</div>
-          <div class="rule-desc">Non-null assertions (<code>value!</code>) are banned. Check for null explicitly.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-ts-comment</div>
-          <div class="rule-desc"><code>@ts-ignore</code>, <code>@ts-expect-error</code>, and <code>@ts-nocheck</code> are banned. Fix the type error.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-undefined-type</div>
-          <div class="rule-desc"><code>undefined</code> in type annotations is banned. The only nullable value is <code>null</code>.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-optional-property</div>
-          <div class="rule-desc">Optional properties (<code>prop?: T</code>) are banned. Use <code>prop: T | null</code> — explicit absence is a first-class value.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-optional-parameter</div>
-          <div class="rule-desc">Optional parameters (<code>x?: T</code>) are banned. Use <code>x: T | null</code>.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">require-readonly-property</div>
-          <div class="rule-desc">Every object type property must be <code>readonly</code>. Mutation is explicit, not the default.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">require-readonly-arrays</div>
-          <div class="rule-desc">Array type annotations must use <code>readonly T[]</code>. Not <code>T[]</code>, not <code>Array&lt;T&gt;</code>.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-array-generic</div>
-          <div class="rule-desc"><code>Array&lt;T&gt;</code> and <code>ReadonlyArray&lt;T&gt;</code> in annotations are banned. Use <code>readonly T[]</code>.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-intersection-types</div>
-          <div class="rule-desc">Intersection types (<code>A &amp; B</code>) are banned. Spell out the combined fields, or compose by value.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-conditional-type</div>
-          <div class="rule-desc">Conditional types (<code>T extends U ? X : Y</code>) are banned.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-mapped-type</div>
-          <div class="rule-desc">Mapped types (<code>{ [K in keyof T]: ... }</code>) are banned.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-template-literal-type</div>
-          <div class="rule-desc">Template literal types (<code>`prefix-${T}`</code>) are banned.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-infer</div>
-          <div class="rule-desc"><code>infer</code> inside conditional types is banned (follows from <code>no-conditional-type</code>).</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-variadic-tuple</div>
-          <div class="rule-desc">Variadic tuple types (<code>[...T]</code>) are banned.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-index-signature</div>
-          <div class="rule-desc">Index signatures (<code>[k: string]: T</code>) are banned. Use <code>Map&lt;K, V&gt;</code>.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-banned-utility-types</div>
-          <div class="rule-desc"><code>Partial</code>, <code>Required</code>, <code>Record</code>, <code>InstanceType</code>, <code>ConstructorParameters</code>, and <code>ThisType</code> are banned. Spell out the shape.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-readonly-wrapper</div>
-          <div class="rule-desc"><code>Readonly&lt;T&gt;</code> wrapper is banned. Mark each property <code>readonly</code> directly.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-primitive-wrapper-types</div>
-          <div class="rule-desc">Boxed primitive types (<code>String</code>, <code>Number</code>, <code>Boolean</code>, <code>Symbol</code>, <code>BigInt</code>) are banned. Use the lowercase primitives.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-constructor-type</div>
-          <div class="rule-desc">Constructor type signatures (<code>new (...args): T</code>) are banned.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-function-type</div>
-          <div class="rule-desc">The <code>Function</code> type is banned. Use an explicit call signature type.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-object-type</div>
-          <div class="rule-desc">The <code>object</code> type is banned. Use an explicit type shape.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-empty-object-type</div>
-          <div class="rule-desc">The empty object type <code>{}</code> in annotations is banned.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-symbol-type</div>
-          <div class="rule-desc">The <code>symbol</code> type is banned.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-literal-boolean-type</div>
-          <div class="rule-desc"><code>true | false</code> is banned — it is just <code>boolean</code>.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-overloads</div>
-          <div class="rule-desc">Function overload signatures are banned. Use a union parameter type and handle variants inside the body.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-namespace</div>
-          <div class="rule-desc">TypeScript namespaces and modules (<code>namespace</code> / <code>module</code> declarations) are banned.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-decorators</div>
-          <div class="rule-desc">Decorators are banned.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-this</div>
-          <div class="rule-desc"><code>this</code> is banned in all forms — no method context, no <code>this</code> parameters.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-abstract</div>
-          <div class="rule-desc"><code>abstract</code> classes and members are banned.</div>
-        </div>
-      </div>
-    </section>
 
-    <!-- IMPORTS -->
-    <section class="rule-section" id="imports">
-      <div class="rule-section-header">
-        <h2>Imports &amp; exports</h2>
-        <span class="rule-count">4 rules</span>
-      </div>
-      <div class="rule-list">
-        <div class="rule-item">
-          <div class="rule-name">no-default-export</div>
-          <div class="rule-desc">Default exports are banned. Named exports only — every export is addressable and tree-shakeable.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-require</div>
-          <div class="rule-desc"><code>require()</code> is banned. ESM <code>import</code> only.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-index-import</div>
-          <div class="rule-desc">Importing from an <code>index</code> file or a bare directory is banned. Import the specific file.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-useless-empty-export</div>
-          <div class="rule-desc">Empty <code>export {}</code> statements that serve no purpose are banned.</div>
-        </div>
-      </div>
-    </section>
+        <script type="module">
+            import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+            mermaid.initialize({
+                startOnLoad: false,
+                theme: "base",
+                themeVariables: {
+                    background: "#16161a",
+                    primaryColor: "#1e1e24",
+                    primaryBorderColor: "#2a2a32",
+                    primaryTextColor: "#e8e8f0",
+                    lineColor: "#7a7a90",
+                    edgeLabelBackground: "#16161a",
+                    tertiaryColor: "#16161a",
+                    tertiaryBorderColor: "#2a2a32",
+                },
+            });
 
-    <!-- STYLE -->
-    <section class="rule-section" id="style">
-      <div class="rule-section-header">
-        <h2>Style &amp; clarity</h2>
-        <span class="rule-count">20 rules</span>
-      </div>
-      <div class="rule-list">
-        <div class="rule-item">
-          <div class="rule-name">prefer-template</div>
-          <div class="rule-desc">String concatenation with <code>+</code> is banned when a template literal would work. Use <code>`hello ${name}`</code>.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-double-bang</div>
-          <div class="rule-desc"><code>!!value</code> is banned. Use <code>Boolean(value)</code>.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-unary-plus</div>
-          <div class="rule-desc">Unary <code>+</code> for coercion is banned. Use <code>Number(value)</code>.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-parse-number-fns</div>
-          <div class="rule-desc"><code>parseInt</code> and <code>parseFloat</code> are banned. Use <code>Number(str)</code>.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-throwing-globals</div>
-          <div class="rule-desc"><code>JSON.parse</code>, <code>JSON.stringify</code>, and bare <code>fetch</code> are banned. Use the safe wrappers from <code>shot-lint/utils</code>.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-metaprogramming-globals</div>
-          <div class="rule-desc"><code>Proxy</code>, <code>Reflect</code>, <code>Object.assign</code>, <code>Object.create</code>, <code>Object.defineProperty</code>, and similar metaprogramming APIs are banned.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-new-wrappers</div>
-          <div class="rule-desc"><code>new String()</code>, <code>new Number()</code>, <code>new Boolean()</code> are banned.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-new-user-types</div>
-          <div class="rule-desc"><code>new</code> on user-defined constructors is banned. No classes means no <code>new</code>.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-delete</div>
-          <div class="rule-desc">The <code>delete</code> operator is banned. Build a new object without the key.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-in</div>
-          <div class="rule-desc">The <code>in</code> operator is banned. Use explicit property checks or discriminated unions.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-bitwise</div>
-          <div class="rule-desc">Bitwise operators (<code>&amp;</code>, <code>|</code>, <code>^</code>, <code>~</code>, <code>&lt;&lt;</code>, <code>&gt;&gt;</code>, <code>&gt;&gt;&gt;</code>) are banned.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-comma-operator</div>
-          <div class="rule-desc">The comma operator is banned.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-arguments</div>
-          <div class="rule-desc">The <code>arguments</code> object is banned. Use explicit rest parameters.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-void</div>
-          <div class="rule-desc"><code>void</code> as an expression (e.g. <code>void someCall()</code>) is banned.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-tagged-templates</div>
-          <div class="rule-desc">Tagged template literals are banned.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-empty</div>
-          <div class="rule-desc">Empty block bodies (<code>{}</code>) on functions, <code>if</code>, <code>while</code>, etc. are banned.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-empty-pattern</div>
-          <div class="rule-desc">Empty destructuring patterns (<code>const {} = x</code>, <code>const [] = x</code>) are banned.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-lone-blocks</div>
-          <div class="rule-desc">Standalone block statements (<code>{ ... }</code> not attached to control flow) are banned.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-unused-expressions</div>
-          <div class="rule-desc">Expressions whose result is not used are banned. Every expression must be assigned, returned, or have a deliberate side effect.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-useless-rename</div>
-          <div class="rule-desc">Renaming an import or export to the same name (<code>import { x as x }</code>) is banned.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-useless-return</div>
-          <div class="rule-desc">A bare <code>return</code> at the end of a <code>void</code> function is banned.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-useless-concat</div>
-          <div class="rule-desc">Concatenation of two string literals (<code>"a" + "b"</code>) is banned — just write <code>"ab"</code>.</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-name">no-useless-computed-key</div>
-          <div class="rule-desc">Computed property keys that are string literals (<code>{ ["x"]: 1 }</code>) are banned.</div>
-        </div>
-      </div>
-    </section>
-
-  </div><!-- /content -->
-</div><!-- /page -->
-
-<!-- ECOSYSTEM -->
-<div style="max-width:1040px;margin:0 auto;padding:3rem 2rem;">
-  <div style="font-family:'SF Mono','Fira Code',monospace;font-size:0.65rem;letter-spacing:0.12em;color:var(--accent);text-transform:uppercase;margin-bottom:0.5rem;">Ecosystem</div>
-  <h2 style="font-size:1.1rem;font-weight:700;letter-spacing:-0.02em;margin-bottom:0.75rem;">How the pieces fit together.</h2>
-  <p style="font-size:0.875rem;color:var(--muted);margin-bottom:1.5rem;">
-    ShotLint is the portable rule engine. ShotScript is the full toolchain built on top of it.
-    A ShotScript registry is planned — native packages and jsr/npm wrappers with error-tuple guarantees throughout.
-  </p>
-  <div id="ecosystem-diagram" style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:2rem;overflow-x:auto;"></div>
-</div>
-
-<script type="module">
-  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs'
-  mermaid.initialize({
-    startOnLoad: false,
-    theme: 'base',
-    themeVariables: {
-      background: '#16161a',
-      primaryColor: '#1e1e24',
-      primaryBorderColor: '#2a2a32',
-      primaryTextColor: '#e8e8f0',
-      lineColor: '#7a7a90',
-      edgeLabelBackground: '#16161a',
-      tertiaryColor: '#16161a',
-      tertiaryBorderColor: '#2a2a32',
-    }
-  })
-
-  const diagram = `graph TD
+            const diagram = `graph TD
     SL["<b>ShotLint</b>  ·  github.com/didley/shot-lint
 ────────────────────────────────
 Go-style linting for any TypeScript project
@@ -870,7 +1461,7 @@ Go-style linting for any TypeScript project
     SS["<b>ShotScript</b>  ·  github.com/didley/ShotScript
 ────────────────────────────────
 The full opinionated Go-style toolchain
-• .shot files · shot CLI · Deno runtime
+• .shot files · Shot CLI · Deno runtime
 • shot:std standard library · import allowlist
 • Locked tsconfig — no user overrides"]
 
@@ -897,23 +1488,27 @@ A package registry for the Shot ecosystem
     SS -->|"shot run / check / build / test"| SP
     REG -->|"shot add"| SP
 
-    style REG stroke-dasharray: 5 5`
+    style REG stroke-dasharray: 5 5`;
 
-  const { svg } = await mermaid.render('eco', diagram)
-  document.getElementById('ecosystem-diagram').innerHTML = svg
-</script>
+            const { svg } = await mermaid.render("eco", diagram);
+            document.getElementById("ecosystem-diagram").innerHTML = svg;
+        </script>
 
-<hr />
+        <hr />
 
-<!-- FOOTER -->
-<footer>
-  <p>
-    <a href="https://github.com/didley/shot-lint" class="ext">ShotLint on GitHub</a> ·
-    <a href="https://www.npmjs.com/package/shot-lint" class="ext">npm</a> ·
-    <a href="https://jsr.io/@shot/lint" class="ext">jsr</a> ·
-    <a href="/">ShotScript</a>
-  </p>
-</footer>
-
-</body>
+        <!-- FOOTER -->
+        <footer>
+            <p>
+                <a href="https://github.com/didley/shot-lint" class="ext"
+                    >ShotLint on GitHub</a
+                >
+                ·
+                <a href="https://www.npmjs.com/package/shot-lint" class="ext"
+                    >npm</a
+                >
+                · <a href="https://jsr.io/@shot/lint" class="ext">jsr</a> ·
+                <a href="/">ShotScript</a>
+            </p>
+        </footer>
+    </body>
 </html>
