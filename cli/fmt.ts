@@ -3,7 +3,7 @@ import { walk } from "jsr:@std/fs@^1.0.0/walk"
 async function fmtFile(path: string): Promise<boolean> {
     const source = await Deno.readTextFile(path)
     const cmd = new Deno.Command(Deno.execPath(), {
-        args: ["fmt", "--ext", "ts", "--options-no-semicolons", "-"],
+        args: ["fmt", "--ext", "ts", "--options-no-semicolons", "--options-single-quote", "-"],
         stdin: "piped",
         stdout: "piped",
         stderr: "inherit",

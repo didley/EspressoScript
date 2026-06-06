@@ -60,3 +60,33 @@ export async function writeFile(path: string, data: string): Promise<[null, Erro
         return [null, e instanceof Error ? e : new Error(String(e))]
     }
 }
+
+// serve bridges the ShotPromise<Response> handler to Deno.serve's expected signature.
+// A [null, Error] result becomes a 500; a [Response, null] result is returned as-is.
+export function serve(
+    handler: (req: Request) => ShotPromise<Response>,
+    port?: number,
+): void {
+    async function serveHandler(req: Request): Promise<Response> {
+        try {
+            const [res, err] = await handler(req)
+            if (err !== null || res === null) {
+                return new Response('{"error":"internal server error"}', {
+                    status: 500,
+                    headers: { "Content-Type": "application/json" },
+                })
+            }
+            return res
+        } catch {
+            return new Response('{"error":"internal server error"}', {
+                status: 500,
+                headers: { "Content-Type": "application/json" },
+            })
+        }
+    }
+    if (port !== undefined) {
+        Deno.serve({ port }, serveHandler)
+    } else {
+        Deno.serve(serveHandler)
+    }
+}

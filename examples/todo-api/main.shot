@@ -1,0 +1,59 @@
+import { serve, ShotPromise } from 'shot:std'
+import {
+  handleCreate,
+  handleDelete,
+  handleGet,
+  handleList,
+  handleUpdate,
+} from './handlers.shot'
+
+function matchTodoId(path: string): number | null {
+  const parts = path.split('/')
+  if (parts.length !== 3 || parts[0] !== '' || parts[1] !== 'todos') {
+    return null
+  }
+  const id = Number(parts[2])
+  if (isNaN(id) || id <= 0) {
+    return null
+  }
+  return id
+}
+
+async function dispatch(req: Request): ShotPromise<Response> {
+  const url = new URL(req.url)
+  const path = url.pathname
+  const method = req.method
+
+  if (method === 'GET' && path === '/todos') {
+    return handleList()
+  }
+
+  if (method === 'POST' && path === '/todos') {
+    return handleCreate(req)
+  }
+
+  const id = matchTodoId(path)
+
+  if (id !== null) {
+    if (method === 'GET') {
+      return handleGet(id)
+    }
+    if (method === 'PATCH') {
+      return handleUpdate(req, id)
+    }
+    if (method === 'DELETE') {
+      return handleDelete(id)
+    }
+  }
+
+  return [
+    new Response('{"error":"not found"}', {
+      status: 404,
+      headers: { 'Content-Type': 'application/json' },
+    }),
+    null,
+  ]
+}
+
+console.log('todo-api listening on :8000')
+serve(dispatch)

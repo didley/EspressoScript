@@ -1,0 +1,130 @@
+import {
+  clearTodos,
+  createTodo,
+  deleteTodo,
+  getTodo,
+  listTodos,
+  updateTodo,
+} from './store.shot'
+import { assertEquals, assertInstanceOf, assertNotEquals } from 'shot:assert'
+
+Deno.test('createTodo adds a todo with trimmed title', function testCreateTodo(): void {
+  clearTodos()
+  const [todo, err] = createTodo({ title: '  buy milk  ' })
+  assertEquals(err, null)
+  assertNotEquals(todo, null)
+  if (todo === null) {
+    return
+  }
+  assertEquals(todo.title, 'buy milk')
+  assertEquals(todo.done, false)
+  assertNotEquals(todo.id, 0)
+})
+
+Deno.test('createTodo rejects empty title', function testCreateTodoEmpty(): void {
+  clearTodos()
+  const [todo, err] = createTodo({ title: '   ' })
+  assertEquals(todo, null)
+  assertInstanceOf(err, Error)
+  if (err === null) {
+    return
+  }
+  assertEquals(err.message, 'title must not be empty')
+})
+
+Deno.test('createTodo assigns incrementing ids', function testCreateTodoIds(): void {
+  clearTodos()
+  const [first, firstErr] = createTodo({ title: 'first' })
+  const [second, secondErr] = createTodo({ title: 'second' })
+  assertEquals(firstErr, null)
+  assertEquals(secondErr, null)
+  if (first === null || second === null) {
+    return
+  }
+  assertNotEquals(first.id, second.id)
+})
+
+Deno.test('listTodos returns all todos in insertion order', function testListTodos(): void {
+  clearTodos()
+  createTodo({ title: 'alpha' })
+  createTodo({ title: 'beta' })
+  createTodo({ title: 'gamma' })
+  const all = listTodos()
+  assertEquals(all.length, 3)
+  assertEquals(all[0].title, 'alpha')
+  assertEquals(all[2].title, 'gamma')
+})
+
+Deno.test('getTodo returns the matching todo', function testGetTodo(): void {
+  clearTodos()
+  const [created, createErr] = createTodo({ title: 'find me' })
+  assertEquals(createErr, null)
+  if (created === null) {
+    return
+  }
+  const [found, findErr] = getTodo(created.id)
+  assertEquals(findErr, null)
+  assertNotEquals(found, null)
+  if (found === null) {
+    return
+  }
+  assertEquals(found.id, created.id)
+  assertEquals(found.title, 'find me')
+})
+
+Deno.test('getTodo returns error for unknown id', function testGetTodoMissing(): void {
+  clearTodos()
+  const [todo, err] = getTodo(99999)
+  assertEquals(todo, null)
+  assertInstanceOf(err, Error)
+})
+
+Deno.test('updateTodo flips done status', function testUpdateTodo(): void {
+  clearTodos()
+  const [created, createErr] = createTodo({ title: 'finish me' })
+  assertEquals(createErr, null)
+  if (created === null) {
+    return
+  }
+  const [updated, updateErr] = updateTodo(created.id, { done: true })
+  assertEquals(updateErr, null)
+  assertNotEquals(updated, null)
+  if (updated === null) {
+    return
+  }
+  assertEquals(updated.done, true)
+  assertEquals(updated.title, 'finish me')
+})
+
+Deno.test('updateTodo returns wrapped error for unknown id', function testUpdateTodoMissing(): void {
+  clearTodos()
+  const [todo, err] = updateTodo(99999, { done: true })
+  assertEquals(todo, null)
+  assertInstanceOf(err, Error)
+  if (err === null) {
+    return
+  }
+  assertNotEquals(err.message.indexOf('update todo'), -1)
+})
+
+Deno.test('deleteTodo removes the todo', function testDeleteTodo(): void {
+  clearTodos()
+  const [created, createErr] = createTodo({ title: 'delete me' })
+  assertEquals(createErr, null)
+  if (created === null) {
+    return
+  }
+  const [_result, deleteErr] = deleteTodo(created.id)
+  assertEquals(deleteErr, null)
+  assertEquals(listTodos().length, 0)
+})
+
+Deno.test('deleteTodo returns wrapped error for unknown id', function testDeleteTodoMissing(): void {
+  clearTodos()
+  const [_result, err] = deleteTodo(99999)
+  assertInstanceOf(err, Error)
+  if (err === null) {
+    return
+  }
+  assertNotEquals(err.message.indexOf('delete todo'), -1)
+})

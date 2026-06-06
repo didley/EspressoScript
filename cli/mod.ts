@@ -42,7 +42,10 @@ async function main(argv: string[]): Promise<number> {
         return 0
     }
 
-    const [subcommand, ...rest] = args._ as string[]
+    const [subcommand] = args._ as string[]
+    // Slice from the raw argv to preserve "--" and passthrough flags that parseArgs strips
+    const subcommandIdx = argv.indexOf(subcommand as string)
+    const rest = subcommandIdx >= 0 ? argv.slice(subcommandIdx + 1) : []
 
     switch (subcommand) {
         case "check":
