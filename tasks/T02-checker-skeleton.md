@@ -101,7 +101,7 @@ Place this in `cli/checker/mod.ts` or a `cli/checker/util.ts`.
 ## Verification commands
 
 ```bash
-cd /var/home/dylanlamont/Developer/EspressoScript
+cd /var/home/dylanlamont/Developer/ShotScript
 deno run --allow-read - <<'EOF'
 import { check } from "./cli/checker/mod.ts"
 console.log(check("empty.shot", ""))                // []

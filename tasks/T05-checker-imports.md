@@ -1,14 +1,14 @@
 # T05 — Import allowlist rule
 
 ## Goal
-Implement the `imports-allowlist` rule: only `shot:*`, `jsr:@espresso/*`, and relative paths ending in `.shot` are permitted in `.shot` source.
+Implement the `imports-allowlist` rule: only `shot:*`, `jsr:@shotscript/*`, and relative paths ending in `.shot` are permitted in `.shot` source.
 
 ## Dependencies
 T02, T03.
 
 ## Files to create
 - `cli/checker/rules/imports-allowlist.ts`
-- `tests/fixtures/imports/allowlist-valid.shot` — uses `shot:std`, `jsr:@espresso/foo`, and `./util.shot`
+- `tests/fixtures/imports/allowlist-valid.shot` — uses `shot:std`, `jsr:@shotscript/foo`, and `./util.shot`
 - `tests/fixtures/imports/allowlist-invalid-npm.shot`
 - `tests/fixtures/imports/allowlist-invalid-jsr-other.shot`
 - `tests/fixtures/imports/allowlist-invalid-url.shot`
@@ -20,7 +20,7 @@ T02, T03.
 
 An import specifier is allowed if and only if it matches **any** of:
 - `^shot:` — branded stdlib/scope
-- `^jsr:@espresso/` — explicit espresso JSR scope
+- `^jsr:@shotscript/` — explicit ShotScript JSR scope
 - `^\./` or `^\.\./` AND ends with `.shot` — relative to another `.shot` file in this project
 
 Everything else is a violation. Triggered on:
@@ -31,7 +31,7 @@ Everything else is a violation. Triggered on:
 ## Diagnostic
 
 ```json
-{"rule":"imports-allowlist","message":"Import specifier \"npm:lodash\" is not allowed. v1 permits shot:*, jsr:@espresso/*, and relative *.shot imports only."}
+{"rule":"imports-allowlist","message":"Import specifier \"npm:lodash\" is not allowed. v1 permits shot:*, jsr:@shotscript/*, and relative *.shot imports only."}
 ```
 
 ## Acceptance criteria
@@ -42,11 +42,11 @@ Everything else is a violation. Triggered on:
 ## Verification commands
 
 ```bash
-cd /var/home/dylanlamont/Developer/EspressoScript
+cd /var/home/dylanlamont/Developer/ShotScript
 deno run --allow-read tests/run-imports-fixtures.ts
 ```
 
 ## Notes
-- Matching is on raw string specifiers — no resolution. `jsr:@espresso/std` ✓, `jsr:@other/pkg` ✗.
-- Resolution of `shot:*` → `jsr:@espresso/*` happens at Deno's import-map layer (see `docs/ARCHITECTURE.md`), not in the checker. The checker only validates source-level specifiers.
+- Matching is on raw string specifiers — no resolution. `jsr:@shotscript/std` ✓, `jsr:@other/pkg` ✗.
+- Resolution of `shot:*` → `jsr:@shotscript/*` happens at Deno's import-map layer (see `docs/ARCHITECTURE.md`), not in the checker. The checker only validates source-level specifiers.
 - Multi-file projects: this task enables them. Cross-file type-checking is handled by `deno check`'s normal module graph traversal — no extra work needed.

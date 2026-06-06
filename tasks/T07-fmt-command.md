@@ -35,7 +35,7 @@ export async function fmtCmd(files: string[]): Promise<number> {
 ## Verification commands
 
 ```bash
-cd /var/home/dylanlamont/Developer/EspressoScript
+cd /var/home/dylanlamont/Developer/ShotScript
 printf 'const x=1;function foo(  ){return x}\n' > /tmp/dirty.shot
 
 deno run --allow-read --allow-write --allow-run=deno cli/mod.ts fmt /tmp/dirty.shot

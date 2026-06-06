@@ -73,13 +73,13 @@ export async function writeFile(path: string, data: string): Promise<[null, Erro
 
 ```json
 {
-    "name": "@espresso/std",
+    "name": "@shotscript/std",
     "version": "0.0.1",
     "exports": "./mod.ts"
 }
 ```
 
-(JSR scope ownership is out of scope for this task — assume `@espresso` is reserved.)
+(JSR scope ownership is out of scope for this task — assume `@shotscript` is reserved.)
 
 ## Acceptance criteria
 - `cd stdlib && deno check mod.ts` passes with no errors.
@@ -95,13 +95,13 @@ export async function writeFile(path: string, data: string): Promise<[null, Erro
 ## Verification commands
 
 ```bash
-cd /var/home/dylanlamont/Developer/EspressoScript/stdlib
+cd /var/home/dylanlamont/Developer/ShotScript/stdlib
 deno check mod.ts
 echo "exit: $?"
 deno publish --dry-run
 
 # End-to-end via shot run (depends on T09)
-cd /var/home/dylanlamont/Developer/EspressoScript
+cd /var/home/dylanlamont/Developer/ShotScript
 cat > /tmp/use-std.shot <<'EOF'
 import { jsonStringify } from "shot:std"
 const [out, err] = jsonStringify({ hello: "world" }, 2)
@@ -110,8 +110,8 @@ EOF
 deno run -A cli/mod.ts run /tmp/use-std.shot
 ```
 
-The end-to-end case requires the rewriter (T08) to map `shot:std` → `jsr:@espresso/std`. Since `@espresso/std` is **not yet published**, this last verification will fail with a JSR resolution error. That's expected for v1 — document it clearly and either:
-(a) test against a local `deno.json` import map that maps `jsr:@espresso/std` to `../stdlib/mod.ts`, or
+The end-to-end case requires the rewriter (T08) to map `shot:std` → `jsr:@shotscript/std`. Since `@shotscript/std` is **not yet published**, this last verification will fail with a JSR resolution error. That's expected for v1 — document it clearly and either:
+(a) test against a local `deno.json` import map that maps `jsr:@shotscript/std` to `../stdlib/mod.ts`, or
 (b) skip the end-to-end test until publish happens.
 
 Recommended: (a) — add a `SHOT_STDLIB_LOCAL=<path>` env var that, when set, makes `writeImportMap()` in `cli/pipeline.ts` map `shot:std` directly to the local file instead of the JSR scope. This is a one-line change in the pipeline. Add as a follow-up task if it grows past trivial.

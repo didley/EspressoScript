@@ -76,4 +76,4 @@ When running unattended, follow these conventions strictly:
 
 ## Architecture in one paragraph
 
-shot is a single Deno script published to JSR (`@espresso/shot`). No Go binary. No source rewriting. `shot:*` imports resolve to `jsr:@espresso/*` via a transient Deno import map. The checker is in-process TypeScript using `npm:typescript` (AST-only in v1). `shot build` / `shot run` write the import map, then invoke `deno check` / `deno run --check=all` directly on the `.shot` file with `--ext=ts`.
+shot is a single Deno script published to JSR (`@shotscript/shot`). No Go binary. No source rewriting. `shot:*` imports resolve to `jsr:@shotscript/*` via a transient Deno import map. The checker is in-process TypeScript using `npm:typescript` (AST-only in v1). `shot build` / `shot run` write the import map, then invoke `deno check` / `deno run --check=all` directly on the `.shot` file with `--ext=ts`.

@@ -87,7 +87,7 @@ False negatives (user-defined fallible fns aren't tracked) and rare false positi
 ## Verification commands
 
 ```bash
-cd /var/home/dylanlamont/Developer/EspressoScript
+cd /var/home/dylanlamont/Developer/ShotScript
 deno run --allow-read tests/run-types-fixtures.ts   # mirror the T03 runner for types fixtures
 ```
 

@@ -889,14 +889,14 @@ import y from "jsr:@other/lib"
 
 // ✅
 import { thing } from "shot:std"
-import { other } from "jsr:@espresso/utils"
+import { other } from "jsr:@shotscript/utils"
 import { helper } from "./helpers.shot"
 export { thing }
 ```
 
 v1 import allowlist:
-- `shot:*` (resolved to `jsr:@espresso/*` via import map)
-- `jsr:@espresso/*` (direct)
+- `shot:*` (resolved to `jsr:@shotscript/*` via import map)
+- `jsr:@shotscript/*` (direct)
 - Relative paths ending in `.shot` (`./util.shot`, `../shared/helpers.shot`)
 
 Rules: `no-require`, `no-default-export`, `imports-allowlist`, `no-index-import`

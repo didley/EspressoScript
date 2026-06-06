@@ -111,7 +111,7 @@ Each case should be independently runnable and self-contained (creates its own f
 ## Verification commands
 
 ```bash
-cd /var/home/dylanlamont/Developer/EspressoScript
+cd /var/home/dylanlamont/Developer/ShotScript
 bash scripts/verify.sh
 echo "exit: $?"
 ```
@@ -120,7 +120,7 @@ echo "exit: $?"
 - This is the "definition of done" for v1. Green = ship.
 - Case 09 depends on `deno check` enforcing `noUnusedLocals`. If the deno default isn't strict enough, the transient `deno.json` from T08 should include:
   ```json
-  { "imports": { "shot:": "jsr:@espresso/" }, "compilerOptions": { "noUnusedLocals": true, "noUnusedParameters": true } }
+  { "imports": { "shot:": "jsr:@shotscript/" }, "compilerOptions": { "noUnusedLocals": true, "noUnusedParameters": true } }
   ```
   If this turns out necessary, update `cli/pipeline.ts` accordingly and flag in this task's "discovered subtasks" section.
 - Case 13 is the "compile-language UX" assertion. The sentinel-not-written check is non-negotiable.

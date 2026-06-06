@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 # Morning-after status check. Read-only.
-# Run from anywhere: bash /var/home/dylanlamont/Developer/EspressoScript/scripts/status.sh
+# Run from anywhere: bash /var/home/dylanlamont/Developer/ShotScript/scripts/status.sh
 
 set -uo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 
-echo "=== EspressoScript overnight status ==="
+echo "=== ShotScript overnight status ==="
 echo "Repo:    $ROOT"
 echo "Branch:  $(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo '(not a git repo)')"
 echo "HEAD:    $(git log -1 --oneline 2>/dev/null || echo '(no commits)')"

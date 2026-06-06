@@ -7,9 +7,9 @@
  ╚══════╝╚═╝  ╚═╝ ╚═════╝    ╚═╝   
 ```
 
-# EspressoScript — TypeScript, minus the options.
+# ShotScript — Take a Shot of extracted JavaScript.
 
-A subtractive superset of TypeScript. EspressoScript removes features instead of adding them — applying Go's philosophy ("one canonical way to do everything") to the TS/JS ecosystem.
+A subtractive superset of TypeScript. ShotScript removes features instead of adding them — applying Go's philosophy ("one canonical way to do everything") to the TS/JS ecosystem.
 
 - **Tooling shorthand:** `shot` (CLI command + file extension)
 - **Target runtime:** modern JS runtimes (edge, server, scripts)
@@ -32,7 +32,7 @@ async function getUser(id: number): Promise<[User | null, Error | null]> {
 }
 ```
 
-No arrow functions. No `throw`. No `interface`. No `class`. No `any`. No `as`. No ternaries. No third-party imports outside the `shot:` and `jsr:@espresso/*` namespaces (relative `.shot` imports allowed). The list of what's banned is the language.
+No arrow functions. No `throw`. No `interface`. No `class`. No `any`. No `as`. No ternaries. No third-party imports outside the `shot:` and `jsr:@shotscript/*` namespaces (relative `.shot` imports allowed). The list of what's banned is the language.
 
 ## What the simplifications look like
 
@@ -50,7 +50,7 @@ async function getUser(id: number): Promise<User> {
     }
 }
 
-// EspressoScript — no throw, no try, no hidden control flow
+// ShotScript — no throw, no try, no hidden control flow
 async function getUser(id: number): Promise<[User | null, Error | null]> {
     const [res, fetchErr] = await fetch(`/users/${id}`)
     if (fetchErr !== null) {
@@ -66,7 +66,7 @@ async function getUser(id: number): Promise<[User | null, Error | null]> {
 // TypeScript
 const label = isAdmin ? (isSuperAdmin ? "Super Admin" : "Admin") : "User"
 
-// EspressoScript — nesting is gone, each case is readable
+// ShotScript — nesting is gone, each case is readable
 function roleLabel(isAdmin: boolean, isSuperAdmin: boolean): string {
     if (isSuperAdmin) {
         return "Super Admin"
@@ -87,7 +87,7 @@ const results = items
     .map(x => ({ ...x, score: x.score * 2 }))
     .reduce((acc, x) => acc + x.score, 0)
 
-// EspressoScript — every step is a named, testable function
+// ShotScript — every step is a named, testable function
 function isActive(item: Item): boolean {
     return item.active
 }
@@ -113,7 +113,7 @@ class UserService {
     async findById(id: number): Promise<User | null> { ... }
 }
 
-// EspressoScript — a type and a function, nothing hidden
+// ShotScript — a type and a function, nothing hidden
 type UserService = { readonly db: Database }
 
 async function findUserById(svc: UserService, id: number): Promise<[User | null, Error | null]> {
@@ -124,7 +124,7 @@ async function findUserById(svc: UserService, id: number): Promise<[User | null,
 ## Install
 
 ```
-curl -fsSL https://espressoscript.dev/install.sh | sh
+curl -fsSL https://shotscript.dev/install.sh | sh
 ```
 
 Verify:

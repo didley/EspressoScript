@@ -4,7 +4,7 @@
 Ship a one-liner install experience that hides the runtime detail. Users run a curl-piped script and get a working `shot` binary on PATH. The script handles runtime bootstrap, package installation, and PATH guidance.
 
 ## Dependencies
-T01 (CLI exists), T10 (`@espresso/shot` is publishable to JSR — and ideally published before this script is hosted; for now, the script works against either JSR or a local checkout via env var).
+T01 (CLI exists), T10 (`@shotscript/shot` is publishable to JSR — and ideally published before this script is hosted; for now, the script works against either JSR or a local checkout via env var).
 
 ## Files to create
 - `install.sh` — the user-facing install script (POSIX sh, no bashisms)
@@ -14,8 +14,8 @@ T01 (CLI exists), T10 (`@espresso/shot` is publishable to JSR — and ideally pu
 ## User experience
 
 ```
-$ curl -fsSL https://espressoscript.dev/install.sh | sh
-EspressoScript installer
+$ curl -fsSL https://shotscript.dev/install.sh | sh
+ShotScript installer
   → detecting platform                       ok (linux-x86_64)
   → checking runtime                         not found, installing deno…
   → installing shot                          ok (v0.1.0)
@@ -48,7 +48,7 @@ EspressoScript installer
 2. **Check runtime.** `command -v deno`. If missing:
    - Run `curl -fsSL https://deno.land/install.sh | sh -s -- -y` (or the wget equivalent if curl absent).
    - Source the deno env so `deno` is on PATH for the rest of the script.
-3. **Install shot.** `deno install -gn --global --quiet shot jsr:@espresso/shot`. Use `--global` to ensure the binary lands in `$HOME/.deno/bin`.
+3. **Install shot.** `deno install -gn --global --quiet shot jsr:@shotscript/shot`. Use `--global` to ensure the binary lands in `$HOME/.deno/bin`.
 4. **Verify.** Run `$HOME/.deno/bin/shot --version` and confirm exit 0.
 5. **Print next-steps.** Show binary path, PATH-export snippet, and two example commands.
 
@@ -68,8 +68,8 @@ Re-running the script should upgrade to the latest published version, not fail.
 
 ## Hosting
 
-The script lives at `https://espressoscript.dev/install.sh`. Until that domain exists, host on GitHub:
-- Canonical URL: `https://raw.githubusercontent.com/<owner>/EspressoScript/main/install.sh`
+The script lives at `https://shotscript.dev/install.sh`. Until that domain exists, host on GitHub:
+- Canonical URL: `https://raw.githubusercontent.com/<owner>/ShotScript/main/install.sh`
 - README and CLI.md point at the canonical URL; once a domain is set up, set up a redirect or update the URL in one place.
 
 ## Acceptance criteria
@@ -84,7 +84,7 @@ The script lives at `https://espressoscript.dev/install.sh`. Until that domain e
 ## Verification commands
 
 ```bash
-cd /var/home/dylanlamont/Developer/EspressoScript
+cd /var/home/dylanlamont/Developer/ShotScript
 
 # Lint
 shellcheck --shell=sh install.sh

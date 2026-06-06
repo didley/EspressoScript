@@ -1,6 +1,6 @@
 #!/bin/sh
-# EspressoScript installer — https://espressoscript.dev/install.sh
-# Usage: curl -fsSL https://espressoscript.dev/install.sh | sh
+# ShotScript installer — https://shotscript.dev/install.sh
+# Usage: curl -fsSL https://shotscript.dev/install.sh | sh
 set -eu
 
 SHOT_VERSION="${SHOT_VERSION:-}"
@@ -12,7 +12,7 @@ step() { printf '  → %-36s' "$1" >&2; }
 ok()   { printf 'ok%s\n' "${1:+ ($1)}" >&2; }
 die()  { printf '\nerror: %s\n' "$1" >&2; exit "${2:-1}"; }
 
-printf 'EspressoScript installer\n' >&2
+printf 'ShotScript installer\n' >&2
 
 # 1. Detect platform
 step "detecting platform"
@@ -81,11 +81,11 @@ if [ -n "$SHOT_LOCAL" ]; then
     die "failed to install shot from local path: $SHOT_LOCAL" 1
 elif [ -n "$SHOT_VERSION" ]; then
   # shellcheck disable=SC2086
-  deno install -A -g -n shot --quiet -f $ROOT_FLAG "jsr:@espresso/shot@$SHOT_VERSION" >/dev/null 2>&1 || \
+  deno install -A -g -n shot --quiet -f $ROOT_FLAG "jsr:@shotscript/shot@$SHOT_VERSION" >/dev/null 2>&1 || \
     die "failed to install shot@$SHOT_VERSION from JSR" 1
 else
   # shellcheck disable=SC2086
-  deno install -A -g -n shot --quiet -f $ROOT_FLAG "jsr:@espresso/shot" >/dev/null 2>&1 || \
+  deno install -A -g -n shot --quiet -f $ROOT_FLAG "jsr:@shotscript/shot" >/dev/null 2>&1 || \
     die "failed to install shot from JSR" 1
 fi
 ok

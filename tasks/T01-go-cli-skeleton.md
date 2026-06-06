@@ -7,7 +7,7 @@ Stand up the Deno CLI entrypoint with four subcommand stubs. No real behavior ye
 
 ## Files to create
 - `cli/mod.ts` — argv parsing + subcommand dispatch
-- `cli/deno.json` — JSR package config (`@espresso/shot`)
+- `cli/deno.json` — JSR package config (`@shotscript/shot`)
 - `cli/check.ts`, `cli/fmt.ts`, `cli/build.ts`, `cli/run.ts` — one stub per subcommand
 
 ## Dependencies
@@ -42,7 +42,7 @@ Deno.exit(await main(Deno.args))
 ```json
 // cli/deno.json
 {
-    "name": "@espresso/shot",
+    "name": "@shotscript/shot",
     "version": "0.0.0",
     "exports": "./mod.ts",
     "bin": {
@@ -54,7 +54,7 @@ Deno.exit(await main(Deno.args))
 ## Verification commands
 
 ```bash
-cd /var/home/dylanlamont/Developer/EspressoScript/cli
+cd /var/home/dylanlamont/Developer/ShotScript/cli
 deno run mod.ts --help
 deno run mod.ts check; echo "exit: $?"
 deno run mod.ts run nope.shot; echo "exit: $?"

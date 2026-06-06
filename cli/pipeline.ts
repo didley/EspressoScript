@@ -24,8 +24,8 @@ export async function writeImportMap(extraImports: Record<string, string> = {}):
     const path = `${dir}/deno.json`
     const stdlibOverride = Deno.env.get("SHOT_STDLIB_LOCAL")
     const base = stdlibOverride !== undefined && stdlibOverride !== ""
-        ? { "shot:std": stdlibOverride, "shot:": "jsr:@espresso/" }
-        : { "shot:": "jsr:@espresso/" }
+        ? { "shot:std": stdlibOverride, "shot:": "jsr:@shotscript/" }
+        : { "shot:": "jsr:@shotscript/" }
     const imports = { ...base, ...extraImports }
     await Deno.writeTextFile(path, JSON.stringify({
         imports,

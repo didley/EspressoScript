@@ -97,7 +97,7 @@ export async function runCmd(args: string[]): Promise<number> {
 ## Verification commands
 
 ```bash
-cd /var/home/dylanlamont/Developer/EspressoScript
+cd /var/home/dylanlamont/Developer/ShotScript
 
 # 1) Hello world (no permissions needed)
 cat > /tmp/hello.shot <<'EOF'

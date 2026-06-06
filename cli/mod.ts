@@ -8,7 +8,7 @@ import { init } from "./init.ts"
 
 const VERSION = "0.0.0-dev"
 
-const HELP = `shot — EspressoScript toolchain
+const HELP = `shot — ShotScript toolchain
 
 USAGE:
   shot <subcommand> [args]

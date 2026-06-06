@@ -14,7 +14,7 @@ diagnostics? ─── yes ──► exit 1
    ▼
 write temp deno.json with import map
    │
-   │  (2) shot: prefix maps to jsr:@espresso/ via import map
+   │  (2) shot: prefix maps to jsr:@shotscript/ via import map
    ▼
 deno run --check=all --config <tempjson> <file.ts>
                                   ▲
@@ -27,10 +27,10 @@ No source rewriting. No file copying. No temp `.ts` files. The `.shot` file is f
 ## Repository layout
 
 ```
-EspressoScript/
+ShotScript/
 ├── cli/
 │   ├── mod.ts             # entry: parses argv, dispatches subcommands
-│   ├── deno.json          # JSR publish config (@espresso/shot)
+│   ├── deno.json          # JSR publish config (@shotscript/shot)
 │   ├── check.ts           # shot check
 │   ├── fmt.ts             # shot fmt
 │   ├── build.ts           # shot build
@@ -41,7 +41,7 @@ EspressoScript/
 │       └── rules/         # one file per rule
 ├── stdlib/
 │   ├── mod.ts             # shot:std implementation
-│   └── deno.json          # JSR publish config (@espresso/std)
+│   └── deno.json          # JSR publish config (@shotscript/std)
 ├── tests/
 │   └── fixtures/          # one .shot pair per rule (valid + invalid)
 ├── docs/
@@ -77,7 +77,7 @@ Going type-aware in v2 means upgrading to `ts.createProgram()` — same library,
 
 ```json
 {
-    "imports": { "shot:": "jsr:@espresso/" },
+    "imports": { "shot:": "jsr:@shotscript/" },
     "compilerOptions": {
         "strict": true,
         "noImplicitReturns": true,
@@ -100,7 +100,7 @@ Going type-aware in v2 means upgrading to `ts.createProgram()` — same library,
 }
 ```
 
-Deno's import-map resolver follows the trailing-slash convention: `shot:std` → `jsr:@espresso/std`. No source modification; the `.shot` file Deno sees is identical to the `.shot` file the user wrote.
+Deno's import-map resolver follows the trailing-slash convention: `shot:std` → `jsr:@shotscript/std`. No source modification; the `.shot` file Deno sees is identical to the `.shot` file the user wrote.
 
 The `compilerOptions` block is the type-system half of the strict-typing contract: `exactOptionalPropertyTypes` and `noUncheckedIndexedAccess` close the holes the AST-only checker can't see, and `noUnusedLocals` is what makes ignored tuple-error bindings fail the build (see `docs/LANGUAGE.md`).
 
@@ -126,16 +126,16 @@ Two layers — user-facing and underlying:
 
 **User-facing (the only thing documented in README/CLI docs):**
 ```
-curl -fsSL https://espressoscript.dev/install.sh | sh
+curl -fsSL https://shotscript.dev/install.sh | sh
 ```
 
 **Underlying (what the install script actually does):**
 1. Detect platform (Linux, macOS).
 2. Check for Deno on PATH. If absent, install it via Deno's own install script.
-3. `deno install -gn --global shot jsr:@espresso/shot`.
+3. `deno install -gn --global shot jsr:@shotscript/shot`.
 4. Print confirmation + next-steps.
 
-The two-layer split exists so EspressoScript's UX never leaks "this is a Deno script." Users see "shot." Internals reuse the JS ecosystem. If we ever swap runtimes or ship `deno compile`-bundled binaries, the install URL stays stable — only the script body changes.
+The two-layer split exists so ShotScript's UX never leaks "this is a Deno script." Users see "shot." Internals reuse the JS ecosystem. If we ever swap runtimes or ship `deno compile`-bundled binaries, the install URL stays stable — only the script body changes.
 
 See `tasks/T12-install-script.md` for the script implementation.
 

@@ -59,7 +59,7 @@ Wire `checkCmd` into `cli/mod.ts`'s dispatcher.
 ## Verification commands
 
 ```bash
-cd /var/home/dylanlamont/Developer/EspressoScript
+cd /var/home/dylanlamont/Developer/ShotScript
 
 # Valid
 deno run --allow-read cli/mod.ts check tests/fixtures/syntax/no-arrow-functions-valid.shot

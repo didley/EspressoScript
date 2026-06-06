@@ -6,7 +6,7 @@ shot <command> [args...]
 
 Install:
 ```
-curl -fsSL https://espressoscript.dev/install.sh | sh
+curl -fsSL https://shotscript.dev/install.sh | sh
 ```
 
 The installer takes care of the runtime, the `shot` binary, and your PATH. Re-run any time to update to the latest release.
@@ -55,7 +55,7 @@ Validate → type-check. Does not execute.
 
 Pipeline:
 1. Lint each `.shot` file. Abort on diagnostics.
-2. Write a transient `deno.json` containing `{ "imports": { "shot:": "jsr:@espresso/" } }`.
+2. Write a transient `deno.json` containing `{ "imports": { "shot:": "jsr:@shotscript/" } }`.
 3. `deno check --config=<tempjson> --ext=ts <files>`. Abort on type errors.
 
 ```
@@ -92,7 +92,7 @@ $ shot run hello.shot -- --allow-net --allow-read=./config
 ## Common errors
 
 ### Import not in allowlist
-`shot check` flags imports outside `shot:`, `jsr:@espresso/*`, and relative `.shot` paths.
+`shot check` flags imports outside `shot:`, `jsr:@shotscript/*`, and relative `.shot` paths.
 
 ### Type errors block `shot run`
 A `.shot` program that lints clean but fails `deno check` will not execute. This is intentional — type-checks are gating, like `go run`.

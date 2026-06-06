@@ -111,7 +111,7 @@ Deno.exit(fails > 0 ? 1 : 0)
 ```
 
 ```bash
-cd /var/home/dylanlamont/Developer/EspressoScript
+cd /var/home/dylanlamont/Developer/ShotScript
 deno run --allow-read tests/run-syntax-fixtures.ts
 ```
 

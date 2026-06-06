@@ -18,7 +18,7 @@ T01–T06.
 1. **Lint** — for each input, read it and call `check()`. If any diagnostic, print all of them and exit 1. The program never reaches Deno.
 2. **Import map** — write `<tempdir>/deno.json` with:
    ```json
-   { "imports": { "shot:": "jsr:@espresso/" } }
+   { "imports": { "shot:": "jsr:@shotscript/" } }
    ```
 3. **Type-check** — invoke `deno check --config=<tempdir>/deno.json --ext=ts <files>`. Stream output. Forward deno's exit code.
 4. **Cleanup** — delete tempdir on completion (unless `SHOT_KEEP_TEMP=1`).
@@ -52,8 +52,8 @@ export async function writeImportMap(): Promise<string> {
     const path = `${dir}/deno.json`
     const stdlibOverride = Deno.env.get("SHOT_STDLIB_LOCAL")
     const imports = stdlibOverride !== undefined && stdlibOverride !== ""
-        ? { "shot:std": stdlibOverride, "shot:": "jsr:@espresso/" }
-        : { "shot:": "jsr:@espresso/" }
+        ? { "shot:std": stdlibOverride, "shot:": "jsr:@shotscript/" }
+        : { "shot:": "jsr:@shotscript/" }
     await Deno.writeTextFile(path, JSON.stringify({
         imports,
         compilerOptions: STRICT_COMPILER_OPTIONS,
@@ -111,13 +111,13 @@ export async function buildCmd(files: string[]): Promise<number> {
 - Valid `.shot` file → exit 0, no stderr output.
 - File with arrow function → lint fails → exit 1, diagnostic points at the `.shot` source line.
 - File with type error (`const x: number = "foo"`) → lint passes, type-check fails → exit 1, deno diagnostic surfaces.
-- File with `import { x } from "shot:std"` and `x` actually used → all steps pass. Requires `@espresso/std` to be importable (depends on T10 or a local import map override; see Notes).
+- File with `import { x } from "shot:std"` and `x` actually used → all steps pass. Requires `@shotscript/std` to be importable (depends on T10 or a local import map override; see Notes).
 - `SHOT_KEEP_TEMP=1 shot build foo.shot` leaves the temp dir intact and prints its path.
 
 ## Verification commands
 
 ```bash
-cd /var/home/dylanlamont/Developer/EspressoScript
+cd /var/home/dylanlamont/Developer/ShotScript
 
 # 1) Lint failure
 echo 'const f = () => 1' > /tmp/arrow.shot
@@ -134,5 +134,5 @@ echo "exit: $?"
 - No `.ts` files are ever written. `deno check --ext=ts <file.shot>` tells Deno to treat the input as TypeScript regardless of extension.
 - The transient `deno.json` is the only emitted artifact and is cleaned up.
 - The strict `compilerOptions` are load-bearing — they're how the language enforces strict typing beyond what the AST-only checker can see. `exactOptionalPropertyTypes` and `noUncheckedIndexedAccess` in particular are the type-system half of the no-`undefined` story.
-- For the `shot:std` happy-path test: `@espresso/std` may not be published when this task is run. The `SHOT_STDLIB_LOCAL=path/to/stdlib/mod.ts` env var maps `shot:std` to the local file (already wired in the sketch above).
+- For the `shot:std` happy-path test: `@shotscript/std` may not be published when this task is run. The `SHOT_STDLIB_LOCAL=path/to/stdlib/mod.ts` env var maps `shot:std` to the local file (already wired in the sketch above).
 - See `docs/ARCHITECTURE.md` "Import resolution via Deno import maps" and `docs/LANGUAGE.md` "Strict typing — the baseline".

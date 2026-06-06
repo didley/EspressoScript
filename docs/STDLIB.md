@@ -1,6 +1,6 @@
 # `shot:std`
 
-The standard library. Ships as `@espresso/std` on JSR; imported via the branded `shot:std` specifier in `.shot` source.
+The standard library. Ships as `@shotscript/std` on JSR; imported via the branded `shot:std` specifier in `.shot` source.
 
 Every function in `shot:std` returns a tuple — never throws. Internal `try`/`catch` is hidden inside the wrappers; users never see it.
 
