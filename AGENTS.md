@@ -23,7 +23,7 @@ cli/                    Deno-based shot CLI
       index.ts          Registers all rules
 lint/                   shot-lint submodule (npm package for users)
   src/checker/          Parallel copy of cli/checker/ for the npm package
-stdlib/                 shot standard library (published as jsr:@shotscript/std)
+stdlib/                 shot standard library (published as @shotscript/std on npm)
   mod.ts                fetch, jsonParse, jsonStringify, tryCatch, mutableRef, etc.
 tests/
   fixtures/             .shot files for rule fixture tests (syntax/, types/, imports/)
@@ -112,7 +112,7 @@ CI runs `bash scripts/verify.sh` for the root repo and all three npm commands fo
 1. Read the `.shot` source file(s)
 2. Rewrite relative `.shot` imports to `.ts` (e.g. `"./util.shot"` → `"./util.ts"`)
 3. Copy transformed source into a temp directory
-4. Write a `deno.json` import map pointing `shot:` → `jsr:@shotscript/` (or local override) and embedding strict `compilerOptions`
+4. Write a `deno.json` import map pointing `shot:` → `npm:@shotscript/` (or local override) and embedding strict `compilerOptions`
 5. Run `deno check` or `deno run` against the temp copy
 
 `shot check` skips Deno entirely — it runs the AST rule checker in `cli/checker/` directly.

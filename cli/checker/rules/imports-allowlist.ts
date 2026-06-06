@@ -5,7 +5,6 @@ import { posOf } from "../mod.ts"
 function isAllowed(spec: string): boolean {
     if (spec.startsWith('shot:')) return true
     if (spec.startsWith('bun:')) return true
-    if (spec.startsWith('jsr:@shotscript/')) return true
     if ((spec.startsWith('./') || spec.startsWith('../')) && spec.endsWith('.shot')) return true
     return false
 }

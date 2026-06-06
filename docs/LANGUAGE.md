@@ -32,6 +32,14 @@ for (let i = 0; i < 10; i += 1) { /* ... */ }   // let in for header is OK
 ```
 Rules: `no-let-outside-for`, `no-var`
 
+When you need a mutable counter or accumulator outside a `for` header, use `mutableRef` from `shot:std`:
+```ts
+import { mutableRef } from "shot:std"
+
+const count = mutableRef(0)
+count.value += 1
+```
+
 ### No `++` / `--`
 ```ts
 // ❌
@@ -99,6 +107,18 @@ fetch(url).then((r) => r.json()).catch((e) => console.log(e))
 const [res, err] = await fetch(url)
 ```
 Rule: `no-promise-chain`
+
+### No `Promise` constructor or static methods
+```ts
+// ❌
+new Promise((resolve) => resolve(1))
+Promise.all([a, b])
+Promise.race([a, b])
+
+// ✅ — wrap external Promise-returning APIs with toPromiseResult
+const [result, err] = await toPromiseResult(() => externalLib.fetch(url))
+```
+Rule: `no-promise`
 
 ### Async functions must return a tuple
 
@@ -170,6 +190,20 @@ async function loadConfig(path: string): ShotPromise<Config> {
     }
     // ...
 }
+```
+
+### Wrapping external throwing APIs
+
+When importing `bun:*` or `node:*` APIs that throw or reject instead of returning tuples, use `toResult` (sync) or `toPromiseResult` (async) from `shot:std`:
+
+```ts
+import { toResult, toPromiseResult } from "shot:std"
+
+// synchronous third-party call that throws
+const [parsed, err] = toResult(() => someLib.parseSync(input))
+
+// async third-party call that rejects
+const [rows, err] = await toPromiseResult(() => db.query(sql))
 ```
 
 ## Strict typing — the baseline
@@ -961,14 +995,13 @@ import y from "jsr:@other/lib"
 
 // ✅
 import { thing } from "shot:std"
-import { other } from "jsr:@shotscript/utils"
 import { helper } from "./helpers.shot"
 export { thing }
 ```
 
 v1 import allowlist:
-- `shot:*` (resolved to `jsr:@shotscript/*` via import map)
-- `jsr:@shotscript/*` (direct)
+- `shot:*` (resolved to `npm:@shotscript/*` via import map)
+- `bun:*`
 - Relative paths ending in `.shot` (`./util.shot`, `../shared/helpers.shot`)
 
 Rules: `no-require`, `no-default-export`, `imports-allowlist`, `no-index-import`

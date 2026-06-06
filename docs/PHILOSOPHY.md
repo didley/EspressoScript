@@ -9,7 +9,7 @@ shot is a **linted dialect of TypeScript** — a subtractive superset. Every val
 shot is **not a compiled language**. There is no compiler, no AST transformation, no IR, no codegen, no lowering. The pipeline is:
 
 1. Lint the `.shot` file in-process (TypeScript Compiler API + custom rules)
-2. Write a transient Deno import map (`shot:` → `jsr:@shotscript/`)
+2. Write a transient Deno import map (`shot:` → `npm:@shotscript/`)
 3. Hand the original `.shot` file to Deno with `--ext=ts` and the import map
 
 No source rewriting. No `.ts` emission. No copies. The file Deno sees is the file the user wrote. Compilation (TS → JS) happens inside Deno, exactly as it would for plain TypeScript.

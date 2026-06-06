@@ -1,4 +1,3 @@
 import { readFile } from "shot:std"
-import { helper } from "jsr:@shotscript/utils"
 import { util } from "./util.shot"
 import { other } from "../shared/other.shot"

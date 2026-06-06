@@ -28,7 +28,7 @@ This Package:
 | **`.shot` files** | TypeScript source files enforced by Shot's rules — valid TS, Shot-compliant |
 | **`shot` cli** | `init` · `check` · `fmt` · `build` · `run` · `test` |
 | **`shot:std`** | Standard library — `fetch`, `jsonParse`, `wrapError`, and other safe wrappers |
-| **Import allowlist** | Only `shot:` and `jsr:@shotscript/*` namespaces — no arbitrary third-party imports |
+| **Import allowlist** | Only `shot:` and `bun:` namespaces — no arbitrary third-party imports |
 | **Deno runtime** | Validates and type-checks before running — no execution without a clean check |
 
 
@@ -50,7 +50,7 @@ async function getUser(id: number): Promise<[User | null, Error | null]> {
 }
 ```
 
-No arrow functions. No `throw`. No `interface`. No `class`. No `any`. No `as`. No ternaries. No third-party imports outside the `shot:` and `jsr:@shotscript/*` namespaces (relative `.shot` imports allowed). The list of what's banned is the language.
+No arrow functions. No `throw`. No `interface`. No `class`. No `any`. No `as`. No ternaries. No third-party imports outside the `shot:` and `bun:` namespaces (relative `.shot` imports allowed). The list of what's banned is the language.
 
 ## Install
 

@@ -2,7 +2,7 @@
 
 ## High-level shape
 
-`shot` is a **single TypeScript entrypoint** executed by a small runtime layer (currently Deno). No Go binary, no compiled artifacts in v1. Users install via a curl-able script that handles the runtime bootstrap; under the hood the binary is registered via `deno install -gn`. The script orchestrates a small pipeline that ends with the runtime doing the actual TS → JS work.
+`shot` is a **single TypeScript entrypoint** executed by a small runtime layer (currently Deno). No Go binary, no compiled artifacts in v1. Users install via a curl-able script; under the hood the binary is registered via `npm install -g`. The script orchestrates a small pipeline that ends with the runtime doing the actual TS → JS work.
 
 ```
 .shot file
@@ -14,7 +14,7 @@ diagnostics? ─── yes ──► exit 1
    ▼
 write temp deno.json with import map
    │
-   │  (2) shot: prefix maps to jsr:@shotscript/ via import map
+   │  (2) shot: prefix maps to npm:@shotscript/ via import map
    ▼
 deno run --check=all --config <tempjson> <file.ts>
                                   ▲
@@ -30,7 +30,7 @@ No source rewriting. No file copying. No temp `.ts` files. The `.shot` file is f
 ShotScript/
 ├── cli/
 │   ├── mod.ts             # entry: parses argv, dispatches subcommands
-│   ├── deno.json          # JSR publish config (@shotscript/shot)
+│   ├── package.json       # npm publish config (@shotscript/shot)
 │   ├── check.ts           # shot check
 │   ├── fmt.ts             # shot fmt
 │   ├── build.ts           # shot build
@@ -41,7 +41,7 @@ ShotScript/
 │       └── rules/         # one file per rule
 ├── stdlib/
 │   ├── mod.ts             # shot:std implementation
-│   └── deno.json          # JSR publish config (@shotscript/std)
+│   └── package.json       # npm publish config (@shotscript/std)
 ├── tests/
 │   └── fixtures/          # one .shot pair per rule (valid + invalid)
 ├── docs/
@@ -76,7 +76,7 @@ Going type-aware in v2 means upgrading to `ts.createProgram()` — same library,
 
 ```json
 {
-    "imports": { "shot:": "jsr:@shotscript/" },
+    "imports": { "shot:": "npm:@shotscript/" },
     "compilerOptions": {
         "strict": true,
         "noImplicitReturns": true,
@@ -99,7 +99,7 @@ Going type-aware in v2 means upgrading to `ts.createProgram()` — same library,
 }
 ```
 
-Deno's import-map resolver follows the trailing-slash convention: `shot:std` → `jsr:@shotscript/std`. No source modification; the `.shot` file Deno sees is identical to the `.shot` file the user wrote.
+Deno's import-map resolver follows the trailing-slash convention: `shot:std` → `npm:@shotscript/std`. No source modification; the `.shot` file Deno sees is identical to the `.shot` file the user wrote.
 
 The `compilerOptions` block is the type-system half of the strict-typing contract: `exactOptionalPropertyTypes` and `noUncheckedIndexedAccess` close the holes the AST-only checker can't see, and `noUnusedLocals` is what makes ignored tuple-error bindings fail the build (see `docs/LANGUAGE.md`).
 
@@ -130,8 +130,8 @@ curl -fsSL https://shotscript.dev/install.sh | sh
 
 **Underlying (what the install script actually does):**
 1. Detect platform (Linux, macOS).
-2. Check for Deno on PATH. If absent, install it via Deno's own install script.
-3. `deno install -gn --global shot jsr:@shotscript/shot`.
+2. Check for npm on PATH.
+3. `npm install -g @shotscript/shot`.
 4. Print confirmation + next-steps.
 
 The two-layer split exists so ShotScript's UX never leaks "this is a Deno script." Users see "shot." Internals reuse the JS ecosystem. If we ever swap runtimes or ship `deno compile`-bundled binaries, the install URL stays stable — only the script body changes.
