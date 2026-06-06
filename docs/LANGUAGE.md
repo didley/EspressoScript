@@ -991,7 +991,7 @@ Rules: `no-class`, `no-abstract`, `no-decorators`, `no-this`
 const x = require("foo")
 export default thing
 import x from "npm:lodash"
-import y from "jsr:@other/lib"
+import y from "https://cdn.example.com/lib.js"
 
 // ✅
 import { thing } from "shot:std"
