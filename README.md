@@ -5,16 +5,15 @@
  ╚════██║██╔══██║██║   ██║   ██║   
  ███████║██║  ██║╚██████╔╝   ██║   
  ╚══════╝╚═╝  ╚═╝ ╚═════╝    ╚═╝   
- ShotScript — TypeScript, one way.
+ TypeScript, one way.
+
+ Shot extracts features from TypeScript, applying Go's "one canonical way" philosophy to the TS/JS ecosystem.
+ Making coding easier for humans and LLMs.
 ```
 
-Shot is a subtractive superset of TypeScript. It removes features instead of adding them — applying Go's "one canonical way" philosophy to the TS/JS ecosystem. One canonical form per construct makes code easier for humans to review and LLMs to generate correctly.
-
-Four ways to write a function. Three ways to handle errors. Two ways to declare a type. Most codebases use all of them. Shot keeps one of each.
-
-- **File extension / CLI:** `.shot` + `shot` command
-- **Runtime:** Deno — validates and type-checks before running
-- **LLM-friendly:** one form per construct — models generate correct, consistent code without reading the codebase first
+Echosystem:
+**[ShotScript](https://github.com/didley/ShotScript)** — Opinionated toolchain strictly enforcing Shots principles.
+**[ShotLint](https://github.com/didley/ShotLint)** — Utils and config for typing, linting, and formatting with Shots principles.
 
 ## Quick taste
 
