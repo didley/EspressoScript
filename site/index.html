@@ -63,19 +63,187 @@
       margin: 0 auto 2.5rem;
     }
 
-    .hero-links {
+    .hero-github {
       display: flex;
-      gap: 1.75rem;
+      gap: 1.25rem;
       justify-content: center;
-      flex-wrap: wrap;
-      list-style: none;
-      font-size: 0.9rem;
+      align-items: center;
+      font-size: 0.85rem;
     }
 
-    .hero-links a {
+    .hero-github a { color: var(--muted); }
+    .hero-github a:hover { color: var(--text); text-decoration: none; }
+    .hero-github-sep { color: var(--border); }
+
+    /* ── Ecosystem nav ── */
+    .eco-section {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 2rem 4rem;
+    }
+
+    .eco-heading {
+      text-align: center;
+      margin-bottom: 1.75rem;
+    }
+
+    .eco-heading .section-label { display: block; margin-bottom: 0.4rem; }
+
+    .eco-heading h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      margin-bottom: 0.35rem;
+    }
+
+    .eco-heading p {
+      font-size: 0.9rem;
       color: var(--muted);
     }
-    .hero-links a:hover { color: var(--text); text-decoration: none; }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      border: 1px solid var(--border);
+      border-radius: 10px 10px 0 0;
+      overflow: hidden;
+      background: var(--border);
+    }
+
+    .doc-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      border: 1px solid var(--border);
+      border-top: none;
+      border-radius: 0 0 10px 10px;
+      overflow: hidden;
+      background: var(--border);
+    }
+
+    @media (max-width: 680px) {
+      .product-grid, .doc-grid { grid-template-columns: 1fr; }
+    }
+
+    .product-card {
+      background: var(--surface);
+      padding: 1.75rem 2rem 2rem;
+    }
+
+    .product-card:nth-child(2) {
+      background: #131318;
+      border-left: 1px solid var(--border);
+    }
+
+    @media (max-width: 680px) {
+      .product-card:nth-child(2) { border-left: none; border-top: 1px solid var(--border); }
+    }
+
+    .product-tag {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.6rem;
+    }
+
+    .product-name {
+      font-size: 1.3rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.5rem;
+    }
+
+    .product-desc {
+      font-size: 0.875rem;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 1.25rem;
+    }
+
+    .product-features {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .product-features li {
+      font-size: 0.82rem;
+      color: var(--muted);
+      display: flex;
+      align-items: baseline;
+      gap: 0.5rem;
+    }
+
+    .product-features li::before { content: '·'; color: var(--accent); flex-shrink: 0; }
+
+    .product-features code {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 0.78em;
+      color: var(--type);
+      background: rgba(130,170,255,0.08);
+      padding: 0.05rem 0.3rem;
+      border-radius: 3px;
+    }
+
+    .product-link {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    .doc-card {
+      background: #0f0f13;
+      padding: 1.25rem 2rem 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .doc-card:nth-child(2) {
+      border-left: 1px solid var(--border);
+    }
+
+    @media (max-width: 680px) {
+      .doc-card:nth-child(2) { border-left: none; }
+    }
+
+    .doc-tag {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.4rem;
+    }
+
+    .doc-name {
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: -0.015em;
+      margin-bottom: 0.4rem;
+    }
+
+    .doc-desc {
+      font-size: 0.845rem;
+      color: var(--muted);
+      line-height: 1.55;
+      margin-bottom: 0.9rem;
+    }
+
+    .doc-desc code {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 0.82em;
+      color: var(--type);
+    }
+
+    .doc-link {
+      font-size: 0.845rem;
+      font-weight: 600;
+      color: var(--muted);
+    }
 
     /* ── Layout ── */
     .divider { border: none; border-top: 1px solid var(--border); }
@@ -381,7 +549,7 @@
       <div class="rule-grid">
         <div class="rule-card">
           <div class="rule-name">no-throw / no-try</div>
-          <div class="rule-desc">Errors are values — return <code>ShotPromise&lt;T, E&gt;</code> tuples. Failure is in the type signature, not the air.</div>
+          <div class="rule-desc">Errors are values — return <code>PromiseResult&lt;T, E&gt;</code> tuples. Failure is in the type signature, not the air.</div>
         </div>
         <div class="rule-card">
           <div class="rule-name">no-undefined-type / no-optional-property</div>
@@ -445,13 +613,13 @@
         </div>
         <div class="pane-after">
           <div class="pane-label"><span class="dot dot-green"></span>shot</div>
-          <pre><span class="kw">import</span> { <span class="fn">fetch</span>, <span class="fn">jsonParse</span> } <span class="kw">from</span> <span class="st">"shot:std"</span>
-<span class="kw">import type</span> { <span class="ty">ShotPromise</span> } <span class="kw">from</span> <span class="st">"shot:std"</span>
+          <pre><span class="kw">import</span> { <span class="fn">safeFetch</span>, <span class="fn">jsonParse</span> } <span class="kw">from</span> <span class="st">"shot:std"</span>
+<span class="kw">import type</span> { <span class="ty">PromiseResult</span> } <span class="kw">from</span> <span class="st">"shot:std"</span>
 
 <span class="kw">async function</span> <span class="fn">getUser</span>(
   <span class="id">id</span>: <span class="ty">number</span>
-): <span class="ty">ShotPromise</span>&lt;<span class="ty">User</span>&gt; {
-  <span class="kw">const</span> [<span class="id">res</span>, <span class="id">err</span>] = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="st">`/users/<span class="op">${</span><span class="id">id</span><span class="op">}</span>`</span>)
+): <span class="ty">PromiseResult</span>&lt;<span class="ty">User</span>&gt; {
+  <span class="kw">const</span> [<span class="id">res</span>, <span class="id">err</span>] = <span class="kw">await</span> <span class="fn">safeFetch</span>(<span class="st">`/users/<span class="op">${</span><span class="id">id</span><span class="op">}</span>`</span>)
   <span class="kw">if</span> (<span class="id">err</span> !== <span class="kw">null</span>) {
     <span class="kw">return</span> [<span class="kw">null</span>, <span class="id">err</span>]
   }
@@ -465,7 +633,7 @@
       <div class="callout">
         <strong>Why it matters:</strong> thrown exceptions don't appear in function signatures.
         Callers have no idea a function can fail without reading its source.
-        <code>ShotPromise&lt;T, E&gt;</code> makes every failure path explicit in the type, enforced by the checker.
+        <code>PromiseResult&lt;T, E&gt;</code> makes every failure path explicit in the type, enforced by the checker.
       </div>
 
       <p class="section-label" style="margin-bottom: 0.75rem">Absent values</p>
@@ -701,7 +869,7 @@
       <div class="demo-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;align-items:start;">
         <div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;">
           <div style="background:var(--surface);border-bottom:1px solid var(--border);padding:0.6rem 1rem;font-size:0.72rem;color:var(--muted);font-family:'SF Mono','Fira Code',monospace;">todo.shot</div>
-          <pre style="background:#0a0a0d;padding:1.25rem 1.5rem;font-size:0.78rem;line-height:1.75;overflow-x:auto;"><span style="color:var(--keyword)">import</span> <span style="color:var(--text)">{ mutableRef, wrapError }</span> <span style="color:var(--keyword)">from</span> <span style="color:var(--string)">"shot:std"</span>
+          <pre style="background:#0a0a0d;padding:1.25rem 1.5rem;font-size:0.78rem;line-height:1.75;overflow-x:auto;"><span style="color:var(--keyword)">import</span> <span style="color:var(--text)">{ wrapError }</span> <span style="color:var(--keyword)">from</span> <span style="color:var(--string)">"shot:std"</span>
 
 <span style="color:var(--keyword)">type</span> <span style="color:var(--type)">Todo</span> <span style="color:var(--text)">=</span> <span style="color:var(--text)">{</span>
   <span style="color:var(--keyword)">readonly</span> <span style="color:var(--text)">id</span><span style="color:var(--text)">:</span> <span style="color:var(--type)">number</span>
@@ -709,8 +877,8 @@
   <span style="color:var(--keyword)">readonly</span> <span style="color:var(--text)">done</span><span style="color:var(--text)">:</span> <span style="color:var(--type)">boolean</span>
 <span style="color:var(--text)">}</span>
 
-<span style="color:var(--keyword)">const</span> <span style="color:var(--text)">_todos</span> <span style="color:var(--text)">=</span> <span style="color:var(--fn)">mutableRef</span><span style="color:var(--text)">&lt;</span><span style="color:var(--keyword)">readonly</span> <span style="color:var(--type)">Todo</span><span style="color:var(--text)">[]&gt;([])</span>
-<span style="color:var(--keyword)">const</span> <span style="color:var(--text)">_nextId</span> <span style="color:var(--text)">=</span> <span style="color:var(--fn)">mutableRef</span><span style="color:var(--text)">(</span><span style="color:var(--num)">1</span><span style="color:var(--text)">)</span>
+<span style="color:var(--keyword)">const</span> <span style="color:var(--text)">_todos</span><span style="color:var(--text)">:</span> <span style="color:var(--text)">{ value:</span> <span style="color:var(--keyword)">readonly</span> <span style="color:var(--type)">Todo</span><span style="color:var(--text)">[] } = { value: [] }</span>
+<span style="color:var(--keyword)">const</span> <span style="color:var(--text)">_nextId</span><span style="color:var(--text)">:</span> <span style="color:var(--text)">{ value:</span> <span style="color:var(--type)">number</span> <span style="color:var(--text)">} = { value:</span> <span style="color:var(--num)">1</span> <span style="color:var(--text)">}</span>
 
 <span style="color:var(--keyword)">export function</span> <span style="color:var(--fn)">addTodo</span><span style="color:var(--text)">(</span><span style="color:var(--text)">title</span><span style="color:var(--text)">:</span> <span style="color:var(--type)">string</span><span style="color:var(--text)">):</span> <span style="color:var(--text)">[</span><span style="color:var(--type)">Todo</span> <span style="color:var(--text)">|</span> <span style="color:var(--keyword)">null</span><span style="color:var(--text)">,</span> <span style="color:var(--type)">Error</span> <span style="color:var(--text)">|</span> <span style="color:var(--keyword)">null</span><span style="color:var(--text)">]</span> <span style="color:var(--text)">{</span>
   <span style="color:var(--keyword)">const</span> <span style="color:var(--text)">trimmed</span> <span style="color:var(--text)">=</span> <span style="color:var(--text)">title.</span><span style="color:var(--fn)">trim</span><span style="color:var(--text)">()</span>

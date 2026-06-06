@@ -401,7 +401,7 @@
                     <div class="sidebar-label">Also</div>
                     <ul>
                         <li><a href="/stdlib/">Stdlib reference</a></li>
-                        <li><a href="/script/cli/">CLI reference</a></li>
+                        
                         <li><a href="/lint/">ShotLint rules</a></li>
                     </ul>
                 </div>
@@ -498,8 +498,8 @@
                             <code>var</code> is banned. <code>let</code> is only
                             allowed inside <code>for</code> loop headers.
                             Everywhere else: <code>const</code>. For mutable
-                            module-level state, use <code>mutableRef</code> from
-                            <code>shot:std</code>.
+                            module-level state, use a plain const object:
+                            <code>const state = { value: 0 }</code>.
                         </p>
                         <div class="code-pair">
                             <div class="code-pane code-pane-bad">
@@ -533,7 +533,7 @@
                         Fallible functions return
                         <code>[T | null, Error | null]</code>. The caller
                         destructures and checks. No hidden control flow.
-                        <code>ShotPromise&lt;T, E&gt;</code> is the canonical
+                        <code>PromiseResult&lt;T, E&gt;</code> is the canonical
                         alias for async fallible functions.
                     </div>
 
@@ -557,11 +557,11 @@
                             </div>
                             <div class="code-pane code-pane-good">
                                 <div class="code-label">✅</div>
-                                <pre><span class="kw">import</span> { fetch, jsonParse } <span class="kw">from</span> <span class="st">"shot:std"</span>
-<span class="kw">import type</span> { <span class="ty">ShotPromise</span> } <span class="kw">from</span> <span class="st">"shot:std"</span>
+                                <pre><span class="kw">import</span> { safeFetch, jsonParse } <span class="kw">from</span> <span class="st">"shot:std"</span>
+<span class="kw">import type</span> { <span class="ty">PromiseResult</span> } <span class="kw">from</span> <span class="st">"shot:std"</span>
 
-<span class="kw">async function</span> <span class="fn">getUser</span>(id: <span class="ty">number</span>): <span class="ty">ShotPromise</span>&lt;<span class="ty">User</span>&gt; {
-  <span class="kw">const</span> [res, err] = <span class="kw">await</span> <span class="fn">fetch</span>(`/users/${id}`)
+<span class="kw">async function</span> <span class="fn">getUser</span>(id: <span class="ty">number</span>): <span class="ty">PromiseResult</span>&lt;<span class="ty">User</span>&gt; {
+  <span class="kw">const</span> [res, err] = <span class="kw">await</span> <span class="fn">safeFetch</span>(`/users/${id}`)
   <span class="kw">if</span> (err !== <span class="kw">null</span>) { <span class="kw">return</span> [<span class="kw">null</span>, err] }
   <span class="kw">return</span> <span class="fn">jsonParse</span>&lt;<span class="ty">User</span>&gt;(<span class="kw">await</span> res.text())
 }</pre>
@@ -588,7 +588,7 @@
   | { <span class="kw">readonly</span> kind: <span class="st">"network"</span>; <span class="kw">readonly</span> status: <span class="ty">number</span> }
   | { <span class="kw">readonly</span> kind: <span class="st">"parse"</span>; <span class="kw">readonly</span> input: <span class="ty">string</span> }
 
-<span class="kw">async function</span> <span class="fn">load</span>(id: <span class="ty">number</span>): <span class="ty">ShotPromise</span>&lt;<span class="ty">User</span>, <span class="ty">AppError</span>&gt; { <span class="cm">/* ... */</span> }</pre>
+<span class="kw">async function</span> <span class="fn">load</span>(id: <span class="ty">number</span>): <span class="ty">PromiseResult</span>&lt;<span class="ty">User</span>, <span class="ty">AppError</span>&gt; { <span class="cm">/* ... */</span> }</pre>
                     </div>
 
                     <div class="rule-block">
@@ -1101,7 +1101,7 @@ math/
             <p>
                 <a href="/script/">ShotScript</a> ·
                 <a href="/lint/">ShotLint</a> · <a href="/stdlib/">Stdlib</a> ·
-                <a href="/script/cli/">CLI</a> ·
+                
                 <a href="https://github.com/didley/ShotScript" class="ext"
                     >GitHub</a
                 >

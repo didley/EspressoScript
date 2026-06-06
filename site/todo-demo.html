@@ -126,18 +126,14 @@
   <script>
     // --- pure logic (mirrors todo.shot) ---
 
-    function mutableRef(initial) {
-      return { value: initial };
-    }
-
     function wrapError(message, cause) {
       const err = new Error(message);
       err.cause = cause;
       return err;
     }
 
-    const _todos = mutableRef([]);
-    const _nextId = mutableRef(1);
+    const _todos = { value: [] };
+    const _nextId = { value: 1 };
 
     function allTodos() {
       return _todos.value;

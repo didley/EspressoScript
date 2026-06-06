@@ -234,7 +234,7 @@
                 font-size: 0.8rem;
                 line-height: 1.7;
                 padding: 0.9rem 1.1rem;
-                background: #0a0a0d;
+                background: #131318;
                 border-top: 1px solid var(--border);
                 overflow-x: auto;
                 white-space: pre;
@@ -305,13 +305,12 @@
                 <div class="sidebar-section">
                     <div class="sidebar-label">Functions</div>
                     <ul>
-                        <li><a href="#fetch">fetch</a></li>
+                        <li><a href="#safeFetch">safeFetch</a></li>
                         <li><a href="#jsonParse">jsonParse</a></li>
                         <li><a href="#jsonStringify">jsonStringify</a></li>
                         <li><a href="#readFile">readFile</a></li>
                         <li><a href="#writeFile">writeFile</a></li>
                         <li><a href="#wrapError">wrapError</a></li>
-                        <li><a href="#mutableRef">mutableRef</a></li>
                         <li><a href="#toResult">toResult</a></li>
                         <li><a href="#toPromiseResult">toPromiseResult</a></li>
                     </ul>
@@ -319,14 +318,15 @@
                 <div class="sidebar-section">
                     <div class="sidebar-label">Types</div>
                     <ul>
-                        <li><a href="#ShotPromise">ShotPromise</a></li>
+                        <li><a href="#Result">Result</a></li>
+                        <li><a href="#PromiseResult">PromiseResult</a></li>
                     </ul>
                 </div>
                 <div class="sidebar-section">
                     <div class="sidebar-label">Also</div>
                     <ul>
                         <li><a href="/language/">Language ref</a></li>
-                        <li><a href="/script/cli/">CLI ref</a></li>
+                        
                     </ul>
                 </div>
             </aside>
@@ -350,39 +350,63 @@
                 <div class="callout">
                     <strong>Import:</strong>
                     <code
-                        >import { fetch, jsonParse, wrapError, mutableRef } from
+                        >import { safeFetch, jsonParse, wrapError } from
                         "shot:std"</code
                     ><br />
-                    <code>import type { ShotPromise } from "shot:std"</code>
+                    <code>import type { Result, PromiseResult } from "shot:std"</code>
                 </div>
 
-                <!-- ShotPromise -->
-                <div class="fn-block" id="ShotPromise">
+                <!-- Result -->
+                <div class="fn-block" id="Result">
                     <div class="fn-header">
-                        <span class="fn-name">ShotPromise&lt;T, E&gt;</span>
+                        <span class="fn-name">Result&lt;T, E&gt;</span>
+                        <span class="fn-kind">type</span>
+                    </div>
+                    <div class="fn-body">
+                        <p class="fn-desc">
+                            The canonical return type for synchronous fallible
+                            functions. A discriminated union — either
+                            <code>[T, null]</code> on success or
+                            <code>[null, E]</code> on failure.
+                            <code>E</code> defaults to <code>Error</code> but
+                            can be any plain type.
+                        </p>
+                    </div>
+                    <pre><span class="kw">type</span> <span class="ty">Result</span>&lt;<span class="ty">T</span>, <span class="ty">E</span> = <span class="ty">Error</span>&gt; = [<span class="ty">T</span>, <span class="kw">null</span>] | [<span class="kw">null</span>, <span class="ty">E</span>]
+
+<span class="cm">// usage</span>
+<span class="kw">function</span> parseConfig(src: <span class="ty">string</span>): <span class="ty">Result</span>&lt;<span class="ty">Config</span>&gt; {
+  <span class="kw">return</span> jsonParse&lt;<span class="ty">Config</span>&gt;(src)
+}</pre>
+                </div>
+
+                <!-- PromiseResult -->
+                <div class="fn-block" id="PromiseResult">
+                    <div class="fn-header">
+                        <span class="fn-name">PromiseResult&lt;T, E&gt;</span>
                         <span class="fn-kind">type</span>
                     </div>
                     <div class="fn-body">
                         <p class="fn-desc">
                             The canonical return type for async fallible
-                            functions. <code>E</code> defaults to
-                            <code>Error</code> but can be any plain type.
+                            functions. Shorthand for
+                            <code>Promise&lt;Result&lt;T, E&gt;&gt;</code>.
                         </p>
                     </div>
-                    <pre><span class="kw">type</span> <span class="ty">ShotPromise</span>&lt;<span class="ty">T</span>, <span class="ty">E</span> = <span class="ty">Error</span>&gt; = <span class="ty">Promise</span>&lt;[<span class="ty">T</span> | <span class="kw">null</span>, <span class="ty">E</span> | <span class="kw">null</span>]&gt;
+                    <pre><span class="kw">type</span> <span class="ty">PromiseResult</span>&lt;<span class="ty">T</span>, <span class="ty">E</span> = <span class="ty">Error</span>&gt; = <span class="ty">Promise</span>&lt;<span class="ty">Result</span>&lt;<span class="ty">T</span>, <span class="ty">E</span>&gt;&gt;
 
 <span class="cm">// usage</span>
-<span class="kw">async function</span> queryUser(id: <span class="ty">number</span>): <span class="ty">ShotPromise</span>&lt;<span class="ty">User</span>&gt; {
-  <span class="kw">const</span> [res, err] = <span class="kw">await</span> fetch(`/users/${id}`)
+<span class="kw">async function</span> queryUser(id: <span class="ty">number</span>): <span class="ty">PromiseResult</span>&lt;<span class="ty">User</span>&gt; {
+  <span class="kw">const</span> [res, err] = <span class="kw">await</span> safeFetch(`/users/${id}`)
   <span class="kw">if</span> (err !== <span class="kw">null</span>) { <span class="kw">return</span> [<span class="kw">null</span>, err] }
   <span class="kw">return</span> jsonParse&lt;<span class="ty">User</span>&gt;(<span class="kw">await</span> res.text())
 }</pre>
                 </div>
 
-                <!-- fetch -->
-                <div class="fn-block" id="fetch">
+                <!-- safeFetch -->
+                <div class="fn-block" id="safeFetch">
                     <div class="fn-header">
-                        <span class="fn-name">fetch(url, opts?)</span>
+                        <span class="fn-name">safeFetch(url, opts?)</span>
                         <span class="fn-kind">async</span>
                     </div>
                     <div class="fn-body">
@@ -390,15 +414,18 @@
                             Wraps <code>globalThis.fetch</code>. Returns
                             <code>[Response, null]</code> on success,
                             <code>[null, Error]</code> on network failure.
+                            HTTP error status codes are not treated as errors —
+                            check <code>res.ok</code> yourself.
                         </p>
                     </div>
-                    <pre><span class="kw">function</span> fetch(
+                    <pre><span class="kw">function</span> safeFetch(
   input: <span class="ty">string</span> | <span class="ty">URL</span>,
   init?: <span class="ty">RequestInit</span>,
-): <span class="ty">Promise</span>&lt;[<span class="ty">Response</span> | <span class="kw">null</span>, <span class="ty">Error</span> | <span class="kw">null</span>]&gt;
+): <span class="ty">PromiseResult</span>&lt;<span class="ty">Response</span>&gt;
 
-<span class="kw">const</span> [res, err] = <span class="kw">await</span> fetch(<span class="st">`https://api.example.com/users/${id}`</span>)
-<span class="kw">if</span> (err !== <span class="kw">null</span>) { <span class="kw">return</span> [<span class="kw">null</span>, err] }</pre>
+<span class="kw">const</span> [res, err] = <span class="kw">await</span> safeFetch(<span class="st">`https://api.example.com/users/${id}`</span>)
+<span class="kw">if</span> (err !== <span class="kw">null</span>) { <span class="kw">return</span> [<span class="kw">null</span>, err] }
+<span class="kw">if</span> (!res.ok) { <span class="kw">return</span> [<span class="kw">null</span>, <span class="kw">new</span> <span class="ty">Error</span>(<span class="st">`HTTP ${res.status}`</span>)] }</pre>
                 </div>
 
                 <!-- jsonParse -->
@@ -414,7 +441,7 @@
                             <code>[null, Error]</code>.
                         </p>
                     </div>
-                    <pre><span class="kw">function</span> jsonParse&lt;<span class="ty">T</span>&gt;(str: <span class="ty">string</span>): [<span class="ty">T</span> | <span class="kw">null</span>, <span class="ty">Error</span> | <span class="kw">null</span>]
+                    <pre><span class="kw">function</span> jsonParse&lt;<span class="ty">T</span>&gt;(str: <span class="ty">string</span>): <span class="ty">Result</span>&lt;<span class="ty">T</span>&gt;
 
 <span class="kw">const</span> [user, err] = jsonParse&lt;<span class="ty">User</span>&gt;(text)</pre>
                 </div>
@@ -435,7 +462,7 @@
                     <pre><span class="kw">function</span> jsonStringify(
   value: <span class="ty">unknown</span>,
   indent?: <span class="ty">number</span>,
-): [<span class="ty">string</span> | <span class="kw">null</span>, <span class="ty">Error</span> | <span class="kw">null</span>]</pre>
+): <span class="ty">Result</span>&lt;<span class="ty">string</span>&gt;</pre>
                 </div>
 
                 <!-- readFile -->
@@ -451,7 +478,7 @@
                             UTF-8 string, or an error.
                         </p>
                     </div>
-                    <pre><span class="kw">function</span> readFile(path: <span class="ty">string</span>): <span class="ty">Promise</span>&lt;[<span class="ty">string</span> | <span class="kw">null</span>, <span class="ty">Error</span> | <span class="kw">null</span>]&gt;
+                    <pre><span class="kw">function</span> readFile(path: <span class="ty">string</span>): <span class="ty">PromiseResult</span>&lt;<span class="ty">string</span>&gt;
 
 <span class="kw">const</span> [text, err] = <span class="kw">await</span> readFile(<span class="st">"./config.json"</span>)</pre>
                 </div>
@@ -501,29 +528,6 @@
 }</pre>
                 </div>
 
-                <!-- mutableRef -->
-                <div class="fn-block" id="mutableRef">
-                    <div class="fn-header">
-                        <span class="fn-name"
-                            >mutableRef&lt;T&gt;(initial)</span
-                        >
-                        <span class="fn-kind">sync</span>
-                    </div>
-                    <div class="fn-body">
-                        <p class="fn-desc">
-                            Returns a single-slot mutable cell — the canonical
-                            way to hold mutable state when
-                            <code>no-let-outside-for</code> bans
-                            <code>let</code> in function bodies and module
-                            scope.
-                        </p>
-                    </div>
-                    <pre><span class="kw">function</span> mutableRef&lt;<span class="ty">T</span>&gt;(initial: <span class="ty">T</span>): { value: <span class="ty">T</span> }
-
-<span class="kw">const</span> count = mutableRef(<span class="ty">0</span>)
-count.value += <span class="ty">1</span></pre>
-                </div>
-
                 <!-- toResult -->
                 <div class="fn-block" id="toResult">
                     <div class="fn-header">
@@ -537,7 +541,7 @@ count.value += <span class="ty">1</span></pre>
                             <code>node:*</code> APIs that don't return tuples.
                         </p>
                     </div>
-                    <pre><span class="kw">function</span> toResult&lt;<span class="ty">T</span>&gt;(fn: () =&gt; <span class="ty">T</span>): [<span class="ty">T</span> | <span class="kw">null</span>, <span class="ty">Error</span> | <span class="kw">null</span>]
+                    <pre><span class="kw">function</span> toResult&lt;<span class="ty">T</span>&gt;(fn: () =&gt; <span class="ty">T</span>): <span class="ty">Result</span>&lt;<span class="ty">T</span>&gt;
 
 <span class="kw">const</span> [parsed, err] = toResult(() =&gt; someLib.parseSync(input))</pre>
                 </div>
@@ -559,7 +563,7 @@ count.value += <span class="ty">1</span></pre>
                     </div>
                     <pre><span class="kw">function</span> toPromiseResult&lt;<span class="ty">T</span>&gt;(
   fn: () =&gt; <span class="ty">Promise</span>&lt;<span class="ty">T</span>&gt;,
-): <span class="ty">Promise</span>&lt;[<span class="ty">T</span> | <span class="kw">null</span>, <span class="ty">Error</span> | <span class="kw">null</span>]&gt;
+): <span class="ty">PromiseResult</span>&lt;<span class="ty">T</span>&gt;
 
 <span class="kw">const</span> [rows, err] = <span class="kw">await</span> toPromiseResult(() =&gt; db.query(sql))</pre>
                 </div>
@@ -590,7 +594,7 @@ count.value += <span class="ty">1</span></pre>
                 <a href="/script/">ShotScript</a> ·
                 <a href="/lint/">ShotLint</a> ·
                 <a href="/language/">Language</a> ·
-                <a href="/script/cli/">CLI</a> ·
+                
                 <a href="https://github.com/didley/ShotScript" class="ext"
                     >GitHub</a
                 >
