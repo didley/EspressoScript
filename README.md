@@ -14,9 +14,9 @@ Making coding easier for humans and LLMs.
 
 Echosystem:
 
-**[ShotScript](https://github.com/didley/ShotScript)** — Opinionated toolchain strictly enforcing Shots principles.
+**[ShotScript](https://github.com/didley/ShotScript)** — Full opinionated toolchain: `.shot` file extension, `shot` CLI, Deno runtime, `shot:std` stdlib, and import allowlist. Start new projects with `shot init` — no config, no overrides.
 
-**[ShotLint](https://github.com/didley/ShotLint)** — Utils and config for typing, linting, and formatting with Shots principles.
+**[ShotLint](https://github.com/didley/ShotLint)** — Bring Shot principles to existing TypeScript projects: 90+ lint rules as `tsc` errors via TypeScript plugin, shareable Biome config, and safe util wrappers. No new extension or runtime required.
 
 # ShotScript
 

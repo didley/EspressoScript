@@ -4,6 +4,14 @@ This is the ShotScript toolchain repository. ShotScript is a TypeScript dialect 
 
 ---
 
+## ShotScript vs ShotLint
+
+**ShotScript** (this repo) is the full opinionated toolchain. It requires Deno, uses `.shot` files instead of `.ts`, enforces Shot principles at the runtime level, and ships its own CLI (`shot init` · `check` · `fmt` · `build` · `run` · `test`) and stdlib (`shot:std`). Users adopt ShotScript by starting a new project with `shot init` — there is no config, no overrides.
+
+**ShotLint** (`lint/` submodule, published as `shot-lint` on npm) is the package for existing TypeScript projects. It brings Shot principles via a TypeScript language-server plugin (rules surface as `tsc` errors in CI and editor squiggles), a shareable Biome config, and safe util wrappers. No `.shot` extension, no Deno, no CLI required — just `npm install shot-lint`.
+
+---
+
 ## Repo layout
 
 ```
@@ -125,9 +133,9 @@ CI runs `bash scripts/verify.sh` for the root repo and all three npm commands fo
 
 2. **Register it in `cli/checker/rules/index.ts`** — import and add to the `rules` array.
 
-3. **Add the same rule file to `rules/src/checker/rules/`** — identical logic but import extensions must be `.js` (NodeNext requirement).
+3. **Add the same rule file to `lint/src/checker/rules/`** — identical logic but import extensions must be `.js` (NodeNext requirement).
 
-4. **Register it in `rules/src/checker/rules/index.ts`**.
+4. **Register it in `lint/src/checker/rules/index.ts`**.
 
 5. **Add fixture files** to `tests/fixtures/syntax/` or `tests/fixtures/types/`:
    - `rule-name-invalid.shot` — code that should trigger the rule (exactly 1 diagnostic)
