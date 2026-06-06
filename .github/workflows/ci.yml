@@ -1,0 +1,64 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  verify:
+    name: Verify shot CLI
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: "2.x"
+
+      - name: Cache Deno dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.deno
+            ~/.cache/deno
+          key: deno-${{ hashFiles('cli/deno.lock') }}
+          restore-keys: deno-
+
+      - name: Run integration tests
+        run: bash scripts/verify.sh
+
+  rules-submodule:
+    name: shot-rules submodule
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+          cache-dependency-path: rules/package.json
+
+      - name: Install shot-rules dependencies
+        working-directory: rules
+        run: npm ci
+
+      - name: Build shot-rules
+        working-directory: rules
+        run: npm run build
+
+      - name: Run shot-rules tests
+        working-directory: rules
+        run: node --import tsx/esm tests/runner.ts
+
+      - name: Run shot-rules utils tests
+        working-directory: rules
+        run: node --import tsx/esm --test tests/utils.test.ts
