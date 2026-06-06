@@ -191,31 +191,6 @@ function roleLabel(isAdmin: boolean, isSuperAdmin: boolean): string {
 }
 ```
 
-## Ecosystem
-
-```mermaid
-graph TD
-    SL["**ShotLint**  ·  github.com/didley/shot-lint\n──────────────────────────────────\nStrict linting for any TypeScript project\n• 90+ AST rules · standalone CLI · npm · jsr\n• No Deno required\n• Runtime utils — jsonParse, safeFetch, tryCatch"]
-
-    SS["**ShotScript**  ·  github.com/didley/ShotScript\n──────────────────────────────────\nThe full opinionated lint toolchain\n• .shot files · Shot CLI · Deno runtime\n• shot:std standard library · import allowlist\n• Locked tsconfig — no user overrides"]
-
-    TS["**Your TypeScript project**\n(any runtime · any framework)"]
-
-    SP["**Your ShotScript project**\n──────────────────────────────────\nZero-throw guarantee — every failure path is in the type\n• No any · no class · no undefined · no escape hatches\n• LLM-friendly: one form per construct, every time\n• Code your whole team can read on first glance"]
-
-    REG["**ShotScript Registry**  ·  planned\n──────────────────────────────────\nA package registry for the Shot ecosystem\n• Native .shot packages with full type guarantees\n• jsr/npm packages wrapped in error-tuple handlers\n• Every import returns  T | null, Error | null  — no surprises"]
-
-    SL -->|"embedded as lint/ submodule"| SS
-    SS -->|"Shot check calls ShotLint checker"| SL
-    SL -->|"npx shot-lint 'src/**/*.ts'"| TS
-    SS -->|"shot run / check / build / test"| SP
-    REG -->|"shot add"| SP
-
-    style REG stroke-dasharray: 5 5
-```
-
-ShotScript is the full opinionated language — `.shot` files, `shot:std`, Deno runtime, locked config, all-or-nothing. `shot-lint` is the rule engine extracted so you can apply the same lint to an existing TypeScript project without committing to the Shot ecosystem. Changes to rules flow from `shot-lint` into ShotScript automatically via the submodule.
-
 ## Documentation
 
 - [`docs/PHILOSOPHY.md`](docs/PHILOSOPHY.md) — what Shot is and isn't
