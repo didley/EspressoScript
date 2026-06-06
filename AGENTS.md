@@ -62,7 +62,7 @@ deno run -A cli/mod.ts run path/to/file.shot
 deno run -A cli/mod.ts test path/to/dir/
 ```
 
-To point the CLI at the local stdlib instead of the published JSR version:
+To point the CLI at the local stdlib instead of the published npm version:
 
 ```bash
 SHOT_STDLIB_LOCAL=$(pwd)/stdlib/mod.ts deno run -A cli/mod.ts run file.shot
@@ -143,7 +143,7 @@ CI runs `bash scripts/verify.sh` for the root repo and all three npm commands fo
 
 | Variable | Effect |
 |---|---|
-| `SHOT_STDLIB_LOCAL` | Path to local stdlib `mod.ts` — bypasses JSR for development |
+| `SHOT_STDLIB_LOCAL` | Path to local stdlib `mod.ts` — bypasses npm for development |
 | `SHOT_KEEP_TEMP` | Set to `1` to leave the temp `deno.json` dir on disk after a command |
 | `DENO_EXEC` | Override the deno binary used by `scripts/verify.sh` |
 

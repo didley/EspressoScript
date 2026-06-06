@@ -23,7 +23,7 @@ Go's response is well known: pick one way and remove the others. `gofmt` is not 
 shot applies this approach to TS. Rather than designing a new language, we restrict the one developers already know. The benefits:
 
 - **Zero learning curve for readers** — every shot program is readable as TS.
-- **Full ecosystem compatibility** — emitted output IS TypeScript; Deno's tooling, type system, and JSR ecosystem work unchanged.
+- **Full ecosystem compatibility** — emitted output IS TypeScript; Deno's tooling and type system work unchanged.
 - **No bootstrap problem** — no parser, no compiler, no language spec to maintain. We maintain a list of rules.
 
 ## Consequences of the lint-only architecture
