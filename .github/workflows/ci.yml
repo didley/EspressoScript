@@ -10,6 +10,7 @@ jobs:
   verify:
     name: Verify shot CLI
     runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     steps:
       - uses: actions/checkout@v4
@@ -35,25 +36,27 @@ jobs:
   rules-submodule:
     name: shot-lint submodule
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     steps:
       - uses: actions/checkout@v4
         with:
           submodules: recursive
 
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-          cache: "npm"
-          cache-dependency-path: lint/package.json
 
-      - name: Install shot-lint dependencies
-        working-directory: lint
-        run: npm ci
+      - name: Install dependencies
+        run: bun install
 
       - name: Build shot-lint
         working-directory: lint
-        run: npm run build
+        run: bun run build
 
       - name: Run shot-lint tests
         working-directory: lint
