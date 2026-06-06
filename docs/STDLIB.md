@@ -7,7 +7,8 @@ Every function in `shot:std` returns a tuple — never throws. Internal `try`/`c
 ## v1 surface
 
 ```ts
-import { fetch, jsonParse, jsonStringify, readFile, writeFile } from "shot:std"
+import { fetch, jsonParse, jsonStringify, readFile, writeFile, wrapError } from "shot:std"
+import type { ShotPromise } from "shot:std"
 ```
 
 ### `fetch(url, opts?)`
@@ -44,6 +45,33 @@ function writeFile(path: string, data: string): Promise<[null, Error | null]>
 ```
 The first tuple element is always `null` for void-returning operations — the destructure pattern stays uniform.
 
+### `wrapError(message, cause)`
+Adds context to a propagated error. The shot equivalent of Go's `fmt.Errorf("context: %w", err)`.
+```ts
+function wrapError(message: string, cause: Error): Error
+```
+Sets `err.cause` (standard `Error.cause` from ES2022) so the original error is inspectable. Use this when re-returning an error from a lower layer with added context:
+```ts
+const [data, err] = await readFile(path)
+if (err !== null) {
+    return [null, wrapError(`loadConfig: ${path}`, err)]
+}
+```
+
+### `ShotPromise<T, E = Error>` _(type)_
+The canonical return type for async fallible functions. Equivalent to `Promise<[T | null, E | null]>`.
+```ts
+type ShotPromise<T, E = Error> = Promise<[T | null, E | null]>
+```
+`E` has no `extends Error` constraint — custom error shapes are plain `type` declarations, no class hierarchy required:
+```ts
+type DbError = { readonly message: string; readonly code: number }
+
+async function queryUser(id: number): ShotPromise<User, DbError> {
+    return [null, { message: "not found", code: 404 }]
+}
+```
+
 ## Usage example
 
 ```ts
@@ -69,7 +97,7 @@ async function downloadUser(id: number, outPath: string): Promise<[null, Error |
 ## Implementation conventions
 
 - All wrappers internally use `try`/`catch` to convert thrown errors into the second tuple slot. The ban on `try`/`catch` applies to `.shot` user code; stdlib is `.ts` and exempt.
-- Errors are returned as instances of `Error` (or subclasses). Custom error types are out-of-scope for v1.
+- Errors from stdlib wrappers are returned as `Error` instances. User code may use any plain `type` as the `E` parameter of `ShotPromise<T, E>` — no class hierarchy needed.
 - Async functions return `Promise<[T | null, Error | null]>`. Sync functions return `[T | null, Error | null]`.
 
 ## Out of scope for v1

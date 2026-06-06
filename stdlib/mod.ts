@@ -6,6 +6,13 @@
 // Custom error shapes: type DbError = { readonly message: string; readonly code: number }
 export type ShotPromise<T, E = Error> = Promise<[T | null, E | null]>
 
+// wrapError adds context to a propagated error — the shot equivalent of Go's fmt.Errorf("context: %w", err).
+export function wrapError(message: string, cause: Error): Error {
+    const err = new Error(message)
+    err.cause = cause
+    return err
+}
+
 export async function fetch(
     input: string | URL,
     init?: RequestInit,

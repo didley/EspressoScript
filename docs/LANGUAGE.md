@@ -100,6 +100,78 @@ const [res, err] = await fetch(url)
 ```
 Rule: `no-promise-chain`
 
+### Async functions must return a tuple
+
+Every `async` function with a meaningful return must declare `Promise<[T | null, E | null]>` or the `ShotPromise<T, E>` alias from `shot:std`. `Promise<void>` is allowed for fire-and-forget side effects.
+
+```ts
+// ❌
+async function getUser(id: number): Promise<User> { ... }
+
+// ✅ — spelled out
+async function getUser(id: number): Promise<[User | null, Error | null]> { ... }
+
+// ✅ — canonical alias (import ShotPromise from "shot:std")
+async function getUser(id: number): ShotPromise<User> { ... }
+
+// ✅ — side-effect async with no meaningful return
+async function logEvent(event: string): Promise<void> { ... }
+```
+
+Rule: `require-async-tuple-return`
+
+### Custom error types — plain types + factories
+
+There is no error hierarchy. Define error shapes as plain `type` declarations and construct them with factory functions. No `extends`, no `class`.
+
+```ts
+type DbError = {
+    readonly message: string
+    readonly code: number
+    readonly table: string
+}
+
+function newDbError(message: string, code: number, table: string): DbError {
+    return { message, code, table }
+}
+
+async function queryUser(id: number): ShotPromise<User, DbError> {
+    return [null, newDbError("not found", 404, "users")]
+}
+```
+
+For multiple failure modes across a module, use a **discriminated union**. The exhaustiveness checker enforces that every variant is handled at every call site:
+
+```ts
+type AppError =
+    | { readonly kind: "database"; readonly code: number }
+    | { readonly kind: "network"; readonly status: number }
+    | { readonly kind: "parse"; readonly input: string }
+
+const [user, err] = await getUser(1)
+if (err !== null) {
+    switch (err.kind) {
+        case "database": /* err.code */ break
+        case "network":  /* err.status */ break
+        case "parse":    /* err.input */ break
+    }
+}
+```
+
+To add context when propagating an error up the call stack, use `wrapError` from `shot:std` — the shot equivalent of Go's `fmt.Errorf("context: %w", err)`:
+
+```ts
+import { readFile, wrapError } from "shot:std"
+
+async function loadConfig(path: string): ShotPromise<Config> {
+    const [text, err] = await readFile(path)
+    if (err !== null) {
+        return [null, wrapError(`loadConfig: ${path}`, err)]
+    }
+    // ...
+}
+```
+
 ## Strict typing — the baseline
 
 `shot build` and `shot run` write a strict `compilerOptions` into the transient `deno.json` for every invocation. You don't configure it; it's part of the language.
