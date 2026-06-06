@@ -581,38 +581,41 @@
   <div class="comparison">
     <div class="pane-before">
       <div class="pane-label"><span class="dot dot-red"></span>TypeScript</div>
-      <pre><span class="cm">// type-level programs — require knowing</span>
-<span class="cm">// advanced TS to read or modify</span>
-<span class="kw">type</span> <span class="ty">Flatten</span>&lt;<span class="ty">T</span>&gt; =
-  <span class="ty">T</span> <span class="kw">extends</span> <span class="ty">Array</span>&lt;<span class="kw">infer</span> <span class="ty">U</span>&gt; ? <span class="ty">U</span> : <span class="ty">T</span>
-
-<span class="kw">type</span> <span class="ty">Merged</span> =
-  <span class="ty">UserBase</span> & <span class="ty">UserProfile</span> & { <span class="kw">readonly</span> <span class="id">role</span>: <span class="ty">string</span> }
-
-<span class="kw">type</span> <span class="ty">ReadonlyRecord</span>&lt;<span class="ty">K</span> <span class="kw">extends</span> <span class="ty">string</span>, <span class="ty">V</span>&gt; =
-  { <span class="kw">readonly</span> [<span class="ty">P</span> <span class="kw">in</span> <span class="ty">K</span>]: <span class="ty">V</span> }</pre>
-    </div>
-    <div class="pane-after">
-      <div class="pane-label"><span class="dot dot-green"></span>shot</div>
-      <pre><span class="cm">// plain shapes — readable at a glance</span>
-
-<span class="kw">type</span> <span class="ty">FlatItem</span> = <span class="ty">string</span> | <span class="ty">number</span>
-
+      <pre><span class="cm">// intersection to "extend" a base type</span>
 <span class="kw">type</span> <span class="ty">User</span> = {
   <span class="kw">readonly</span> <span class="id">id</span>: <span class="ty">number</span>
   <span class="kw">readonly</span> <span class="id">name</span>: <span class="ty">string</span>
-  <span class="kw">readonly</span> <span class="id">role</span>: <span class="ty">string</span>
 }
 
-<span class="kw">type</span> <span class="ty">Config</span> = { <span class="kw">readonly</span> [<span class="id">key</span>: <span class="ty">string</span>]: <span class="ty">string</span> }</pre>
+<span class="kw">type</span> <span class="ty">AdminUser</span> =
+  <span class="ty">User</span> & { <span class="kw">readonly</span> <span class="id">role</span>: <span class="st">'admin'</span> }
+
+<span class="cm">// what fields does AdminUser have?</span>
+<span class="cm">// depends on what User is today</span></pre>
+    </div>
+    <div class="pane-after">
+      <div class="pane-label"><span class="dot dot-green"></span>shot</div>
+      <pre><span class="cm">// embed as a named field — Go/Rust-style</span>
+<span class="kw">type</span> <span class="ty">User</span> = {
+  <span class="kw">readonly</span> <span class="id">id</span>: <span class="ty">number</span>
+  <span class="kw">readonly</span> <span class="id">name</span>: <span class="ty">string</span>
+}
+
+<span class="kw">type</span> <span class="ty">AdminUser</span> = {
+  <span class="kw">readonly</span> <span class="id">user</span>: <span class="ty">User</span>
+  <span class="kw">readonly</span> <span class="id">role</span>: <span class="st">'admin'</span>
+}
+
+<span class="cm">// access: admin.user.id</span></pre>
     </div>
   </div>
 
   <div class="callout">
-    <strong>Why it matters:</strong> conditional types, mapped types, intersection types, and <code>infer</code>
-    turn types into programs. They're powerful but opaque — a junior dev (or an LLM) has to understand
-    the full type-level machinery to know what a value actually looks like.
-    shot bans all of it. Types are shapes. If you need a new shape, write it.
+    <strong>Why it matters:</strong> intersection types hide fields behind indirection —
+    to know what <code>AdminUser</code> actually contains you have to trace every component.
+    shot bans <code>&</code>, conditional types, mapped types, and <code>infer</code>.
+    Instead of extending, embed: give the base type a named field.
+    Every shape is self-contained and readable where it's defined.
   </div>
 
   <!-- 4. Immutable -->
