@@ -143,6 +143,8 @@
       border: 1px solid var(--border);
     }
 
+    a.ext::after { content: ' ↗'; font-size: 0.75em; opacity: 0.5; }
+
     .install-cmd {
       display: inline-flex;
       align-items: center;
@@ -338,10 +340,10 @@
   <ul class="nav-links">
     <li><a href="#why">Why</a></li>
     <li><a href="#features">Features</a></li>
-    <li><a href="lint/">Lint</a></li>
+    <li><a href="lint/">ShotLint ↗</a></li>
     <li><a href="#demo">Demo</a></li>
     <li><a href="docs/PHILOSOPHY.html">Docs</a></li>
-    <li><a href="https://github.com/didley/ShotScript">GitHub</a></li>
+    <li><a href="https://github.com/didley/ShotScript" class="ext">GitHub</a></li>
   </ul>
 </nav>
 
@@ -359,6 +361,7 @@
   <div class="hero-actions">
     <a href="#features" class="btn btn-primary">See the difference</a>
     <a href="docs/LANGUAGE.html" class="btn btn-secondary">Language reference</a>
+    <a href="lint/" class="btn btn-secondary">ShotLint ↗</a>
   </div>
   <div class="install-cmd">
     <span class="prompt">$</span>
@@ -876,7 +879,7 @@
     shot is pre-v1 and open source.
     See the <a href="docs/PHILOSOPHY.html">philosophy</a>,
     <a href="docs/LANGUAGE.html">language reference</a>,
-    and <a href="https://github.com/didley/ShotScript">source on GitHub</a>.
+    and <a href="https://github.com/didley/ShotScript" class="ext">source on GitHub</a>.
   </p>
   <p style="margin-top: 0.5rem;">
     Install: <code>curl -fsSL https://shot.didley.dev/install.sh | sh</code>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>shot-lint — TypeScript linter for any project</title>
+  <title>ShotLint — TypeScript linter for any project</title>
   <style>
     :root {
       --bg: #0d0d10;
@@ -71,6 +71,8 @@
     .nav-links a { color: var(--muted); }
     .nav-links a:hover { color: var(--text); text-decoration: none; }
     .nav-links a.active { color: var(--text); }
+
+    a.ext::after { content: ' ↗'; font-size: 0.75em; opacity: 0.5; }
 
     /* ── HERO ── */
     .hero {
@@ -305,11 +307,11 @@
 
 <!-- NAV -->
 <nav>
-  <div class="nav-logo"><span>shot</span>-lint</div>
+  <div class="nav-logo"><span>Shot</span>Lint</div>
   <ul class="nav-links">
-    <li><a href="https://github.com/didley/shot-lint">GitHub</a></li>
-    <li><a href="https://www.npmjs.com/package/shot-lint">npm</a></li>
-    <li><a href="https://jsr.io/@shot/lint">jsr</a></li>
+    <li><a href="https://github.com/didley/shot-lint" class="ext">GitHub</a></li>
+    <li><a href="https://www.npmjs.com/package/shot-lint" class="ext">npm</a></li>
+    <li><a href="https://jsr.io/@shot/lint" class="ext">jsr</a></li>
     <li><a href="../index.html">ShotScript ↗</a></li>
   </ul>
 </nav>
@@ -375,8 +377,8 @@
     <div class="sidebar-section">
       <div class="sidebar-label">Package</div>
       <ul>
-        <li><a href="https://github.com/didley/shot-lint">GitHub</a></li>
-        <li><a href="https://www.npmjs.com/package/shot-lint">npm</a></li>
+        <li><a href="https://github.com/didley/shot-lint" class="ext">GitHub</a></li>
+        <li><a href="https://www.npmjs.com/package/shot-lint" class="ext">npm</a></li>
       </ul>
     </div>
   </nav>
@@ -834,8 +836,9 @@
 <!-- FOOTER -->
 <footer>
   <p>
-    <a href="https://github.com/didley/shot-lint">shot-lint on GitHub</a> ·
-    <a href="https://www.npmjs.com/package/shot-lint">npm</a> ·
+    <a href="https://github.com/didley/shot-lint" class="ext">ShotLint on GitHub</a> ·
+    <a href="https://www.npmjs.com/package/shot-lint" class="ext">npm</a> ·
+    <a href="https://jsr.io/@shot/lint" class="ext">jsr</a> ·
     <a href="/">ShotScript</a>
   </p>
 </footer>
