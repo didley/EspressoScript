@@ -45,7 +45,6 @@ ShotScript/
 ├── tests/
 │   └── fixtures/          # one .shot pair per rule (valid + invalid)
 ├── docs/
-├── tasks/
 └── deno.json              # workspace config (optional)
 ```
 
@@ -136,8 +135,6 @@ curl -fsSL https://shotscript.dev/install.sh | sh
 4. Print confirmation + next-steps.
 
 The two-layer split exists so ShotScript's UX never leaks "this is a Deno script." Users see "shot." Internals reuse the JS ecosystem. If we ever swap runtimes or ship `deno compile`-bundled binaries, the install URL stays stable — only the script body changes.
-
-See `tasks/T12-install-script.md` for the script implementation.
 
 ## What we don't do
 

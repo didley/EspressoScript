@@ -176,4 +176,4 @@ ShotScript is the full opinionated language — `.shot` files, `shot:std`, Deno 
 
 ## Status
 
-Pre-v1. See [`tasks/`](tasks/) for the v1 implementation plan.
+v1 complete.
