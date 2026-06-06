@@ -1,2 +1,3 @@
 [build]
+  command = "cp docs/*.md site/docs/"
   publish = "site"

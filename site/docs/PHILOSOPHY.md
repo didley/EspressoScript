@@ -1,1 +1,0 @@
-../../docs/PHILOSOPHY.md
