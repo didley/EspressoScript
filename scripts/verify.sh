@@ -368,9 +368,25 @@ echo "Case 51: no-index-import"
 printf 'import { add } from "./math/index.shot"\nexport { add }\n' > "$(tmp idx-import.shot)"
 diagnostic_check "no-index-import" "no-index-import" "$(tmp idx-import.shot)"
 
+# Case 52: require-async-tuple-return (plain Promise<string> rejected)
+echo "Case 52: require-async-tuple-return"
+printf 'export async function getUser(id: number): Promise<string> { return `${id}` }\n' > "$(tmp async-plain.shot)"
+diagnostic_check "require-async-tuple-return" "require-async-tuple-return" "$(tmp async-plain.shot)"
+
+# Case 53: require-async-tuple-return (Promise<void> and tuple form accepted)
+echo "Case 53: require-async-tuple-return (valid forms)"
+cat > "$(tmp async-valid.shot)" << 'EOF'
+export async function effect(): Promise<void> { }
+export async function fetch(id: number): Promise<[string | null, Error | null]> {
+  return [null, new Error(`not found: ${id}`)]
+}
+EOF
+$SHOT check "$(tmp async-valid.shot)" > /dev/null 2>&1
+check_exit "require-async-tuple-return valid" 0
+
 echo
 if [ $FAILS -eq 0 ]; then
-    echo "All 51 cases passed."
+    echo "All 53 cases passed."
     exit 0
 else
     echo "$FAILS case(s) failed."

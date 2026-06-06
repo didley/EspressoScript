@@ -168,3 +168,23 @@ All tasks T01–T12 completed. Final `bash scripts/verify.sh` exits 0 (48/48 cas
 - Four compilerOptions unsupported by Deno 2.6.4 removed
 - `deno install -gn` combined flag breaks name parsing → split to `-g -n`; added `-f` for idempotency
 - shellcheck not available on host → POSIX compliance verified manually
+
+## 2026-06-06 — ShotPromise: E has no `extends Error` constraint
+
+**Context:** Adding `ShotPromise<T, E = Error>` to shot:std. The question was whether to constrain `E extends Error` (forcing the class hierarchy) or leave E unconstrained.
+
+**Decision:** `E = Error` default, no `extends` constraint. Custom errors are plain `type` declarations and factory functions. E.g. `type DbError = { readonly message: string; readonly code: number }`.
+
+**Why:** `extends Error` would require class inheritance, which is banned by `no-class`. Plain types + factory functions achieve the same goal without the hierarchy — and discriminated unions of error shapes are more powerful than inheritance because the exhaustiveness checker catches unhandled variants at compile time.
+
+**Reversibility:** Add `E extends { readonly message: string }` (a minimal interface-like constraint) if the community wants a common shape guarantee; still no class required.
+
+## 2026-06-06 — require-async-tuple-return: Promise<void> and Promise<never> are exempt
+
+**Context:** Implementing the rule that async functions must return a tuple type. Side-effect async functions (e.g. `async function main(): Promise<void>`) and functions that never resolve should not be flagged.
+
+**Decision:** `Promise<void>` and `Promise<never>` pass the rule. `ShotPromise<T, E>` passes. Any other `Promise<X>` where X is not a 2-tuple with a nullable second element is flagged.
+
+**Why:** `void` is kept by the language ("this function returns nothing meaningful") and applies equally to async functions. `never` covers unusual but valid patterns. Requiring a tuple on `Promise<void>` would produce nonsensical `[null | null, Error | null]` return shapes.
+
+**Reversibility:** Remove the `VoidKeyword`/`NeverKeyword` carve-outs in `require-async-tuple-return.ts` if stricter enforcement is wanted.

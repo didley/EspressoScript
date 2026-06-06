@@ -92,6 +92,7 @@ import { noMetaprogrammingGlobals } from "./no-metaprogramming-globals.ts"
 import { noLiteralBooleanType } from "./no-literal-boolean-type.ts"
 import { noIntersectionTypes } from "./no-intersection-types.ts"
 import { requireTupleDestructure } from "./require-tuple-destructure.ts"
+import { requireAsyncTupleReturn } from "./require-async-tuple-return.ts"
 
 export const rules: Rule[] = [
     noArrowFunctions,
@@ -187,4 +188,5 @@ export const rules: Rule[] = [
     noLiteralBooleanType,
     noIntersectionTypes,
     requireTupleDestructure,
+    requireAsyncTupleReturn,
 ]

@@ -1,9 +1,11 @@
 export function hello(): string {
-    return "hello"
+  return "hello"
 }
 
 function main(): void {
-    console.log(hello())
+  console.log(hello())
 }
 
-main()
+if (import.meta.main) {
+  main()
+}
