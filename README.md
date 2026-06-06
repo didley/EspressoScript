@@ -6,14 +6,31 @@
  ███████║██║  ██║╚██████╔╝   ██║   
  ╚══════╝╚═╝  ╚═╝ ╚═════╝    ╚═╝   
  TypeScript, one way.
-
- Shot extracts features from TypeScript, applying Go's "one canonical way" philosophy to the TS/JS ecosystem.
- Making coding easier for humans and LLMs.
 ```
+Shot extracts features from TypeScript, applying Go's "one canonical way" philosophy to the TS/JS ecosystem.
+Making coding easier for humans and LLMs.
+
+--
 
 Echosystem:
+
 **[ShotScript](https://github.com/didley/ShotScript)** — Opinionated toolchain strictly enforcing Shots principles.
+
 **[ShotLint](https://github.com/didley/ShotLint)** — Utils and config for typing, linting, and formatting with Shots principles.
+
+# ShotScript
+
+This Package:
+
+| | |
+|---|---|
+| **No config** | TypeScript with strict enforcement of Shot principles — no user overrides |
+| **`.shot` files** | TypeScript source files enforced by Shot's rules — valid TS, Shot-compliant |
+| **`shot` cli** | `init` · `check` · `fmt` · `build` · `run` · `test` |
+| **`shot:std`** | Standard library — `fetch`, `jsonParse`, `wrapError`, and other safe wrappers |
+| **Import allowlist** | Only `shot:` and `jsr:@shotscript/*` namespaces — no arbitrary third-party imports |
+| **Deno runtime** | Validates and type-checks before running — no execution without a clean check |
+
 
 ## Quick taste
 
