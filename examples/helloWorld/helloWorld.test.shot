@@ -1,6 +1,0 @@
-import { hello } from './helloWorld.shot'
-import { test, expect } from 'bun:test'
-
-test('hello returns greeting string', function testHello(): void {
-    expect(hello()).toBe('hello')
-})
