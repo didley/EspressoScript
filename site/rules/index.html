@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>shot-discipline — Rules reference</title>
+  <title>shot-discipline — TypeScript linter for any project</title>
   <style>
     :root {
       --bg: #0d0d10;
@@ -317,23 +317,34 @@
 
 <!-- HERO -->
 <section class="hero">
-  <div class="hero-badge">shot-discipline · npm package</div>
-  <h1>The <em>shot</em> rule set.</h1>
+  <div class="hero-badge">shot-discipline · standalone npm linter</div>
+  <h1>Go-style discipline<br>for <em>any TypeScript project.</em></h1>
   <p class="hero-sub">
-    90 rules that enforce one canonical form for every TypeScript construct.
-    Use them standalone via the npm package, or get them bundled inside the
-    <code style="font-family:'SF Mono','Fira Code',monospace;font-size:0.9em;color:var(--type)">shot</code> CLI.
+    90 rules that enforce one canonical form per construct — no Deno, no <code style="font-family:'SF Mono','Fira Code',monospace;font-size:0.85em;color:var(--type)">.shot</code> files required.
+    Drop it into any Node or TypeScript project and run it against your <code style="font-family:'SF Mono','Fira Code',monospace;font-size:0.85em;color:var(--type)">.ts</code> source.
   </p>
-  <div class="install-row">
-    <div class="install-cmd">
-      <span class="label">npm</span>
-      <span class="prompt">$</span>
-      <span class="cmd">npm install shot-discipline</span>
+
+  <!-- Install block -->
+  <div style="max-width:480px;margin:0 auto;text-align:left;">
+    <div style="font-family:'SF Mono','Fira Code',monospace;font-size:0.65rem;letter-spacing:0.12em;color:var(--accent);text-transform:uppercase;margin-bottom:0.6rem;">Install</div>
+    <div class="install-cmd" style="display:block;margin-bottom:0.75rem;">
+      <span class="prompt">$</span> <span class="cmd">npm install --save-dev shot-discipline</span>
     </div>
-    <div class="install-cmd">
-      <span class="label">shot CLI</span>
-      <span class="prompt">$</span>
-      <span class="cmd">curl -fsSL https://shot.didley.dev/install.sh | sh</span>
+
+    <div style="font-family:'SF Mono','Fira Code',monospace;font-size:0.65rem;letter-spacing:0.12em;color:var(--accent);text-transform:uppercase;margin-bottom:0.6rem;margin-top:1.25rem;">Run</div>
+    <div class="install-cmd" style="display:block;margin-bottom:0.5rem;">
+      <span class="prompt">$</span> <span class="cmd">npx shot-rules <span style="color:var(--muted)">'src/**/*.ts'</span></span>
+    </div>
+    <div style="font-size:0.78rem;color:var(--muted);margin-top:0.5rem;">
+      Exits <code style="font-family:'SF Mono','Fira Code',monospace;color:var(--text);background:var(--surface);padding:0.1rem 0.3rem;border-radius:3px;">0</code> when clean,
+      <code style="font-family:'SF Mono','Fira Code',monospace;color:var(--text);background:var(--surface);padding:0.1rem 0.3rem;border-radius:3px;">1</code> when violations are found.
+      Add <code style="font-family:'SF Mono','Fira Code',monospace;color:var(--text);background:var(--surface);padding:0.1rem 0.3rem;border-radius:3px;">--json</code> for machine-readable output.
+      Pair with the <a href="/">shot CLI</a> for the full toolchain.
+    </div>
+
+    <div style="font-family:'SF Mono','Fira Code',monospace;font-size:0.65rem;letter-spacing:0.12em;color:var(--accent);text-transform:uppercase;margin-bottom:0.6rem;margin-top:1.25rem;">Add to package.json</div>
+    <div class="install-cmd" style="display:block;">
+      <span style="color:var(--muted)">"lint":</span> <span class="cmd">"shot-rules 'src/**/*.ts'"</span>
     </div>
   </div>
 </section>
