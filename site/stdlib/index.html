@@ -1,292 +1,369 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>shot:std — Standard Library</title>
-  <style>
-    :root {
-      --bg: #0d0d10;
-      --surface: #16161a;
-      --border: #2a2a32;
-      --text: #e8e8f0;
-      --muted: #7a7a90;
-      --accent: #c8702a;
-      --accent-dim: #7a4418;
-      --green: #4ec994;
-      --red: #e05c5c;
-      --keyword: #c792ea;
-      --string: #c3e88d;
-      --type: #82aaff;
-      --comment: #546e7a;
-    }
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>shot:std — Standard Library</title>
+        <style>
+            :root {
+                --bg: #0d0d10;
+                --surface: #16161a;
+                --border: #2a2a32;
+                --text: #e8e8f0;
+                --muted: #7a7a90;
+                --accent: #c8702a;
+                --accent-dim: #7a4418;
+                --green: #4ec994;
+                --red: #e05c5c;
+                --keyword: #c792ea;
+                --string: #c3e88d;
+                --type: #82aaff;
+                --comment: #546e7a;
+            }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
 
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      font-size: 16px;
-      line-height: 1.6;
-    }
+            body {
+                background: var(--bg);
+                color: var(--text);
+                font-family:
+                    -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+                font-size: 16px;
+                line-height: 1.6;
+            }
 
-    a { color: var(--accent); text-decoration: none; }
-    a:hover { text-decoration: underline; }
-    a.ext::after { content: ' ↗'; font-size: 0.75em; opacity: 0.5; }
+            a {
+                color: var(--accent);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            a.ext::after {
+                content: " ↗";
+                font-size: 0.75em;
+                opacity: 0.5;
+            }
 
-    nav {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 1.25rem 2rem;
-      border-bottom: 1px solid var(--border);
-      position: sticky;
-      top: 0;
-      background: rgba(13,13,16,0.92);
-      backdrop-filter: blur(8px);
-      z-index: 10;
-    }
+            nav {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 1.25rem 2rem;
+                border-bottom: 1px solid var(--border);
+                position: sticky;
+                top: 0;
+                background: rgba(13, 13, 16, 0.92);
+                backdrop-filter: blur(8px);
+                z-index: 10;
+            }
 
-    .nav-logo {
-      font-family: 'SF Mono', 'Fira Code', monospace;
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: var(--text);
-      letter-spacing: -0.02em;
-      text-decoration: none;
-    }
-    .nav-logo span { color: var(--accent); }
+            .nav-logo {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 1.1rem;
+                font-weight: 700;
+                color: var(--text);
+                letter-spacing: -0.02em;
+                text-decoration: none;
+            }
+            .nav-logo span {
+                color: var(--accent);
+            }
 
-    .nav-links {
-      display: flex;
-      gap: 1.75rem;
-      list-style: none;
-      font-size: 0.875rem;
-    }
-    .nav-links a { color: var(--muted); }
-    .nav-links a:hover { color: var(--text); text-decoration: none; }
+            .nav-links {
+                display: flex;
+                gap: 1.75rem;
+                list-style: none;
+                font-size: 0.875rem;
+            }
+            .nav-links a {
+                color: var(--muted);
+            }
+            .nav-links a:hover {
+                color: var(--text);
+                text-decoration: none;
+            }
 
-    .page {
-      max-width: 1040px;
-      margin: 0 auto;
-      padding: 3rem 2rem 5rem;
-      display: grid;
-      grid-template-columns: 220px 1fr;
-      gap: 3rem;
-      align-items: start;
-    }
+            .page {
+                max-width: 1040px;
+                margin: 0 auto;
+                padding: 3rem 2rem 5rem;
+                display: grid;
+                grid-template-columns: 220px 1fr;
+                gap: 3rem;
+                align-items: start;
+            }
 
-    @media (max-width: 800px) {
-      .page { grid-template-columns: 1fr; }
-      .sidebar { display: none; }
-    }
+            @media (max-width: 800px) {
+                .page {
+                    grid-template-columns: 1fr;
+                }
+                .sidebar {
+                    display: none;
+                }
+            }
 
-    .sidebar { position: sticky; top: 5rem; }
-    .sidebar-section { margin-bottom: 1.75rem; }
+            .sidebar {
+                position: sticky;
+                top: 5rem;
+            }
+            .sidebar-section {
+                margin-bottom: 1.75rem;
+            }
 
-    .sidebar-label {
-      font-family: 'SF Mono', 'Fira Code', monospace;
-      font-size: 0.65rem;
-      letter-spacing: 0.12em;
-      color: var(--accent);
-      text-transform: uppercase;
-      margin-bottom: 0.5rem;
-    }
+            .sidebar-label {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.65rem;
+                letter-spacing: 0.12em;
+                color: var(--accent);
+                text-transform: uppercase;
+                margin-bottom: 0.5rem;
+            }
 
-    .sidebar ul { list-style: none; display: flex; flex-direction: column; gap: 0.1rem; }
-    .sidebar a { font-size: 0.82rem; color: var(--muted); display: block; padding: 0.2rem 0; }
-    .sidebar a:hover { color: var(--text); text-decoration: none; }
+            .sidebar ul {
+                list-style: none;
+                display: flex;
+                flex-direction: column;
+                gap: 0.1rem;
+            }
+            .sidebar a {
+                font-size: 0.82rem;
+                color: var(--muted);
+                display: block;
+                padding: 0.2rem 0;
+            }
+            .sidebar a:hover {
+                color: var(--text);
+                text-decoration: none;
+            }
 
-    .content-header {
-      padding: 3rem 0 2rem;
-      border-bottom: 1px solid var(--border);
-      margin-bottom: 3rem;
-    }
+            .content-header {
+                padding: 3rem 0 2rem;
+                border-bottom: 1px solid var(--border);
+                margin-bottom: 3rem;
+            }
 
-    .content-header .label {
-      font-family: 'SF Mono', 'Fira Code', monospace;
-      font-size: 0.7rem;
-      letter-spacing: 0.12em;
-      color: var(--accent);
-      text-transform: uppercase;
-      margin-bottom: 0.5rem;
-    }
+            .content-header .label {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.7rem;
+                letter-spacing: 0.12em;
+                color: var(--accent);
+                text-transform: uppercase;
+                margin-bottom: 0.5rem;
+            }
 
-    .content-header h1 {
-      font-size: 2rem;
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      margin-bottom: 0.5rem;
-    }
+            .content-header h1 {
+                font-size: 2rem;
+                font-weight: 800;
+                letter-spacing: -0.03em;
+                margin-bottom: 0.5rem;
+            }
 
-    .content-header p { font-size: 0.95rem; color: var(--muted); }
+            .content-header p {
+                font-size: 0.95rem;
+                color: var(--muted);
+            }
 
-    .fn-block {
-      margin-bottom: 2.5rem;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      overflow: hidden;
-    }
+            .fn-block {
+                margin-bottom: 2.5rem;
+                border: 1px solid var(--border);
+                border-radius: 10px;
+                overflow: hidden;
+            }
 
-    .fn-header {
-      background: var(--surface);
-      padding: 0.9rem 1.25rem;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: baseline;
-      gap: 0.75rem;
-    }
+            .fn-header {
+                background: var(--surface);
+                padding: 0.9rem 1.25rem;
+                border-bottom: 1px solid var(--border);
+                display: flex;
+                align-items: baseline;
+                gap: 0.75rem;
+            }
 
-    .fn-name {
-      font-family: 'SF Mono', 'Fira Code', monospace;
-      font-size: 0.95rem;
-      font-weight: 700;
-      color: var(--type);
-    }
+            .fn-name {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.95rem;
+                font-weight: 700;
+                color: var(--type);
+            }
 
-    .fn-kind {
-      font-family: 'SF Mono', 'Fira Code', monospace;
-      font-size: 0.65rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--muted);
-      background: rgba(122,122,144,0.12);
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      padding: 0.1em 0.45em;
-    }
+            .fn-kind {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.65rem;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+                color: var(--muted);
+                background: rgba(122, 122, 144, 0.12);
+                border: 1px solid var(--border);
+                border-radius: 4px;
+                padding: 0.1em 0.45em;
+            }
 
-    .fn-body { padding: 1.1rem 1.25rem; }
+            .fn-body {
+                padding: 1.1rem 1.25rem;
+            }
 
-    .fn-desc {
-      font-size: 0.875rem;
-      color: var(--muted);
-      margin-bottom: 0.9rem;
-      line-height: 1.6;
-    }
+            .fn-desc {
+                font-size: 0.875rem;
+                color: var(--muted);
+                margin-bottom: 0.9rem;
+                line-height: 1.6;
+            }
 
-    .fn-desc code {
-      font-family: 'SF Mono', 'Fira Code', monospace;
-      font-size: 0.82em;
-      color: var(--type);
-      background: rgba(130,170,255,0.08);
-      padding: 0.05rem 0.3rem;
-      border-radius: 3px;
-    }
+            .fn-desc code {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.82em;
+                color: var(--type);
+                background: rgba(130, 170, 255, 0.08);
+                padding: 0.05rem 0.3rem;
+                border-radius: 3px;
+            }
 
-    pre {
-      font-family: 'SF Mono', 'Fira Code', monospace;
-      font-size: 0.8rem;
-      line-height: 1.7;
-      padding: 0.9rem 1.1rem;
-      background: #0a0a0d;
-      border-top: 1px solid var(--border);
-      overflow-x: auto;
-      white-space: pre;
-    }
+            pre {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.8rem;
+                line-height: 1.7;
+                padding: 0.9rem 1.1rem;
+                background: #0a0a0d;
+                border-top: 1px solid var(--border);
+                overflow-x: auto;
+                white-space: pre;
+            }
 
-    .kw { color: var(--keyword); }
-    .ty { color: var(--type); }
-    .st { color: var(--string); }
-    .cm { color: var(--comment); }
+            .kw {
+                color: var(--keyword);
+            }
+            .ty {
+                color: var(--type);
+            }
+            .st {
+                color: var(--string);
+            }
+            .cm {
+                color: var(--comment);
+            }
 
-    .callout {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-left: 3px solid var(--accent);
-      border-radius: 8px;
-      padding: 0.9rem 1.1rem;
-      font-size: 0.85rem;
-      color: var(--muted);
-      margin-bottom: 2rem;
-    }
-    .callout strong { color: var(--text); }
-    .callout code {
-      font-family: 'SF Mono', 'Fira Code', monospace;
-      font-size: 0.82em;
-      color: var(--type);
-      background: rgba(130,170,255,0.08);
-      padding: 0.05rem 0.3rem;
-      border-radius: 3px;
-    }
+            .callout {
+                background: var(--surface);
+                border: 1px solid var(--border);
+                border-left: 3px solid var(--accent);
+                border-radius: 8px;
+                padding: 0.9rem 1.1rem;
+                font-size: 0.85rem;
+                color: var(--muted);
+                margin-bottom: 2rem;
+            }
+            .callout strong {
+                color: var(--text);
+            }
+            .callout code {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.82em;
+                color: var(--type);
+                background: rgba(130, 170, 255, 0.08);
+                padding: 0.05rem 0.3rem;
+                border-radius: 3px;
+            }
 
-    footer {
-      text-align: center;
-      padding: 2.5rem 2rem;
-      font-size: 0.825rem;
-      color: var(--muted);
-      border-top: 1px solid var(--border);
-    }
-  </style>
-</head>
-<body>
+            footer {
+                text-align: center;
+                padding: 2.5rem 2rem;
+                font-size: 0.825rem;
+                color: var(--muted);
+                border-top: 1px solid var(--border);
+            }
+        </style>
+    </head>
+    <body>
+        <nav>
+            <a href="/" class="nav-logo"><span>shot</span></a>
+            <ul class="nav-links">
+                <li><a href="/script/">ShotScript</a></li>
+                <li><a href="/lint/">ShotLint</a></li>
+                <li><a href="/language/">Language</a></li>
+                <li><a href="/stdlib/">Stdlib</a></li>
+                <li>
+                    <a href="https://github.com/didley/ShotScript" class="ext"
+                        >GitHub</a
+                    >
+                </li>
+            </ul>
+        </nav>
 
-<nav>
-  <a href="/" class="nav-logo"><span>shot</span></a>
-  <ul class="nav-links">
-    <li><a href="/script/">ShotScript</a></li>
-    <li><a href="/lint/">ShotLint</a></li>
-    <li><a href="/language/">Language</a></li>
-    <li><a href="/stdlib/">Stdlib</a></li>
-    <li><a href="https://github.com/didley/ShotScript" class="ext">GitHub</a></li>
-  </ul>
-</nav>
+        <div class="page">
+            <aside class="sidebar">
+                <div class="sidebar-section">
+                    <div class="sidebar-label">Functions</div>
+                    <ul>
+                        <li><a href="#fetch">fetch</a></li>
+                        <li><a href="#jsonParse">jsonParse</a></li>
+                        <li><a href="#jsonStringify">jsonStringify</a></li>
+                        <li><a href="#readFile">readFile</a></li>
+                        <li><a href="#writeFile">writeFile</a></li>
+                        <li><a href="#wrapError">wrapError</a></li>
+                        <li><a href="#mutableRef">mutableRef</a></li>
+                        <li><a href="#toResult">toResult</a></li>
+                        <li><a href="#toPromiseResult">toPromiseResult</a></li>
+                    </ul>
+                </div>
+                <div class="sidebar-section">
+                    <div class="sidebar-label">Types</div>
+                    <ul>
+                        <li><a href="#ShotPromise">ShotPromise</a></li>
+                    </ul>
+                </div>
+                <div class="sidebar-section">
+                    <div class="sidebar-label">Also</div>
+                    <ul>
+                        <li><a href="/language/">Language ref</a></li>
+                        <li><a href="/script/cli/">CLI ref</a></li>
+                    </ul>
+                </div>
+            </aside>
 
-<div class="page">
-  <aside class="sidebar">
-    <div class="sidebar-section">
-      <div class="sidebar-label">Functions</div>
-      <ul>
-        <li><a href="#fetch">fetch</a></li>
-        <li><a href="#jsonParse">jsonParse</a></li>
-        <li><a href="#jsonStringify">jsonStringify</a></li>
-        <li><a href="#readFile">readFile</a></li>
-        <li><a href="#writeFile">writeFile</a></li>
-        <li><a href="#wrapError">wrapError</a></li>
-        <li><a href="#mutableRef">mutableRef</a></li>
-        <li><a href="#toResult">toResult</a></li>
-        <li><a href="#toPromiseResult">toPromiseResult</a></li>
-      </ul>
-    </div>
-    <div class="sidebar-section">
-      <div class="sidebar-label">Types</div>
-      <ul>
-        <li><a href="#ShotPromise">ShotPromise</a></li>
-      </ul>
-    </div>
-    <div class="sidebar-section">
-      <div class="sidebar-label">Also</div>
-      <ul>
-        <li><a href="/language/">Language ref</a></li>
-        <li><a href="/script/cli/">CLI ref</a></li>
-      </ul>
-    </div>
-  </aside>
+            <main>
+                <div class="content-header">
+                    <div class="label">Standard Library</div>
+                    <h1>shot:std</h1>
+                    <p>
+                        The standard library. Ships as
+                        <code>@shotscript/std</code> on NPM; imported via the
+                        <code>shot:std</code> specifier in
+                        <code>.shot</code> source. Every function returns a
+                        tuple — never throws. Internal <code>try</code>/<code
+                            >catch</code
+                        >
+                        is hidden inside the wrappers; user code never sees it.
+                    </p>
+                </div>
 
-  <main>
-    <div class="content-header">
-      <div class="label">Standard Library</div>
-      <h1>shot:std</h1>
-      <p>The standard library. Ships as <code>@shotscript/std</code> on JSR; imported via the <code>shot:std</code> specifier in <code>.shot</code> source. Every function returns a tuple — never throws. Internal <code>try</code>/<code>catch</code> is hidden inside the wrappers; user code never sees it.</p>
-    </div>
+                <div class="callout">
+                    <strong>Import:</strong>
+                    <code
+                        >import { fetch, jsonParse, wrapError, mutableRef } from
+                        "shot:std"</code
+                    ><br />
+                    <code>import type { ShotPromise } from "shot:std"</code>
+                </div>
 
-    <div class="callout">
-      <strong>Import:</strong>
-      <code>import { fetch, jsonParse, wrapError, mutableRef } from "shot:std"</code><br />
-      <code>import type { ShotPromise } from "shot:std"</code>
-    </div>
-
-    <!-- ShotPromise -->
-    <div class="fn-block" id="ShotPromise">
-      <div class="fn-header">
-        <span class="fn-name">ShotPromise&lt;T, E&gt;</span>
-        <span class="fn-kind">type</span>
-      </div>
-      <div class="fn-body">
-        <p class="fn-desc">The canonical return type for async fallible functions. <code>E</code> defaults to <code>Error</code> but can be any plain type.</p>
-      </div>
-      <pre><span class="kw">type</span> <span class="ty">ShotPromise</span>&lt;<span class="ty">T</span>, <span class="ty">E</span> = <span class="ty">Error</span>&gt; = <span class="ty">Promise</span>&lt;[<span class="ty">T</span> | <span class="kw">null</span>, <span class="ty">E</span> | <span class="kw">null</span>]&gt;
+                <!-- ShotPromise -->
+                <div class="fn-block" id="ShotPromise">
+                    <div class="fn-header">
+                        <span class="fn-name">ShotPromise&lt;T, E&gt;</span>
+                        <span class="fn-kind">type</span>
+                    </div>
+                    <div class="fn-body">
+                        <p class="fn-desc">
+                            The canonical return type for async fallible
+                            functions. <code>E</code> defaults to
+                            <code>Error</code> but can be any plain type.
+                        </p>
+                    </div>
+                    <pre><span class="kw">type</span> <span class="ty">ShotPromise</span>&lt;<span class="ty">T</span>, <span class="ty">E</span> = <span class="ty">Error</span>&gt; = <span class="ty">Promise</span>&lt;[<span class="ty">T</span> | <span class="kw">null</span>, <span class="ty">E</span> | <span class="kw">null</span>]&gt;
 
 <span class="cm">// usage</span>
 <span class="kw">async function</span> queryUser(id: <span class="ty">number</span>): <span class="ty">ShotPromise</span>&lt;<span class="ty">User</span>&gt; {
@@ -294,165 +371,224 @@
   <span class="kw">if</span> (err !== <span class="kw">null</span>) { <span class="kw">return</span> [<span class="kw">null</span>, err] }
   <span class="kw">return</span> jsonParse&lt;<span class="ty">User</span>&gt;(<span class="kw">await</span> res.text())
 }</pre>
-    </div>
+                </div>
 
-    <!-- fetch -->
-    <div class="fn-block" id="fetch">
-      <div class="fn-header">
-        <span class="fn-name">fetch(url, opts?)</span>
-        <span class="fn-kind">async</span>
-      </div>
-      <div class="fn-body">
-        <p class="fn-desc">Wraps <code>globalThis.fetch</code>. Returns <code>[Response, null]</code> on success, <code>[null, Error]</code> on network failure.</p>
-      </div>
-      <pre><span class="kw">function</span> fetch(
+                <!-- fetch -->
+                <div class="fn-block" id="fetch">
+                    <div class="fn-header">
+                        <span class="fn-name">fetch(url, opts?)</span>
+                        <span class="fn-kind">async</span>
+                    </div>
+                    <div class="fn-body">
+                        <p class="fn-desc">
+                            Wraps <code>globalThis.fetch</code>. Returns
+                            <code>[Response, null]</code> on success,
+                            <code>[null, Error]</code> on network failure.
+                        </p>
+                    </div>
+                    <pre><span class="kw">function</span> fetch(
   input: <span class="ty">string</span> | <span class="ty">URL</span>,
   init?: <span class="ty">RequestInit</span>,
 ): <span class="ty">Promise</span>&lt;[<span class="ty">Response</span> | <span class="kw">null</span>, <span class="ty">Error</span> | <span class="kw">null</span>]&gt;
 
 <span class="kw">const</span> [res, err] = <span class="kw">await</span> fetch(<span class="st">`https://api.example.com/users/${id}`</span>)
 <span class="kw">if</span> (err !== <span class="kw">null</span>) { <span class="kw">return</span> [<span class="kw">null</span>, err] }</pre>
-    </div>
+                </div>
 
-    <!-- jsonParse -->
-    <div class="fn-block" id="jsonParse">
-      <div class="fn-header">
-        <span class="fn-name">jsonParse&lt;T&gt;(str)</span>
-        <span class="fn-kind">sync</span>
-      </div>
-      <div class="fn-body">
-        <p class="fn-desc">Wraps <code>JSON.parse</code> with a caller-supplied type. Returns <code>[T, null]</code> or <code>[null, Error]</code>.</p>
-      </div>
-      <pre><span class="kw">function</span> jsonParse&lt;<span class="ty">T</span>&gt;(str: <span class="ty">string</span>): [<span class="ty">T</span> | <span class="kw">null</span>, <span class="ty">Error</span> | <span class="kw">null</span>]
+                <!-- jsonParse -->
+                <div class="fn-block" id="jsonParse">
+                    <div class="fn-header">
+                        <span class="fn-name">jsonParse&lt;T&gt;(str)</span>
+                        <span class="fn-kind">sync</span>
+                    </div>
+                    <div class="fn-body">
+                        <p class="fn-desc">
+                            Wraps <code>JSON.parse</code> with a caller-supplied
+                            type. Returns <code>[T, null]</code> or
+                            <code>[null, Error]</code>.
+                        </p>
+                    </div>
+                    <pre><span class="kw">function</span> jsonParse&lt;<span class="ty">T</span>&gt;(str: <span class="ty">string</span>): [<span class="ty">T</span> | <span class="kw">null</span>, <span class="ty">Error</span> | <span class="kw">null</span>]
 
 <span class="kw">const</span> [user, err] = jsonParse&lt;<span class="ty">User</span>&gt;(text)</pre>
-    </div>
+                </div>
 
-    <!-- jsonStringify -->
-    <div class="fn-block" id="jsonStringify">
-      <div class="fn-header">
-        <span class="fn-name">jsonStringify(val, indent?)</span>
-        <span class="fn-kind">sync</span>
-      </div>
-      <div class="fn-body">
-        <p class="fn-desc">Wraps <code>JSON.stringify</code>. Returns <code>[string, null]</code> or <code>[null, Error]</code> if serialization fails.</p>
-      </div>
-      <pre><span class="kw">function</span> jsonStringify(
+                <!-- jsonStringify -->
+                <div class="fn-block" id="jsonStringify">
+                    <div class="fn-header">
+                        <span class="fn-name">jsonStringify(val, indent?)</span>
+                        <span class="fn-kind">sync</span>
+                    </div>
+                    <div class="fn-body">
+                        <p class="fn-desc">
+                            Wraps <code>JSON.stringify</code>. Returns
+                            <code>[string, null]</code> or
+                            <code>[null, Error]</code> if serialization fails.
+                        </p>
+                    </div>
+                    <pre><span class="kw">function</span> jsonStringify(
   value: <span class="ty">unknown</span>,
   indent?: <span class="ty">number</span>,
 ): [<span class="ty">string</span> | <span class="kw">null</span>, <span class="ty">Error</span> | <span class="kw">null</span>]</pre>
-    </div>
+                </div>
 
-    <!-- readFile -->
-    <div class="fn-block" id="readFile">
-      <div class="fn-header">
-        <span class="fn-name">readFile(path)</span>
-        <span class="fn-kind">async</span>
-      </div>
-      <div class="fn-body">
-        <p class="fn-desc">Wraps <code>node:fs/promises</code> <code>readFile</code>. Returns file contents as a UTF-8 string, or an error.</p>
-      </div>
-      <pre><span class="kw">function</span> readFile(path: <span class="ty">string</span>): <span class="ty">Promise</span>&lt;[<span class="ty">string</span> | <span class="kw">null</span>, <span class="ty">Error</span> | <span class="kw">null</span>]&gt;
+                <!-- readFile -->
+                <div class="fn-block" id="readFile">
+                    <div class="fn-header">
+                        <span class="fn-name">readFile(path)</span>
+                        <span class="fn-kind">async</span>
+                    </div>
+                    <div class="fn-body">
+                        <p class="fn-desc">
+                            Wraps <code>node:fs/promises</code>
+                            <code>readFile</code>. Returns file contents as a
+                            UTF-8 string, or an error.
+                        </p>
+                    </div>
+                    <pre><span class="kw">function</span> readFile(path: <span class="ty">string</span>): <span class="ty">Promise</span>&lt;[<span class="ty">string</span> | <span class="kw">null</span>, <span class="ty">Error</span> | <span class="kw">null</span>]&gt;
 
 <span class="kw">const</span> [text, err] = <span class="kw">await</span> readFile(<span class="st">"./config.json"</span>)</pre>
-    </div>
+                </div>
 
-    <!-- writeFile -->
-    <div class="fn-block" id="writeFile">
-      <div class="fn-header">
-        <span class="fn-name">writeFile(path, data)</span>
-        <span class="fn-kind">async</span>
-      </div>
-      <div class="fn-body">
-        <p class="fn-desc">Wraps <code>node:fs/promises</code> <code>writeFile</code>. The first tuple element is always <code>null</code> for void-returning operations — the destructure pattern stays uniform.</p>
-      </div>
-      <pre><span class="kw">function</span> writeFile(
+                <!-- writeFile -->
+                <div class="fn-block" id="writeFile">
+                    <div class="fn-header">
+                        <span class="fn-name">writeFile(path, data)</span>
+                        <span class="fn-kind">async</span>
+                    </div>
+                    <div class="fn-body">
+                        <p class="fn-desc">
+                            Wraps <code>node:fs/promises</code>
+                            <code>writeFile</code>. The first tuple element is
+                            always <code>null</code> for void-returning
+                            operations — the destructure pattern stays uniform.
+                        </p>
+                    </div>
+                    <pre><span class="kw">function</span> writeFile(
   path: <span class="ty">string</span>,
   data: <span class="ty">string</span>,
 ): <span class="ty">Promise</span>&lt;[<span class="kw">null</span>, <span class="ty">Error</span> | <span class="kw">null</span>]&gt;
 
 <span class="kw">const</span> [, writeErr] = <span class="kw">await</span> writeFile(<span class="st">"./out.json"</span>, json)</pre>
-    </div>
+                </div>
 
-    <!-- wrapError -->
-    <div class="fn-block" id="wrapError">
-      <div class="fn-header">
-        <span class="fn-name">wrapError(message, cause)</span>
-        <span class="fn-kind">sync</span>
-      </div>
-      <div class="fn-body">
-        <p class="fn-desc">Adds context to a propagated error — the shot equivalent of Go's <code>fmt.Errorf("context: %w", err)</code>. Sets <code>err.cause</code> so the original error is inspectable.</p>
-      </div>
-      <pre><span class="kw">function</span> wrapError(message: <span class="ty">string</span>, cause: <span class="ty">Error</span>): <span class="ty">Error</span>
+                <!-- wrapError -->
+                <div class="fn-block" id="wrapError">
+                    <div class="fn-header">
+                        <span class="fn-name">wrapError(message, cause)</span>
+                        <span class="fn-kind">sync</span>
+                    </div>
+                    <div class="fn-body">
+                        <p class="fn-desc">
+                            Adds context to a propagated error — the shot
+                            equivalent of Go's
+                            <code>fmt.Errorf("context: %w", err)</code>. Sets
+                            <code>err.cause</code> so the original error is
+                            inspectable.
+                        </p>
+                    </div>
+                    <pre><span class="kw">function</span> wrapError(message: <span class="ty">string</span>, cause: <span class="ty">Error</span>): <span class="ty">Error</span>
 
 <span class="kw">const</span> [text, err] = <span class="kw">await</span> readFile(path)
 <span class="kw">if</span> (err !== <span class="kw">null</span>) {
   <span class="kw">return</span> [<span class="kw">null</span>, wrapError(`loadConfig: ${path}`, err)]
 }</pre>
-    </div>
+                </div>
 
-    <!-- mutableRef -->
-    <div class="fn-block" id="mutableRef">
-      <div class="fn-header">
-        <span class="fn-name">mutableRef&lt;T&gt;(initial)</span>
-        <span class="fn-kind">sync</span>
-      </div>
-      <div class="fn-body">
-        <p class="fn-desc">Returns a single-slot mutable cell — the canonical way to hold mutable state when <code>no-let-outside-for</code> bans <code>let</code> in function bodies and module scope.</p>
-      </div>
-      <pre><span class="kw">function</span> mutableRef&lt;<span class="ty">T</span>&gt;(initial: <span class="ty">T</span>): { value: <span class="ty">T</span> }
+                <!-- mutableRef -->
+                <div class="fn-block" id="mutableRef">
+                    <div class="fn-header">
+                        <span class="fn-name"
+                            >mutableRef&lt;T&gt;(initial)</span
+                        >
+                        <span class="fn-kind">sync</span>
+                    </div>
+                    <div class="fn-body">
+                        <p class="fn-desc">
+                            Returns a single-slot mutable cell — the canonical
+                            way to hold mutable state when
+                            <code>no-let-outside-for</code> bans
+                            <code>let</code> in function bodies and module
+                            scope.
+                        </p>
+                    </div>
+                    <pre><span class="kw">function</span> mutableRef&lt;<span class="ty">T</span>&gt;(initial: <span class="ty">T</span>): { value: <span class="ty">T</span> }
 
 <span class="kw">const</span> count = mutableRef(<span class="ty">0</span>)
 count.value += <span class="ty">1</span></pre>
-    </div>
+                </div>
 
-    <!-- toResult -->
-    <div class="fn-block" id="toResult">
-      <div class="fn-header">
-        <span class="fn-name">toResult&lt;T&gt;(fn)</span>
-        <span class="fn-kind">sync</span>
-      </div>
-      <div class="fn-body">
-        <p class="fn-desc">Wraps any synchronous third-party call that might throw. Use when importing <code>bun:*</code> or <code>node:*</code> APIs that don't return tuples.</p>
-      </div>
-      <pre><span class="kw">function</span> toResult&lt;<span class="ty">T</span>&gt;(fn: () =&gt; <span class="ty">T</span>): [<span class="ty">T</span> | <span class="kw">null</span>, <span class="ty">Error</span> | <span class="kw">null</span>]
+                <!-- toResult -->
+                <div class="fn-block" id="toResult">
+                    <div class="fn-header">
+                        <span class="fn-name">toResult&lt;T&gt;(fn)</span>
+                        <span class="fn-kind">sync</span>
+                    </div>
+                    <div class="fn-body">
+                        <p class="fn-desc">
+                            Wraps any synchronous third-party call that might
+                            throw. Use when importing <code>bun:*</code> or
+                            <code>node:*</code> APIs that don't return tuples.
+                        </p>
+                    </div>
+                    <pre><span class="kw">function</span> toResult&lt;<span class="ty">T</span>&gt;(fn: () =&gt; <span class="ty">T</span>): [<span class="ty">T</span> | <span class="kw">null</span>, <span class="ty">Error</span> | <span class="kw">null</span>]
 
 <span class="kw">const</span> [parsed, err] = toResult(() =&gt; someLib.parseSync(input))</pre>
-    </div>
+                </div>
 
-    <!-- toPromiseResult -->
-    <div class="fn-block" id="toPromiseResult">
-      <div class="fn-header">
-        <span class="fn-name">toPromiseResult&lt;T&gt;(fn)</span>
-        <span class="fn-kind">async</span>
-      </div>
-      <div class="fn-body">
-        <p class="fn-desc">Wraps any async third-party call that might reject. Use when importing <code>bun:*</code> or <code>node:*</code> APIs that return plain Promises.</p>
-      </div>
-      <pre><span class="kw">function</span> toPromiseResult&lt;<span class="ty">T</span>&gt;(
+                <!-- toPromiseResult -->
+                <div class="fn-block" id="toPromiseResult">
+                    <div class="fn-header">
+                        <span class="fn-name"
+                            >toPromiseResult&lt;T&gt;(fn)</span
+                        >
+                        <span class="fn-kind">async</span>
+                    </div>
+                    <div class="fn-body">
+                        <p class="fn-desc">
+                            Wraps any async third-party call that might reject.
+                            Use when importing <code>bun:*</code> or
+                            <code>node:*</code> APIs that return plain Promises.
+                        </p>
+                    </div>
+                    <pre><span class="kw">function</span> toPromiseResult&lt;<span class="ty">T</span>&gt;(
   fn: () =&gt; <span class="ty">Promise</span>&lt;<span class="ty">T</span>&gt;,
 ): <span class="ty">Promise</span>&lt;[<span class="ty">T</span> | <span class="kw">null</span>, <span class="ty">Error</span> | <span class="kw">null</span>]&gt;
 
 <span class="kw">const</span> [rows, err] = <span class="kw">await</span> toPromiseResult(() =&gt; db.query(sql))</pre>
-    </div>
+                </div>
 
-    <div style="margin-top:3rem;padding-top:2rem;border-top:1px solid var(--border);">
-      <p style="font-size:0.82rem;color:var(--muted);">
-        All wrappers internally use <code>try</code>/<code>catch</code> to convert thrown errors into the second tuple slot.
-        The ban on <code>try</code>/<code>catch</code> applies to <code>.shot</code> user code; stdlib is <code>.ts</code> and exempt.
-        Errors from stdlib wrappers are returned as <code>Error</code> instances.
-      </p>
-    </div>
-  </main>
-</div>
+                <div
+                    style="
+                        margin-top: 3rem;
+                        padding-top: 2rem;
+                        border-top: 1px solid var(--border);
+                    "
+                >
+                    <p style="font-size: 0.82rem; color: var(--muted)">
+                        All wrappers internally use <code>try</code>/<code
+                            >catch</code
+                        >
+                        to convert thrown errors into the second tuple slot. The
+                        ban on <code>try</code>/<code>catch</code> applies to
+                        <code>.shot</code> user code; stdlib is
+                        <code>.ts</code> and exempt. Errors from stdlib wrappers
+                        are returned as <code>Error</code> instances.
+                    </p>
+                </div>
+            </main>
+        </div>
 
-<footer>
-  <p>
-    <a href="/script/">ShotScript</a> · <a href="/lint/">ShotLint</a> ·
-    <a href="/language/">Language</a> · <a href="/script/cli/">CLI</a> ·
-    <a href="https://github.com/didley/ShotScript" class="ext">GitHub</a>
-  </p>
-</footer>
-
-</body>
+        <footer>
+            <p>
+                <a href="/script/">ShotScript</a> ·
+                <a href="/lint/">ShotLint</a> ·
+                <a href="/language/">Language</a> ·
+                <a href="/script/cli/">CLI</a> ·
+                <a href="https://github.com/didley/ShotScript" class="ext"
+                    >GitHub</a
+                >
+            </p>
+        </footer>
+    </body>
 </html>
