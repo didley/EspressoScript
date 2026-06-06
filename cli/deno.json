@@ -5,5 +5,9 @@
     "exports": "./mod.ts",
     "bin": {
         "shot": "./mod.ts"
-    }
+    },
+    "imports": {
+        "typescript": "npm:typescript"
+    },
+    "unstable": ["sloppy-imports"]
 }

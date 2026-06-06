@@ -14,7 +14,7 @@ if ! command -v "$DENO" &>/dev/null; then
 fi
 
 echo "shot pre-commit: running fixture tests..."
-"$DENO" run -A "$ROOT/tests/run-syntax-fixtures.ts"
-"$DENO" run -A "$ROOT/tests/run-types-fixtures.ts"
-"$DENO" run -A "$ROOT/tests/run-imports-fixtures.ts"
+"$DENO" run -A --config "$ROOT/cli/deno.json" "$ROOT/tests/run-syntax-fixtures.ts"
+"$DENO" run -A --config "$ROOT/cli/deno.json" "$ROOT/tests/run-types-fixtures.ts"
+"$DENO" run -A --config "$ROOT/cli/deno.json" "$ROOT/tests/run-imports-fixtures.ts"
 echo "shot pre-commit: all checks passed."
