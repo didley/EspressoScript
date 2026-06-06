@@ -5,14 +5,16 @@
  ╚════██║██╔══██║██║   ██║   ██║   
  ███████║██║  ██║╚██████╔╝   ██║   
  ╚══════╝╚═╝  ╚═╝ ╚═════╝    ╚═╝   
+ ShotScript — Take a Shot of extracted JavaScript.
 ```
-
-# ShotScript — Take a Shot of extracted JavaScript.
 
 A subtractive superset of TypeScript. ShotScript removes features instead of adding them — applying Go's philosophy ("one canonical way to do everything") to the TS/JS ecosystem.
 
+One canonical form per construct makes ShotScript code easier for humans to review and LLMs to generate correctly. No hidden control flow. No anonymous logic. Every failure path in the type signature.
+
 - **Tooling shorthand:** `shot` (CLI command + file extension)
 - **Target runtime:** modern JS runtimes (edge, server, scripts)
+- **LLM-friendly:** one form per construct — models generate consistent code and can statically reason about every failure path without reading implementation details
 
 ## Quick taste
 
