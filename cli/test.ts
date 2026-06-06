@@ -26,6 +26,7 @@ export async function test(args: string[]): Promise<number> {
     }
 
     // Check if any test file imports relative .shot modules
+    const sourceCache = new Map<string, string>()
     let needsTransform = false
     for (const file of testFiles) {
         let source: string
@@ -35,6 +36,7 @@ export async function test(args: string[]): Promise<number> {
             console.error(`shot test: cannot read ${file}: ${(e as Error).message}`)
             return 2
         }
+        sourceCache.set(file, source)
         if (hasShotImports(source)) {
             needsTransform = true
             break
@@ -66,12 +68,14 @@ export async function test(args: string[]): Promise<number> {
     // Lint test files only
     let lintFails = 0
     for (const file of testFiles) {
-        let source: string
-        try {
-            source = await Deno.readTextFile(file)
-        } catch (e) {
-            console.error(`shot test: cannot read ${file}: ${(e as Error).message}`)
-            return 2
+        let source = sourceCache.get(file)
+        if (source === undefined) {
+            try {
+                source = await Deno.readTextFile(file)
+            } catch (e) {
+                console.error(`shot test: cannot read ${file}: ${(e as Error).message}`)
+                return 2
+            }
         }
         const diagnostics = check(file, source)
         for (const d of diagnostics) {

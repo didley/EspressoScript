@@ -13,6 +13,8 @@ export async function run(args: string[]): Promise<number> {
 
     const entry = positional[0]
 
+    const sourceCache = new Map<string, string>()
+
     // Determine all project files to lint and (if multi-file) transform
     let projectFiles: string[]
     if (positional.length === 1) {
@@ -23,6 +25,7 @@ export async function run(args: string[]): Promise<number> {
             console.error(`shot run: cannot read ${entry}: ${(e as Error).message}`)
             return 2
         }
+        sourceCache.set(entry, entrySource)
         if (hasShotImports(entrySource)) {
             const parts = entry.split("/")
             parts.pop()
@@ -40,12 +43,14 @@ export async function run(args: string[]): Promise<number> {
     // Lint all project files
     let lintFails = 0
     for (const file of projectFiles) {
-        let source: string
-        try {
-            source = await Deno.readTextFile(file)
-        } catch (e) {
-            console.error(`shot run: cannot read ${file}: ${(e as Error).message}`)
-            return 2
+        let source = sourceCache.get(file)
+        if (source === undefined) {
+            try {
+                source = await Deno.readTextFile(file)
+            } catch (e) {
+                console.error(`shot run: cannot read ${file}: ${(e as Error).message}`)
+                return 2
+            }
         }
         const diagnostics = check(file, source)
         for (const d of diagnostics) {
