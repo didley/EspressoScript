@@ -1,0 +1,38 @@
+import { addItem, clearItems, listItems } from './store.shot'
+import { test, expect } from 'bun:test'
+
+test('addItem trims title and assigns id', function testAdd(): void {
+    clearItems()
+    const [item, err] = addItem('  hello  ')
+    expect(err).toBeNull()
+    expect(item).not.toBeNull()
+    if (item === null) return
+    expect(item.title).toBe('hello')
+    expect(item.id).toBe(1)
+})
+
+test('addItem rejects empty title', function testAddEmpty(): void {
+    clearItems()
+    const [item, err] = addItem('   ')
+    expect(item).toBeNull()
+    expect(err).toBeInstanceOf(Error)
+})
+
+test('addItem assigns incrementing ids', function testIds(): void {
+    clearItems()
+    const [a] = addItem('first')
+    const [b] = addItem('second')
+    if (a === null || b === null) return
+    expect(a.id).not.toBe(b.id)
+})
+
+test('listItems returns insertion order', function testList(): void {
+    clearItems()
+    addItem('alpha')
+    addItem('beta')
+    const all = listItems()
+    expect(all.length).toBe(2)
+    const first = all[0]
+    if (first === undefined) return
+    expect(first.title).toBe('alpha')
+})

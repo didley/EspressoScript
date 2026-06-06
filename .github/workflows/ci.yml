@@ -65,3 +65,13 @@ jobs:
       - name: Run shot-lint utils tests
         working-directory: lint
         run: node --import tsx/esm --test tests/utils.test.ts
+
+      - name: Check fullstack frontend (shot-lint)
+        run: node lint/dist/cli.js 'examples/fullstack/frontend/src/**/*.ts'
+
+      - name: Check fullstack frontend (tsc + biome)
+        working-directory: examples/fullstack/frontend
+        run: |
+          npm ci
+          npm run check
+          npx biome check src/

@@ -1,0 +1,13 @@
+{
+    "name": "fullstack-frontend",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "check": "tsc --noEmit"
+    },
+    "devDependencies": {
+        "@biomejs/biome": "^2.0.0",
+        "shot-lint": "file:../../../lint",
+        "typescript": "^5.8.0"
+    }
+}
