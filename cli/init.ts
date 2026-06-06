@@ -25,6 +25,7 @@ export async function init(args: string[]): Promise<number> {
 
     const entryPath = `${name}/${name}.shot`
     const testPath = `${name}/${name}.test.shot`
+    const agentsPath = `${name}/AGENTS.md`
 
     await Deno.writeTextFile(entryPath, `export function hello(): string {
     return "Hello from ${name}!"
@@ -39,9 +40,13 @@ Deno.test("hello returns greeting", function testHello(): void {
 })
 `)
 
+    const agentsTemplate = new URL("./templates/AGENTS.md", import.meta.url)
+    await Deno.copyFile(agentsTemplate, agentsPath)
+
     console.log(`Created ${name}/`)
     console.log(`  ${entryPath}`)
     console.log(`  ${testPath}`)
+    console.log(`  ${agentsPath}`)
     console.log(`\nRun tests: shot test ${testPath}`)
     return 0
 }
