@@ -5,7 +5,7 @@
  ╚════██║██╔══██║██║   ██║   ██║   
  ███████║██║  ██║╚██████╔╝   ██║   
  ╚══════╝╚═╝  ╚═╝ ╚═════╝    ╚═╝   
- ShotScript — Go-style TypeScript. One way to do everything.
+ ShotScript — TypeScript. One way to do everything.
 ```
 
 TypeScript has four ways to write a function, three ways to handle errors, two ways to declare a type — and most codebases use all of them. shot removes the extras and keeps one of each.
@@ -179,9 +179,9 @@ shot test [files...]     Validate → type-check → run *.test.shot files.
 
 ```mermaid
 graph TD
-    SL["**ShotLint**  ·  github.com/didley/shot-lint\n──────────────────────────────────\nGo-style linting for any TypeScript project\n• 90+ AST rules · standalone CLI · npm · jsr\n• No Deno required\n• Runtime utils — jsonParse, safeFetch, tryCatch"]
+    SL["**ShotLint**  ·  github.com/didley/shot-lint\n──────────────────────────────────\nStrict linting for any TypeScript project\n• 90+ AST rules · standalone CLI · npm · jsr\n• No Deno required\n• Runtime utils — jsonParse, safeFetch, tryCatch"]
 
-    SS["**ShotScript**  ·  github.com/didley/ShotScript\n──────────────────────────────────\nThe full opinionated Go-style toolchain\n• .shot files · shot CLI · Deno runtime\n• shot:std standard library · import allowlist\n• Locked tsconfig — no user overrides"]
+    SS["**ShotScript**  ·  github.com/didley/ShotScript\n──────────────────────────────────\nThe full opinionated lint toolchain\n• .shot files · shot CLI · Deno runtime\n• shot:std standard library · import allowlist\n• Locked tsconfig — no user overrides"]
 
     TS["**Your TypeScript project**\n(any runtime · any framework)"]
 
@@ -198,7 +198,7 @@ graph TD
     style REG stroke-dasharray: 5 5
 ```
 
-ShotScript is the full opinionated language — `.shot` files, `shot:std`, Deno runtime, locked config, all-or-nothing. `shot-lint` is the rule engine extracted so you can apply the same discipline to an existing TypeScript project without committing to the Shot ecosystem. Changes to rules flow from `shot-lint` into ShotScript automatically via the submodule.
+ShotScript is the full opinionated language — `.shot` files, `shot:std`, Deno runtime, locked config, all-or-nothing. `shot-lint` is the rule engine extracted so you can apply the same lint to an existing TypeScript project without committing to the Shot ecosystem. Changes to rules flow from `shot-lint` into ShotScript automatically via the submodule.
 
 ## Documentation
 

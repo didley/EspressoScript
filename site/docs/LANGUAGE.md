@@ -360,7 +360,7 @@ Inference is great for compiler ergonomics; explicit signatures are better for r
 
 Rule: `require-explicit-return-type`
 
-## Discipline
+## Lint
 
 ### One declaration per statement
 
@@ -897,7 +897,7 @@ The existing `no-parse-number-fns` rule extends to the `Number.*`-qualified form
 
 These would require upgrading the checker from AST-only to using `ts.createProgram()` with a type checker. Important enough to call out so they don't get forgotten:
 
-- **`no-implicit-truthy`** — Go-style: only `boolean`-typed expressions allowed in conditionals.
+- **`no-implicit-truthy`** — only `boolean`-typed expressions allowed in conditionals.
 - **`no-floating-promises`** — every Promise must be awaited or destructured into the tuple form.
 - **`no-unnecessary-condition`** — `if (x === null)` when `x` is typed `string` (non-nullable) is dead code.
 - **`prefer-readonly-locals`** — locals never reassigned should still be flagged as missing `readonly` semantics where applicable.

@@ -1,6 +1,6 @@
 # EspressoScript — Agent Context
 
-This is the ShotScript toolchain repository. ShotScript is a TypeScript dialect that enforces Go-style constraints: one canonical way to write every construct. `.shot` files are valid TypeScript with a different extension — no new syntax, only stricter rules enforced at lint and build time.
+This is the ShotScript toolchain repository. ShotScript is a TypeScript dialect that enforces lint constraints: one canonical way to write every construct. `.shot` files are valid TypeScript with a different extension — no new syntax, only stricter rules enforced at lint and build time.
 
 ---
 
@@ -151,6 +151,6 @@ CI runs `bash scripts/verify.sh` for the root repo and all three npm commands fo
 
 ## Coding style in this repo
 
-The CLI itself (`cli/`, `stdlib/`) is written in idiomatic TypeScript for Deno — it does not follow shot discipline (the CLI needs `try/catch`, classes, etc. to implement the toolchain). The `stdlib/mod.ts` is the one place in the entire codebase where `try/catch` is intentionally used to wrap throwing APIs for shot users.
+The CLI itself (`cli/`, `stdlib/`) is written in idiomatic TypeScript for Deno — it does not follow shot lint (the CLI needs `try/catch`, classes, etc. to implement the toolchain). The `stdlib/mod.ts` is the one place in the entire codebase where `try/catch` is intentionally used to wrap throwing APIs for shot users.
 
-The `lint/` submodule source should follow shot discipline where possible, but the checker implementation necessarily uses TypeScript AST APIs that require patterns shot bans (indexing, casting, etc.) — use guarded patterns with `noUncheckedIndexedAccess` in mind.
+The `lint/` submodule source should follow shot lint where possible, but the checker implementation necessarily uses TypeScript AST APIs that require patterns shot bans (indexing, casting, etc.) — use guarded patterns with `noUncheckedIndexedAccess` in mind.
