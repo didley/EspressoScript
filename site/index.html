@@ -342,6 +342,7 @@
     <li><a href="#features">Features</a></li>
     <li><a href="lint/">ShotLint ↗</a></li>
     <li><a href="#demo">Demo</a></li>
+    <li><a href="#ecosystem">Ecosystem</a></li>
     <li><a href="docs/PHILOSOPHY.html">Docs</a></li>
     <li><a href="https://github.com/didley/ShotScript" class="ext">GitHub</a></li>
   </ul>
@@ -870,6 +871,82 @@
     The demo JS mirrors the <code style="color:var(--type)">.shot</code> source exactly — same named functions, same tuple returns, same no-throw contract. Types strip away; the patterns stay.
   </p>
 </section>
+
+<hr class="divider" />
+
+<!-- ECOSYSTEM SECTION -->
+<section class="section" id="ecosystem">
+  <div class="section-header">
+    <div class="section-label">Ecosystem</div>
+    <h2>How the pieces fit together.</h2>
+    <p class="section-desc">
+      ShotLint is the portable rule engine. ShotScript is the full toolchain built on top of it.
+      A ShotScript registry is planned — native packages and jsr/npm wrappers with error-tuple guarantees throughout.
+    </p>
+  </div>
+  <div id="ecosystem-diagram" style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:2rem;overflow-x:auto;"></div>
+</section>
+
+<script type="module">
+  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs'
+  mermaid.initialize({
+    startOnLoad: false,
+    theme: 'base',
+    themeVariables: {
+      background: '#16161a',
+      primaryColor: '#1e1e24',
+      primaryBorderColor: '#2a2a32',
+      primaryTextColor: '#e8e8f0',
+      lineColor: '#7a7a90',
+      edgeLabelBackground: '#16161a',
+      tertiaryColor: '#16161a',
+      tertiaryBorderColor: '#2a2a32',
+    }
+  })
+
+  const diagram = `graph TD
+    SL["<b>ShotLint</b>  ·  github.com/didley/shot-lint
+────────────────────────────────
+Go-style linting for any TypeScript project
+• 90+ AST rules · standalone CLI · npm · jsr
+• No Deno required
+• Runtime utils — jsonParse, safeFetch, tryCatch"]
+
+    SS["<b>ShotScript</b>  ·  github.com/didley/ShotScript
+────────────────────────────────
+The full opinionated Go-style toolchain
+• .shot files · shot CLI · Deno runtime
+• shot:std standard library · import allowlist
+• Locked tsconfig — no user overrides"]
+
+    TS["<b>Your TypeScript project</b>
+(any runtime · any framework)"]
+
+    SP["<b>Your ShotScript project</b>
+────────────────────────────────
+Zero-throw guarantee — every failure path is in the type
+• No any · no class · no undefined · no escape hatches
+• LLM-friendly: one form per construct, every time
+• Code your whole team can read on first glance"]
+
+    REG["<b>ShotScript Registry</b>  ·  planned
+────────────────────────────────
+A package registry for the Shot ecosystem
+• Native .shot packages with full type guarantees
+• jsr/npm packages wrapped in error-tuple handlers
+• Every import returns  T | null, Error | null  — no surprises"]
+
+    SL -->|"embedded as lint/ submodule"| SS
+    SS -->|"shot check calls ShotLint checker"| SL
+    SL -->|"npx shot-lint 'src/**/*.ts'"| TS
+    SS -->|"shot run / check / build / test"| SP
+    REG -->|"shot add"| SP
+
+    style REG stroke-dasharray: 5 5`
+
+  const { svg } = await mermaid.render('eco', diagram)
+  document.getElementById('ecosystem-diagram').innerHTML = svg
+</script>
 
 <hr class="divider" />
 
