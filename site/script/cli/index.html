@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CLI Reference — ShotScript</title>
+  <style>
+    :root {
+      --bg: #0d0d10;
+      --surface: #16161a;
+      --border: #2a2a32;
+      --text: #e8e8f0;
+      --muted: #7a7a90;
+      --accent: #c8702a;
+      --accent-dim: #7a4418;
+      --green: #4ec994;
+      --red: #e05c5c;
+      --keyword: #c792ea;
+      --string: #c3e88d;
+      --type: #82aaff;
+      --comment: #546e7a;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    a.ext::after { content: ' ↗'; font-size: 0.75em; opacity: 0.5; }
+
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 2rem;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      background: rgba(13,13,16,0.92);
+      backdrop-filter: blur(8px);
+      z-index: 10;
+    }
+
+    .nav-logo {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.02em;
+      text-decoration: none;
+    }
+    .nav-logo span { color: var(--accent); }
+    .nav-logo .sep { color: var(--border); margin: 0 0.35rem; }
+
+    .nav-links {
+      display: flex;
+      gap: 1.75rem;
+      list-style: none;
+      font-size: 0.875rem;
+    }
+    .nav-links a { color: var(--muted); }
+    .nav-links a:hover { color: var(--text); text-decoration: none; }
+
+    .page {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 3rem 2rem 5rem;
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 3rem;
+      align-items: start;
+    }
+
+    @media (max-width: 800px) {
+      .page { grid-template-columns: 1fr; }
+      .sidebar { display: none; }
+    }
+
+    .sidebar { position: sticky; top: 5rem; }
+    .sidebar-section { margin-bottom: 1.75rem; }
+
+    .sidebar-label {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    .sidebar ul { list-style: none; display: flex; flex-direction: column; gap: 0.1rem; }
+    .sidebar a { font-size: 0.82rem; color: var(--muted); display: block; padding: 0.2rem 0; }
+    .sidebar a:hover { color: var(--text); text-decoration: none; }
+
+    .content-header {
+      padding: 3rem 0 2rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2.5rem;
+    }
+
+    .content-header .label {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    .content-header h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 0.5rem;
+    }
+
+    .content-header p { font-size: 0.95rem; color: var(--muted); }
+
+    .install-cmd {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.65rem 1.1rem;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 0.8rem;
+      color: var(--text);
+      margin-top: 0.75rem;
+    }
+    .install-cmd .prompt { color: var(--accent); }
+    .install-cmd .cmd { color: var(--green); }
+
+    .cmd-block {
+      margin-bottom: 2.5rem;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .cmd-header {
+      background: var(--surface);
+      padding: 0.9rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .cmd-name {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--type);
+    }
+
+    .cmd-signature {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 0.2rem;
+    }
+
+    .cmd-body { padding: 1.1rem 1.25rem; }
+
+    .cmd-desc {
+      font-size: 0.875rem;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+
+    .cmd-desc code {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 0.82em;
+      color: var(--type);
+      background: rgba(130,170,255,0.08);
+      padding: 0.05rem 0.3rem;
+      border-radius: 3px;
+    }
+
+    pre {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 0.8rem;
+      line-height: 1.7;
+      padding: 0.9rem 1.25rem;
+      background: #0a0a0d;
+      border-top: 1px solid var(--border);
+      overflow-x: auto;
+      white-space: pre;
+      color: var(--muted);
+    }
+
+    .cmd { color: var(--green); }
+    .kw { color: #c792ea; }
+    .cm { color: var(--comment); }
+    .st { color: var(--string); }
+
+    .exit-codes {
+      margin-top: 0.9rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    .exit-code {
+      font-size: 0.82rem;
+      color: var(--muted);
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    .exit-code code {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      color: var(--text);
+      font-size: 0.82em;
+      width: 1.5rem;
+      flex-shrink: 0;
+    }
+
+    footer {
+      text-align: center;
+      padding: 2.5rem 2rem;
+      font-size: 0.825rem;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo"><span>shot</span><span class="sep">·</span>script</a>
+  <ul class="nav-links">
+    <li><a href="/script/">ShotScript</a></li>
+    <li><a href="/language/">Language</a></li>
+    <li><a href="/stdlib/">Stdlib</a></li>
+    <li><a href="https://github.com/didley/ShotScript" class="ext">GitHub</a></li>
+  </ul>
+</nav>
+
+<div class="page">
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-label">Commands</div>
+      <ul>
+        <li><a href="#init">shot init</a></li>
+        <li><a href="#check">shot check</a></li>
+        <li><a href="#fmt">shot fmt</a></li>
+        <li><a href="#build">shot build</a></li>
+        <li><a href="#run">shot run</a></li>
+        <li><a href="#test">shot test</a></li>
+      </ul>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Also</div>
+      <ul>
+        <li><a href="/language/">Language ref</a></li>
+        <li><a href="/stdlib/">Stdlib ref</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main>
+    <div class="content-header">
+      <div class="label">CLI Reference</div>
+      <h1>shot</h1>
+      <p>The <code>shot</code> command orchestrates the full pipeline: lint → type-check → execute. Type errors block execution — the program never runs if <code>shot check</code> fails.</p>
+      <div class="install-cmd">
+        <span class="prompt">$</span>
+        <span class="cmd">curl -fsSL https://shot.didley.dev/install.sh | sh</span>
+      </div>
+    </div>
+
+    <!-- init -->
+    <div class="cmd-block" id="init">
+      <div class="cmd-header">
+        <div class="cmd-name">shot init</div>
+        <div class="cmd-signature">shot init &lt;name&gt;</div>
+      </div>
+      <div class="cmd-body">
+        <p class="cmd-desc">Scaffold a new project directory with a <code>.shot</code> entry file, a test file, and a <code>shot.json</code> config stub.</p>
+      </div>
+      <pre><span class="cm"># scaffold a new project</span>
+$ shot init my-app</pre>
+    </div>
+
+    <!-- check -->
+    <div class="cmd-block" id="check">
+      <div class="cmd-header">
+        <div class="cmd-name">shot check</div>
+        <div class="cmd-signature">shot check [files...]</div>
+      </div>
+      <div class="cmd-body">
+        <p class="cmd-desc">Validate one or more <code>.shot</code> files. Runs the linter only — does not type-check, does not run. If no files are given, checks all <code>.shot</code> files in the current directory.</p>
+        <pre style="background:var(--surface);border:1px solid var(--border);border-radius:6px;margin-bottom:0.75rem;border-top:none;padding:0.7rem 1rem;">src/main.shot:3:5  no-arrow-functions  Arrow functions are not allowed.</pre>
+        <div class="exit-codes">
+          <div class="exit-code"><code>0</code>no diagnostics</div>
+          <div class="exit-code"><code>1</code>at least one diagnostic emitted</div>
+          <div class="exit-code"><code>2</code>internal error</div>
+        </div>
+      </div>
+      <pre>$ shot check src/main.shot
+$ shot check src/**/*.shot</pre>
+    </div>
+
+    <!-- fmt -->
+    <div class="cmd-block" id="fmt">
+      <div class="cmd-header">
+        <div class="cmd-name">shot fmt</div>
+        <div class="cmd-signature">shot fmt [files...]</div>
+      </div>
+      <div class="cmd-body">
+        <p class="cmd-desc">Format <code>.shot</code> files in place. Zero config — one canonical output. If no files are given, formats the current directory recursively.</p>
+      </div>
+      <pre>$ shot fmt src/main.shot
+$ shot fmt src/</pre>
+    </div>
+
+    <!-- build -->
+    <div class="cmd-block" id="build">
+      <div class="cmd-header">
+        <div class="cmd-name">shot build</div>
+        <div class="cmd-signature">shot build [files...]</div>
+      </div>
+      <div class="cmd-body">
+        <p class="cmd-desc">Validate → type-check. Does not execute. Runs the linter, then type-checks via the TypeScript compiler. Aborts on any diagnostic.</p>
+        <p class="cmd-desc">No emitted <code>.ts</code> files; build is purely a validation gate.</p>
+      </div>
+      <pre>$ shot build src/main.shot</pre>
+    </div>
+
+    <!-- run -->
+    <div class="cmd-block" id="run">
+      <div class="cmd-header">
+        <div class="cmd-name">shot run</div>
+        <div class="cmd-signature">shot run &lt;file&gt; [-- flags...]</div>
+      </div>
+      <div class="cmd-body">
+        <p class="cmd-desc">Validate → type-check → execute. The program never runs if lint or type-check fails. Flags after <code>--</code> pass through to Bun.</p>
+        <div class="exit-codes">
+          <div class="exit-code"><code>0</code>program exited cleanly</div>
+          <div class="exit-code"><code>1</code>lint or type-check failed — program did not run</div>
+          <div class="exit-code"><code>2</code>internal error</div>
+        </div>
+      </div>
+      <pre>$ shot run hello.shot
+$ shot run hello.shot -- --port 3000</pre>
+    </div>
+
+    <!-- test -->
+    <div class="cmd-block" id="test">
+      <div class="cmd-header">
+        <div class="cmd-name">shot test</div>
+        <div class="cmd-signature">shot test [files...]</div>
+      </div>
+      <div class="cmd-body">
+        <p class="cmd-desc">Validate → type-check → run <code>*.test.shot</code> files. If no files are given, finds all <code>*.test.shot</code> in the current directory.</p>
+      </div>
+      <pre>$ shot test
+$ shot test src/calculator.test.shot</pre>
+    </div>
+
+    <div style="margin-top:2.5rem;padding-top:2rem;border-top:1px solid var(--border);">
+      <p style="font-size:0.82rem;color:var(--muted);">
+        All commands return exit <code>0</code> on success, non-zero on any failure (lint, type-check, or runtime).
+      </p>
+    </div>
+  </main>
+</div>
+
+<footer>
+  <p>
+    <a href="/script/">ShotScript</a> · <a href="/language/">Language</a> ·
+    <a href="/stdlib/">Stdlib</a> · <a href="https://github.com/didley/ShotScript" class="ext">GitHub</a>
+  </p>
+</footer>
+
+</body>
+</html>

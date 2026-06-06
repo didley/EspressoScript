@@ -14,7 +14,7 @@ Making coding easier for humans and LLMs.
 
 Echosystem:
 
-**[ShotScript](https://github.com/didley/ShotScript)** — Full opinionated toolchain: `.shot` file extension, `shot` CLI, Deno runtime, `shot:std` stdlib, and import allowlist. Start new projects with `shot init` — no config, no overrides.
+**[ShotScript](https://github.com/didley/ShotScript)** — Full opinionated toolchain: `.shot` file extension, `shot` CLI, Bun runtime, `shot:std` stdlib, and import allowlist. Start new projects with `shot init` — no config, no overrides.
 
 **[ShotLint](https://github.com/didley/ShotLint)** — Bring Shot principles to existing TypeScript projects: 90+ lint rules as `tsc` errors via TypeScript plugin, shareable Biome config, and safe util wrappers. No new extension or runtime required.
 
@@ -29,7 +29,7 @@ This Package:
 | **`shot` cli** | `init` · `check` · `fmt` · `build` · `run` · `test` |
 | **`shot:std`** | Standard library — `fetch`, `jsonParse`, `wrapError`, and other safe wrappers |
 | **Import allowlist** | Only `shot:` and `bun:` namespaces — no arbitrary third-party imports |
-| **Deno runtime** | Validates and type-checks before running — no execution without a clean check |
+| **Bun runtime** | Validates and type-checks before running — no execution without a clean check |
 
 
 ## Quick taste
@@ -74,7 +74,7 @@ shot init <name>         Scaffold a new project directory.
 shot check [files...]    Validate .shot files.
 shot fmt [files...]      Format in-place via shot fmt.
 shot build [files...]    Validate → type-check.
-shot run <file>          Validate → type-check → run via Deno.
+shot run <file>          Validate → type-check → run via Bun.
 shot test [files...]     Validate → type-check → run *.test.shot files.
 ```
 
@@ -193,8 +193,6 @@ function roleLabel(isAdmin: boolean, isSuperAdmin: boolean): string {
 
 ## Documentation
 
-- [`docs/PHILOSOPHY.md`](docs/PHILOSOPHY.md) — what Shot is and isn't
 - [`docs/LANGUAGE.md`](docs/LANGUAGE.md) — full rule list with examples
-- [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — how the toolchain works
 - [`docs/STDLIB.md`](docs/STDLIB.md) — the `shot:std` v1 surface
 - [`docs/CLI.md`](docs/CLI.md) — command reference

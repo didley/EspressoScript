@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Language Reference — Shot</title>
+  <style>
+    :root {
+      --bg: #0d0d10;
+      --surface: #16161a;
+      --border: #2a2a32;
+      --text: #e8e8f0;
+      --muted: #7a7a90;
+      --accent: #c8702a;
+      --accent-dim: #7a4418;
+      --green: #4ec994;
+      --red: #e05c5c;
+      --keyword: #c792ea;
+      --string: #c3e88d;
+      --type: #82aaff;
+      --comment: #546e7a;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    a.ext::after { content: ' ↗'; font-size: 0.75em; opacity: 0.5; }
+
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 2rem;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      background: rgba(13,13,16,0.92);
+      backdrop-filter: blur(8px);
+      z-index: 10;
+    }
+
+    .nav-logo {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.02em;
+      text-decoration: none;
+    }
+    .nav-logo span { color: var(--accent); }
+
+    .nav-links {
+      display: flex;
+      gap: 1.75rem;
+      list-style: none;
+      font-size: 0.875rem;
+    }
+    .nav-links a { color: var(--muted); }
+    .nav-links a:hover { color: var(--text); text-decoration: none; }
+
+    .page {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 3rem 2rem 5rem;
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 3rem;
+      align-items: start;
+    }
+
+    @media (max-width: 800px) {
+      .page { grid-template-columns: 1fr; }
+      .sidebar { display: none; }
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 5rem;
+    }
+
+    .sidebar-section { margin-bottom: 1.75rem; }
+
+    .sidebar-label {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    .sidebar ul { list-style: none; display: flex; flex-direction: column; gap: 0.1rem; }
+
+    .sidebar a { font-size: 0.82rem; color: var(--muted); display: block; padding: 0.2rem 0; }
+    .sidebar a:hover { color: var(--text); text-decoration: none; }
+
+    .content-header {
+      padding: 3rem 0 2rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 3rem;
+    }
+
+    .content-header .label {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    .content-header h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 0.5rem;
+    }
+
+    .content-header p { font-size: 0.95rem; color: var(--muted); }
+
+    .rule-section { margin-bottom: 3.5rem; }
+
+    .rule-section h2 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .rule-block {
+      margin-bottom: 2rem;
+    }
+
+    .rule-block h3 {
+      font-size: 0.82rem;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      color: var(--red);
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .rule-block p {
+      font-size: 0.875rem;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 0.75rem;
+    }
+
+    .rule-block code {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 0.82em;
+      color: var(--type);
+      background: rgba(130,170,255,0.08);
+      padding: 0.05rem 0.3rem;
+      border-radius: 3px;
+    }
+
+    .code-pair {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 0.75rem;
+    }
+
+    @media (max-width: 700px) { .code-pair { grid-template-columns: 1fr; } }
+
+    .code-pane { }
+    .code-pane-bad { background: var(--surface); }
+    .code-pane-good { background: #131318; border-left: 1px solid var(--border); }
+
+    .code-label {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.45rem 0.75rem;
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .code-pane-bad .code-label { color: var(--red); background: rgba(224,92,92,0.07); }
+    .code-pane-good .code-label { color: var(--green); background: rgba(78,201,148,0.07); }
+
+    pre {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 0.78rem;
+      line-height: 1.7;
+      padding: 1rem 1rem 1.25rem;
+      overflow-x: auto;
+      white-space: pre;
+    }
+
+    .kw { color: var(--keyword); }
+    .ty { color: var(--type); }
+    .st { color: var(--string); }
+    .cm { color: var(--comment); }
+    .nu { color: #f78c6c; }
+    .fn { color: var(--type); }
+
+    .callout {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: 8px;
+      padding: 0.9rem 1.1rem;
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+    }
+    .callout strong { color: var(--text); }
+    .callout code {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 0.82em;
+      color: var(--type);
+      background: rgba(130,170,255,0.08);
+      padding: 0.05rem 0.3rem;
+      border-radius: 3px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      margin-bottom: 1.5rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    th {
+      background: var(--surface);
+      text-align: left;
+      padding: 0.6rem 1rem;
+      font-weight: 600;
+      font-size: 0.75rem;
+      letter-spacing: 0.04em;
+      border-bottom: 1px solid var(--border);
+    }
+
+    td {
+      padding: 0.6rem 1rem;
+      border-bottom: 1px solid var(--border);
+      color: var(--muted);
+    }
+
+    tr:last-child td { border-bottom: none; }
+    tr:nth-child(even) td { background: #131318; }
+
+    td code {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 0.82em;
+      color: var(--type);
+    }
+
+    td:first-child code { color: var(--red); }
+
+    footer {
+      text-align: center;
+      padding: 2.5rem 2rem;
+      font-size: 0.825rem;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo"><span>shot</span></a>
+  <ul class="nav-links">
+    <li><a href="/script/">ShotScript</a></li>
+    <li><a href="/lint/">ShotLint</a></li>
+    <li><a href="/language/">Language</a></li>
+    <li><a href="/stdlib/">Stdlib</a></li>
+    <li><a href="https://github.com/didley/ShotScript" class="ext">GitHub</a></li>
+  </ul>
+</nav>
+
+<div class="page">
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-label">Sections</div>
+      <ul>
+        <li><a href="#functions">Functions</a></li>
+        <li><a href="#variables">Variables</a></li>
+        <li><a href="#errors">Error handling</a></li>
+        <li><a href="#types">Types</a></li>
+        <li><a href="#null">Null &amp; undefined</a></li>
+        <li><a href="#immutable">Immutable by default</a></li>
+        <li><a href="#imports">Imports &amp; exports</a></li>
+        <li><a href="#control">Control flow</a></li>
+        <li><a href="#operators">Operators</a></li>
+        <li><a href="#tsconfig">Strict tsconfig</a></li>
+      </ul>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Also</div>
+      <ul>
+        <li><a href="/stdlib/">Stdlib reference</a></li>
+        <li><a href="/script/cli/">CLI reference</a></li>
+        <li><a href="/lint/">ShotLint rules</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main>
+    <div class="content-header">
+      <div class="label">Language Reference</div>
+      <h1>Shot language rules</h1>
+      <p>Every rule below is enforced by <code>shot check</code>. Violations exit non-zero with a diagnostic. Rules apply to both <code>.shot</code> files (ShotScript) and TypeScript files linted with ShotLint.</p>
+    </div>
+
+    <!-- FUNCTIONS -->
+    <section class="rule-section" id="functions">
+      <h2>Functions</h2>
+
+      <div class="rule-block">
+        <h3>no-arrow-functions</h3>
+        <p>Arrow functions are banned. Use named <code>function</code> declarations or expressions — they show up in stack traces, are grep-able, and testable in isolation.</p>
+        <div class="code-pair">
+          <div class="code-pane code-pane-bad">
+            <div class="code-label">❌</div>
+            <pre><span class="kw">const</span> greet = (name: <span class="ty">string</span>) => `hello ${name}`
+[<span class="nu">1</span>, <span class="nu">2</span>].map((n) => n * <span class="nu">2</span>)</pre>
+          </div>
+          <div class="code-pane code-pane-good">
+            <div class="code-label">✅</div>
+            <pre><span class="kw">function</span> <span class="fn">greet</span>(name: <span class="ty">string</span>): <span class="ty">string</span> {
+  <span class="kw">return</span> `hello ${name}`
+}
+[<span class="nu">1</span>, <span class="nu">2</span>].map(<span class="kw">function</span> <span class="fn">double</span>(n: <span class="ty">number</span>): <span class="ty">number</span> {
+  <span class="kw">return</span> n * <span class="nu">2</span>
+})</pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="rule-block">
+        <h3>require-explicit-return-type</h3>
+        <p>Every function declaration must have an explicit return type. Inference hides contracts from readers and lets return-type drift go unnoticed.</p>
+        <div class="code-pair">
+          <div class="code-pane code-pane-bad">
+            <div class="code-label">❌</div>
+            <pre><span class="kw">function</span> <span class="fn">double</span>(n: <span class="ty">number</span>) { <span class="kw">return</span> n * <span class="nu">2</span> }</pre>
+          </div>
+          <div class="code-pane code-pane-good">
+            <div class="code-label">✅</div>
+            <pre><span class="kw">function</span> <span class="fn">double</span>(n: <span class="ty">number</span>): <span class="ty">number</span> { <span class="kw">return</span> n * <span class="nu">2</span> }</pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="rule-block">
+        <h3>require-named-functions</h3>
+        <p>Function expressions passed as arguments must be named. Anonymous callbacks produce useless <code>(anonymous)</code> stack frames.</p>
+        <div class="code-pair">
+          <div class="code-pane code-pane-bad">
+            <div class="code-label">❌</div>
+            <pre>[<span class="nu">1</span>, <span class="nu">2</span>].map(<span class="kw">function</span>(n: <span class="ty">number</span>): <span class="ty">number</span> { <span class="kw">return</span> n * <span class="nu">2</span> })</pre>
+          </div>
+          <div class="code-pane code-pane-good">
+            <div class="code-label">✅</div>
+            <pre>[<span class="nu">1</span>, <span class="nu">2</span>].map(<span class="kw">function</span> <span class="fn">double</span>(n: <span class="ty">number</span>): <span class="ty">number</span> { <span class="kw">return</span> n * <span class="nu">2</span> })</pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- VARIABLES -->
+    <section class="rule-section" id="variables">
+      <h2>Variables</h2>
+
+      <div class="rule-block">
+        <h3>no-var / no-let-outside-for</h3>
+        <p><code>var</code> is banned. <code>let</code> is only allowed inside <code>for</code> loop headers. Everywhere else: <code>const</code>. For mutable module-level state, use <code>mutableRef</code> from <code>shot:std</code>.</p>
+        <div class="code-pair">
+          <div class="code-pane code-pane-bad">
+            <div class="code-label">❌</div>
+            <pre><span class="kw">let</span> x = <span class="nu">1</span>
+<span class="kw">var</span> y = <span class="nu">2</span></pre>
+          </div>
+          <div class="code-pane code-pane-good">
+            <div class="code-label">✅</div>
+            <pre><span class="kw">const</span> x = <span class="nu">1</span>
+<span class="kw">for</span> (<span class="kw">let</span> i = <span class="nu">0</span>; i &lt; <span class="nu">10</span>; i += <span class="nu">1</span>) { <span class="cm">/* ok */</span> }</pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="rule-block">
+        <h3>no-increment-decrement</h3>
+        <p><code>++</code> and <code>--</code> are banned. Use <code>+= 1</code> and <code>-= 1</code>.</p>
+      </div>
+    </section>
+
+    <!-- ERROR HANDLING -->
+    <section class="rule-section" id="errors">
+      <h2>Error handling</h2>
+
+      <div class="callout">
+        <strong>The core pattern:</strong> errors are values. Fallible functions return
+        <code>[T | null, Error | null]</code>. The caller destructures and checks. No hidden control flow.
+        <code>ShotPromise&lt;T, E&gt;</code> is the canonical alias for async fallible functions.
+      </div>
+
+      <div class="rule-block">
+        <h3>no-throw / no-try</h3>
+        <p>Throwing and <code>try</code>/<code>catch</code> are banned. Return errors as values instead.</p>
+        <div class="code-pair">
+          <div class="code-pane code-pane-bad">
+            <div class="code-label">❌</div>
+            <pre><span class="kw">async function</span> <span class="fn">getUser</span>(id: <span class="ty">number</span>): <span class="ty">Promise</span>&lt;<span class="ty">User</span>&gt; {
+  <span class="kw">try</span> {
+    <span class="kw">const</span> res = <span class="kw">await</span> <span class="fn">fetch</span>(`/users/${id}`)
+    <span class="kw">return</span> res.json() <span class="kw">as</span> <span class="ty">User</span>
+  } <span class="kw">catch</span> (e) {
+    <span class="kw">throw new</span> <span class="ty">Error</span>(`failed: ${e}`)
+  }
+}</pre>
+          </div>
+          <div class="code-pane code-pane-good">
+            <div class="code-label">✅</div>
+            <pre><span class="kw">import</span> { fetch, jsonParse } <span class="kw">from</span> <span class="st">"shot:std"</span>
+<span class="kw">import type</span> { <span class="ty">ShotPromise</span> } <span class="kw">from</span> <span class="st">"shot:std"</span>
+
+<span class="kw">async function</span> <span class="fn">getUser</span>(id: <span class="ty">number</span>): <span class="ty">ShotPromise</span>&lt;<span class="ty">User</span>&gt; {
+  <span class="kw">const</span> [res, err] = <span class="kw">await</span> <span class="fn">fetch</span>(`/users/${id}`)
+  <span class="kw">if</span> (err !== <span class="kw">null</span>) { <span class="kw">return</span> [<span class="kw">null</span>, err] }
+  <span class="kw">return</span> <span class="fn">jsonParse</span>&lt;<span class="ty">User</span>&gt;(<span class="kw">await</span> res.text())
+}</pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="rule-block">
+        <h3>Custom error types</h3>
+        <p>Error shapes are plain <code>type</code> declarations — no class hierarchy. Use a discriminated union for multiple failure modes.</p>
+        <pre style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1rem 1.25rem;"><span class="kw">type</span> <span class="ty">AppError</span> =
+  | { <span class="kw">readonly</span> kind: <span class="st">"network"</span>; <span class="kw">readonly</span> status: <span class="ty">number</span> }
+  | { <span class="kw">readonly</span> kind: <span class="st">"parse"</span>; <span class="kw">readonly</span> input: <span class="ty">string</span> }
+
+<span class="kw">async function</span> <span class="fn">load</span>(id: <span class="ty">number</span>): <span class="ty">ShotPromise</span>&lt;<span class="ty">User</span>, <span class="ty">AppError</span>&gt; { <span class="cm">/* ... */</span> }</pre>
+      </div>
+
+      <div class="rule-block">
+        <h3>Wrapping throwing APIs</h3>
+        <p>Use <code>toResult</code> (sync) or <code>toPromiseResult</code> (async) from <code>shot:std</code> to wrap external APIs that throw.</p>
+        <pre style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1rem 1.25rem;"><span class="kw">import</span> { toResult, toPromiseResult } <span class="kw">from</span> <span class="st">"shot:std"</span>
+
+<span class="kw">const</span> [parsed, err] = toResult(() => someLib.parseSync(input))
+<span class="kw">const</span> [rows, err] = <span class="kw">await</span> toPromiseResult(() => db.query(sql))</pre>
+      </div>
+    </section>
+
+    <!-- TYPES -->
+    <section class="rule-section" id="types">
+      <h2>Types</h2>
+
+      <div class="rule-block">
+        <h3>no-interface — <code>type</code> only</h3>
+        <p>One way to define a shape: <code>type</code>. Interfaces are banned.</p>
+        <div class="code-pair">
+          <div class="code-pane code-pane-bad"><div class="code-label">❌</div><pre><span class="kw">interface</span> <span class="ty">User</span> { id: <span class="ty">number</span> }</pre></div>
+          <div class="code-pane code-pane-good"><div class="code-label">✅</div><pre><span class="kw">type</span> <span class="ty">User</span> = { <span class="kw">readonly</span> id: <span class="ty">number</span> }</pre></div>
+        </div>
+      </div>
+
+      <div class="rule-block">
+        <h3>no-enum — <code>as const</code> instead</h3>
+        <div class="code-pair">
+          <div class="code-pane code-pane-bad"><div class="code-label">❌</div><pre><span class="kw">enum</span> Direction { Up, Down }</pre></div>
+          <div class="code-pane code-pane-good"><div class="code-label">✅</div><pre><span class="kw">const</span> Direction = { Up: <span class="st">"up"</span>, Down: <span class="st">"down"</span> } <span class="kw">as const</span>
+<span class="kw">type</span> <span class="ty">Direction</span> = <span class="kw">typeof</span> Direction[<span class="kw">keyof typeof</span> Direction]</pre></div>
+        </div>
+      </div>
+
+      <div class="rule-block">
+        <h3>no-class / no-this</h3>
+        <p>Classes and <code>this</code> are banned. Use a plain <code>type</code> for data, plain functions for behaviour.</p>
+        <div class="code-pair">
+          <div class="code-pane code-pane-bad"><div class="code-label">❌</div><pre><span class="kw">class</span> <span class="ty">UserService</span> {
+  <span class="kw">constructor</span>(db: <span class="ty">Database</span>) { <span class="kw">this</span>.db = db }
+}</pre></div>
+          <div class="code-pane code-pane-good"><div class="code-label">✅</div><pre><span class="kw">type</span> <span class="ty">UserService</span> = { <span class="kw">readonly</span> db: <span class="ty">Database</span> }
+
+<span class="kw">const</span> svc: <span class="ty">UserService</span> = { db }</pre></div>
+        </div>
+      </div>
+
+      <div class="rule-block">
+        <h3>no-intersection-types — compose by field instead</h3>
+        <p>Intersection types (<code>A &amp; B</code>) are banned. Embed types as named fields.</p>
+        <div class="code-pair">
+          <div class="code-pane code-pane-bad"><div class="code-label">❌</div><pre><span class="kw">type</span> <span class="ty">AdminUser</span> = <span class="ty">User</span> &amp; { <span class="kw">readonly</span> role: <span class="st">'admin'</span> }</pre></div>
+          <div class="code-pane code-pane-good"><div class="code-label">✅</div><pre><span class="kw">type</span> <span class="ty">AdminUser</span> = {
+  <span class="kw">readonly</span> user: <span class="ty">User</span>
+  <span class="kw">readonly</span> role: <span class="st">'admin'</span>
+}
+<span class="cm">// access: admin.user.id</span></pre></div>
+        </div>
+      </div>
+
+      <div class="rule-block">
+        <h3>no-any / no-assertion / no-non-null / no-ts-comment</h3>
+        <p>Type escape hatches are banned. No <code>any</code>, no <code>as T</code> (except <code>as const</code>), no <code>!</code>, no <code>@ts-ignore</code>. Use <code>unknown</code> and narrow explicitly.</p>
+      </div>
+
+      <div class="rule-block">
+        <h3>Banned complex types</h3>
+        <p>Conditional types, mapped types, template literal types, and <code>infer</code> are banned. These produce shapes that are hard to read at their definition site.</p>
+      </div>
+
+      <div class="rule-block">
+        <h3>Banned utility types</h3>
+        <table>
+          <tr><th>Banned</th><th>Reason</th><th>Use instead</th></tr>
+          <tr><td><code>Partial&lt;T&gt;</code></td><td>Produces optional properties (banned)</td><td>Spell out with <code>| null</code> per field</td></tr>
+          <tr><td><code>Record&lt;K, V&gt;</code></td><td>Produces index signature (banned)</td><td><code>Map&lt;K, V&gt;</code></td></tr>
+          <tr><td><code>Readonly&lt;T&gt;</code></td><td>Redundant — each property is already required to be <code>readonly</code></td><td>Mark properties directly</td></tr>
+          <tr><td><code>InstanceType</code>, <code>ConstructorParameters</code></td><td>shot has no classes</td><td>n/a</td></tr>
+        </table>
+        <p>Kept: <code>Pick</code>, <code>Omit</code>, <code>Exclude</code>, <code>Extract</code>, <code>NonNullable</code>, <code>Parameters</code>, <code>ReturnType</code>, <code>Awaited</code>.</p>
+      </div>
+    </section>
+
+    <!-- NULL & UNDEFINED -->
+    <section class="rule-section" id="null">
+      <h2>Null &amp; undefined</h2>
+
+      <div class="rule-block">
+        <h3>no-undefined-type / no-optional-property / no-optional-parameter</h3>
+        <p>shot has one nullable value: <code>null</code>. <code>undefined</code> cannot appear in user-authored type annotations. Optional properties (<code>prop?: T</code>) and optional parameters (<code>x?: T</code>) are banned — use explicit <code>T | null</code>.</p>
+        <div class="code-pair">
+          <div class="code-pane code-pane-bad">
+            <div class="code-label">❌</div>
+            <pre><span class="kw">type</span> <span class="ty">User</span> = { avatar?: <span class="ty">string</span> }
+<span class="kw">function</span> <span class="fn">f</span>(x?: <span class="ty">string</span>): <span class="ty">void</span> { }</pre>
+          </div>
+          <div class="code-pane code-pane-good">
+            <div class="code-label">✅</div>
+            <pre><span class="kw">type</span> <span class="ty">User</span> = { <span class="kw">readonly</span> avatar: <span class="ty">string</span> | <span class="kw">null</span> }
+<span class="kw">function</span> <span class="fn">f</span>(x: <span class="ty">string</span> | <span class="kw">null</span>): <span class="ty">void</span> { }</pre>
+          </div>
+        </div>
+        <p>Runtime <code>undefined</code> still exists (e.g. <code>arr[i]</code> under <code>noUncheckedIndexedAccess</code>). Convert at the boundary: <code>arr[i] ?? null</code>. The language forbids writing <code>undefined</code> in types; it doesn't pretend the value can't appear.</p>
+      </div>
+    </section>
+
+    <!-- IMMUTABLE -->
+    <section class="rule-section" id="immutable">
+      <h2>Immutable by default</h2>
+
+      <div class="rule-block">
+        <h3>require-readonly-property / require-readonly-arrays</h3>
+        <p>Every property in a user-authored object type must be <code>readonly</code>. Array type annotations must use <code>readonly T[]</code> — not <code>T[]</code> or <code>Array&lt;T&gt;</code>.</p>
+        <div class="code-pair">
+          <div class="code-pane code-pane-bad">
+            <div class="code-label">❌</div>
+            <pre><span class="kw">type</span> <span class="ty">Config</span> = { host: <span class="ty">string</span>; port: <span class="ty">number</span> }
+<span class="kw">const</span> ids: <span class="ty">number</span>[] = []</pre>
+          </div>
+          <div class="code-pane code-pane-good">
+            <div class="code-label">✅</div>
+            <pre><span class="kw">type</span> <span class="ty">Config</span> = { <span class="kw">readonly</span> host: <span class="ty">string</span>; <span class="kw">readonly</span> port: <span class="ty">number</span> }
+<span class="kw">const</span> ids: <span class="kw">readonly</span> <span class="ty">number</span>[] = []</pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- IMPORTS -->
+    <section class="rule-section" id="imports">
+      <h2>Imports &amp; exports</h2>
+
+      <div class="rule-block">
+        <h3>Import allowlist (ShotScript only)</h3>
+        <p>Only these import specifiers are allowed in <code>.shot</code> files:</p>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:0.3rem;font-size:0.875rem;color:var(--muted);margin-bottom:0.75rem;">
+          <li>· <code style="color:var(--type)">shot:*</code> — the standard library and shot packages</li>
+          <li>· <code style="color:var(--type)">bun:*</code> — Bun built-in APIs</li>
+          <li>· Relative paths ending in <code style="color:var(--type)">.shot</code></li>
+        </ul>
+        <p>No arbitrary third-party npm/jsr imports.</p>
+      </div>
+
+      <div class="rule-block">
+        <h3>no-default-export</h3>
+        <p>Default exports are banned. Named exports only — every export is addressable and tree-shakeable.</p>
+      </div>
+
+      <div class="rule-block">
+        <h3>no-index-import</h3>
+        <p>Importing from an <code>index</code> file or bare directory is banned. Import the specific file.</p>
+        <div class="code-pair">
+          <div class="code-pane code-pane-bad"><div class="code-label">❌</div><pre><span class="kw">import</span> { add } <span class="kw">from</span> <span class="st">"./math/index.shot"</span></pre></div>
+          <div class="code-pane code-pane-good"><div class="code-label">✅</div><pre><span class="kw">import</span> { add } <span class="kw">from</span> <span class="st">"./math/add.shot"</span></pre></div>
+        </div>
+      </div>
+
+      <div class="rule-block">
+        <h3>File naming</h3>
+        <p>Name each file after the directory it lives in (Go package convention). For multi-file modules, name each file after what it exports.</p>
+        <pre style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1rem 1.25rem;font-size:0.78rem;line-height:1.8;color:var(--muted);">calculator/
+  calculator.shot   <span style="color:var(--green)">✅</span>  matches directory
+  index.shot        <span style="color:var(--red)">❌</span>  do not use
+
+math/
+  add.shot          <span style="color:var(--green)">✅</span>
+  divide.shot       <span style="color:var(--green)">✅</span></pre>
+      </div>
+    </section>
+
+    <!-- CONTROL FLOW -->
+    <section class="rule-section" id="control">
+      <h2>Control flow</h2>
+
+      <div class="rule-block">
+        <h3>no-ternary</h3>
+        <p>Ternary expressions are banned. Use <code>if</code>/<code>else</code> or extract a named function.</p>
+        <div class="code-pair">
+          <div class="code-pane code-pane-bad"><div class="code-label">❌</div><pre><span class="kw">const</span> label = isAdmin ? <span class="st">"Admin"</span> : <span class="st">"User"</span></pre></div>
+          <div class="code-pane code-pane-good"><div class="code-label">✅</div><pre><span class="kw">function</span> <span class="fn">roleLabel</span>(isAdmin: <span class="ty">boolean</span>): <span class="ty">string</span> {
+  <span class="kw">if</span> (isAdmin === <span class="kw">true</span>) { <span class="kw">return</span> <span class="st">"Admin"</span> }
+  <span class="kw">return</span> <span class="st">"User"</span>
+}</pre></div>
+        </div>
+      </div>
+
+      <div class="rule-block">
+        <h3>no-for-in / no-do-while / no-labels</h3>
+        <p><code>for...in</code> is banned (use <code>for...of Object.keys()</code>). <code>do...while</code> is banned (use <code>while</code>). Labelled <code>break</code>/<code>continue</code> is banned (extract a function and <code>return</code>).</p>
+      </div>
+
+      <div class="rule-block">
+        <h3>switch-no-fallthrough</h3>
+        <p>Every <code>switch</code> case must end with <code>break</code> or <code>return</code>. Implicit fallthrough is banned.</p>
+      </div>
+
+      <div class="rule-block">
+        <h3>no-and-shorthand</h3>
+        <p><code>condition &amp;&amp; doThing()</code> for side effects is banned. Use <code>if</code>.</p>
+      </div>
+    </section>
+
+    <!-- OPERATORS -->
+    <section class="rule-section" id="operators">
+      <h2>Operators</h2>
+      <table>
+        <tr><th>Banned</th><th>Use instead</th></tr>
+        <tr><td><code>&amp; | ^ ~ &lt;&lt; &gt;&gt;</code></td><td>Don't do bitwise</td></tr>
+        <tr><td><code>delete obj.x</code></td><td>Build a new object without the key</td></tr>
+        <tr><td><code>"x" in obj</code></td><td>Explicit property check or discriminated union</td></tr>
+        <tr><td><code>a, b</code> (comma)</td><td>Separate statements</td></tr>
+        <tr><td><code>arguments</code></td><td>Rest params <code>...args</code></td></tr>
+        <tr><td><code>function*</code> / <code>yield</code></td><td><code>for...of</code> over iterables</td></tr>
+        <tr><td><code>eval()</code></td><td>n/a</td></tr>
+        <tr><td><code>parseInt</code>, <code>parseFloat</code></td><td><code>Number(str)</code></td></tr>
+        <tr><td><code>!!value</code></td><td><code>Boolean(value)</code></td></tr>
+        <tr><td><code>==</code>, <code>!=</code></td><td><code>===</code>, <code>!==</code></td></tr>
+      </table>
+    </section>
+
+    <!-- TSCONFIG -->
+    <section class="rule-section" id="tsconfig">
+      <h2>Strict tsconfig</h2>
+      <p style="font-size:0.875rem;color:var(--muted);margin-bottom:1rem;"><code>shot build</code> and <code>shot run</code> write a baked-in <code>compilerOptions</code> for every invocation. Users cannot relax it — the language defines its own tsconfig.</p>
+      <pre style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1rem 1.25rem;font-size:0.78rem;line-height:1.7;color:var(--muted);">"compilerOptions": {
+  "strict": true,
+  "noImplicitReturns": true,
+  "noFallthroughCasesInSwitch": true,
+  "noUnusedLocals": true,
+  "noUnusedParameters": true,
+  "noUncheckedIndexedAccess": true,
+  "noPropertyAccessFromIndexSignature": true,
+  "exactOptionalPropertyTypes": true,
+  "allowUnreachableCode": false,
+  "allowUnusedLabels": false,
+  "noErrorTruncation": true,
+  "verbatimModuleSyntax": true,
+  "isolatedModules": true,
+  "moduleDetection": "force"
+}</pre>
+      <p style="font-size:0.82rem;color:var(--muted);margin-top:0.75rem;"><code>noUncheckedIndexedAccess</code> makes <code>arr[i]</code> return <code>T | undefined</code> — you must check. <code>verbatimModuleSyntax</code> requires type-only imports to say <code>import type</code>.</p>
+    </section>
+  </main>
+</div>
+
+<footer>
+  <p>
+    <a href="/script/">ShotScript</a> · <a href="/lint/">ShotLint</a> ·
+    <a href="/stdlib/">Stdlib</a> · <a href="/script/cli/">CLI</a> ·
+    <a href="https://github.com/didley/ShotScript" class="ext">GitHub</a>
+  </p>
+</footer>
+
+</body>
+</html>

@@ -6,12 +6,22 @@ shot <command> [args...]
 
 Install:
 ```
-curl -fsSL https://shotscript.dev/install.sh | sh
+curl -fsSL https://shot.didley.dev/install.sh | sh
 ```
 
-The installer takes care of the runtime, the `shot` binary, and your PATH. Re-run any time to update to the latest release.
+The installer handles everything needed to run Shot on your machine. Re-run any time to update.
 
 All commands return exit 0 on success, non-zero on any failure (lint, type-check, or runtime).
+
+---
+
+## `shot init <name>`
+
+Scaffold a new project directory with a `.shot` entry file, a test file, and a `shot.json` config stub.
+
+```
+$ shot init my-app
+```
 
 ---
 
@@ -55,8 +65,7 @@ Validate → type-check. Does not execute.
 
 Pipeline:
 1. Lint each `.shot` file. Abort on diagnostics.
-2. Write a transient `deno.json` containing `{ "imports": { "shot:": "npm:@shotscript/" } }`.
-3. `deno check --config=<tempjson> --ext=ts <files>`. Abort on type errors.
+2. Type-check via the TypeScript compiler. Abort on type errors.
 
 ```
 $ shot build src/main.shot
@@ -66,26 +75,37 @@ No emitted `.ts` files; build is purely a validation gate.
 
 ---
 
-## `shot run <file> [-- deno-flags...]`
+## `shot run <file> [-- flags...]`
 
 Validate → type-check → execute. Type errors block execution.
 
 Pipeline:
-1. Lint + type-check via `deno run --check=all`.
-2. Deno runs the program if and only if both pass.
+1. Lint all project files. Abort on diagnostics.
+2. Type-check in-process. Abort on type errors.
+3. Run via Bun if both pass.
 
 ```
 $ shot run hello.shot
-$ shot run hello.shot -- --allow-net
-$ shot run hello.shot -- --allow-net --allow-read=./config
+$ shot run hello.shot -- --port 3000
 ```
 
-**Permission posture:** by default, `shot run` invokes `deno run` with no permission flags. Flags after `--` pass through to deno.
+Flags after `--` pass through to Bun.
 
 **Exit codes:**
 - The program's own exit code on successful run
 - `1` if lint or type-check failed (program never executed)
 - `2` for internal errors
+
+---
+
+## `shot test [files...]`
+
+Validate → type-check → run `*.test.shot` files.
+
+```
+$ shot test
+$ shot test src/calculator.test.shot
+```
 
 ---
 
@@ -95,4 +115,4 @@ $ shot run hello.shot -- --allow-net --allow-read=./config
 `shot check` flags imports outside `shot:`, `bun:`, and relative `.shot` paths.
 
 ### Type errors block `shot run`
-A `.shot` program that lints clean but fails `deno check` will not execute. This is intentional — type-checks are gating, like `go run`.
+A `.shot` program that lints clean but fails type-checking will not execute. This is intentional — type-checks are gating, like `go run`.
