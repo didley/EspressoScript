@@ -21,7 +21,7 @@ cli/                    Deno-based shot CLI
     types.ts            Rule, Diagnostic, Context types
     rules/              One file per rule (~94 rules)
       index.ts          Registers all rules
-rules/                  shot-rules submodule (npm package for users)
+lint/                   shot-lint submodule (npm package for users)
   src/checker/          Parallel copy of cli/checker/ for the npm package
 stdlib/                 shot standard library (published as jsr:@shotscript/std)
   mod.ts                fetch, jsonParse, jsonStringify, tryCatch, mutableRef, etc.
@@ -45,11 +45,11 @@ There are two parallel copies of the rule checker:
 | Location | Used by | Runtime |
 |---|---|---|
 | `cli/checker/` | `shot check` CLI command | Deno (`npm:typescript`) |
-| `rules/src/checker/` | `shot-rules` npm package | Node.js |
+| `lint/src/checker/` | `shot-lint` npm package | Node.js |
 
-Both have the same rule files, types, and structure. When you add or change a rule, **you must update both**. The `rules/` submodule is what users install via npm; `cli/checker/` is what the CLI uses directly.
+Both have the same rule files, types, and structure. When you add or change a rule, **you must update both**. The `lint/` submodule is what users install via npm; `cli/checker/` is what the CLI uses directly.
 
-The `cli/checker/rules/index.ts` imports use `.ts` extensions (Deno style). The `rules/src/checker/rules/index.ts` imports use `.js` extensions (NodeNext/ESM style).
+The `cli/checker/rules/index.ts` imports use `.ts` extensions (Deno style). The `lint/src/checker/rules/index.ts` imports use `.js` extensions (NodeNext/ESM style).
 
 ---
 
@@ -92,10 +92,10 @@ deno run -A tests/run-types-fixtures.ts
 deno run -A tests/run-imports-fixtures.ts
 ```
 
-**shot-rules submodule tests** (from inside `rules/`):
+**shot-lint submodule tests** (from inside `lint/`):
 
 ```bash
-cd rules
+cd lint
 npm ci
 node --import tsx/esm tests/runner.ts
 node --import tsx/esm --test tests/utils.test.ts
@@ -135,7 +135,7 @@ CI runs `bash scripts/verify.sh` for the root repo and all three npm commands fo
 
 6. **Add an integration case** to `scripts/verify.sh` using the `diagnostic_check` helper.
 
-7. **Add a pass/fail fixture** to `rules/tests/fixtures/` for the submodule's own test runner.
+7. **Add a pass/fail fixture** to `lint/tests/fixtures/` for the submodule's own test runner.
 
 ---
 
@@ -153,4 +153,4 @@ CI runs `bash scripts/verify.sh` for the root repo and all three npm commands fo
 
 The CLI itself (`cli/`, `stdlib/`) is written in idiomatic TypeScript for Deno — it does not follow shot discipline (the CLI needs `try/catch`, classes, etc. to implement the toolchain). The `stdlib/mod.ts` is the one place in the entire codebase where `try/catch` is intentionally used to wrap throwing APIs for shot users.
 
-The `rules/` submodule source should follow shot discipline where possible, but the checker implementation necessarily uses TypeScript AST APIs that require patterns shot bans (indexing, casting, etc.) — use guarded patterns with `noUncheckedIndexedAccess` in mind.
+The `lint/` submodule source should follow shot discipline where possible, but the checker implementation necessarily uses TypeScript AST APIs that require patterns shot bans (indexing, casting, etc.) — use guarded patterns with `noUncheckedIndexedAccess` in mind.

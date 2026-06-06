@@ -33,7 +33,7 @@ jobs:
         run: bash scripts/verify.sh
 
   rules-submodule:
-    name: shot-rules submodule
+    name: shot-lint submodule
     runs-on: ubuntu-latest
 
     steps:
@@ -45,20 +45,20 @@ jobs:
         with:
           node-version: "22"
           cache: "npm"
-          cache-dependency-path: rules/package.json
+          cache-dependency-path: lint/package.json
 
-      - name: Install shot-rules dependencies
-        working-directory: rules
+      - name: Install shot-lint dependencies
+        working-directory: lint
         run: npm ci
 
-      - name: Build shot-rules
-        working-directory: rules
+      - name: Build shot-lint
+        working-directory: lint
         run: npm run build
 
-      - name: Run shot-rules tests
-        working-directory: rules
+      - name: Run shot-lint tests
+        working-directory: lint
         run: node --import tsx/esm tests/runner.ts
 
-      - name: Run shot-rules utils tests
-        working-directory: rules
+      - name: Run shot-lint utils tests
+        working-directory: lint
         run: node --import tsx/esm --test tests/utils.test.ts

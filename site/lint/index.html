@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>shot-discipline — TypeScript linter for any project</title>
+  <title>shot-lint — TypeScript linter for any project</title>
   <style>
     :root {
       --bg: #0d0d10;
@@ -307,14 +307,14 @@
 <nav>
   <div class="nav-logo"><span>shot</span>-discipline</div>
   <ul class="nav-links">
-    <li><a href="https://github.com/didley/shot-rules">GitHub</a></li>
-    <li><a href="https://www.npmjs.com/package/shot-discipline">npm</a></li>
+    <li><a href="https://github.com/didley/shot-lint">GitHub</a></li>
+    <li><a href="https://www.npmjs.com/package/shot-lint">npm</a></li>
   </ul>
 </nav>
 
 <!-- HERO -->
 <section class="hero">
-  <div class="hero-badge">shot-discipline · npm</div>
+  <div class="hero-badge">shot-lint · npm</div>
   <h1>Go-style discipline<br>for <em>TypeScript.</em></h1>
   <p class="hero-sub">
     90 rules that enforce one canonical form per construct.
@@ -325,12 +325,12 @@
   <div style="max-width:480px;margin:0 auto;text-align:left;">
     <div style="font-family:'SF Mono','Fira Code',monospace;font-size:0.65rem;letter-spacing:0.12em;color:var(--accent);text-transform:uppercase;margin-bottom:0.6rem;">Install</div>
     <div class="install-cmd" style="display:block;margin-bottom:0.75rem;">
-      <span class="prompt">$</span> <span class="cmd">npm install --save-dev shot-discipline</span>
+      <span class="prompt">$</span> <span class="cmd">npm install --save-dev shot-lint</span>
     </div>
 
     <div style="font-family:'SF Mono','Fira Code',monospace;font-size:0.65rem;letter-spacing:0.12em;color:var(--accent);text-transform:uppercase;margin-bottom:0.6rem;margin-top:1.25rem;">Run</div>
     <div class="install-cmd" style="display:block;margin-bottom:0.5rem;">
-      <span class="prompt">$</span> <span class="cmd">npx shot-rules <span style="color:var(--muted)">'src/**/*.ts'</span></span>
+      <span class="prompt">$</span> <span class="cmd">npx shot-lint <span style="color:var(--muted)">'src/**/*.ts'</span></span>
     </div>
     <div style="font-size:0.78rem;color:var(--muted);margin-top:0.5rem;">
       Exits <code style="font-family:'SF Mono','Fira Code',monospace;color:var(--text);background:var(--surface);padding:0.1rem 0.3rem;border-radius:3px;">0</code> when clean,
@@ -340,7 +340,7 @@
 
     <div style="font-family:'SF Mono','Fira Code',monospace;font-size:0.65rem;letter-spacing:0.12em;color:var(--accent);text-transform:uppercase;margin-bottom:0.6rem;margin-top:1.25rem;">Add to package.json</div>
     <div class="install-cmd" style="display:block;">
-      <span style="color:var(--muted)">"lint":</span> <span class="cmd">"shot-rules 'src/**/*.ts'"</span>
+      <span style="color:var(--muted)">"lint":</span> <span class="cmd">"shot-lint 'src/**/*.ts'"</span>
     </div>
   </div>
 </section>
@@ -367,8 +367,8 @@
     <div class="sidebar-section">
       <div class="sidebar-label">Package</div>
       <ul>
-        <li><a href="https://github.com/didley/shot-rules">GitHub</a></li>
-        <li><a href="https://www.npmjs.com/package/shot-discipline">npm</a></li>
+        <li><a href="https://github.com/didley/shot-lint">GitHub</a></li>
+        <li><a href="https://www.npmjs.com/package/shot-lint">npm</a></li>
       </ul>
     </div>
   </nav>
@@ -415,7 +415,7 @@
         </div>
         <div class="rule-item">
           <div class="rule-name">no-try</div>
-          <div class="rule-desc"><code>try</code>/<code>catch</code> is banned. Wrap third-party throwing code with <code>tryCatch</code> or <code>tryCatchAsync</code> from <code>shot-discipline/utils</code>.</div>
+          <div class="rule-desc"><code>try</code>/<code>catch</code> is banned. Wrap third-party throwing code with <code>tryCatch</code> or <code>tryCatchAsync</code> from <code>shot-lint/utils</code>.</div>
         </div>
         <div class="rule-item">
           <div class="rule-name">no-promise-chain</div>
@@ -741,7 +741,7 @@
         </div>
         <div class="rule-item">
           <div class="rule-name">no-throwing-globals</div>
-          <div class="rule-desc"><code>JSON.parse</code>, <code>JSON.stringify</code>, and bare <code>fetch</code> are banned. Use the safe wrappers from <code>shot-discipline/utils</code>.</div>
+          <div class="rule-desc"><code>JSON.parse</code>, <code>JSON.stringify</code>, and bare <code>fetch</code> are banned. Use the safe wrappers from <code>shot-lint/utils</code>.</div>
         </div>
         <div class="rule-item">
           <div class="rule-name">no-metaprogramming-globals</div>
@@ -826,8 +826,8 @@
 <!-- FOOTER -->
 <footer>
   <p>
-    <a href="https://github.com/didley/shot-rules">shot-discipline on GitHub</a> ·
-    <a href="https://www.npmjs.com/package/shot-discipline">npm</a> ·
+    <a href="https://github.com/didley/shot-lint">shot-lint on GitHub</a> ·
+    <a href="https://www.npmjs.com/package/shot-lint">npm</a> ·
     <a href="/">ShotScript</a>
   </p>
 </footer>
