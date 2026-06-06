@@ -5,16 +5,16 @@
  ╚════██║██╔══██║██║   ██║   ██║   
  ███████║██║  ██║╚██████╔╝   ██║   
  ╚══════╝╚═╝  ╚═╝ ╚═════╝    ╚═╝   
- ShotScript — Take a Shot of extracted JavaScript.
+ ShotScript — Go-style TypeScript. One way to do everything.
 ```
 
-A subtractive superset of TypeScript. ShotScript removes features instead of adding them — applying Go's philosophy ("one canonical way to do everything") to the TS/JS ecosystem.
+TypeScript has four ways to write a function, three ways to handle errors, two ways to declare a type — and most codebases use all of them. shot removes the extras and keeps one of each.
 
-One canonical form per construct makes ShotScript code easier for humans to review and LLMs to generate correctly. No hidden control flow. No anonymous logic. Every failure path in the type signature.
+No arrow functions. No `throw`. No `class`. No `interface`. No `any`. No ternary. No optional properties. The rules aren't configurable — that's the point. Consistency you don't have to think about.
 
-- **Tooling shorthand:** `shot` (CLI command + file extension)
-- **Target runtime:** modern JS runtimes (edge, server, scripts)
-- **LLM-friendly:** one form per construct — models generate consistent code and can statically reason about every failure path without reading implementation details
+- **File extension / CLI:** `.shot` + `shot` command
+- **Runtime:** Deno (type-checks before running, like `go run`)
+- **LLM-friendly:** one form per construct — models generate consistent, statically-checkable code without needing to read implementation details
 
 ## Quick taste
 
