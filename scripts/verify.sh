@@ -376,16 +376,33 @@ check_exit "require-async-tuple-return valid" 0
 
 # Case 54: notes example backend lints clean
 echo "Case 54: notes example backend lints clean"
-NOTES_DIR="$ROOT/examples/notes/backend"
+NOTES_DIR="$ROOT/examples/shotScript/notes/backend"
 $SHOT check "$NOTES_DIR/store.shot" "$NOTES_DIR/handlers.shot" "$NOTES_DIR/main.shot" > /dev/null 2>&1 && pass "shot check notes backend" || fail "shot check notes backend"
 
 # Case 55: notes example backend tests pass
 echo "Case 55: notes example backend tests"
 SHOT_STDLIB_LOCAL="$STDLIB" $SHOT test "$NOTES_DIR/store.test.shot" > /dev/null 2>&1 && pass "shot test notes store" || fail "shot test notes store"
 
+# Case 56: both/calculator example lints clean and tests pass
+echo "Case 56: both/calculator example"
+CALC_DIR="$ROOT/examples/both/calculator/shot"
+$SHOT check "$CALC_DIR/calculator.shot" > /dev/null 2>&1 && pass "shot check calculator" || fail "shot check calculator"
+SHOT_STDLIB_LOCAL="$STDLIB" $SHOT test "$CALC_DIR/calculator.test.shot" > /dev/null 2>&1 && pass "shot test calculator" || fail "shot test calculator"
+
+# Case 57: both/fetch-user example lints clean
+echo "Case 57: both/fetch-user example lints clean"
+FETCH_DIR="$ROOT/examples/both/fetch-user/shot"
+$SHOT check "$FETCH_DIR/fetchUser.shot" > /dev/null 2>&1 && pass "shot check fetch-user" || fail "shot check fetch-user"
+
+# Case 58: fullstack backend lints clean and tests pass
+echo "Case 58: fullstack backend example"
+FULLSTACK_DIR="$ROOT/examples/fullstack/backend"
+$SHOT check "$FULLSTACK_DIR/store.shot" "$FULLSTACK_DIR/main.shot" > /dev/null 2>&1 && pass "shot check fullstack backend" || fail "shot check fullstack backend"
+SHOT_STDLIB_LOCAL="$STDLIB" $SHOT test "$FULLSTACK_DIR/store.test.shot" > /dev/null 2>&1 && pass "shot test fullstack store" || fail "shot test fullstack store"
+
 echo
 if [ $FAILS -eq 0 ]; then
-    echo "All 55 cases passed."
+    echo "All 58 cases passed."
     exit 0
 else
     echo "$FAILS case(s) failed."

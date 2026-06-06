@@ -66,6 +66,10 @@ jobs:
         working-directory: lint
         run: node --import tsx/esm --test tests/utils.test.ts
 
+      - name: Check shotLint and both examples (shot-lint)
+        working-directory: lint
+        run: node --import tsx/esm scripts/check-examples.mjs
+
       - name: Check fullstack frontend (shot-lint)
         run: node lint/dist/cli.js 'examples/fullstack/frontend/src/**/*.ts'
 
