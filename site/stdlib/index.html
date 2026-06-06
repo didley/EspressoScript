@@ -306,8 +306,6 @@
                         <li><a href="#safeFetch">safeFetch</a></li>
                         <li><a href="#jsonParse">jsonParse</a></li>
                         <li><a href="#jsonStringify">jsonStringify</a></li>
-                        <li><a href="#readFile">readFile</a></li>
-                        <li><a href="#writeFile">writeFile</a></li>
                         <li><a href="#wrapError">wrapError</a></li>
                         <li><a href="#toResult">toResult</a></li>
                         <li><a href="#toPromiseResult">toPromiseResult</a></li>
@@ -465,46 +463,6 @@
 ): <span class="ty">Result</span>&lt;<span class="ty">string</span>&gt;</pre>
                 </div>
 
-                <!-- readFile -->
-                <div class="fn-block" id="readFile">
-                    <div class="fn-header">
-                        <span class="fn-name">readFile(path)</span>
-                        <span class="fn-kind">async</span>
-                    </div>
-                    <div class="fn-body">
-                        <p class="fn-desc">
-                            Wraps <code>node:fs/promises</code>
-                            <code>readFile</code>. Returns file contents as a
-                            UTF-8 string, or an error.
-                        </p>
-                    </div>
-                    <pre><span class="kw">function</span> readFile(path: <span class="ty">string</span>): <span class="ty">PromiseResult</span>&lt;<span class="ty">string</span>&gt;
-
-<span class="kw">const</span> [text, err] = <span class="kw">await</span> readFile(<span class="st">"./config.json"</span>)</pre>
-                </div>
-
-                <!-- writeFile -->
-                <div class="fn-block" id="writeFile">
-                    <div class="fn-header">
-                        <span class="fn-name">writeFile(path, data)</span>
-                        <span class="fn-kind">async</span>
-                    </div>
-                    <div class="fn-body">
-                        <p class="fn-desc">
-                            Wraps <code>node:fs/promises</code>
-                            <code>writeFile</code>. The first tuple element is
-                            always <code>null</code> for void-returning
-                            operations — the destructure pattern stays uniform.
-                        </p>
-                    </div>
-                    <pre><span class="kw">function</span> writeFile(
-  path: <span class="ty">string</span>,
-  data: <span class="ty">string</span>,
-): <span class="ty">Promise</span>&lt;[<span class="kw">null</span>, <span class="ty">Error</span> | <span class="kw">null</span>]&gt;
-
-<span class="kw">const</span> [, writeErr] = <span class="kw">await</span> writeFile(<span class="st">"./out.json"</span>, json)</pre>
-                </div>
-
                 <!-- wrapError -->
                 <div class="fn-block" id="wrapError">
                     <div class="fn-header">
@@ -522,9 +480,9 @@
                     </div>
                     <pre><span class="kw">function</span> wrapError(message: <span class="ty">string</span>, cause: <span class="ty">Error</span>): <span class="ty">Error</span>
 
-<span class="kw">const</span> [text, err] = <span class="kw">await</span> readFile(path)
+<span class="kw">const</span> [res, err] = <span class="kw">await</span> safeFetch(url)
 <span class="kw">if</span> (err !== <span class="kw">null</span>) {
-  <span class="kw">return</span> [<span class="kw">null</span>, wrapError(`loadConfig: ${path}`, err)]
+  <span class="kw">return</span> [<span class="kw">null</span>, wrapError(`fetchUser: ${url}`, err)]
 }</pre>
                 </div>
 

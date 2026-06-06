@@ -32,7 +32,7 @@ cli/                    Bun-based shot CLI
 lint/                   shot-lint submodule (npm package for users)
   src/checker/          Parallel copy of cli/checker/ for the npm package
 stdlib/                 shot standard library (published as @shotscript/std on npm)
-  index.ts              safeFetch, jsonParse, jsonStringify, readFile, writeFile, wrapError, toResult, toPromiseResult
+  index.ts              safeFetch, jsonParse, jsonStringify, wrapError, toResult, toPromiseResult
 tests/
   fixtures/             .shot files for rule fixture tests (syntax/, types/, imports/)
   run-syntax-fixtures.ts
