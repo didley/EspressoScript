@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+DENO="${DENO_EXEC:-deno}"
+
+if ! command -v "$DENO" &>/dev/null; then
+    for candidate in \
+        "$HOME/.config/netlify/deno-cli/deno" \
+        "$HOME/.deno/bin/deno" \
+        "/usr/local/bin/deno"; do
+        if [ -x "$candidate" ]; then DENO="$candidate"; break; fi
+    done
+fi
+
+echo "shot pre-commit: running fixture tests..."
+"$DENO" run -A "$ROOT/tests/run-syntax-fixtures.ts"
+"$DENO" run -A "$ROOT/tests/run-types-fixtures.ts"
+"$DENO" run -A "$ROOT/tests/run-imports-fixtures.ts"
+echo "shot pre-commit: all checks passed."
