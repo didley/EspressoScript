@@ -1,5 +1,4 @@
 import * as fs from 'node:fs/promises'
-import { spawn } from 'node:child_process'
 import { glob } from 'glob'
 
 async function fmtFile(filePath: string): Promise<boolean> {
@@ -10,34 +9,19 @@ async function fmtFile(filePath: string): Promise<boolean> {
     return true
 }
 
-function runBiome(source: string): Promise<string | null> {
-    return new Promise((resolve) => {
-        const biomeBin = new URL('./node_modules/.bin/biome', import.meta.url).pathname
-        const biomeConfig = new URL(import.meta.resolve('shot-lint/biome')).pathname
-        const proc = spawn(
-            biomeBin,
-            [
-                'format',
-                '--config-path',
-                biomeConfig,
-                '--stdin-file-path=virtual.ts',
-                '--no-errors-on-unmatched',
-                '-',
-            ],
-            { stdio: ['pipe', 'pipe', 'inherit'] },
-        )
-        const chunks: Buffer[] = []
-        proc.stdout.on('data', (chunk: Buffer) => chunks.push(chunk))
-        proc.stdin.write(source)
-        proc.stdin.end()
-        proc.on('close', (code) => {
-            if (code !== 0) {
-                resolve(null)
-                return
-            }
-            resolve(Buffer.concat(chunks).toString('utf-8'))
-        })
-    })
+async function runBiome(source: string): Promise<string | null> {
+    const biomeBin = new URL('./node_modules/.bin/biome', import.meta.url).pathname
+    const biomeConfig = new URL(import.meta.resolve('shot-lint/biome')).pathname
+    const proc = Bun.spawn(
+        [biomeBin, 'format', '--config-path', biomeConfig, '--stdin-file-path=virtual.ts', '--no-errors-on-unmatched', '-'],
+        {
+            stdin: Buffer.from(source, 'utf-8'),
+            stdout: 'pipe',
+            stderr: 'inherit',
+        },
+    )
+    const [output] = await Promise.all([new Response(proc.stdout).text(), proc.exited])
+    return proc.exitCode === 0 ? output : null
 }
 
 export async function fmt(files: string[]): Promise<number> {
