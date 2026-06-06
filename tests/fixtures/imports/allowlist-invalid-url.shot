@@ -1,1 +1,1 @@
-import { x } from "https://deno.land/x/mod.ts"
+import { x } from "https://cdn.jsdelivr.net/npm/mod.ts"
