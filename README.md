@@ -5,16 +5,14 @@
  ╚════██║██╔══██║██║   ██║   ██║   
  ███████║██║  ██║╚██████╔╝   ██║   
  ╚══════╝╚═╝  ╚═╝ ╚═════╝    ╚═╝   
- ShotScript — TypeScript. One way to do everything.
+ ShotScript — TypeScript, one way.
 ```
 
-TypeScript has four ways to write a function, three ways to handle errors, two ways to declare a type — and most codebases use all of them. shot removes the extras and keeps one of each.
-
-No arrow functions. No `throw`. No `class`. No `interface`. No `any`. No ternary. No optional properties. The rules aren't configurable — that's the point. Consistency you don't have to think about.
+Four ways to write a function. Three ways to handle errors. Two ways to declare a type. Most codebases use all of them. shot keeps one of each.
 
 - **File extension / CLI:** `.shot` + `shot` command
-- **Runtime:** Deno (type-checks before running, like `go run`)
-- **LLM-friendly:** one form per construct — models generate consistent, statically-checkable code without needing to read implementation details
+- **Runtime:** Deno — validates and type-checks before running
+- **LLM-friendly:** one form per construct — models generate correct, consistent code without reading the codebase first
 
 ## Quick taste
 
@@ -35,6 +33,32 @@ async function getUser(id: number): Promise<[User | null, Error | null]> {
 ```
 
 No arrow functions. No `throw`. No `interface`. No `class`. No `any`. No `as`. No ternaries. No third-party imports outside the `shot:` and `jsr:@shotscript/*` namespaces (relative `.shot` imports allowed). The list of what's banned is the language.
+
+## Install
+
+```
+curl -fsSL https://shot.didley.dev/install.sh | sh
+```
+
+Verify:
+```
+shot --version
+```
+
+The installer is a small script that handles everything needed to run shot on your machine. Read it first if you prefer — it's published alongside every release.
+
+Windows installer and prebuilt binaries are on the roadmap.
+
+## CLI
+
+```
+shot init <name>         Scaffold a new project directory.
+shot check [files...]    Validate .shot files.
+shot fmt [files...]      Format in-place via deno fmt.
+shot build [files...]    Validate → type-check.
+shot run <file>          Validate → type-check → run via Deno.
+shot test [files...]     Validate → type-check → run *.test.shot files.
+```
 
 ## What the simplifications look like
 
@@ -81,7 +105,7 @@ function getUser(id: number): [User | null, Error | null] { ... }
 type User = { readonly id: number; readonly name: string }
 type AdminUser = User & { readonly role: 'admin' }
 
-// ShotScript — embed as a named field (Go/Rust-style composition)
+// ShotScript — embed as a named field
 type User = { readonly id: number; readonly name: string }
 type AdminUser = { readonly user: User; readonly role: 'admin' }
 
@@ -149,32 +173,6 @@ function roleLabel(isAdmin: boolean, isSuperAdmin: boolean): string {
 }
 ```
 
-## Install
-
-```
-curl -fsSL https://shot.didley.dev/install.sh | sh
-```
-
-Verify:
-```
-shot --version
-```
-
-The installer is a small script that handles everything needed to run shot on your machine. Read it first if you prefer — it's published alongside every release.
-
-Windows installer and prebuilt binaries are on the roadmap.
-
-## CLI
-
-```
-shot init <name>         Scaffold a new project directory.
-shot check [files...]    Validate .shot files.
-shot fmt [files...]      Format in-place via deno fmt.
-shot build [files...]    Validate → type-check.
-shot run <file>          Validate → type-check → run via Deno.
-shot test [files...]     Validate → type-check → run *.test.shot files.
-```
-
 ## Ecosystem
 
 ```mermaid
@@ -207,7 +205,3 @@ ShotScript is the full opinionated language — `.shot` files, `shot:std`, Deno 
 - [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — how the toolchain works
 - [`docs/STDLIB.md`](docs/STDLIB.md) — the `shot:std` v1 surface
 - [`docs/CLI.md`](docs/CLI.md) — command reference
-
-## Status
-
-v1 complete.
