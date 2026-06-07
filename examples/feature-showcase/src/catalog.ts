@@ -4,7 +4,7 @@ import type { Book, CatalogEntry, CatalogError, Category, Audit } from "./types.
 import { newNotFoundError, newDuplicateError, newValidationError } from "./types.js"
 
 // Map<K, V> for dictionaries — not Record<K, V>, not index signatures
-export type Catalog = Map<string, CatalogEntry>
+export type Catalog = ReadonlyMap<string, CatalogEntry>
 
 export function createCatalog(): Catalog {
     return new Map<string, CatalogEntry>()
@@ -67,7 +67,7 @@ export function importFromJson(json: string, addedBy: string): Result<Catalog, E
     if (parseErr !== null) {
         return [null, wrapError("importFromJson: parse failed", parseErr)]
     }
-    const catalog = createCatalog()
+    const catalog = new Map<string, CatalogEntry>()
     for (const book of books) {
         if (catalog.has(book.id)) {
             return [null, new Error(`importFromJson: duplicate id "${book.id}"`)]

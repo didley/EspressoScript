@@ -1,4 +1,4 @@
-import { toResult, toPromiseResult, wrapError, jsonParse } from "shotscript/std"
+import { toResult, toPromiseResult, wrapError, jsonParse, safeURL } from "shotscript/std"
 import type { Result, PromiseResult } from "shotscript/std"
 import { Category, newNotFoundError, newDuplicateError } from "./types.js"
 import type { Book, CatalogEntry, CatalogError, Audit } from "./types.js"
@@ -31,9 +31,7 @@ async function readTextFile(path: string): PromiseResult<string> {
 // toResult catches throws and converts them to the tuple pattern
 
 function parseUrl(href: string): Result<URL> {
-    return toResult(function constructUrl(): URL {
-        return new URL(href)
-    })
+    return safeURL(href)
 }
 
 // --- Discriminated union error handling ---
