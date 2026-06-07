@@ -1,5 +1,5 @@
 import type ts from 'typescript'
-import { check } from './linter/index.js'
+import { check } from './lint/index.js'
 
 /** TypeScript language service plugin that surfaces ShotScript diagnostics in the editor. */
 function init(modules: {

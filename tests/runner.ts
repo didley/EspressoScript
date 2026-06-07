@@ -2,7 +2,7 @@ import { test } from "node:test"
 import assert from "node:assert/strict"
 import { readFileSync, readdirSync } from "node:fs"
 import { join, resolve } from "node:path"
-import { check } from "../src/linter/index.ts"
+import { check } from "../src/lint/index.ts"
 
 const PASS_DIR = resolve(import.meta.dirname ?? __dirname, "fixtures/pass")
 const FAIL_DIR = resolve(import.meta.dirname ?? __dirname, "fixtures/fail")
