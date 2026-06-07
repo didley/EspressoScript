@@ -22,19 +22,33 @@
                 --num: #f78c6c;
             }
 
-            * { box-sizing: border-box; margin: 0; padding: 0; }
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
 
             body {
                 background: var(--bg);
                 color: var(--text);
-                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+                font-family:
+                    -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
                 font-size: 16px;
                 line-height: 1.6;
             }
 
-            a { color: var(--accent); text-decoration: none; }
-            a:hover { text-decoration: underline; }
-            a.ext::after { content: " ↗"; font-size: 0.75em; opacity: 0.5; }
+            a {
+                color: var(--accent);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            a.ext::after {
+                content: " ↗";
+                font-size: 0.75em;
+                opacity: 0.5;
+            }
 
             nav {
                 display: flex;
@@ -56,8 +70,12 @@
                 letter-spacing: -0.02em;
                 text-decoration: none;
             }
-            .nav-logo .brand { color: var(--accent); }
-            .nav-logo .route { color: var(--text); }
+            .nav-logo .brand {
+                color: var(--accent);
+            }
+            .nav-logo .route {
+                color: var(--text);
+            }
 
             .nav-links {
                 display: flex;
@@ -75,7 +93,9 @@
                 background: rgba(255, 255, 255, 0.05);
                 text-decoration: none;
             }
-            .nav-links a[aria-current="page"] { color: var(--text); }
+            .nav-links a[aria-current="page"] {
+                color: var(--text);
+            }
 
             .nav-divider {
                 width: 1px;
@@ -86,7 +106,9 @@
                 list-style: none;
             }
 
-            .nav-ext { font-size: 0.78rem !important; }
+            .nav-ext {
+                font-size: 0.78rem !important;
+            }
 
             .page-header {
                 max-width: 860px;
@@ -196,8 +218,12 @@
                 font-family: "SF Mono", "Fira Code", monospace;
                 font-size: 0.82rem;
             }
-            .install-cmd .prompt { color: var(--muted); }
-            .install-cmd .cmd { color: var(--green); }
+            .install-cmd .prompt {
+                color: var(--muted);
+            }
+            .install-cmd .cmd {
+                color: var(--green);
+            }
 
             .install-note {
                 font-size: 0.8rem;
@@ -222,7 +248,9 @@
                 color: var(--muted);
                 margin-bottom: 2.5rem;
             }
-            .callout strong { color: var(--text); }
+            .callout strong {
+                color: var(--text);
+            }
             .callout code {
                 font-family: "SF Mono", "Fira Code", monospace;
                 font-size: 0.8em;
@@ -291,11 +319,18 @@
                 border-bottom: 1px solid var(--border);
                 align-items: start;
             }
-            .step-item:last-child { border-bottom: none; }
-            .step-item:nth-child(even) { background: #131318; }
+            .step-item:last-child {
+                border-bottom: none;
+            }
+            .step-item:nth-child(even) {
+                background: #131318;
+            }
 
             @media (max-width: 600px) {
-                .step-item { grid-template-columns: 1fr; gap: 0.25rem; }
+                .step-item {
+                    grid-template-columns: 1fr;
+                    gap: 0.25rem;
+                }
             }
 
             .step-key {
@@ -329,16 +364,36 @@
                 white-space: pre;
             }
 
-            .kw { color: var(--keyword); }
-            .ty { color: var(--type); }
-            .fn { color: var(--fn); }
-            .st { color: var(--string); }
-            .cm { color: var(--comment); }
-            .nu { color: var(--num); }
-            .op { color: var(--muted); }
-            .id { color: var(--muted); }
+            .kw {
+                color: var(--keyword);
+            }
+            .ty {
+                color: var(--type);
+            }
+            .fn {
+                color: var(--fn);
+            }
+            .st {
+                color: var(--string);
+            }
+            .cm {
+                color: var(--comment);
+            }
+            .nu {
+                color: var(--num);
+            }
+            .op {
+                color: var(--muted);
+            }
+            .id {
+                color: var(--muted);
+            }
 
-            hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
+            hr {
+                border: none;
+                border-top: 1px solid var(--border);
+                margin: 2.5rem 0;
+            }
 
             .page-toc-wrap {
                 padding: 0.75rem 2rem 1.75rem;
@@ -378,7 +433,8 @@
     <body>
         <nav>
             <a href="/" class="nav-logo">
-                <span class="brand">ShotScript</span><span class="route">/skills</span>
+                <span class="brand">ShotScript</span
+                ><span class="route">Skills</span>
             </a>
             <ul class="nav-links">
                 <li><a href="/">ShotScript</a></li>
@@ -388,8 +444,24 @@
                 <li><a href="/std/">Std</a></li>
                 <li><a href="/skills/" aria-current="page">Skills</a></li>
                 <li class="nav-divider" aria-hidden="true"></li>
-                <li><a href="https://github.com/didley/shotscript" class="nav-ext" target="_blank" rel="noopener">GitHub ↗</a></li>
-                <li><a href="https://www.npmjs.com/package/shotscript" class="nav-ext" target="_blank" rel="noopener">npm ↗</a></li>
+                <li>
+                    <a
+                        href="https://github.com/didley/shotscript"
+                        class="nav-ext"
+                        target="_blank"
+                        rel="noopener"
+                        >GitHub ↗</a
+                    >
+                </li>
+                <li>
+                    <a
+                        href="https://www.npmjs.com/package/shotscript"
+                        class="nav-ext"
+                        target="_blank"
+                        rel="noopener"
+                        >npm ↗</a
+                    >
+                </li>
             </ul>
         </nav>
 
@@ -397,10 +469,10 @@
             <div class="page-badge">ShotScriptSkills</div>
             <h1>Three commands. <em>Zero manual rewrites.</em></h1>
             <p class="sub">
-                Claude Code slash commands that understand every ShotScript rule.
-                Fix violations in-place, migrate entire codebases, or explain
-                any rule on demand — without introducing new violations while
-                fixing existing ones.
+                Claude Code slash commands that understand every ShotScript
+                rule. Fix violations in-place, migrate entire codebases, or
+                explain any rule on demand — without introducing new violations
+                while fixing existing ones.
             </p>
         </div>
 
@@ -414,13 +486,14 @@
         </div>
 
         <div class="content">
-
             <div class="callout">
-                <strong>No gradual migration path — unless you use Claude.</strong>
-                Rules like <code>no-class</code> and <code>no-throw</code> require
-                architectural rewrites, not search-and-replace.
-                <code>/shotscript-migrate</code> handles the rewrite, including
-                updating every call site.
+                <strong
+                    >No gradual migration path — unless you use Claude.</strong
+                >
+                Rules like <code>no-class</code> and
+                <code>no-throw</code> require architectural rewrites, not
+                search-and-replace. <code>/shotscript-migrate</code> handles the
+                rewrite, including updating every call site.
             </div>
 
             <!-- ── FIX ── -->
@@ -429,30 +502,48 @@
                     <span class="cmd-name">/shotscript-fix</span>
                 </div>
                 <p class="cmd-desc">
-                    Runs the linter against your source files, reads every flagged
-                    file, and rewrites violations in-place. Re-runs until zero
-                    violations remain. Pass a glob to target specific files, or
-                    omit it to let the command infer from <code>package.json</code>.
+                    Runs the linter against your source files, reads every
+                    flagged file, and rewrites violations in-place. Re-runs
+                    until zero violations remain. Pass a glob to target specific
+                    files, or omit it to let the command infer from
+                    <code>package.json</code>.
                 </p>
 
                 <div class="step-list">
                     <div class="step-item">
                         <span class="step-key">1. Run linter</span>
-                        <span class="step-val">Executes <code>npx shotscript 'src/**/*.ts'</code> and parses the output — one violation per line in <code>file:line:col [rule] message</code> format.</span>
+                        <span class="step-val"
+                            >Executes
+                            <code>npx shotscript 'src/**/*.ts'</code> and parses
+                            the output — one violation per line in
+                            <code>file:line:col [rule] message</code>
+                            format.</span
+                        >
                     </div>
                     <div class="step-item">
                         <span class="step-key">2. Fix per rule</span>
-                        <span class="step-val">Applies the correct rewrite for each rule — <code>interface</code> → <code>type</code>, <code>T[]</code> → <code>readonly T[]</code>, <code>throw</code> → <code>return [null, err]</code>, and all others. Never introduces new violations while fixing.</span>
+                        <span class="step-val"
+                            >Applies the correct rewrite for each rule —
+                            <code>interface</code> → <code>type</code>,
+                            <code>T[]</code> → <code>readonly T[]</code>,
+                            <code>throw</code> →
+                            <code>return [null, err]</code>, and all others.
+                            Never introduces new violations while fixing.</span
+                        >
                     </div>
                     <div class="step-item">
                         <span class="step-key">3. Verify</span>
-                        <span class="step-val">Re-runs the linter after each file. Repeats until the output is clean.</span>
+                        <span class="step-val"
+                            >Re-runs the linter after each file. Repeats until
+                            the output is clean.</span
+                        >
                     </div>
                 </div>
 
                 <p class="section-desc" style="margin-bottom: 0">
-                    Best for: day-to-day use when you wrote something that triggered a rule
-                    and want it fixed without looking up the correct form.
+                    Best for: day-to-day use when you wrote something that
+                    triggered a rule and want it fixed without looking up the
+                    correct form.
                 </p>
             </div>
 
@@ -471,26 +562,52 @@
                 <div class="step-list">
                     <div class="step-item">
                         <span class="step-key">Phase 1 — Audit</span>
-                        <span class="step-val">Counts violations per rule, categorises them as mechanical or structural, and confirms with you before making any changes.</span>
+                        <span class="step-val"
+                            >Counts violations per rule, categorises them as
+                            mechanical or structural, and confirms with you
+                            before making any changes.</span
+                        >
                     </div>
                     <div class="step-item">
                         <span class="step-key">Phase 2 — Mechanical</span>
-                        <span class="step-val">Fixes safe, local rewrites first: <code>interface</code> → <code>type</code>, optional properties → <code>| null</code>, <code>T[]</code> → <code>readonly T[]</code>, <code>let</code> → <code>const</code>, <code>==</code> → <code>===</code>, <code>enum</code> → <code>as const</code>, and more.</span>
+                        <span class="step-val"
+                            >Fixes safe, local rewrites first:
+                            <code>interface</code> → <code>type</code>, optional
+                            properties → <code>| null</code>, <code>T[]</code> →
+                            <code>readonly T[]</code>, <code>let</code> →
+                            <code>const</code>, <code>==</code> →
+                            <code>===</code>, <code>enum</code> →
+                            <code>as const</code>, and more.</span
+                        >
                     </div>
                     <div class="step-item">
                         <span class="step-key">Phase 3 — Structural</span>
-                        <span class="step-val">Tackles changes that cascade across call sites: arrow functions → named <code>function</code> declarations, classes → plain types + functions, <code>throw</code>/<code>try</code> → <code>Result</code> tuple returns with <code>toResult</code>/<code>safeFetch</code> from <code>shotscript/std</code>. Updates every call site.</span>
+                        <span class="step-val"
+                            >Tackles changes that cascade across call sites:
+                            arrow functions → named
+                            <code>function</code> declarations, classes → plain
+                            types + functions, <code>throw</code>/<code
+                                >try</code
+                            >
+                            → <code>Result</code> tuple returns with
+                            <code>toResult</code>/<code>safeFetch</code> from
+                            <code>shotscript/std</code>. Updates every call
+                            site.</span
+                        >
                     </div>
                     <div class="step-item">
                         <span class="step-key">Phase 4 — Verify</span>
-                        <span class="step-val">Final linter pass. Zero violations is the target before finishing.</span>
+                        <span class="step-val"
+                            >Final linter pass. Zero violations is the target
+                            before finishing.</span
+                        >
                     </div>
                 </div>
 
                 <p class="section-desc" style="margin-bottom: 0">
-                    Best for: onboarding an existing TypeScript project to ShotScript.
-                    The structural phase handles the rewrites that would otherwise
-                    require days of manual work.
+                    Best for: onboarding an existing TypeScript project to
+                    ShotScript. The structural phase handles the rewrites that
+                    would otherwise require days of manual work.
                 </p>
             </div>
 
@@ -502,26 +619,39 @@
                 <p class="cmd-desc">
                     Explains any ShotScript rule or violation. Pass a rule name
                     or paste a full violation line from the linter output — the
-                    command returns what's banned, why, and a before/after example.
+                    command returns what's banned, why, and a before/after
+                    example.
                 </p>
 
                 <div class="step-list">
                     <div class="step-item">
                         <span class="step-key">Input</span>
-                        <span class="step-val">A rule name (e.g. <code>no-arrow-functions</code>), or a pasted violation line (e.g. <code>src/api.ts:12:5 [no-throw] Use return instead of throw.</code>)</span>
+                        <span class="step-val"
+                            >A rule name (e.g. <code>no-arrow-functions</code>),
+                            or a pasted violation line (e.g.
+                            <code
+                                >src/api.ts:12:5 [no-throw] Use return instead
+                                of throw.</code
+                            >)</span
+                        >
                     </div>
                     <div class="step-item">
                         <span class="step-key">Output</span>
-                        <span class="step-val"><strong>What's banned</strong> — the specific construct with an example. <strong>Why</strong> — the design principle in one sentence. <strong>The fix</strong> — a before/after code pair showing the ShotScript-compliant form.</span>
+                        <span class="step-val"
+                            ><strong>What's banned</strong> — the specific
+                            construct with an example. <strong>Why</strong> —
+                            the design principle in one sentence.
+                            <strong>The fix</strong> — a before/after code pair
+                            showing the ShotScript-compliant form.</span
+                        >
                     </div>
                 </div>
 
                 <p class="section-desc" style="margin-bottom: 0">
-                    Best for: onboarding new team members to the dialect, or quickly
-                    looking up the correct form for an unfamiliar rule.
+                    Best for: onboarding new team members to the dialect, or
+                    quickly looking up the correct form for an unfamiliar rule.
                 </p>
             </div>
-
         </div>
 
         <hr />
@@ -535,17 +665,30 @@
                 </div>
             </div>
             <p class="install-note">
-                Copies <code>/shotscript-fix</code>, <code>/shotscript-migrate</code>, and
-                <code>/shotscript-explain</code> into <code>.claude/commands/</code> in
-                your project. Requires
-                <a href="https://claude.ai/code" target="_blank" rel="noopener" class="ext">Claude Code</a>.
+                Copies <code>/shotscript-fix</code>,
+                <code>/shotscript-migrate</code>, and
+                <code>/shotscript-explain</code> into
+                <code>.claude/commands/</code> in your project. Requires
+                <a
+                    href="https://claude.ai/code"
+                    target="_blank"
+                    rel="noopener"
+                    class="ext"
+                    >Claude Code</a
+                >.
             </p>
         </div>
 
-
         <footer>
             <p>
-                By <a href="https://github.com/didley" target="_blank" rel="noopener">didley</a> in Melbourne (Naarm), Australia.
+                By
+                <a
+                    href="https://github.com/didley"
+                    target="_blank"
+                    rel="noopener"
+                    >didley</a
+                >
+                in Melbourne (Naarm), Australia.
             </p>
         </footer>
     </body>
