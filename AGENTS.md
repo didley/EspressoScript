@@ -668,8 +668,10 @@ import { add } from './math/add.js'
 ShotScript targets developers who know TypeScript but may not know language theory. All site copy, rule descriptions, and error messages should use plain language approachable to new developers.
 
 **Prefer outcome language over mechanism language:**
-- ✅ "~70% fewer ways to write the same thing" — developers immediately understand fewer choices
-- ❌ "~70% of valid TypeScript syntax forms removed" — "valid forms" is language-spec jargon
+- ✅ "~79% fewer ways to write the same thing" — developers immediately understand fewer choices
+- ❌ "~79% of valid TypeScript syntax forms removed" — "valid forms" is language-spec jargon
+
+The ~79% figure is computed in `scripts/reduction.mjs` (`npm run reduction`). Update both that file and `site/index.html` when rules change.
 
 **Explain constraints as simplifications, not restrictions:**
 - ✅ "one way to say nothing: `null`" — frames the rule as reducing cognitive load
