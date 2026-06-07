@@ -552,9 +552,9 @@
                     </div>
                     <pre><span class="kw">const</span> <span class="op">items</span>: <span class="kw">readonly</span> <span class="ty">string</span>[] = <span class="fn">getItems</span>()
 
-<span class="cm">// first: string | undefined</span>
-<span class="kw">const</span> <span class="op">first</span> = <span class="op">items</span>[<span class="nu">0</span>]
-<span class="kw">if</span> (<span class="op">first</span> === <span class="kw">undefined</span>) {
+<span class="cm">// collapse undefined to null at the access site</span>
+<span class="kw">const</span> <span class="op">first</span> = <span class="op">items</span>[<span class="nu">0</span>] ?? <span class="kw">null</span>  <span class="cm">// string | null</span>
+<span class="kw">if</span> (<span class="op">first</span> === <span class="kw">null</span>) {
     <span class="kw">return</span> [<span class="kw">null</span>, <span class="kw">new</span> <span class="ty">Error</span>(<span class="st">'empty list'</span>)]
 }
 <span class="fn">process</span>(<span class="op">first</span>.<span class="fn">toUpperCase</span>()) <span class="cm">// ✓ safe</span></pre>

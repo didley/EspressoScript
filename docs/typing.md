@@ -53,9 +53,9 @@ process(first.toUpperCase()) // 💥 runtime
 ```ts ✅
 const items: readonly string[] = getItems()
 
-// first: string | undefined
-const first = items[0]
-if (first === undefined) {
+// collapse undefined to null at the access site
+const first = items[0] ?? null  // string | null
+if (first === null) {
     return [null, new Error('empty list')]
 }
 process(first.toUpperCase()) // ✓ safe
