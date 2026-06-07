@@ -54,11 +54,19 @@ src/
 2. Import and add it to the array in `src/lint/rules/all.ts`.
 3. Add a fixture file to `tests/pass/` or `tests/fail/` — the test runner picks them up automatically.
 
+**Rule implementation must itself be valid ShotScript.** Common pitfalls when writing rule files:
+
+- **Use `ctx.report(...)`, not `ctx.push(...)`** — `push` is banned by `no-mutating-array-methods`. `Context.report` is the correct method name.
+- **No arrow functions in callbacks** — `members.every(member => ...)` is banned. Extract a named `function` and pass it: `members.every(isReadonlyProperty)`.
+- **No ternary chains for lookup** — `method === 'a' ? x : method === 'b' ? y : z` is banned. Use a module-level `ReadonlyMap` instead and call `.get()`.
+- **No non-null assertions** — `map.get(key)!` is banned. Guard with `if (value === undefined) return` after `.get()`.
+- **Module-level constants** — put `BANNED` sets/maps at module scope, not inside `visit`. They're constructed once per rule, not per node.
+
 ### Key constraints
 
 - **Never hardcode compiler options** in `lintCli.ts`. Always read the user's `tsconfig.json` via `ts.findConfigFile`. Users choose their own `target`, `lib`, `paths`, etc.
 - **One shared `ts.createProgram`** per CLI run. Creating a program per file adds ~50s to a 30-file run. The `check()` fallback exists for tests only.
-- **Rules must be side-effect free** — `visit` only calls `ctx.push()` to emit diagnostics. No state between files.
+- **Rules must be side-effect free** — `visit` only calls `ctx.report()` to emit diagnostics. No state between files.
 - **The linter itself must pass its own rules.** The pre-commit hook runs `npm run lint` over `src/`. Any new code in `src/` must be valid ShotScript.
 
 ---
@@ -411,6 +419,21 @@ if (err1 !== null) { return [null, err1] }
 const [v2, err2] = addBook(v1, bookB, 'seed')
 if (err2 !== null) { return [null, err2] }
 ```
+
+**Pattern 3 — sequential async collection (for-await + index assignment):**
+
+When you need to `await` inside a loop and collect results into a flat array, `Promise.all` is banned and `let` is banned outside `for` headers. Use index assignment on a `const` array (index assignment is not a method call — `no-mutating-array-methods` doesn't fire):
+
+```ts
+const fileGroups = []
+for (const pattern of patterns) {
+    const matches = await glob(pattern, { absolute: true })
+    fileGroups[fileGroups.length] = matches   // index assignment, not .push()
+}
+const files = fileGroups.flat()              // .flat() is not mutating — fine
+```
+
+Do not annotate `fileGroups` or `files` with an explicit array type — `require-readonly-arrays` would flag `string[][]`. Let TypeScript infer.
 
 **While loops without `let` — check external mutable state:**
 
