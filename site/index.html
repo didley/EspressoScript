@@ -395,6 +395,30 @@
             .op { color: var(--muted); }
             .id { color: var(--text); }
 
+            /* ── Page TOC ── */
+            .page-toc {
+                max-width: 860px;
+                margin: 0 auto;
+                padding: 0 2rem;
+                display: flex;
+                gap: 0.25rem;
+                flex-wrap: wrap;
+            }
+
+            .page-toc a {
+                font-size: 0.8rem;
+                color: var(--muted);
+                padding: 0.3rem 0.7rem;
+                border-radius: 5px;
+                border: 1px solid var(--border);
+                background: var(--surface);
+            }
+            .page-toc a:hover {
+                color: var(--text);
+                border-color: var(--accent);
+                text-decoration: none;
+            }
+
             footer {
                 text-align: center;
                 padding: 2.5rem 2rem;
@@ -424,6 +448,13 @@
                 TypeScript extracted to its canonical form. Go's "one way"
                 philosophy applied to the TS/JS ecosystem.
             </p>
+        </div>
+
+        <div class="page-toc" style="padding-bottom: 2rem">
+            <a href="#problem">The problem</a>
+            <a href="#what">What is ShotScript</a>
+            <a href="#install">Install</a>
+            <a href="#before-after">Before / after</a>
         </div>
 
         <hr class="divider" />
