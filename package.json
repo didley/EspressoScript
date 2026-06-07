@@ -10,26 +10,26 @@
   },
   "exports": {
     ".": {
-      "import": "./dist/checker/index.js",
-      "types": "./dist/checker/index.d.ts"
+      "import": "./dist/linter/index.js",
+      "types": "./dist/linter/index.d.ts"
     },
     "./std": {
       "import": "./dist/std/index.js",
       "types": "./dist/std/index.d.ts"
     },
-    "./plugin": "./dist/plugin.cjs",
-    "./tsconfig/shotscript.json": "./tsconfig/shotscript.json",
-    "./fmt": "./fmt/shotscript.json"
+    "./plugin": "./dist/tsPlugin.cjs",
+    "./tsconfig/shotscript.json": "./src/tsconfig/shotscript.json",
+    "./fmt": "./src/fmt/shotscript.json"
   },
-  "main": "./dist/checker/index.js",
-  "types": "./dist/checker/index.d.ts",
+  "main": "./dist/linter/index.js",
+  "types": "./dist/linter/index.d.ts",
   "files": [
     "dist/",
-    "tsconfig/",
-    "fmt/"
+    "src/tsconfig/",
+    "src/fmt/"
   ],
   "scripts": {
-    "build": "tsc && esbuild src/plugin.ts --bundle --platform=node --format=cjs --external:typescript --outfile=dist/plugin.cjs --footer:js='module.exports=module.exports.default??module.exports;'",
+    "build": "tsc && esbuild src/tsPlugin.ts --bundle --platform=node --format=cjs --external:typescript --outfile=dist/tsPlugin.cjs --footer:js='module.exports=module.exports.default??module.exports;'",
     "test": "node --import tsx/esm tests/runner.ts && node --import tsx/esm --test tests/std.test.ts",
     "check": "tsc --noEmit",
     "prepare": "git config core.hooksPath .githooks || true"

@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs'
 import { glob } from 'glob'
-import { check } from './checker/index.js'
+import { check } from './linter/index.js'
 
 const patterns = process.argv.slice(2)
 
