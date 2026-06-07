@@ -445,6 +445,69 @@
                 border-top: 1px solid var(--border);
             }
 
+            /* ── What gets removed ── */
+            .removed-section {
+                max-width: 860px;
+                margin: 0 auto;
+                padding: 0 2rem 4rem;
+            }
+
+            .pct-grid {
+                display: flex;
+                flex-direction: column;
+                gap: 1.1rem;
+            }
+
+            .pct-row {
+                display: grid;
+                grid-template-columns: 260px 1fr 64px;
+                gap: 1.25rem;
+                align-items: center;
+            }
+
+            @media (max-width: 620px) {
+                .pct-row {
+                    grid-template-columns: 1fr 80px 48px;
+                    gap: 0.75rem;
+                }
+                .pct-meta { grid-column: 1 / -1; }
+            }
+
+            .pct-cat {
+                font-size: 0.875rem;
+                font-weight: 600;
+                color: var(--text);
+                margin-bottom: 0.2rem;
+            }
+
+            .pct-items {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.68rem;
+                color: var(--muted);
+            }
+
+            .pct-bar-wrap {
+                height: 5px;
+                background: var(--surface);
+                border: 1px solid var(--border);
+                border-radius: 3px;
+                overflow: hidden;
+            }
+
+            .pct-bar-fill {
+                height: 100%;
+                background: var(--accent);
+                border-radius: 3px;
+                opacity: 0.65;
+            }
+
+            .pct-value {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.72rem;
+                color: var(--muted);
+                text-align: right;
+            }
+
             footer {
                 text-align: center;
                 padding: 2.5rem 2rem;
@@ -514,9 +577,9 @@
             <div class="section-label">Example</div>
             <h2>What linting looks like.</h2>
             <p class="section-desc">
-                Both sides use ShotScript formatting — 4-space indent, no
-                semis, 80-char. The only difference is whether the lint
-                rules pass.
+                Eight violations, one file. Intersection types, three
+                different function styles, optional params, ternaries,
+                try/catch — common patterns that ShotScript rejects.
             </p>
 
             <div class="comparison">
@@ -524,32 +587,36 @@
                     <div class="pane-label">
                         <span class="dot dot-red"></span>TypeScript
                     </div>
-                    <pre><span class="kw">import</span> { <span class="fn">db</span> } <span class="kw">from</span> <span class="st">'./db'</span>
-
-<span class="cm">// ❌ interface (use type)</span>
-<span class="kw">interface</span> <span class="ty">User</span> {
+                    <pre><span class="cm">// ❌ interface</span>
+<span class="kw">interface</span> <span class="ty">BaseUser</span> {
     <span class="id">id</span>: <span class="ty">number</span>
-    <span class="id">name</span>: <span class="ty">string</span>
-    <span class="cm">// ❌ optional property</span>
-    <span class="id">avatar</span>?: <span class="ty">string</span>
+    <span class="id">createdAt</span>: <span class="ty">Date</span>
 }
 
-<span class="cm">// ❌ arrow function, optional param</span>
-<span class="kw">const</span> <span class="fn">findUser</span> = <span class="kw">async</span> (<span class="id">id</span>?: <span class="ty">number</span>) => {
-    <span class="cm">// ❌ try/catch</span>
+<span class="cm">// ❌ intersection — what fields does Admin have?</span>
+<span class="kw">type</span> <span class="ty">Admin</span> = <span class="ty">BaseUser</span> & {
+    <span class="id">role</span>?: <span class="st">'admin'</span> | <span class="st">'superadmin'</span>  <span class="cm">// ❌ optional</span>
+    <span class="id">permissions</span>?: <span class="ty">string</span>[]           <span class="cm">// ❌ optional</span>
+}
+
+<span class="cm">// ❌ arrow fn · optional param · ternary</span>
+<span class="kw">const</span> <span class="fn">getLabel</span> = (<span class="id">a</span>?: <span class="ty">Admin</span>): <span class="ty">string</span> =>
+    <span class="id">a</span>?.<span class="id">role</span> === <span class="st">'superadmin'</span> ? <span class="st">'Super'</span> : <span class="st">'Admin'</span>
+
+<span class="cm">// ❌ arrow fn · try/catch · as assertion</span>
+<span class="kw">const</span> <span class="fn">findAdmin</span> = <span class="kw">async</span> (
+    <span class="id">id</span>: <span class="ty">number</span>
+): <span class="ty">Promise</span>&lt;<span class="ty">Admin</span>&gt; => {
     <span class="kw">try</span> {
-        <span class="kw">const</span> <span class="id">res</span> = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="st">`/users/<span class="op">${</span><span class="id">id</span><span class="op">}</span>`</span>)
-        <span class="cm">// ❌ type assertion</span>
-        <span class="kw">return</span> <span class="id">res</span>.<span class="fn">json</span>() <span class="kw">as</span> <span class="ty">User</span>
+        <span class="kw">const</span> <span class="id">res</span> = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="st">`/admins/<span class="op">${</span><span class="id">id</span><span class="op">}</span>`</span>)
+        <span class="kw">return</span> <span class="id">res</span>.<span class="fn">json</span>() <span class="kw">as</span> <span class="ty">Admin</span>
     } <span class="kw">catch</span> (<span class="id">e</span>) {
-        <span class="cm">// ❌ throw</span>
-        <span class="kw">throw new</span> <span class="ty">Error</span>(<span class="st">`findUser failed: <span class="op">${</span><span class="id">e</span><span class="op">}</span>`</span>)
+        <span class="kw">throw new</span> <span class="ty">Error</span>(<span class="st">`failed: <span class="op">${</span><span class="id">e</span><span class="op">}</span>`</span>)
     }
 }
 
-<span class="cm">// ❌ arrow function</span>
-<span class="kw">const</span> <span class="fn">formatName</span> = (<span class="id">user</span>: <span class="ty">User</span>): <span class="ty">string</span> =>
-    <span class="id">user</span>.<span class="id">name</span>.<span class="fn">trim</span>()</pre>
+<span class="cm">// ❌ anonymous callback</span>
+<span class="kw">const</span> <span class="id">ids</span> = <span class="id">admins</span>.<span class="fn">map</span>(<span class="id">a</span> => <span class="id">a</span>.<span class="id">id</span>)</pre>
                 </div>
                 <div class="pane-after">
                     <div class="pane-label">
@@ -558,26 +625,106 @@
                     <pre><span class="kw">import type</span> { <span class="ty">PromiseResult</span> } <span class="kw">from</span> <span class="st">'shotscript/std'</span>
 <span class="kw">import</span> { <span class="fn">safeFetch</span>, <span class="fn">jsonParse</span> } <span class="kw">from</span> <span class="st">'shotscript/std'</span>
 
-<span class="kw">type</span> <span class="ty">User</span> = {
+<span class="kw">type</span> <span class="ty">BaseUser</span> = {
     <span class="kw">readonly</span> <span class="id">id</span>: <span class="ty">number</span>
-    <span class="kw">readonly</span> <span class="id">name</span>: <span class="ty">string</span>
-    <span class="cm">// null — the only absent value</span>
-    <span class="kw">readonly</span> <span class="id">avatar</span>: <span class="ty">string</span> | <span class="kw">null</span>
+    <span class="kw">readonly</span> <span class="id">createdAt</span>: <span class="ty">Date</span>
 }
 
-<span class="kw">async function</span> <span class="fn">findUser</span>(
+<span class="cm">// embed — no & — every field is visible here</span>
+<span class="kw">type</span> <span class="ty">Admin</span> = {
+    <span class="kw">readonly</span> <span class="id">user</span>: <span class="ty">BaseUser</span>
+    <span class="kw">readonly</span> <span class="id">role</span>: <span class="st">'admin'</span> | <span class="st">'superadmin'</span>
+    <span class="kw">readonly</span> <span class="id">permissions</span>: <span class="kw">readonly</span> <span class="ty">string</span>[] | <span class="kw">null</span>
+}
+
+<span class="kw">function</span> <span class="fn">getLabel</span>(<span class="id">admin</span>: <span class="ty">Admin</span>): <span class="ty">string</span> {
+    <span class="kw">if</span> (<span class="id">admin</span>.<span class="id">role</span> === <span class="st">'superadmin'</span>) {
+        <span class="kw">return</span> <span class="st">'Super Admin'</span>
+    }
+    <span class="kw">return</span> <span class="st">'Admin'</span>
+}
+
+<span class="kw">async function</span> <span class="fn">findAdmin</span>(
     <span class="id">id</span>: <span class="ty">number</span>,
-): <span class="ty">PromiseResult</span>&lt;<span class="ty">User</span>&gt; {
-    <span class="kw">const</span> [<span class="id">res</span>, <span class="id">err</span>] = <span class="kw">await</span> <span class="fn">safeFetch</span>(<span class="st">`/users/<span class="op">${</span><span class="id">id</span><span class="op">}</span>`</span>)
+): <span class="ty">PromiseResult</span>&lt;<span class="ty">Admin</span>&gt; {
+    <span class="kw">const</span> [<span class="id">res</span>, <span class="id">err</span>] = <span class="kw">await</span> <span class="fn">safeFetch</span>(<span class="st">`/admins/<span class="op">${</span><span class="id">id</span><span class="op">}</span>`</span>)
     <span class="kw">if</span> (<span class="id">err</span> !== <span class="kw">null</span>) {
         <span class="kw">return</span> [<span class="kw">null</span>, <span class="id">err</span>]
     }
-    <span class="kw">return</span> <span class="fn">jsonParse</span>&lt;<span class="ty">User</span>&gt;(<span class="kw">await</span> <span class="id">res</span>.<span class="fn">text</span>())
+    <span class="kw">return</span> <span class="fn">jsonParse</span>&lt;<span class="ty">Admin</span>&gt;(<span class="kw">await</span> <span class="id">res</span>.<span class="fn">text</span>())
 }
 
-<span class="kw">function</span> <span class="fn">formatName</span>(<span class="id">user</span>: <span class="ty">User</span>): <span class="ty">string</span> {
-    <span class="kw">return</span> <span class="id">user</span>.<span class="id">name</span>.<span class="fn">trim</span>()
-}</pre>
+<span class="kw">function</span> <span class="fn">toId</span>(<span class="id">admin</span>: <span class="ty">Admin</span>): <span class="ty">number</span> {
+    <span class="kw">return</span> <span class="id">admin</span>.<span class="id">user</span>.<span class="id">id</span>
+}
+<span class="kw">const</span> <span class="id">ids</span> = <span class="id">admins</span>.<span class="fn">map</span>(<span class="fn">toId</span>)</pre>
+                </div>
+            </div>
+        </div>
+
+        <hr />
+
+        <!-- ── WHAT GETS REMOVED ── -->
+        <div class="removed-section" style="padding-top: 3rem">
+            <div class="section-label">What gets removed</div>
+            <h2>Roughly half of TypeScript.</h2>
+            <p class="section-desc">
+                By syntax construct count, ShotScript removes approximately
+                half of what TypeScript allows. Some categories disappear
+                entirely — not because the features are bad, but because
+                having fewer ways to do the same thing is the goal.
+            </p>
+
+            <div class="pct-grid">
+                <div class="pct-row">
+                    <div class="pct-meta">
+                        <div class="pct-cat">OOP</div>
+                        <div class="pct-items">class · this · extends · decorators · abstract</div>
+                    </div>
+                    <div class="pct-bar-wrap">
+                        <div class="pct-bar-fill" style="width: 100%"></div>
+                    </div>
+                    <div class="pct-value">all of it</div>
+                </div>
+                <div class="pct-row">
+                    <div class="pct-meta">
+                        <div class="pct-cat">Error handling</div>
+                        <div class="pct-items">try · catch · finally · throw</div>
+                    </div>
+                    <div class="pct-bar-wrap">
+                        <div class="pct-bar-fill" style="width: 100%"></div>
+                    </div>
+                    <div class="pct-value">all of it</div>
+                </div>
+                <div class="pct-row">
+                    <div class="pct-meta">
+                        <div class="pct-cat">Type constructs</div>
+                        <div class="pct-items">interface · enum · &amp; · conditional · mapped · infer · any · void · undefined</div>
+                    </div>
+                    <div class="pct-bar-wrap">
+                        <div class="pct-bar-fill" style="width: 65%"></div>
+                    </div>
+                    <div class="pct-value">~65%</div>
+                </div>
+                <div class="pct-row">
+                    <div class="pct-meta">
+                        <div class="pct-cat">Function syntax</div>
+                        <div class="pct-items">arrow functions · generators · overloads · default params · optional params</div>
+                    </div>
+                    <div class="pct-bar-wrap">
+                        <div class="pct-bar-fill" style="width: 50%"></div>
+                    </div>
+                    <div class="pct-value">~50%</div>
+                </div>
+                <div class="pct-row">
+                    <div class="pct-meta">
+                        <div class="pct-cat">Control flow</div>
+                        <div class="pct-items">ternary · do-while · for-in · labels</div>
+                    </div>
+                    <div class="pct-bar-wrap">
+                        <div class="pct-bar-fill" style="width: 40%"></div>
+                    </div>
+                    <div class="pct-value">~40%</div>
                 </div>
             </div>
         </div>
