@@ -4,6 +4,9 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>ShotScript — TypeScript, one way.</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700&family=Bricolage+Grotesque:wght@700&family=Plus+Jakarta+Sans:wght@700&family=Fraunces:wght@700&family=Outfit:wght@700&display=swap" rel="stylesheet">
         <style>
             :root {
                 --bg: #0d0d10;
@@ -140,15 +143,25 @@
             }
 
             .hero-brand {
-                font-family: "SF Mono", "Fira Code", monospace;
+                font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
                 font-size: clamp(3.5rem, 10vw, 6rem);
-                font-weight: 800;
-                letter-spacing: -0.05em;
+                font-weight: 700;
+                letter-spacing: -0.04em;
                 line-height: 1;
                 margin-bottom: 1.5rem;
                 color: var(--text);
+                -webkit-font-smoothing: antialiased;
+                text-rendering: optimizeLegibility;
             }
 
+            .hero-brand-label {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.65rem;
+                letter-spacing: 0.12em;
+                text-transform: uppercase;
+                color: var(--accent);
+                margin-bottom: 0.5rem;
+            }
             .hero-desc {
                 font-size: 1.05rem;
                 color: var(--muted);
@@ -674,10 +687,18 @@
         <div class="hero">
             <canvas id="hero-canvas" aria-hidden="true"></canvas>
             <div class="hero-content">
-                <div class="hero-brand">ShotScript</div>
+                <div class="hero-brand" style="font-family:'Syne',sans-serif">ShotScript</div>
+                <div class="hero-brand-label">Syne — geometric, punchy</div>
+                <div class="hero-brand" style="font-family:'Bricolage Grotesque',sans-serif;margin-top:1.5rem">ShotScript</div>
+                <div class="hero-brand-label">Bricolage Grotesque — irregular, editorial</div>
+                <div class="hero-brand" style="font-family:'Plus Jakarta Sans',sans-serif;margin-top:1.5rem">ShotScript</div>
+                <div class="hero-brand-label">Plus Jakarta Sans — refined, professional</div>
+                <div class="hero-brand" style="font-family:'Fraunces',serif;margin-top:1.5rem">ShotScript</div>
+                <div class="hero-brand-label">Fraunces — high-contrast serif, distinctive</div>
+                <div class="hero-brand" style="font-family:'Outfit',sans-serif;margin-top:1.5rem">ShotScript</div>
+                <div class="hero-brand-label">Outfit — round, clean</div>
                 <p class="hero-desc">
-                    ShotScript extracts features from TypeScript, applying Go's "one way of doing things" philosophy to the TS/JS ecosystem.<br>
-                    <a href="/lint/#syntax-reduction"><span class="reduction-pct">~79%</span> of TypeScript's syntax, removed.</a>
+                    Applies Go's "one way of doing things" philosophy to the TS/JS ecosystem.
                 </p>
                 <div class="syntax-bars">
                     <div class="syntax-bar-row">
@@ -688,7 +709,7 @@
                         <span class="syntax-bar-label">ShotScript</span>
                         <div class="syntax-bar ss-bar"></div>
                     </div>
-                    <a href="/lint/#syntax-reduction" class="syntax-bar-link">how we count →</a>
+                    <a href="/lint/#syntax-reduction" class="syntax-bar-link"><span class="reduction-pct">~79%</span> of syntax removed — how we count →</a>
                 </div>
             </div>
         </div>
@@ -1022,8 +1043,8 @@
   <span class="id">deletedAt</span>?: <span class="ty">Date</span> | <span class="kw">null</span>
 }
 
-<span class="cm">// 4 ways to say "nothing" · 8 states for `role`</span>
-<span class="cm">// fields are merged invisibly across 3 decls</span></pre>
+<span class="cm">// null · undefined · ? · any — all in one type</span>
+<span class="cm">// User's fields are scattered across 3 declarations</span></pre>
                 </div>
                 <div class="pane-after">
                     <div class="pane-label">
@@ -1050,8 +1071,8 @@
   <span class="kw">readonly</span> <span class="id">deletedAt</span>: <span class="ty">Date</span> | <span class="kw">null</span>
 }
 
-<span class="cm">// 1 way to say "nothing" · 3 states for `role`</span>
-<span class="cm">// reuse by nesting — every field has one home</span></pre>
+<span class="cm">// T | null only — one null form throughout</span>
+<span class="cm">// explicit nesting — every field has one home</span></pre>
                 </div>
             </div>
 
