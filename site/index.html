@@ -22,19 +22,33 @@
                 --num: #f78c6c;
             }
 
-            * { box-sizing: border-box; margin: 0; padding: 0; }
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
 
             body {
                 background: var(--bg);
                 color: var(--text);
-                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+                font-family:
+                    -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
                 font-size: 16px;
                 line-height: 1.6;
             }
 
-            a { color: var(--accent); text-decoration: none; }
-            a:hover { text-decoration: underline; }
-            a.ext::after { content: " ↗"; font-size: 0.75em; opacity: 0.5; }
+            a {
+                color: var(--accent);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            a.ext::after {
+                content: " ↗";
+                font-size: 0.75em;
+                opacity: 0.5;
+            }
 
             /* ── Nav ── */
             nav {
@@ -57,8 +71,12 @@
                 letter-spacing: -0.02em;
                 text-decoration: none;
             }
-            .nav-logo .brand { color: var(--accent); }
-            .nav-logo .route { color: var(--text); }
+            .nav-logo .brand {
+                color: var(--accent);
+            }
+            .nav-logo .route {
+                color: var(--text);
+            }
 
             .nav-links {
                 display: flex;
@@ -76,7 +94,9 @@
                 background: rgba(255, 255, 255, 0.05);
                 text-decoration: none;
             }
-            .nav-links a[aria-current="page"] { color: var(--text); }
+            .nav-links a[aria-current="page"] {
+                color: var(--text);
+            }
 
             .nav-divider {
                 width: 1px;
@@ -163,7 +183,9 @@
                 color: var(--muted);
                 margin-bottom: 2.5rem;
             }
-            .callout strong { color: var(--text); }
+            .callout strong {
+                color: var(--text);
+            }
             .callout code {
                 font-family: "SF Mono", "Fira Code", monospace;
                 font-size: 0.8em;
@@ -237,9 +259,13 @@
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
-                transition: border-color 0.15s, background 0.15s;
+                transition:
+                    border-color 0.15s,
+                    background 0.15s;
             }
-            .graph-item-inner { border-radius: 8px; }
+            .graph-item-inner {
+                border-radius: 8px;
+            }
             .graph-item-inner:hover {
                 background: rgba(200, 112, 42, 0.05);
                 text-decoration: none;
@@ -266,7 +292,9 @@
             }
 
             @keyframes ant-march {
-                to { stroke-dashoffset: -10; }
+                to {
+                    stroke-dashoffset: -10;
+                }
             }
 
             .ant-line {
@@ -310,8 +338,12 @@
                 font-size: 0.875rem;
                 margin-bottom: 2rem;
             }
-            .install-cmd .prompt { color: var(--accent); }
-            .install-cmd .cmd { color: var(--green); }
+            .install-cmd .prompt {
+                color: var(--accent);
+            }
+            .install-cmd .cmd {
+                color: var(--green);
+            }
 
             .install-steps {
                 display: flex;
@@ -353,7 +385,9 @@
             }
 
             @media (max-width: 640px) {
-                .comparison { grid-template-columns: 1fr; }
+                .comparison {
+                    grid-template-columns: 1fr;
+                }
             }
 
             .pane-label {
@@ -377,8 +411,13 @@
                 color: var(--green);
                 border-left: 1px solid var(--border);
             }
-            .pane-before { background: var(--surface); }
-            .pane-after { background: #131318; border-left: 1px solid var(--border); }
+            .pane-before {
+                background: var(--surface);
+            }
+            .pane-after {
+                background: #131318;
+                border-left: 1px solid var(--border);
+            }
 
             pre {
                 font-family: "SF Mono", "Fira Code", monospace;
@@ -389,19 +428,46 @@
                 white-space: pre;
             }
 
-            .dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; }
-            .dot-red { background: var(--red); opacity: 0.7; }
-            .dot-green { background: var(--green); opacity: 0.7; }
+            .dot {
+                display: inline-block;
+                width: 7px;
+                height: 7px;
+                border-radius: 50%;
+            }
+            .dot-red {
+                background: var(--red);
+                opacity: 0.7;
+            }
+            .dot-green {
+                background: var(--green);
+                opacity: 0.7;
+            }
 
             /* ── Syntax highlighting ── */
-            .kw { color: var(--keyword); }
-            .ty { color: var(--type); }
-            .fn { color: var(--fn); }
-            .st { color: var(--string); }
-            .cm { color: var(--comment); }
-            .nu { color: var(--num); }
-            .op { color: var(--muted); }
-            .id { color: var(--text); }
+            .kw {
+                color: var(--keyword);
+            }
+            .ty {
+                color: var(--type);
+            }
+            .fn {
+                color: var(--fn);
+            }
+            .st {
+                color: var(--string);
+            }
+            .cm {
+                color: var(--comment);
+            }
+            .nu {
+                color: var(--num);
+            }
+            .op {
+                color: var(--muted);
+            }
+            .id {
+                color: var(--text);
+            }
 
             /* ── Page TOC ── */
             .page-toc {
@@ -449,8 +515,24 @@
                 <li><a href="/typing/">Typing</a></li>
                 <li><a href="/std/">Std</a></li>
                 <li class="nav-divider" aria-hidden="true"></li>
-                <li><a href="https://github.com/didley/shotscript" class="nav-ext" target="_blank" rel="noopener">GitHub ↗</a></li>
-                <li><a href="https://www.npmjs.com/package/shotscript" class="nav-ext" target="_blank" rel="noopener">npm ↗</a></li>
+                <li>
+                    <a
+                        href="https://github.com/didley/shotscript"
+                        class="nav-ext"
+                        target="_blank"
+                        rel="noopener"
+                        >GitHub ↗</a
+                    >
+                </li>
+                <li>
+                    <a
+                        href="https://www.npmjs.com/package/shotscript"
+                        class="nav-ext"
+                        target="_blank"
+                        rel="noopener"
+                        >npm ↗</a
+                    >
+                </li>
             </ul>
         </nav>
 
@@ -478,18 +560,17 @@
             <h2>Too many ways to write the same thing.</h2>
             <p class="section-desc">
                 TypeScript lets you declare variables three ways, write
-                functions four ways, handle errors five ways. Reading
-                unfamiliar code is hard. Code review is harder.
-                LLM-assisted generation amplifies every inconsistency —
-                more valid forms means more ways to generate subtly wrong
-                code.
+                functions four ways, handle errors five ways. Reading unfamiliar
+                code is hard. Code review is harder. LLM-assisted generation
+                amplifies every inconsistency — more valid forms means more ways
+                to generate subtly wrong code.
             </p>
 
             <div class="callout">
                 <strong>ShotScript's answer:</strong> a strict lint pass, a
-                formatter, and a tsconfig that enforce one canonical form.
-                Your TypeScript files are unchanged — we maintain a list of
-                rules, not a compiler.
+                formatter, and a tsconfig that enforce one canonical form. Your
+                TypeScript files are unchanged — we maintain a list of rules,
+                not a compiler.
             </div>
 
             <div class="rule-grid">
@@ -497,8 +578,8 @@
                     <div class="rule-name">no-throw / no-try</div>
                     <div class="rule-desc">
                         Errors are values — return
-                        <code>PromiseResult&lt;T, E&gt;</code> tuples.
-                        Failure is in the type signature, not the air.
+                        <code>PromiseResult&lt;T, E&gt;</code> tuples. Failure
+                        is in the type signature, not the air.
                     </div>
                 </div>
                 <div class="rule-card">
@@ -507,8 +588,8 @@
                     </div>
                     <div class="rule-desc">
                         <code>null</code> is the only absent value. No
-                        <code>?</code>, no <code>| undefined</code> — one
-                        way to say "nothing."
+                        <code>?</code>, no <code>| undefined</code> — one way to
+                        say "nothing."
                     </div>
                 </div>
                 <div class="rule-card">
@@ -516,8 +597,8 @@
                         require-readonly-property / require-readonly-arrays
                     </div>
                     <div class="rule-desc">
-                        Every field and array is readonly by default.
-                        Mutation is opt-in and explicit.
+                        Every field and array is readonly by default. Mutation
+                        is opt-in and explicit.
                     </div>
                 </div>
                 <div class="rule-card">
@@ -533,15 +614,15 @@
                 <div class="rule-card">
                     <div class="rule-name">no-class / no-this</div>
                     <div class="rule-desc">
-                        Plain <code>type</code> + plain functions. No
-                        hidden state, no inheritance, no <code>this</code>.
+                        Plain <code>type</code> + plain functions. No hidden
+                        state, no inheritance, no <code>this</code>.
                     </div>
                 </div>
                 <div class="rule-card">
                     <div class="rule-name">no-arrow-functions</div>
                     <div class="rule-desc">
-                        Every function is named and grep-able. Callbacks
-                        become testable, findable units.
+                        Every function is named and grep-able. Callbacks become
+                        testable, findable units.
                     </div>
                 </div>
                 <div class="rule-card">
@@ -554,8 +635,7 @@
                 <div class="rule-card">
                     <div class="rule-name">no-ternary</div>
                     <div class="rule-desc">
-                        If/else forces names onto branches. Nesting
-                        disappears.
+                        If/else forces names onto branches. Nesting disappears.
                     </div>
                 </div>
             </div>
@@ -568,34 +648,67 @@
             <div class="section-label">What is ShotScript</div>
             <h2>Four tools. One package.</h2>
             <p class="section-desc">
-                ShotScript is not a language or a compiler. It's a set of
-                tools that constrain TypeScript to a single canonical form.
+                ShotScript is not a language or a compiler. It's a set of tools
+                that constrain TypeScript to a single canonical form.
             </p>
 
             <div class="graph-wrap">
                 <div class="graph-boxes">
                     <a href="/lint/" class="graph-item-inner">
                         <div class="graph-item-name">ShotScriptLint</div>
-                        <div class="graph-item-desc">95+ rules. One canonical form, compile-time enforced.</div>
+                        <div class="graph-item-desc">
+                            95+ rules enforcing one way of doing things,
+                            compile-time enforced.
+                        </div>
                     </a>
                     <a href="/fmt/" class="graph-item-inner">
                         <div class="graph-item-name">ShotScriptFmt</div>
-                        <div class="graph-item-desc">80-char, no semis, 4-space. Optimised for diffs.</div>
+                        <div class="graph-item-desc">
+                            Formatting optimised for minimim diffs, and terminal
+                            previews.
+                        </div>
                     </a>
                     <a href="/typing/" class="graph-item-inner">
                         <div class="graph-item-name">ShotScriptTyping</div>
-                        <div class="graph-item-desc">Full strict mode. Every invalid state, prevented.</div>
+                        <div class="graph-item-desc">
+                            The strict settings TypeScript recommends but can't
+                            enable by default.
+                        </div>
                     </a>
                     <a href="/std/" class="graph-item-inner">
                         <div class="graph-item-name">ShotScriptStd</div>
-                        <div class="graph-item-desc">Safe, non-throwing utils. The primitives the rules require.</div>
+                        <div class="graph-item-desc">
+                            Safe, non-throwing utils. The primitives the rules
+                            require.
+                        </div>
                     </a>
                 </div>
-                <svg class="graph-svg" viewBox="0 0 80 240" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                    <path class="ant-line" d="M0,30 C40,30 40,120 80,120" style="animation-delay:0s"/>
-                    <path class="ant-line" d="M0,90 C40,90 40,120 80,120" style="animation-delay:-0.2s"/>
-                    <path class="ant-line" d="M0,150 C40,150 40,120 80,120" style="animation-delay:-0.4s"/>
-                    <path class="ant-line" d="M0,210 C40,210 40,120 80,120" style="animation-delay:-0.6s"/>
+                <svg
+                    class="graph-svg"
+                    viewBox="0 0 80 240"
+                    xmlns="http://www.w3.org/2000/svg"
+                    aria-hidden="true"
+                >
+                    <path
+                        class="ant-line"
+                        d="M0,30 C40,30 40,120 80,120"
+                        style="animation-delay: 0s"
+                    />
+                    <path
+                        class="ant-line"
+                        d="M0,90 C40,90 40,120 80,120"
+                        style="animation-delay: -0.2s"
+                    />
+                    <path
+                        class="ant-line"
+                        d="M0,150 C40,150 40,120 80,120"
+                        style="animation-delay: -0.4s"
+                    />
+                    <path
+                        class="ant-line"
+                        d="M0,210 C40,210 40,120 80,120"
+                        style="animation-delay: -0.6s"
+                    />
                 </svg>
                 <div class="graph-node-wrap">
                     <div class="graph-node">ShotScript</div>
@@ -610,12 +723,24 @@
             <div class="section-label">Is it for you?</div>
             <h2>Not a linter. Almost a language.</h2>
             <p class="section-desc">
-                ShotScript's constraint set is comprehensive enough that
-                valid code looks nothing like typical TypeScript. No classes,
-                no arrow callbacks, no ternaries, no <code style="font-family:'SF Mono','Fira Code',monospace;font-size:0.85em;color:#82aaff;background:rgba(130,170,255,0.08);padding:0.05rem 0.3rem;border-radius:3px">throw</code>, no raw
-                Promises — not because these features are bad, but because
-                having one canonical form is the point. Think of it less as
-                "stricter TypeScript" and more as a dialect: TypeScript
+                ShotScript's constraint set is comprehensive enough that valid
+                code looks nothing like typical TypeScript. No classes, no arrow
+                callbacks, no ternaries, no
+                <code
+                    style="
+                        font-family:
+                            &quot;SF Mono&quot;, &quot;Fira Code&quot;,
+                            monospace;
+                        font-size: 0.85em;
+                        color: #82aaff;
+                        background: rgba(130, 170, 255, 0.08);
+                        padding: 0.05rem 0.3rem;
+                        border-radius: 3px;
+                    "
+                    >throw</code
+                >, no raw Promises — not because these features are bad, but
+                because having one canonical form is the point. Think of it less
+                as "stricter TypeScript" and more as a dialect: TypeScript
                 provides the type system and toolchain; ShotScript defines a
                 narrower syntax within it.
             </p>
@@ -627,33 +752,47 @@
                 existing codebase.
             </div>
 
-            <div class="rule-grid" style="grid-template-columns: repeat(auto-fill, minmax(280px, 1fr))">
+            <div
+                class="rule-grid"
+                style="
+                    grid-template-columns: repeat(
+                        auto-fill,
+                        minmax(280px, 1fr)
+                    );
+                "
+            >
                 <div class="rule-card">
-                    <div class="rule-name" style="color: var(--muted)">Existing codebases</div>
+                    <div class="rule-name" style="color: var(--muted)">
+                        Existing codebases
+                    </div>
                     <div class="rule-desc">
                         Rules like <code>no-class</code>,
                         <code>no-promise</code>, and
-                        <code>no-arrow-functions</code> require
-                        architectural rewrites, not search-and-replace.
-                        There is no gradual migration path.
+                        <code>no-arrow-functions</code> require architectural
+                        rewrites, not search-and-replace. There is no gradual
+                        migration path.
                     </div>
                 </div>
                 <div class="rule-card">
-                    <div class="rule-name" style="color: var(--muted)">Class-based frameworks</div>
+                    <div class="rule-name" style="color: var(--muted)">
+                        Class-based frameworks
+                    </div>
                     <div class="rule-desc">
-                        Angular, NestJS, and similar frameworks are built
-                        around classes, constructors, and decorators —
-                        constructs ShotScript bans outright.
+                        Angular, NestJS, and similar frameworks are built around
+                        classes, constructors, and decorators — constructs
+                        ShotScript bans outright.
                     </div>
                 </div>
                 <div class="rule-card">
-                    <div class="rule-name" style="color: var(--muted)">Rule-by-rule opt-in</div>
+                    <div class="rule-name" style="color: var(--muted)">
+                        Rule-by-rule opt-in
+                    </div>
                     <div class="rule-desc">
                         There is no config surface. The rules are
-                        interdependent: <code>no-throw</code> only makes
-                        sense once you have <code>PromiseResult</code>;
-                        <code>require-async-tuple-return</code> only makes
-                        sense once raw Promises are gone.
+                        interdependent: <code>no-throw</code> only makes sense
+                        once you have <code>PromiseResult</code>;
+                        <code>require-async-tuple-return</code> only makes sense
+                        once raw Promises are gone.
                     </div>
                 </div>
             </div>
@@ -715,11 +854,11 @@
             </div>
 
             <div class="callout">
-                <strong>Why it matters:</strong> thrown exceptions don't
-                appear in function signatures. Callers have no idea a
-                function can fail without reading its source.
-                <code>PromiseResult&lt;T, E&gt;</code> makes every failure
-                path explicit in the type, enforced by the checker.
+                <strong>Why it matters:</strong> thrown exceptions don't appear
+                in function signatures. Callers have no idea a function can fail
+                without reading its source.
+                <code>PromiseResult&lt;T, E&gt;</code> makes every failure path
+                explicit in the type, enforced by the checker.
             </div>
 
             <!-- 2: Absent values -->
@@ -761,10 +900,10 @@
             </div>
 
             <div class="callout">
-                <strong>Why it matters:</strong> TypeScript has three ways
-                to express "this might not exist" — <code>?</code>,
-                <code>| undefined</code>, and <code>| null</code> — and
-                most codebases mix all three. ShotScript picks one:
+                <strong>Why it matters:</strong> TypeScript has three ways to
+                express "this might not exist" — <code>?</code>,
+                <code>| undefined</code>, and <code>| null</code> — and most
+                codebases mix all three. ShotScript picks one:
                 <code>null</code>. Every optional field is
                 <code>T | null</code>, every fallible return is
                 <code>[T | null, Error | null]</code>. No more checking for
@@ -812,12 +951,11 @@
             </div>
 
             <div class="callout">
-                <strong>Why it matters:</strong> intersection types hide
-                fields behind indirection. ShotScript bans
-                <code>&amp;</code>, conditional types, mapped types, and
-                <code>infer</code>. Instead of extending, embed: give the
-                base type a named field. Every shape is self-contained and
-                readable where it's defined.
+                <strong>Why it matters:</strong> intersection types hide fields
+                behind indirection. ShotScript bans <code>&amp;</code>,
+                conditional types, mapped types, and <code>infer</code>. Instead
+                of extending, embed: give the base type a named field. Every
+                shape is self-contained and readable where it's defined.
             </div>
 
             <!-- 4: Immutable by default -->
@@ -856,11 +994,11 @@
             </div>
 
             <div class="callout">
-                <strong>Why it matters:</strong> mutable data structures
-                mean any function, at any call site, can change state you
-                didn't expect. <code>readonly</code> makes the compiler
-                enforce immutability — mutation becomes opt-in, visible,
-                and intentional.
+                <strong>Why it matters:</strong> mutable data structures mean
+                any function, at any call site, can change state you didn't
+                expect. <code>readonly</code> makes the compiler enforce
+                immutability — mutation becomes opt-in, visible, and
+                intentional.
             </div>
 
             <!-- 5: Data + behaviour -->
@@ -906,10 +1044,10 @@
             </div>
 
             <div class="callout">
-                <strong>Why it matters:</strong> a <code>type</code> is
-                data. A function is behaviour. There is no hidden state, no
-                inheritance graph to trace, no <code>this</code> context to
-                reason about. Both are independently testable.
+                <strong>Why it matters:</strong> a <code>type</code> is data. A
+                function is behaviour. There is no hidden state, no inheritance
+                graph to trace, no <code>this</code> context to reason about.
+                Both are independently testable.
             </div>
 
             <!-- 6: Callbacks -->
@@ -951,10 +1089,9 @@
             </div>
 
             <div class="callout">
-                <strong>Why it matters:</strong> named functions are
-                testable in isolation, searchable with grep, and show up in
-                stack traces. Anonymous arrow callbacks disappear the moment
-                they fail.
+                <strong>Why it matters:</strong> named functions are testable in
+                isolation, searchable with grep, and show up in stack traces.
+                Anonymous arrow callbacks disappear the moment they fail.
             </div>
 
             <!-- 7: Conditionals -->
@@ -992,9 +1129,9 @@
             </div>
 
             <div class="callout">
-                <strong>Why it matters:</strong> each branch has a name.
-                Adding a new role means adding a clause, not untangling a
-                nested expression. The complexity stays flat.
+                <strong>Why it matters:</strong> each branch has a name. Adding
+                a new role means adding a clause, not untangling a nested
+                expression. The complexity stays flat.
             </div>
         </section>
 
@@ -1052,7 +1189,14 @@
 
         <footer>
             <p>
-                By <a href="https://github.com/didley" target="_blank" rel="noopener">didley</a> in Melbourne (Naarm), Australia.
+                By
+                <a
+                    href="https://github.com/didley"
+                    target="_blank"
+                    rel="noopener"
+                    >didley</a
+                >
+                in Melbourne (Naarm), Australia.
             </p>
         </footer>
     </body>
