@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>ShotScriptFmt — Opinionated TypeScript formatter</title>
+        <title>ShotScriptFmt — Zero-config formatting. No debates.</title>
         <style>
             :root {
                 --bg: #0d0d10;
@@ -36,7 +36,6 @@
             a:hover { text-decoration: underline; }
             a.ext::after { content: " ↗"; font-size: 0.75em; opacity: 0.5; }
 
-            /* ── Nav ── */
             nav {
                 display: flex;
                 align-items: center;
@@ -89,7 +88,6 @@
 
             .nav-ext { font-size: 0.78rem !important; }
 
-            /* ── Page header ── */
             .page-header {
                 max-width: 860px;
                 margin: 0 auto;
@@ -126,7 +124,6 @@
                 margin-bottom: 2rem;
             }
 
-            /* ── Content sections ── */
             .content {
                 max-width: 860px;
                 margin: 0 auto;
@@ -156,7 +153,64 @@
                 margin-bottom: 1.75rem;
             }
 
-            /* ── Install ── */
+            .section-desc code {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.85em;
+                color: var(--type);
+                background: rgba(130, 170, 255, 0.08);
+                padding: 0.05rem 0.3rem;
+                border-radius: 3px;
+            }
+
+            .install-block {
+                max-width: 860px;
+                margin: 0 auto;
+                padding: 0 2rem 3rem;
+            }
+
+            .install-label {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.65rem;
+                letter-spacing: 0.12em;
+                color: var(--accent);
+                text-transform: uppercase;
+                margin-bottom: 0.6rem;
+            }
+
+            .install-row {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.75rem;
+                margin-bottom: 1.25rem;
+                align-items: center;
+            }
+
+            .install-cmd {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.6rem;
+                background: var(--surface);
+                border: 1px solid var(--border);
+                border-radius: 8px;
+                padding: 0.6rem 1.1rem;
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.82rem;
+            }
+            .install-cmd .prompt { color: var(--muted); }
+            .install-cmd .cmd { color: var(--green); }
+
+            .install-note {
+                font-size: 0.8rem;
+                color: var(--muted);
+            }
+            .install-note code {
+                font-family: "SF Mono", "Fira Code", monospace;
+                color: var(--text);
+                background: var(--surface);
+                padding: 0.1rem 0.3rem;
+                border-radius: 3px;
+            }
+
             .install-step {
                 border: 1px solid var(--border);
                 border-radius: 8px;
@@ -175,53 +229,6 @@
             }
             .install-step pre { background: var(--surface); margin: 0; }
 
-            .install-cmd {
-                display: inline-flex;
-                align-items: center;
-                gap: 0.6rem;
-                background: var(--surface);
-                border: 1px solid var(--border);
-                border-radius: 8px;
-                padding: 0.6rem 1.1rem;
-                font-family: "SF Mono", "Fira Code", monospace;
-                font-size: 0.82rem;
-                margin-bottom: 1.75rem;
-            }
-            .install-cmd .prompt { color: var(--muted); }
-            .install-cmd .cmd { color: var(--green); }
-
-            /* ── Spec grid ── */
-            .spec-grid {
-                display: grid;
-                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-                gap: 1px;
-                border: 1px solid var(--border);
-                border-radius: 10px;
-                overflow: hidden;
-                background: var(--border);
-                margin-bottom: 2.5rem;
-            }
-
-            .spec-card {
-                background: var(--surface);
-                padding: 1.1rem 1.35rem;
-            }
-
-            .spec-key {
-                font-family: "SF Mono", "Fira Code", monospace;
-                font-size: 0.75rem;
-                color: var(--muted);
-                margin-bottom: 0.25rem;
-            }
-
-            .spec-value {
-                font-family: "SF Mono", "Fira Code", monospace;
-                font-size: 1rem;
-                font-weight: 700;
-                color: var(--accent);
-            }
-
-            /* ── Comparison ── */
             .comparison {
                 display: grid;
                 grid-template-columns: 1fr 1fr;
@@ -260,6 +267,10 @@
             .pane-before { background: var(--surface); }
             .pane-after { background: #131318; border-left: 1px solid var(--border); }
 
+            .dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; }
+            .dot-red { background: var(--red); opacity: 0.7; }
+            .dot-green { background: var(--green); opacity: 0.7; }
+
             pre {
                 font-family: "SF Mono", "Fira Code", monospace;
                 font-size: 0.8rem;
@@ -268,19 +279,6 @@
                 overflow-x: auto;
                 white-space: pre;
             }
-
-            .dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; }
-            .dot-red { background: var(--red); opacity: 0.7; }
-            .dot-green { background: var(--green); opacity: 0.7; }
-
-            /* ── Syntax highlighting ── */
-            .kw { color: var(--keyword); }
-            .ty { color: var(--type); }
-            .fn { color: var(--fn); }
-            .st { color: var(--string); }
-            .cm { color: var(--comment); }
-            .nu { color: var(--num); }
-            .op { color: var(--muted); }
 
             .callout {
                 background: var(--surface);
@@ -301,6 +299,152 @@
                 padding: 0.05rem 0.3rem;
                 border-radius: 3px;
             }
+
+            .fn-block {
+                margin-bottom: 2.5rem;
+                padding-bottom: 2.5rem;
+                border-bottom: 1px solid var(--border);
+            }
+            .fn-block:last-child {
+                border-bottom: none;
+                padding-bottom: 0;
+            }
+
+            .fn-header {
+                display: flex;
+                align-items: baseline;
+                gap: 0.6rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .fn-name {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.95rem;
+                font-weight: 700;
+                color: var(--red);
+            }
+
+            .fn-kind {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.62rem;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+                color: var(--muted);
+                background: rgba(122, 122, 144, 0.12);
+                border: 1px solid var(--border);
+                border-radius: 4px;
+                padding: 0.1em 0.45em;
+            }
+
+            .fn-desc {
+                font-size: 0.875rem;
+                color: var(--muted);
+                line-height: 1.6;
+                margin-bottom: 1rem;
+            }
+
+            .fn-desc code {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.82em;
+                color: var(--type);
+                background: rgba(130, 170, 255, 0.08);
+                padding: 0.05rem 0.3rem;
+                border-radius: 3px;
+            }
+
+            .fn-block pre {
+                font-size: 0.78rem;
+                padding: 1rem 1rem 1.25rem;
+                background: #131318;
+                border: 1px solid var(--border);
+                border-radius: 8px;
+            }
+
+            .options-list {
+                display: flex;
+                flex-direction: column;
+                border: 1px solid var(--border);
+                border-radius: 10px;
+                overflow: hidden;
+                margin-bottom: 2.5rem;
+            }
+
+            .option-item {
+                display: grid;
+                grid-template-columns: 280px 1fr;
+                gap: 1rem;
+                padding: 0.85rem 1.25rem;
+                background: var(--surface);
+                border-bottom: 1px solid var(--border);
+                align-items: start;
+            }
+            .option-item:last-child { border-bottom: none; }
+            .option-item:nth-child(even) { background: #131318; }
+
+            @media (max-width: 640px) {
+                .option-item { grid-template-columns: 1fr; gap: 0.25rem; }
+            }
+
+            .option-name {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.78rem;
+                color: var(--green);
+                padding-top: 0.05rem;
+            }
+
+            .option-desc {
+                font-size: 0.875rem;
+                color: var(--muted);
+                line-height: 1.55;
+            }
+
+            .option-desc code {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.8em;
+                color: var(--type);
+                background: rgba(130, 170, 255, 0.08);
+                padding: 0.05rem 0.3rem;
+                border-radius: 3px;
+            }
+
+            .spec-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: 1px;
+                border: 1px solid var(--border);
+                border-radius: 10px;
+                overflow: hidden;
+                background: var(--border);
+                margin-bottom: 2.5rem;
+            }
+
+            .spec-card {
+                background: var(--surface);
+                padding: 1.1rem 1.35rem;
+            }
+
+            .spec-key {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.75rem;
+                color: var(--muted);
+                margin-bottom: 0.25rem;
+            }
+
+            .spec-value {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 1rem;
+                font-weight: 700;
+                color: var(--accent);
+            }
+
+            .kw { color: var(--keyword); }
+            .ty { color: var(--type); }
+            .fn { color: var(--fn); }
+            .st { color: var(--string); }
+            .cm { color: var(--comment); }
+            .nu { color: var(--num); }
+            .op { color: var(--muted); }
+            .id { color: var(--muted); }
 
             hr { border: none; border-top: 1px solid var(--border); }
 
@@ -332,37 +476,30 @@
 
         <div class="page-header">
             <div class="page-badge">ShotScriptFmt</div>
-            <h1>Zero-config formatting.<br /><em>No debates.</em></h1>
-            <p class="sub">
-                Formatting optimised for minimum diffs and terminal
-                previews. 80-char lines, no semicolons, 4-space indent,
-                single quotes.
-            </p>
+            <h1>Zero-config formatting. <em>No debates.</em></h1>
+            <p class="sub">Formatting optimised for minimum diffs and terminal previews. 80-char lines, no semicolons, 4-space indent, single quotes.</p>
         </div>
 
         <div class="content">
-            <div class="section-label" style="margin-bottom: 1.25rem">
-                Install
-            </div>
+
+            <div class="section-label">Install</div>
 
             <div class="install-step">
                 <div class="install-step-label">biome.json</div>
                 <pre><span class="cm">// biome.json</span>
 {
-  <span class="st">"extends"</span>: [<span class="st">"shotscript/fmt"</span>]
+  <span class="st">&quot;extends&quot;</span>: [<span class="st">&quot;shotscript/fmt&quot;</span>]
 }</pre>
             </div>
 
-            <div class="install-cmd" style="margin-top: 1rem">
+            <div class="install-cmd">
                 <span class="prompt">$</span>
                 <span class="cmd">npx @biomejs/biome format --write src/</span>
             </div>
 
-            <hr style="margin-bottom: 2.5rem" />
+            <hr />
 
-            <div class="section-label" style="margin-bottom: 1.25rem">
-                Format spec
-            </div>
+            <div class="section-label">Format spec</div>
 
             <div class="spec-grid">
                 <div class="spec-card">
@@ -391,41 +528,27 @@
                 </div>
             </div>
 
-            <div class="callout">
-                <strong>Why these choices:</strong> 80 chars fits a split
-                terminal. 4-space indent makes nesting depth visible
-                before it becomes a problem. No semis removes line-noise
-                with no semantic cost. Single quotes are one less keystroke
-                for the common case.
-            </div>
+            <div class="callout"><strong>Why these choices:</strong> 80 chars fits a split terminal. 4-space indent makes nesting depth visible before it becomes a problem. No semis removes line-noise with no semantic cost. Single quotes are one less keystroke for the common case.</div>
 
-            <hr style="margin-bottom: 2.5rem" />
+            <hr />
 
-            <div class="section-label" style="margin-bottom: 0.75rem">
-                Before / after
-            </div>
-            <h2 style="margin-bottom: 1rem">
-                What formatting changes.
-            </h2>
+            <div class="section-label">Before / after</div>
 
-            <!-- Imports + spacing -->
-            <p
-                class="section-label"
-                style="margin-bottom: 0.75rem; color: var(--muted)"
-            >
-                Imports, spacing &amp; semicolons
-            </p>
+            <h2>What formatting changes.</h2>
+
+            <div class="section-label">Imports, spacing &amp; semicolons</div>
+
             <div class="comparison">
                 <div class="pane-before">
                     <div class="pane-label">
                         <span class="dot dot-red"></span>unformatted
                     </div>
-                    <pre><span class="kw">import</span> {<span class="ty">UserService</span>} <span class="kw">from</span> <span class="st">"./services"</span>;
-<span class="kw">import</span> {<span class="ty">Database</span>,<span class="ty">Config</span>} <span class="kw">from</span> <span class="st">"./db"</span>;
+                    <pre><span class="kw">import</span> {<span class="ty">UserService</span>} <span class="kw">from</span> <span class="st">&quot;./services&quot;</span>;
+<span class="kw">import</span> {<span class="ty">Database</span>,<span class="ty">Config</span>} <span class="kw">from</span> <span class="st">&quot;./db&quot;</span>;
 
-<span class="kw">async function</span> <span class="fn">getUser</span>(id:<span class="ty">number</span>):<span class="ty">Promise</span>&lt;<span class="ty">User</span>|<span class="kw">null</span>&gt;{
-  <span class="kw">const</span> svc:UserService = {db:<span class="fn">getDb</span>()}
-  <span class="kw">return</span> <span class="fn">findUserById</span>(svc,id)
+<span class="kw">async</span> <span class="kw">function</span> <span class="fn">getUser</span>(<span class="op">id</span>:<span class="ty">number</span>):<span class="ty">Promise</span>&lt;<span class="ty">User</span>|<span class="kw">null</span>&gt;{
+  <span class="kw">const</span> <span class="op">svc</span>:<span class="ty">UserService</span> = {<span class="op">db</span>:<span class="fn">getDb</span>()}
+  <span class="kw">return</span> <span class="fn">findUserById</span>(<span class="op">svc</span>,<span class="op">id</span>)
 }</pre>
                 </div>
                 <div class="pane-after">
@@ -435,7 +558,7 @@
                     <pre><span class="kw">import</span> { <span class="ty">UserService</span> } <span class="kw">from</span> <span class="st">'./services'</span>
 <span class="kw">import</span> { <span class="ty">Database</span>, <span class="ty">Config</span> } <span class="kw">from</span> <span class="st">'./db'</span>
 
-<span class="kw">async function</span> <span class="fn">getUser</span>(
+<span class="kw">async</span> <span class="kw">function</span> <span class="fn">getUser</span>(
     <span class="op">id</span>: <span class="ty">number</span>,
 ): <span class="ty">Promise</span>&lt;<span class="ty">User</span> | <span class="kw">null</span>&gt; {
     <span class="kw">const</span> <span class="op">svc</span>: <span class="ty">UserService</span> = { <span class="op">db</span>: <span class="fn">getDb</span>() }
@@ -444,19 +567,14 @@
                 </div>
             </div>
 
-            <!-- Long parameter lists -->
-            <p
-                class="section-label"
-                style="margin-bottom: 0.75rem; color: var(--muted)"
-            >
-                Long parameter lists
-            </p>
+            <div class="section-label">Long parameter lists</div>
+
             <div class="comparison">
                 <div class="pane-before">
                     <div class="pane-label">
                         <span class="dot dot-red"></span>unformatted
                     </div>
-                    <pre><span class="kw">function</span> <span class="fn">createOrder</span>(userId:<span class="ty">number</span>,items:<span class="ty">readonly</span> <span class="ty">Item</span>[],shippingAddress:<span class="ty">Address</span>,paymentMethod:<span class="ty">PaymentMethod</span>):<span class="ty">Result</span>&lt;<span class="ty">Order</span>&gt; {
+                    <pre><span class="kw">function</span> <span class="fn">createOrder</span>(<span class="op">userId</span>:<span class="ty">number</span>,<span class="op">items</span>:<span class="kw">readonly</span> <span class="ty">Item</span>[],<span class="op">shippingAddress</span>:<span class="ty">Address</span>,<span class="op">paymentMethod</span>:<span class="ty">PaymentMethod</span>):<span class="ty">Result</span>&lt;<span class="ty">Order</span>&gt; {
   <span class="cm">// ...</span>
 }</pre>
                 </div>
@@ -475,21 +593,16 @@
                 </div>
             </div>
 
-            <!-- Object literals -->
-            <p
-                class="section-label"
-                style="margin-bottom: 0.75rem; color: var(--muted)"
-            >
-                Object literals
-            </p>
+            <div class="section-label">Object literals</div>
+
             <div class="comparison">
                 <div class="pane-before">
                     <div class="pane-label">
                         <span class="dot dot-red"></span>unformatted
                     </div>
-                    <pre><span class="kw">const</span> <span class="op">config</span>: <span class="ty">Config</span> = {host:<span class="st">"localhost"</span>,port:<span class="nu">3000</span>,debug:<span class="kw">true</span>,timeout:<span class="nu">5000</span>,retries:<span class="nu">3</span>}
+                    <pre><span class="kw">const</span> <span class="op">config</span>: <span class="ty">Config</span> = {<span class="op">host</span>:<span class="st">&quot;localhost&quot;</span>,<span class="op">port</span>:<span class="nu">3000</span>,<span class="op">debug</span>:<span class="kw">true</span>,<span class="op">timeout</span>:<span class="nu">5000</span>,<span class="op">retries</span>:<span class="nu">3</span>}
 
-<span class="kw">const</span> <span class="op">updated</span> = {...<span class="op">config</span>,port:<span class="nu">4000</span>,debug:<span class="kw">false</span>}</pre>
+<span class="kw">const</span> <span class="op">updated</span> = {...<span class="op">config</span>,<span class="op">port</span>:<span class="nu">4000</span>,<span class="op">debug</span>:<span class="kw">false</span>}</pre>
                 </div>
                 <div class="pane-after">
                     <div class="pane-label">

@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>ShotScriptStd — Standard library</title>
+        <title>ShotScriptStd — Safe wrappers. Never throws.</title>
         <style>
             :root {
                 --bg: #0d0d10;
@@ -36,7 +36,6 @@
             a:hover { text-decoration: underline; }
             a.ext::after { content: " ↗"; font-size: 0.75em; opacity: 0.5; }
 
-            /* ── Nav ── */
             nav {
                 display: flex;
                 align-items: center;
@@ -89,7 +88,6 @@
 
             .nav-ext { font-size: 0.78rem !important; }
 
-            /* ── Page header ── */
             .page-header {
                 max-width: 860px;
                 margin: 0 auto;
@@ -126,7 +124,6 @@
                 margin-bottom: 2rem;
             }
 
-            /* ── Content ── */
             .content {
                 max-width: 860px;
                 margin: 0 auto;
@@ -149,7 +146,140 @@
                 margin-bottom: 0.5rem;
             }
 
-            /* ── Callout ── */
+            .section-desc {
+                color: var(--muted);
+                font-size: 0.92rem;
+                line-height: 1.7;
+                margin-bottom: 1.75rem;
+            }
+
+            .section-desc code {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.85em;
+                color: var(--type);
+                background: rgba(130, 170, 255, 0.08);
+                padding: 0.05rem 0.3rem;
+                border-radius: 3px;
+            }
+
+            .install-block {
+                max-width: 860px;
+                margin: 0 auto;
+                padding: 0 2rem 3rem;
+            }
+
+            .install-label {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.65rem;
+                letter-spacing: 0.12em;
+                color: var(--accent);
+                text-transform: uppercase;
+                margin-bottom: 0.6rem;
+            }
+
+            .install-row {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.75rem;
+                margin-bottom: 1.25rem;
+                align-items: center;
+            }
+
+            .install-cmd {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.6rem;
+                background: var(--surface);
+                border: 1px solid var(--border);
+                border-radius: 8px;
+                padding: 0.6rem 1.1rem;
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.82rem;
+            }
+            .install-cmd .prompt { color: var(--muted); }
+            .install-cmd .cmd { color: var(--green); }
+
+            .install-note {
+                font-size: 0.8rem;
+                color: var(--muted);
+            }
+            .install-note code {
+                font-family: "SF Mono", "Fira Code", monospace;
+                color: var(--text);
+                background: var(--surface);
+                padding: 0.1rem 0.3rem;
+                border-radius: 3px;
+            }
+
+            .install-step {
+                border: 1px solid var(--border);
+                border-radius: 8px;
+                overflow: hidden;
+                margin-bottom: 0.75rem;
+            }
+            .install-step-label {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.65rem;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+                color: var(--accent);
+                padding: 0.5rem 1.25rem;
+                border-bottom: 1px solid var(--border);
+                background: #0f0f13;
+            }
+            .install-step pre { background: var(--surface); margin: 0; }
+
+            .comparison {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 0;
+                border: 1px solid var(--border);
+                border-radius: 10px;
+                overflow: hidden;
+                margin-bottom: 2.5rem;
+            }
+
+            @media (max-width: 640px) {
+                .comparison { grid-template-columns: 1fr; }
+            }
+
+            .pane-label {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                padding: 0.6rem 1rem;
+                font-size: 0.72rem;
+                font-weight: 600;
+                letter-spacing: 0.06em;
+                text-transform: uppercase;
+                border-bottom: 1px solid var(--border);
+            }
+
+            .pane-before .pane-label {
+                background: rgba(224, 92, 92, 0.08);
+                color: var(--red);
+            }
+            .pane-after .pane-label {
+                background: rgba(78, 201, 148, 0.08);
+                color: var(--green);
+                border-left: 1px solid var(--border);
+            }
+            .pane-before { background: var(--surface); }
+            .pane-after { background: #131318; border-left: 1px solid var(--border); }
+
+            .dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; }
+            .dot-red { background: var(--red); opacity: 0.7; }
+            .dot-green { background: var(--green); opacity: 0.7; }
+
+            pre {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.8rem;
+                line-height: 1.7;
+                padding: 1.25rem 1.25rem 1.5rem;
+                overflow-x: auto;
+                white-space: pre;
+            }
+
             .callout {
                 background: var(--surface);
                 border: 1px solid var(--border);
@@ -170,7 +300,6 @@
                 border-radius: 3px;
             }
 
-            /* ── Function blocks ── */
             .fn-block {
                 margin-bottom: 2.5rem;
                 padding-bottom: 2.5rem;
@@ -223,19 +352,91 @@
                 border-radius: 3px;
             }
 
-            pre {
-                font-family: "SF Mono", "Fira Code", monospace;
+            .fn-block pre {
                 font-size: 0.78rem;
-                line-height: 1.7;
                 padding: 1rem 1rem 1.25rem;
                 background: #131318;
                 border: 1px solid var(--border);
                 border-radius: 8px;
-                overflow-x: auto;
-                white-space: pre;
             }
 
-            /* ── Syntax highlighting ── */
+            .options-list {
+                display: flex;
+                flex-direction: column;
+                border: 1px solid var(--border);
+                border-radius: 10px;
+                overflow: hidden;
+                margin-bottom: 2.5rem;
+            }
+
+            .option-item {
+                display: grid;
+                grid-template-columns: 280px 1fr;
+                gap: 1rem;
+                padding: 0.85rem 1.25rem;
+                background: var(--surface);
+                border-bottom: 1px solid var(--border);
+                align-items: start;
+            }
+            .option-item:last-child { border-bottom: none; }
+            .option-item:nth-child(even) { background: #131318; }
+
+            @media (max-width: 640px) {
+                .option-item { grid-template-columns: 1fr; gap: 0.25rem; }
+            }
+
+            .option-name {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.78rem;
+                color: var(--green);
+                padding-top: 0.05rem;
+            }
+
+            .option-desc {
+                font-size: 0.875rem;
+                color: var(--muted);
+                line-height: 1.55;
+            }
+
+            .option-desc code {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.8em;
+                color: var(--type);
+                background: rgba(130, 170, 255, 0.08);
+                padding: 0.05rem 0.3rem;
+                border-radius: 3px;
+            }
+
+            .spec-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: 1px;
+                border: 1px solid var(--border);
+                border-radius: 10px;
+                overflow: hidden;
+                background: var(--border);
+                margin-bottom: 2.5rem;
+            }
+
+            .spec-card {
+                background: var(--surface);
+                padding: 1.1rem 1.35rem;
+            }
+
+            .spec-key {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.75rem;
+                color: var(--muted);
+                margin-bottom: 0.25rem;
+            }
+
+            .spec-value {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 1rem;
+                font-weight: 700;
+                color: var(--accent);
+            }
+
             .kw { color: var(--keyword); }
             .ty { color: var(--type); }
             .fn { color: var(--fn); }
@@ -243,6 +444,7 @@
             .cm { color: var(--comment); }
             .nu { color: var(--num); }
             .op { color: var(--muted); }
+            .id { color: var(--muted); }
 
             hr { border: none; border-top: 1px solid var(--border); }
 
@@ -274,67 +476,28 @@
 
         <div class="page-header">
             <div class="page-badge">ShotScriptStd</div>
-            <h1>Safe wrappers.<br /><em>Never throws.</em></h1>
-            <p class="sub">
-                The standard library. Every function returns a
-                <code
-                    style="
-                        font-family: 'SF Mono', 'Fira Code', monospace;
-                        font-size: 0.85em;
-                        color: var(--type);
-                    "
-                    >Result</code
-                >
-                or
-                <code
-                    style="
-                        font-family: 'SF Mono', 'Fira Code', monospace;
-                        font-size: 0.85em;
-                        color: var(--type);
-                    "
-                    >PromiseResult</code
-                >
-                tuple — no throws, no hidden control flow. The primitives
-                the lint rules require.
-            </p>
+            <h1>Safe wrappers. <em>Never throws.</em></h1>
+            <p class="sub">The standard library. Every function returns a Result or PromiseResult tuple — no throws, no hidden control flow. The primitives the lint rules require.</p>
         </div>
 
         <div class="content">
-            <div class="callout">
-                <strong>Import:</strong>
-                <code
-                    >import { safeFetch, jsonParse, wrapError } from
-                    'shotscript/std'</code
-                ><br />
-                <code
-                    >import type { Result, PromiseResult } from
-                    'shotscript/std'</code
-                >
-            </div>
 
-            <hr style="margin-bottom: 2.5rem" />
+            <div class="callout"><strong>Import:</strong> <code>import { safeFetch, jsonParse, wrapError } from 'shotscript/std'</code> <code>import type { Result, PromiseResult } from 'shotscript/std'</code></div>
 
-            <!-- Types -->
-            <div class="section-label" style="margin-bottom: 1.5rem">
-                Types
-            </div>
+            <hr />
+
+            <div class="section-label">Types</div>
 
             <div class="fn-block" id="Result">
                 <div class="fn-header">
                     <span class="fn-name">Result&lt;T, E&gt;</span>
                     <span class="fn-kind">type</span>
                 </div>
-                <p class="fn-desc">
-                    The canonical return type for synchronous fallible
-                    functions. A discriminated tuple — either
-                    <code>[T, null]</code> on success or
-                    <code>[null, E]</code> on failure.
-                    <code>E</code> defaults to <code>Error</code>.
-                </p>
+                <p class="fn-desc">The canonical return type for synchronous fallible functions. A discriminated tuple — either <code>[T, null]</code> on success or <code>[null, E]</code> on failure. <code>E</code> defaults to <code>Error</code>.</p>
                 <pre><span class="kw">type</span> <span class="ty">Result</span>&lt;<span class="ty">T</span>, <span class="ty">E</span> = <span class="ty">Error</span>&gt; = [<span class="ty">T</span>, <span class="kw">null</span>] | [<span class="kw">null</span>, <span class="ty">E</span>]
 
-<span class="kw">function</span> <span class="fn">parseConfig</span>(src: <span class="ty">string</span>): <span class="ty">Result</span>&lt;<span class="ty">Config</span>&gt; {
-    <span class="kw">return</span> <span class="fn">jsonParse</span>&lt;<span class="ty">Config</span>&gt;(src)
+<span class="kw">function</span> <span class="fn">parseConfig</span>(<span class="op">src</span>: <span class="ty">string</span>): <span class="ty">Result</span>&lt;<span class="ty">Config</span>&gt; {
+    <span class="kw">return</span> <span class="op">jsonParse</span>&lt;<span class="ty">Config</span>&gt;(<span class="op">src</span>)
 }</pre>
             </div>
 
@@ -343,48 +506,35 @@
                     <span class="fn-name">PromiseResult&lt;T, E&gt;</span>
                     <span class="fn-kind">type</span>
                 </div>
-                <p class="fn-desc">
-                    The canonical return type for async fallible functions.
-                    Shorthand for
-                    <code>Promise&lt;Result&lt;T, E&gt;&gt;</code>.
-                </p>
+                <p class="fn-desc">The canonical return type for async fallible functions. Shorthand for <code>Promise&lt;Result&lt;T, E&gt;&gt;</code>.</p>
                 <pre><span class="kw">type</span> <span class="ty">PromiseResult</span>&lt;<span class="ty">T</span>, <span class="ty">E</span> = <span class="ty">Error</span>&gt; =
     <span class="ty">Promise</span>&lt;<span class="ty">Result</span>&lt;<span class="ty">T</span>, <span class="ty">E</span>&gt;&gt;
 
-<span class="kw">async function</span> <span class="fn">queryUser</span>(<span class="op">id</span>: <span class="ty">number</span>): <span class="ty">PromiseResult</span>&lt;<span class="ty">User</span>&gt; {
-    <span class="kw">const</span> [<span class="op">res</span>, <span class="op">err</span>] = <span class="kw">await</span> <span class="fn">safeFetch</span>(`/users/${<span class="op">id</span>}`)
+<span class="kw">async</span> <span class="kw">function</span> <span class="fn">queryUser</span>(<span class="op">id</span>: <span class="ty">number</span>): <span class="ty">PromiseResult</span>&lt;<span class="ty">User</span>&gt; {
+    <span class="kw">const</span> [<span class="op">res</span>, <span class="op">err</span>] = <span class="kw">await</span> <span class="fn">safeFetch</span>(<span class="st">`/users/${</span><span class="op">${</span><span class="op">id</span><span class="op">}</span><span class="st">`</span>)
     <span class="kw">if</span> (<span class="op">err</span> !== <span class="kw">null</span>) { <span class="kw">return</span> [<span class="kw">null</span>, <span class="op">err</span>] }
-    <span class="kw">return</span> <span class="fn">jsonParse</span>&lt;<span class="ty">User</span>&gt;(<span class="kw">await</span> <span class="op">res</span>.<span class="fn">text</span>())
+    <span class="kw">return</span> <span class="op">jsonParse</span>&lt;<span class="ty">User</span>&gt;(<span class="kw">await</span> <span class="op">res</span>.<span class="fn">text</span>())
 }</pre>
             </div>
 
-            <hr style="margin-bottom: 2.5rem" />
+            <hr />
 
-            <!-- Functions -->
-            <div class="section-label" style="margin-bottom: 1.5rem">
-                Functions
-            </div>
+            <div class="section-label">Functions</div>
 
             <div class="fn-block" id="safeFetch">
                 <div class="fn-header">
                     <span class="fn-name">safeFetch(url, opts?)</span>
                     <span class="fn-kind">async</span>
                 </div>
-                <p class="fn-desc">
-                    Wraps <code>globalThis.fetch</code>. Returns
-                    <code>[Response, null]</code> on success,
-                    <code>[null, Error]</code> on network failure. HTTP
-                    error status codes are not treated as errors — check
-                    <code>res.ok</code> yourself.
-                </p>
+                <p class="fn-desc">Wraps <code>globalThis.fetch</code>. Returns <code>[Response, null]</code> on success, <code>[null, Error]</code> on network failure. HTTP error status codes are not treated as errors — check <code>res.ok</code> yourself.</p>
                 <pre><span class="kw">function</span> <span class="fn">safeFetch</span>(
     <span class="op">input</span>: <span class="ty">string</span> | <span class="ty">URL</span>,
     <span class="op">init</span>: <span class="ty">RequestInit</span> | <span class="kw">null</span>,
 ): <span class="ty">PromiseResult</span>&lt;<span class="ty">Response</span>&gt;
 
-<span class="kw">const</span> [<span class="op">res</span>, <span class="op">err</span>] = <span class="kw">await</span> <span class="fn">safeFetch</span>(`https://api.example.com/users/${<span class="op">id</span>}`, <span class="kw">null</span>)
+<span class="kw">const</span> [<span class="op">res</span>, <span class="op">err</span>] = <span class="kw">await</span> <span class="fn">safeFetch</span>(<span class="st">`https://api.example.com/users/${</span><span class="op">${</span><span class="op">id</span><span class="op">}</span><span class="st">`</span>, <span class="kw">null</span>)
 <span class="kw">if</span> (<span class="op">err</span> !== <span class="kw">null</span>) { <span class="kw">return</span> [<span class="kw">null</span>, <span class="op">err</span>] }
-<span class="kw">if</span> (!<span class="op">res</span>.<span class="op">ok</span>) { <span class="kw">return</span> [<span class="kw">null</span>, <span class="kw">new</span> <span class="ty">Error</span>(`HTTP ${<span class="op">res</span>.<span class="op">status</span>}`)] }</pre>
+<span class="kw">if</span> (!<span class="op">res</span>.<span class="op">ok</span>) { <span class="kw">return</span> [<span class="kw">null</span>, <span class="kw">new</span> <span class="ty">Error</span>(<span class="st">`HTTP ${</span><span class="op">${</span><span class="op">res.status</span><span class="op">}</span><span class="st">`</span>)] }</pre>
             </div>
 
             <div class="fn-block" id="jsonParse">
@@ -392,14 +542,10 @@
                     <span class="fn-name">jsonParse&lt;T&gt;(str)</span>
                     <span class="fn-kind">sync</span>
                 </div>
-                <p class="fn-desc">
-                    Wraps <code>JSON.parse</code>. Returns
-                    <code>[T, null]</code> or
-                    <code>[null, Error]</code> if parsing fails.
-                </p>
-                <pre><span class="kw">function</span> <span class="fn">jsonParse</span>&lt;<span class="ty">T</span>&gt;(<span class="op">str</span>: <span class="ty">string</span>): <span class="ty">Result</span>&lt;<span class="ty">T</span>&gt;
+                <p class="fn-desc">Wraps <code>JSON.parse</code>. Returns <code>[T, null]</code> or <code>[null, Error]</code> if parsing fails.</p>
+                <pre><span class="kw">function</span> <span class="op">jsonParse</span>&lt;<span class="ty">T</span>&gt;(<span class="op">str</span>: <span class="ty">string</span>): <span class="ty">Result</span>&lt;<span class="ty">T</span>&gt;
 
-<span class="kw">const</span> [<span class="op">user</span>, <span class="op">err</span>] = <span class="fn">jsonParse</span>&lt;<span class="ty">User</span>&gt;(<span class="op">text</span>)</pre>
+<span class="kw">const</span> [<span class="op">user</span>, <span class="op">err</span>] = <span class="op">jsonParse</span>&lt;<span class="ty">User</span>&gt;(<span class="op">text</span>)</pre>
             </div>
 
             <div class="fn-block" id="jsonStringify">
@@ -407,11 +553,7 @@
                     <span class="fn-name">jsonStringify(val, indent?)</span>
                     <span class="fn-kind">sync</span>
                 </div>
-                <p class="fn-desc">
-                    Wraps <code>JSON.stringify</code>. Returns
-                    <code>[string, null]</code> or
-                    <code>[null, Error]</code> if serialization fails.
-                </p>
+                <p class="fn-desc">Wraps <code>JSON.stringify</code>. Returns <code>[string, null]</code> or <code>[null, Error]</code> if serialization fails.</p>
                 <pre><span class="kw">function</span> <span class="fn">jsonStringify</span>(
     <span class="op">value</span>: <span class="ty">unknown</span>,
     <span class="op">indent</span>: <span class="ty">number</span> | <span class="kw">null</span>,
@@ -423,18 +565,12 @@
                     <span class="fn-name">wrapError(message, cause)</span>
                     <span class="fn-kind">sync</span>
                 </div>
-                <p class="fn-desc">
-                    Adds context to a propagated error — the ShotScript
-                    equivalent of Go's
-                    <code>fmt.Errorf("context: %w", err)</code>. Sets
-                    <code>err.cause</code> so the original error is
-                    inspectable.
-                </p>
+                <p class="fn-desc">Adds context to a propagated error — the ShotScript equivalent of Go's <code>fmt.Errorf("context: %w", err)</code>. Sets <code>err.cause</code> so the original error is inspectable.</p>
                 <pre><span class="kw">function</span> <span class="fn">wrapError</span>(<span class="op">message</span>: <span class="ty">string</span>, <span class="op">cause</span>: <span class="ty">Error</span>): <span class="ty">Error</span>
 
 <span class="kw">const</span> [<span class="op">res</span>, <span class="op">err</span>] = <span class="kw">await</span> <span class="fn">safeFetch</span>(<span class="op">url</span>, <span class="kw">null</span>)
 <span class="kw">if</span> (<span class="op">err</span> !== <span class="kw">null</span>) {
-    <span class="kw">return</span> [<span class="kw">null</span>, <span class="fn">wrapError</span>(`fetchUser: ${<span class="op">url</span>}`, <span class="op">err</span>)]
+    <span class="kw">return</span> [<span class="kw">null</span>, <span class="fn">wrapError</span>(<span class="st">`fetchUser: ${</span><span class="op">${</span><span class="op">url</span><span class="op">}</span><span class="st">`</span>, <span class="op">err</span>)]
 }</pre>
             </div>
 
@@ -443,11 +579,8 @@
                     <span class="fn-name">toResult&lt;T&gt;(fn)</span>
                     <span class="fn-kind">sync</span>
                 </div>
-                <p class="fn-desc">
-                    Wraps any synchronous dependency call that might
-                    throw — any library that doesn't return tuples.
-                </p>
-                <pre><span class="kw">function</span> <span class="fn">toResult</span>&lt;<span class="ty">T</span>&gt;(<span class="op">fn</span>: () => <span class="ty">T</span>): <span class="ty">Result</span>&lt;<span class="ty">T</span>&gt;
+                <p class="fn-desc">Wraps any synchronous dependency call that might throw — any library that doesn't return tuples.</p>
+                <pre><span class="kw">function</span> <span class="op">toResult</span>&lt;<span class="ty">T</span>&gt;(<span class="op">fn</span>: () =&gt; <span class="ty">T</span>): <span class="ty">Result</span>&lt;<span class="ty">T</span>&gt;
 
 <span class="kw">const</span> [<span class="op">parsed</span>, <span class="op">err</span>] = <span class="fn">toResult</span>(<span class="kw">function</span> <span class="fn">parse</span>(): <span class="ty">ParsedData</span> { <span class="kw">return</span> <span class="op">someLib</span>.<span class="fn">parseSync</span>(<span class="op">input</span>) })</pre>
             </div>
@@ -457,23 +590,69 @@
                     <span class="fn-name">toPromiseResult&lt;T&gt;(fn)</span>
                     <span class="fn-kind">async</span>
                 </div>
-                <p class="fn-desc">
-                    Wraps any async dependency call that might reject —
-                    any library that returns plain Promises.
-                </p>
-                <pre><span class="kw">function</span> <span class="fn">toPromiseResult</span>&lt;<span class="ty">T</span>&gt;(
-    <span class="op">fn</span>: () => <span class="ty">Promise</span>&lt;<span class="ty">T</span>&gt;,
+                <p class="fn-desc">Wraps any async dependency call that might reject — any library that returns plain Promises.</p>
+                <pre><span class="kw">function</span> <span class="op">toPromiseResult</span>&lt;<span class="ty">T</span>&gt;(
+    <span class="op">fn</span>: () =&gt; <span class="ty">Promise</span>&lt;<span class="ty">T</span>&gt;,
 ): <span class="ty">PromiseResult</span>&lt;<span class="ty">T</span>&gt;
 
 <span class="kw">const</span> [<span class="op">rows</span>, <span class="op">err</span>] = <span class="kw">await</span> <span class="fn">toPromiseResult</span>(<span class="kw">function</span> <span class="fn">query</span>(): <span class="ty">Promise</span>&lt;<span class="ty">Row</span>[]&gt; { <span class="kw">return</span> <span class="op">db</span>.<span class="fn">query</span>(<span class="op">sql</span>) })</pre>
             </div>
 
-            <p style="font-size: 0.82rem; color: var(--muted); padding-top: 1rem">
-                All wrappers use <code style="font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.82em; color: var(--type); background: rgba(130,170,255,0.08); padding: 0.05rem 0.3rem; border-radius: 3px">try</code>/<code style="font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.82em; color: var(--type); background: rgba(130,170,255,0.08); padding: 0.05rem 0.3rem; border-radius: 3px">catch</code>
-                internally to convert thrown errors into the second tuple
-                slot. The ban on <code style="font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.82em; color: var(--type); background: rgba(130,170,255,0.08); padding: 0.05rem 0.3rem; border-radius: 3px">try</code>/<code style="font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.82em; color: var(--type); background: rgba(130,170,255,0.08); padding: 0.05rem 0.3rem; border-radius: 3px">catch</code>
-                applies to user code; ShotScriptStd is exempt.
-            </p>
+            <div class="fn-block" id="safeURL">
+                <div class="fn-header">
+                    <span class="fn-name">safeURL(url, base?)</span>
+                    <span class="fn-kind">sync</span>
+                </div>
+                <p class="fn-desc">Safe URL constructor — replaces the banned <code>new URL(str)</code> which throws on malformed input. Returns <code>[URL, null]</code> on success, <code>[null, Error]</code> on invalid URL string.</p>
+                <pre><span class="kw">function</span> <span class="fn">safeURL</span>(<span class="op">url</span>: <span class="ty">string</span>, <span class="op">base</span>: <span class="ty">string</span> | <span class="kw">null</span>): <span class="ty">Result</span>&lt;<span class="ty">URL</span>&gt;
+
+<span class="kw">const</span> [<span class="op">url</span>, <span class="op">err</span>] = <span class="fn">safeURL</span>(<span class="op">rawInput</span>, <span class="kw">null</span>)
+<span class="kw">if</span> (<span class="op">err</span> !== <span class="kw">null</span>) { <span class="kw">return</span> [<span class="kw">null</span>, <span class="op">err</span>] }</pre>
+            </div>
+
+            <div class="fn-block" id="safeDecodeURIComponent">
+                <div class="fn-header">
+                    <span class="fn-name">safeDecodeURIComponent(str)</span>
+                    <span class="fn-kind">sync</span>
+                </div>
+                <p class="fn-desc">Safe <code>decodeURIComponent</code> — replaces the banned global which throws on malformed sequences. Returns <code>[decoded, null]</code> on success, <code>[null, Error]</code> on invalid percent-encoding.</p>
+                <pre><span class="kw">function</span> <span class="fn">safeDecodeURIComponent</span>(<span class="op">str</span>: <span class="ty">string</span>): <span class="ty">Result</span>&lt;<span class="ty">string</span>&gt;
+
+<span class="kw">const</span> [<span class="op">decoded</span>, <span class="op">err</span>] = <span class="fn">safeDecodeURIComponent</span>(<span class="op">rawStr</span>)</pre>
+            </div>
+
+            <div class="fn-block" id="safeDecodeURI">
+                <div class="fn-header">
+                    <span class="fn-name">safeDecodeURI(str)</span>
+                    <span class="fn-kind">sync</span>
+                </div>
+                <p class="fn-desc">Safe <code>decodeURI</code> — replaces the banned global which throws on malformed sequences. Returns <code>[decoded, null]</code> on success, <code>[null, Error]</code> on invalid percent-encoding.</p>
+                <pre><span class="kw">function</span> <span class="fn">safeDecodeURI</span>(<span class="op">str</span>: <span class="ty">string</span>): <span class="ty">Result</span>&lt;<span class="ty">string</span>&gt;
+
+<span class="kw">const</span> [<span class="op">decoded</span>, <span class="op">err</span>] = <span class="fn">safeDecodeURI</span>(<span class="op">rawStr</span>)</pre>
+            </div>
+
+            <div class="fn-block" id="safeAtob">
+                <div class="fn-header">
+                    <span class="fn-name">safeAtob(data)</span>
+                    <span class="fn-kind">sync</span>
+                </div>
+                <p class="fn-desc">Safe <code>atob</code> — replaces the banned global which throws on invalid base64 input. Returns <code>[decoded, null]</code> on success, <code>[null, Error]</code> on invalid input.</p>
+                <pre><span class="kw">function</span> <span class="fn">safeAtob</span>(<span class="op">data</span>: <span class="ty">string</span>): <span class="ty">Result</span>&lt;<span class="ty">string</span>&gt;
+
+<span class="kw">const</span> [<span class="op">bin</span>, <span class="op">err</span>] = <span class="fn">safeAtob</span>(<span class="op">base64Str</span>)</pre>
+            </div>
+
+            <div class="fn-block" id="safeBtoa">
+                <div class="fn-header">
+                    <span class="fn-name">safeBtoa(data)</span>
+                    <span class="fn-kind">sync</span>
+                </div>
+                <p class="fn-desc">Safe <code>btoa</code> — replaces the banned global which throws on non-Latin1 characters. Returns <code>[encoded, null]</code> on success, <code>[null, Error]</code> on invalid input.</p>
+                <pre><span class="kw">function</span> <span class="fn">safeBtoa</span>(<span class="op">data</span>: <span class="ty">string</span>): <span class="ty">Result</span>&lt;<span class="ty">string</span>&gt;
+
+<span class="kw">const</span> [<span class="op">b64</span>, <span class="op">err</span>] = <span class="fn">safeBtoa</span>(<span class="op">binaryStr</span>)</pre>
+            </div>
         </div>
 
         <footer>

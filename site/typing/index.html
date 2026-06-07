@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>ShotScriptTyping — Full strict mode for TypeScript</title>
+        <title>ShotScriptTyping — Full strict mode. Every invalid state, prevented.</title>
         <style>
             :root {
                 --bg: #0d0d10;
@@ -36,7 +36,6 @@
             a:hover { text-decoration: underline; }
             a.ext::after { content: " ↗"; font-size: 0.75em; opacity: 0.5; }
 
-            /* ── Nav ── */
             nav {
                 display: flex;
                 align-items: center;
@@ -89,7 +88,6 @@
 
             .nav-ext { font-size: 0.78rem !important; }
 
-            /* ── Page header ── */
             .page-header {
                 max-width: 860px;
                 margin: 0 auto;
@@ -126,7 +124,6 @@
                 margin-bottom: 2rem;
             }
 
-            /* ── Content ── */
             .content {
                 max-width: 860px;
                 margin: 0 auto;
@@ -165,12 +162,60 @@
                 border-radius: 3px;
             }
 
-            /* ── Install ── */
+            .install-block {
+                max-width: 860px;
+                margin: 0 auto;
+                padding: 0 2rem 3rem;
+            }
+
+            .install-label {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.65rem;
+                letter-spacing: 0.12em;
+                color: var(--accent);
+                text-transform: uppercase;
+                margin-bottom: 0.6rem;
+            }
+
+            .install-row {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.75rem;
+                margin-bottom: 1.25rem;
+                align-items: center;
+            }
+
+            .install-cmd {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.6rem;
+                background: var(--surface);
+                border: 1px solid var(--border);
+                border-radius: 8px;
+                padding: 0.6rem 1.1rem;
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.82rem;
+            }
+            .install-cmd .prompt { color: var(--muted); }
+            .install-cmd .cmd { color: var(--green); }
+
+            .install-note {
+                font-size: 0.8rem;
+                color: var(--muted);
+            }
+            .install-note code {
+                font-family: "SF Mono", "Fira Code", monospace;
+                color: var(--text);
+                background: var(--surface);
+                padding: 0.1rem 0.3rem;
+                border-radius: 3px;
+            }
+
             .install-step {
                 border: 1px solid var(--border);
                 border-radius: 8px;
                 overflow: hidden;
-                margin-bottom: 1.75rem;
+                margin-bottom: 0.75rem;
             }
             .install-step-label {
                 font-family: "SF Mono", "Fira Code", monospace;
@@ -184,7 +229,137 @@
             }
             .install-step pre { background: var(--surface); margin: 0; }
 
-            /* ── Options list ── */
+            .comparison {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 0;
+                border: 1px solid var(--border);
+                border-radius: 10px;
+                overflow: hidden;
+                margin-bottom: 2.5rem;
+            }
+
+            @media (max-width: 640px) {
+                .comparison { grid-template-columns: 1fr; }
+            }
+
+            .pane-label {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                padding: 0.6rem 1rem;
+                font-size: 0.72rem;
+                font-weight: 600;
+                letter-spacing: 0.06em;
+                text-transform: uppercase;
+                border-bottom: 1px solid var(--border);
+            }
+
+            .pane-before .pane-label {
+                background: rgba(224, 92, 92, 0.08);
+                color: var(--red);
+            }
+            .pane-after .pane-label {
+                background: rgba(78, 201, 148, 0.08);
+                color: var(--green);
+                border-left: 1px solid var(--border);
+            }
+            .pane-before { background: var(--surface); }
+            .pane-after { background: #131318; border-left: 1px solid var(--border); }
+
+            .dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; }
+            .dot-red { background: var(--red); opacity: 0.7; }
+            .dot-green { background: var(--green); opacity: 0.7; }
+
+            pre {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.8rem;
+                line-height: 1.7;
+                padding: 1.25rem 1.25rem 1.5rem;
+                overflow-x: auto;
+                white-space: pre;
+            }
+
+            .callout {
+                background: var(--surface);
+                border: 1px solid var(--border);
+                border-left: 3px solid var(--accent);
+                border-radius: 8px;
+                padding: 1rem 1.25rem;
+                font-size: 0.875rem;
+                color: var(--muted);
+                margin-bottom: 2.5rem;
+            }
+            .callout strong { color: var(--text); }
+            .callout code {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.8em;
+                color: var(--type);
+                background: rgba(130, 170, 255, 0.08);
+                padding: 0.05rem 0.3rem;
+                border-radius: 3px;
+            }
+
+            .fn-block {
+                margin-bottom: 2.5rem;
+                padding-bottom: 2.5rem;
+                border-bottom: 1px solid var(--border);
+            }
+            .fn-block:last-child {
+                border-bottom: none;
+                padding-bottom: 0;
+            }
+
+            .fn-header {
+                display: flex;
+                align-items: baseline;
+                gap: 0.6rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .fn-name {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.95rem;
+                font-weight: 700;
+                color: var(--red);
+            }
+
+            .fn-kind {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.62rem;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+                color: var(--muted);
+                background: rgba(122, 122, 144, 0.12);
+                border: 1px solid var(--border);
+                border-radius: 4px;
+                padding: 0.1em 0.45em;
+            }
+
+            .fn-desc {
+                font-size: 0.875rem;
+                color: var(--muted);
+                line-height: 1.6;
+                margin-bottom: 1rem;
+            }
+
+            .fn-desc code {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.82em;
+                color: var(--type);
+                background: rgba(130, 170, 255, 0.08);
+                padding: 0.05rem 0.3rem;
+                border-radius: 3px;
+            }
+
+            .fn-block pre {
+                font-size: 0.78rem;
+                padding: 1rem 1rem 1.25rem;
+                background: #131318;
+                border: 1px solid var(--border);
+                border-radius: 8px;
+            }
+
             .options-list {
                 display: flex;
                 flex-direction: column;
@@ -232,59 +407,36 @@
                 border-radius: 3px;
             }
 
-            /* ── Comparison ── */
-            .comparison {
+            .spec-grid {
                 display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 0;
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: 1px;
                 border: 1px solid var(--border);
                 border-radius: 10px;
                 overflow: hidden;
+                background: var(--border);
                 margin-bottom: 2.5rem;
             }
 
-            @media (max-width: 640px) {
-                .comparison { grid-template-columns: 1fr; }
+            .spec-card {
+                background: var(--surface);
+                padding: 1.1rem 1.35rem;
             }
 
-            .pane-label {
-                display: flex;
-                align-items: center;
-                gap: 0.5rem;
-                padding: 0.6rem 1rem;
-                font-size: 0.72rem;
-                font-weight: 600;
-                letter-spacing: 0.06em;
-                text-transform: uppercase;
-                border-bottom: 1px solid var(--border);
-            }
-
-            .pane-before .pane-label {
-                background: rgba(224, 92, 92, 0.08);
-                color: var(--red);
-            }
-            .pane-after .pane-label {
-                background: rgba(78, 201, 148, 0.08);
-                color: var(--green);
-                border-left: 1px solid var(--border);
-            }
-            .pane-before { background: var(--surface); }
-            .pane-after { background: #131318; border-left: 1px solid var(--border); }
-
-            pre {
+            .spec-key {
                 font-family: "SF Mono", "Fira Code", monospace;
-                font-size: 0.8rem;
-                line-height: 1.7;
-                padding: 1.25rem 1.25rem 1.5rem;
-                overflow-x: auto;
-                white-space: pre;
+                font-size: 0.75rem;
+                color: var(--muted);
+                margin-bottom: 0.25rem;
             }
 
-            .dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; }
-            .dot-red { background: var(--red); opacity: 0.7; }
-            .dot-green { background: var(--green); opacity: 0.7; }
+            .spec-value {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 1rem;
+                font-weight: 700;
+                color: var(--accent);
+            }
 
-            /* ── Syntax highlighting ── */
             .kw { color: var(--keyword); }
             .ty { color: var(--type); }
             .fn { color: var(--fn); }
@@ -292,26 +444,7 @@
             .cm { color: var(--comment); }
             .nu { color: var(--num); }
             .op { color: var(--muted); }
-
-            .callout {
-                background: var(--surface);
-                border: 1px solid var(--border);
-                border-left: 3px solid var(--accent);
-                border-radius: 8px;
-                padding: 1rem 1.25rem;
-                font-size: 0.875rem;
-                color: var(--muted);
-                margin-bottom: 2.5rem;
-            }
-            .callout strong { color: var(--text); }
-            .callout code {
-                font-family: "SF Mono", "Fira Code", monospace;
-                font-size: 0.8em;
-                color: var(--type);
-                background: rgba(130, 170, 255, 0.08);
-                padding: 0.05rem 0.3rem;
-                border-radius: 3px;
-            }
+            .id { color: var(--muted); }
 
             hr { border: none; border-top: 1px solid var(--border); }
 
@@ -343,127 +476,73 @@
 
         <div class="page-header">
             <div class="page-badge">ShotScriptTyping</div>
-            <h1>Full strict mode.<br /><em>Every invalid state, prevented.</em></h1>
-            <p class="sub">
-                The strict settings TypeScript recommends but can't
-                enable by default.
-            </p>
+            <h1>Full strict mode. <em>Every invalid state, prevented.</em></h1>
+            <p class="sub">The strict settings TypeScript recommends but can't enable by default.</p>
         </div>
 
         <div class="content">
-            <div class="section-label" style="margin-bottom: 1.25rem">
-                Install
-            </div>
+
+            <div class="section-label">Install</div>
 
             <div class="install-step">
                 <div class="install-step-label">tsconfig.json</div>
                 <pre><span class="cm">// tsconfig.json</span>
 {
-  <span class="st">"extends"</span>: <span class="st">"shotscript/tsconfig/shotscript.json"</span>
+  <span class="st">&quot;extends&quot;</span>: <span class="st">&quot;shotscript/tsconfig/shotscript.json&quot;</span>
 }</pre>
             </div>
 
-            <hr style="margin-bottom: 2.5rem" />
+            <hr />
 
-            <div class="section-label" style="margin-bottom: 1.25rem">
-                What it enables
-            </div>
+            <div class="section-label">What it enables</div>
 
             <div class="options-list">
                 <div class="option-item">
                     <div class="option-name">strict</div>
-                    <div class="option-desc">
-                        Enables the full strict family:
-                        <code>strictNullChecks</code>,
-                        <code>strictFunctionTypes</code>,
-                        <code>strictBindCallApply</code>,
-                        <code>strictPropertyInitialization</code>, and
-                        more.
-                    </div>
+                    <div class="option-desc">Enables the full strict family: <code>strictNullChecks</code>, <code>strictFunctionTypes</code>, <code>strictBindCallApply</code>, <code>strictPropertyInitialization</code>, and more.</div>
                 </div>
                 <div class="option-item">
                     <div class="option-name">noUncheckedIndexedAccess</div>
-                    <div class="option-desc">
-                        Array and object index access returns
-                        <code>T | undefined</code> instead of
-                        <code>T</code>. Every array[i] must be checked.
-                    </div>
+                    <div class="option-desc">Array and object index access returns <code>T | undefined</code> instead of <code>T</code>. Every array[i] must be checked.</div>
                 </div>
                 <div class="option-item">
                     <div class="option-name">exactOptionalPropertyTypes</div>
-                    <div class="option-desc">
-                        Optional properties cannot be assigned
-                        <code>undefined</code> explicitly — only
-                        omitted. Tightens the gap between
-                        <code>prop?: T</code> and
-                        <code>prop: T | undefined</code>.
-                    </div>
+                    <div class="option-desc">Optional properties cannot be assigned <code>undefined</code> explicitly — only omitted. Tightens the gap between <code>prop?: T</code> and <code>prop: T | undefined</code>.</div>
                 </div>
                 <div class="option-item">
                     <div class="option-name">noImplicitReturns</div>
-                    <div class="option-desc">
-                        Every code path in a non-void function must
-                        return a value. No silent
-                        <code>undefined</code> fallthrough.
-                    </div>
+                    <div class="option-desc">Every code path in a non-void function must return a value. No silent <code>undefined</code> fallthrough.</div>
                 </div>
                 <div class="option-item">
                     <div class="option-name">noFallthroughCasesInSwitch</div>
-                    <div class="option-desc">
-                        Switch cases must end with
-                        <code>break</code> or <code>return</code>.
-                        Implicit fallthrough is a compile error.
-                    </div>
+                    <div class="option-desc">Switch cases must end with <code>break</code> or <code>return</code>. Implicit fallthrough is a compile error.</div>
                 </div>
                 <div class="option-item">
                     <div class="option-name">noImplicitOverride</div>
-                    <div class="option-desc">
-                        Overriding a base class method requires the
-                        <code>override</code> keyword. Accidental
-                        shadowing is a compile error.
-                    </div>
+                    <div class="option-desc">Overriding a base class method requires the <code>override</code> keyword. Accidental shadowing is a compile error.</div>
                 </div>
                 <div class="option-item">
                     <div class="option-name">forceConsistentCasingInFileNames</div>
-                    <div class="option-desc">
-                        Import paths must match the actual filename
-                        casing. Prevents case-insensitive filesystem
-                        bugs from reaching case-sensitive deployments.
-                    </div>
+                    <div class="option-desc">Import paths must match the actual filename casing. Prevents case-insensitive filesystem bugs from reaching case-sensitive deployments.</div>
                 </div>
             </div>
 
-            <hr style="margin-bottom: 2.5rem" />
+            <hr />
 
-            <div class="section-label" style="margin-bottom: 0.75rem">
-                Before / after
-            </div>
-            <h2 style="margin-bottom: 1rem">
-                What strict mode catches.
-            </h2>
+            <div class="section-label">Before / after</div>
 
-            <!-- noUncheckedIndexedAccess -->
-            <p
-                class="section-label"
-                style="margin-bottom: 0.75rem; color: var(--muted)"
-            >
-                Array access — noUncheckedIndexedAccess
-            </p>
+            <h2>What strict mode catches.</h2>
 
-            <div class="callout">
-                <strong>Why it matters:</strong> without this flag,
-                <code>items[0]</code> has type <code>Item</code> even when
-                the array might be empty. With it, you get
-                <code>Item | undefined</code> and must handle the empty
-                case explicitly.
-            </div>
+            <div class="section-label">Array access — noUncheckedIndexedAccess</div>
+
+            <div class="callout"><strong>Why it matters:</strong> without this flag, <code>items[0]</code> has type <code>Item</code> even when the array might be empty. With it, you get <code>Item | undefined</code> and must handle the empty case explicitly.</div>
 
             <div class="comparison">
                 <div class="pane-before">
                     <div class="pane-label">
                         <span class="dot dot-red"></span>without strict
                     </div>
-                    <pre><span class="kw">const</span> <span class="op">items</span>: <span class="ty">readonly</span> <span class="ty">string</span>[] = <span class="fn">getItems</span>()
+                    <pre><span class="kw">const</span> <span class="op">items</span>: <span class="kw">readonly</span> <span class="ty">string</span>[] = <span class="fn">getItems</span>()
 
 <span class="cm">// TypeScript accepts this — but items</span>
 <span class="cm">// might be empty at runtime</span>
@@ -474,7 +553,7 @@
                     <div class="pane-label">
                         <span class="dot dot-green"></span>ShotScriptTyping
                     </div>
-                    <pre><span class="kw">const</span> <span class="op">items</span>: <span class="ty">readonly</span> <span class="ty">string</span>[] = <span class="fn">getItems</span>()
+                    <pre><span class="kw">const</span> <span class="op">items</span>: <span class="kw">readonly</span> <span class="ty">string</span>[] = <span class="fn">getItems</span>()
 
 <span class="cm">// first: string | undefined</span>
 <span class="kw">const</span> <span class="op">first</span> = <span class="op">items</span>[<span class="nu">0</span>]
@@ -485,20 +564,9 @@
                 </div>
             </div>
 
-            <!-- noImplicitReturns -->
-            <p
-                class="section-label"
-                style="margin-bottom: 0.75rem; color: var(--muted)"
-            >
-                Missing returns — noImplicitReturns
-            </p>
+            <div class="section-label">Missing returns — noImplicitReturns</div>
 
-            <div class="callout">
-                <strong>Why it matters:</strong> a function that sometimes
-                returns a value and sometimes falls off the end silently
-                returns <code>undefined</code>. ShotScriptTyping makes
-                this a compile error — every path must return.
-            </div>
+            <div class="callout"><strong>Why it matters:</strong> a function that sometimes returns a value and sometimes falls off the end silently returns <code>undefined</code>. ShotScriptTyping makes this a compile error — every path must return.</div>
 
             <div class="comparison">
                 <div class="pane-before">
@@ -529,26 +597,14 @@
     }
     <span class="cm">// ✗ compile error: not all code paths</span>
     <span class="cm">//   return a value</span>
-    <span class="kw">return</span> <span class="st">`Unknown: ${<span class="op">status</span>}`</span>
+    <span class="kw">return</span> <span class="st">`Unknown: ${</span><span class="op">${</span><span class="op">status</span><span class="op">}</span><span class="st">`</span>
 }</pre>
                 </div>
             </div>
 
-            <!-- Null checks -->
-            <p
-                class="section-label"
-                style="margin-bottom: 0.75rem; color: var(--muted)"
-            >
-                Null propagation — strictNullChecks
-            </p>
+            <div class="section-label">Null propagation — strictNullChecks</div>
 
-            <div class="callout">
-                <strong>Why it matters:</strong> without
-                <code>strictNullChecks</code>, every type implicitly
-                includes <code>null</code> and <code>undefined</code>.
-                With it, nullable values must be explicitly typed and
-                checked before use.
-            </div>
+            <div class="callout"><strong>Why it matters:</strong> without <code>strictNullChecks</code>, every type implicitly includes <code>null</code> and <code>undefined</code>. With it, nullable values must be explicitly typed and checked before use.</div>
 
             <div class="comparison">
                 <div class="pane-before">
@@ -562,7 +618,7 @@
 <span class="cm">// TypeScript does not require you</span>
 <span class="cm">// to check — this compiles fine</span>
 <span class="kw">const</span> <span class="op">user</span> = <span class="fn">getUser</span>(<span class="nu">1</span>)
-<span class="fn">console</span>.<span class="fn">log</span>(<span class="op">user</span>.<span class="op">name</span>) <span class="cm">// 💥 runtime</span></pre>
+<span class="op">console</span>.<span class="fn">log</span>(<span class="op">user</span>.<span class="op">name</span>) <span class="cm">// 💥 runtime</span></pre>
                 </div>
                 <div class="pane-after">
                     <div class="pane-label">
@@ -577,7 +633,7 @@
     <span class="kw">return</span> [<span class="kw">null</span>, <span class="kw">new</span> <span class="ty">Error</span>(<span class="st">'not found'</span>)]
 }
 <span class="cm">// user: User — now safe</span>
-<span class="fn">console</span>.<span class="fn">log</span>(<span class="op">user</span>.<span class="op">name</span>) <span class="cm">// ✓</span></pre>
+<span class="op">console</span>.<span class="fn">log</span>(<span class="op">user</span>.<span class="op">name</span>) <span class="cm">// ✓</span></pre>
                 </div>
             </div>
         </div>

@@ -1,6 +1,7 @@
 {
+  "extends": "./src/tsconfig/shotscript.json",
   "compilerOptions": {
-    "target": "ES2022",
+    "target": "ES2024",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "outDir": "./dist",
@@ -8,18 +9,8 @@
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
-    "strict": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noUncheckedIndexedAccess": true,
-    "exactOptionalPropertyTypes": true,
-    "allowUnreachableCode": false,
-    "allowUnusedLabels": false,
-    "forceConsistentCasingInFileNames": true,
-    "esModuleInterop": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "types": ["node"]
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules", "dist", "tests"]
