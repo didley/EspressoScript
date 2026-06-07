@@ -113,20 +113,116 @@
 
             /* ── Hero ── */
             .hero {
+                position: relative;
+                overflow: hidden;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                min-height: 60vh;
+                padding: 6rem 2rem 5rem;
+            }
+
+            .hero-bg {
+                position: absolute;
+                inset: 0;
+                pointer-events: none;
+                z-index: 0;
+            }
+
+            .hero-content {
+                position: relative;
+                z-index: 1;
                 max-width: 640px;
-                margin: 0 auto;
-                padding: 6rem 2rem 4.5rem;
                 text-align: center;
+            }
+
+            .bokeh {
+                position: absolute;
+                border-radius: 50%;
+                filter: blur(100px);
+            }
+
+            .bokeh-1 {
+                width: 55vw;
+                height: 55vw;
+                max-width: 700px;
+                max-height: 700px;
+                background: radial-gradient(circle, rgba(200, 112, 42, 0.2) 0%, transparent 65%);
+                top: -15%;
+                left: -10%;
+                animation: bokeh-drift-a 10s ease-in-out infinite;
+            }
+            .bokeh-2 {
+                width: 45vw;
+                height: 45vw;
+                max-width: 580px;
+                max-height: 580px;
+                background: radial-gradient(circle, rgba(130, 170, 255, 0.14) 0%, transparent 65%);
+                top: -20%;
+                right: -8%;
+                animation: bokeh-drift-b 13s ease-in-out infinite;
+            }
+            .bokeh-3 {
+                width: 40vw;
+                height: 40vw;
+                max-width: 500px;
+                max-height: 500px;
+                background: radial-gradient(circle, rgba(199, 146, 234, 0.11) 0%, transparent 65%);
+                bottom: -20%;
+                left: 20%;
+                animation: bokeh-drift-c 15s ease-in-out infinite;
+            }
+            .bokeh-4 {
+                width: 35vw;
+                height: 35vw;
+                max-width: 420px;
+                max-height: 420px;
+                background: radial-gradient(circle, rgba(247, 140, 108, 0.11) 0%, transparent 65%);
+                bottom: -15%;
+                right: 5%;
+                animation: bokeh-drift-a 8s ease-in-out infinite reverse;
+            }
+
+            @keyframes bokeh-drift-a {
+                0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.75; }
+                40%      { transform: translate(30px, -25px) scale(1.06); opacity: 1; }
+                70%      { transform: translate(-18px, 18px) scale(0.96); opacity: 0.55; }
+            }
+            @keyframes bokeh-drift-b {
+                0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.6; }
+                35%      { transform: translate(-28px, 22px) scale(1.08); opacity: 0.9; }
+                65%      { transform: translate(20px, -14px) scale(0.94); opacity: 0.5; }
+            }
+            @keyframes bokeh-drift-c {
+                0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.65; }
+                50%      { transform: translate(22px, -20px) scale(1.1); opacity: 0.95; }
+            }
+
+            @keyframes shimmer {
+                0%   { background-position: -200% center; }
+                100% { background-position: 200% center; }
             }
 
             .hero-brand {
                 font-family: "SF Mono", "Fira Code", monospace;
                 font-size: clamp(3.5rem, 10vw, 6rem);
                 font-weight: 800;
-                color: var(--accent);
                 letter-spacing: -0.05em;
                 line-height: 1;
                 margin-bottom: 1.5rem;
+                background: linear-gradient(
+                    100deg,
+                    var(--accent) 20%,
+                    #f0a060 40%,
+                    #ffe0b0 50%,
+                    #f0a060 60%,
+                    var(--accent) 80%
+                );
+                background-size: 250% auto;
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                animation: shimmer 4s linear infinite;
             }
 
             .hero-desc {
@@ -537,14 +633,24 @@
         </nav>
 
         <div class="hero">
-            <div class="hero-brand">ShotScript</div>
-            <p class="hero-desc">
-                ShotScript extracts features from TypeScript, applying Go's
-                "one way of doing things" philosophy to the TS/JS ecosystem.
-            </p>
+            <div class="hero-bg" aria-hidden="true">
+                <div class="bokeh bokeh-1"></div>
+                <div class="bokeh bokeh-2"></div>
+                <div class="bokeh bokeh-3"></div>
+                <div class="bokeh bokeh-4"></div>
+            </div>
+            <div class="hero-content">
+                <div class="hero-brand">ShotScript</div>
+                <p class="hero-desc">
+                    ShotScript extracts features from TypeScript, applying Go's
+                    "one way of doing things" philosophy to the TS/JS ecosystem.
+                </p>
+            </div>
         </div>
 
-        <div class="page-toc" style="padding-bottom: 2rem">
+        <hr class="divider" />
+
+        <div class="page-toc" style="padding: 1.5rem 2rem">
             <a href="#problem">The problem</a>
             <a href="#what">What is ShotScript</a>
             <a href="#who">Is it for you?</a>
