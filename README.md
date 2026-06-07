@@ -18,7 +18,7 @@ Four tools. One way to write TypeScript.
 
 | | |
 |---|---|
-| **ShotScriptLint** | 95+ rules enforced as `tsc` errors. One canonical form for every construct — no ESLint, no config surface. |
+| **ShotScriptLint** | 95+ rules enforced as `tsc` errors. One way to write every construct — no ESLint, no config surface. |
 | **ShotScriptFmt** | Shareable Biome config. 80-char lines, no semicolons, 4-space indent — formatted for terminals and clean diffs. |
 | **ShotScriptTyping** | Strict tsconfig baseline. Full strict mode plus `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`, and more. |
 | **ShotScriptStd** | Safe, non-throwing replacements for every banned global — `jsonParse`, `safeFetch`, `toResult`, `wrapError`. |
