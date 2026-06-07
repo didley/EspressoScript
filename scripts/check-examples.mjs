@@ -1,28 +1,48 @@
-// CI-only script: runs shotscript's check() against the example files.
-// Not part of the published package — this avoids needing a CLI binary.
+// CI-only script: runs shotscript's check() against each example project.
+// Builds one shared ts.createProgram per example using its own tsconfig.json.
 import { readFileSync } from "node:fs"
+import path from "node:path"
 import { glob } from "glob"
+import ts from "typescript"
 import { check } from "../dist/lint/index.js"
 
-const patterns = [
-    "examples/feature-showcase/src/**/*.ts",
+const examples = [
+    { name: "feature-showcase", pattern: "examples/feature-showcase/src/**/*.ts" },
 ]
 
-const files = (await Promise.all(patterns.map((p) => glob(p, { absolute: true })))).flat()
+let totalErrors = 0
 
-let errorCount = 0
+for (const example of examples) {
+    const files = await glob(example.pattern, { absolute: true })
 
-for (const file of files) {
-    const source = readFileSync(file, "utf8")
-    for (const d of check(file, source, null, null)) {
-        process.stderr.write(`${d.file}:${d.line}:${d.col} [${d.rule}] ${d.message}\n`)
-        errorCount++
+    const configPath = ts.findConfigFile(files[0] ?? process.cwd(), ts.sys.fileExists)
+    const compilerOptions = configPath
+        ? ts.parseJsonConfigFileContent(
+              ts.readConfigFile(configPath, ts.sys.readFile).config,
+              ts.sys,
+              path.dirname(configPath),
+          ).options
+        : { target: ts.ScriptTarget.ES2022, noEmit: true, skipLibCheck: true }
+
+    const program = ts.createProgram(files, { ...compilerOptions, noEmit: true })
+    const typeChecker = program.getTypeChecker()
+
+    let errorCount = 0
+    for (const file of files) {
+        const source = readFileSync(file, "utf8")
+        const programSourceFile = program.getSourceFile(file) ?? null
+        for (const d of check(file, source, typeChecker, programSourceFile)) {
+            process.stderr.write(`${d.file}:${d.line}:${d.col} [${d.rule}] ${d.message}\n`)
+            errorCount++
+        }
     }
+
+    if (errorCount > 0) {
+        process.stderr.write(`\n${errorCount} error(s) in examples/${example.name}\n`)
+    } else {
+        console.log(`examples/${example.name}: ${files.length} files passed`)
+    }
+    totalErrors += errorCount
 }
 
-if (errorCount > 0) {
-    process.stderr.write(`\n${errorCount} error(s) found in examples\n`)
-    process.exit(1)
-}
-
-console.log(`All example files passed (${files.length} files checked)`)
+if (totalErrors > 0) process.exit(1)
