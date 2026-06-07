@@ -1,3 +1,6 @@
+// CLI entry point — runs the ShotScript linter over glob patterns from argv
+// and exits with code 1 if any diagnostics are found.
+// Usage: shotscript 'src/**/*.ts'
 import { readFileSync } from 'node:fs'
 import { glob } from 'glob'
 import { check } from './lint/index.js'
@@ -9,20 +12,22 @@ if (patterns.length === 0) {
     process.exit(1)
 }
 
-const files: string[] = []
+const files = []
 for (const pattern of patterns) {
     const matches = await glob(pattern, { absolute: true })
     files.push(...matches)
 }
 
-let errorCount = 0
-
+const lines = []
 for (const file of files) {
     const source = readFileSync(file, 'utf8')
     for (const d of check(file, source)) {
-        process.stdout.write(`${d.file}:${d.line}:${d.col} [${d.rule}] ${d.message}\n`)
-        errorCount++
+        lines.push(`${d.file}:${d.line}:${d.col} [${d.rule}] ${d.message}`)
     }
 }
 
-if (errorCount > 0) process.exit(1)
+for (const line of lines) {
+    process.stdout.write(`${line}\n`)
+}
+
+if (lines.length > 0) process.exit(1)
