@@ -13,9 +13,9 @@ const BANNED_OBJECT_METHODS = new Set([
 /** Metaprogramming globals are banned. */
 export const noMetaprogrammingGlobals: Rule = {
     name: 'no-metaprogramming-globals',
-    visit(node, ctx) {
+    visit(node, ctx): void {
         if (ts.isIdentifier(node)) {
-            const name = (node as ts.Identifier).escapedText as string
+            const name = node.text
             if (BANNED_GLOBALS.has(name)) {
                 // Skip when in type position (TypeReferenceNode's typeName)
                 if (ts.isTypeReferenceNode(node.parent)) return
@@ -29,8 +29,8 @@ export const noMetaprogrammingGlobals: Rule = {
             const expr = node.expression
             if (
                 ts.isIdentifier(expr) &&
-                (expr as ts.Identifier).escapedText === 'Object' &&
-                BANNED_OBJECT_METHODS.has((node.name as ts.Identifier).escapedText as string)
+                expr.text === 'Object' &&
+                BANNED_OBJECT_METHODS.has(node.name.text)
             ) {
                 ctx.push({ ...posOf(ctx.sourceFile, node), rule: 'no-metaprogramming-globals', message: 'Metaprogramming globals are banned.' })
             }

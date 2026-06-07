@@ -5,7 +5,7 @@ import { posOf } from '../pos.js'
 /** Defaults in destructuring rely on `undefined` (banned sentinel). */
 export const noDestructuringDefault: Rule = {
     name: 'no-destructuring-default',
-    visit(node, ctx) {
+    visit(node, ctx): void {
         if (!ts.isBindingElement(node)) return
         if (node.initializer === undefined) return
         const parent = node.parent

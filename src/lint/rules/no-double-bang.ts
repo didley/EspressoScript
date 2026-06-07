@@ -5,7 +5,7 @@ import { posOf } from '../pos.js'
 /** `!!` is not allowed. Use `Boolean()`. */
 export const noDoubleBang: Rule = {
     name: 'no-double-bang',
-    visit(node, ctx) {
+    visit(node, ctx): void {
         if (!ts.isPrefixUnaryExpression(node)) return
         if (node.operator !== ts.SyntaxKind.ExclamationToken) return
         const operand = node.operand

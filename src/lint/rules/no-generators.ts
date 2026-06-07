@@ -5,7 +5,7 @@ import { posOf } from '../pos.js'
 /** Generators are not allowed. */
 export const noGenerators: Rule = {
     name: 'no-generators',
-    visit(node, ctx) {
+    visit(node, ctx): void {
         if (
             (ts.isFunctionDeclaration(node) || ts.isFunctionExpression(node) || ts.isMethodDeclaration(node)) &&
             node.asteriskToken !== undefined

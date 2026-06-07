@@ -5,7 +5,7 @@ import { posOf } from '../pos.js'
 /** `{}` is not allowed as a type. Use `unknown` or a specific shape. */
 export const noEmptyObjectType: Rule = {
     name: 'no-empty-object-type',
-    visit(node, ctx) {
+    visit(node, ctx): void {
         if (ts.isTypeLiteralNode(node) && node.members.length === 0) {
             ctx.push({ ...posOf(ctx.sourceFile, node), rule: 'no-empty-object-type', message: '`{}` is not allowed as a type. Use `unknown` or a specific shape.' })
         }

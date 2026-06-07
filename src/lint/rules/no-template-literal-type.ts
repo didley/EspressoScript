@@ -5,7 +5,7 @@ import { posOf } from '../pos.js'
 /** Template literal types are not allowed. */
 export const noTemplateLiteralType: Rule = {
     name: 'no-template-literal-type',
-    visit(node, ctx) {
+    visit(node, ctx): void {
         if (ts.isTemplateLiteralTypeNode(node)) {
             ctx.push({ ...posOf(ctx.sourceFile, node), rule: 'no-template-literal-type', message: 'Template literal types are not allowed.' })
         }

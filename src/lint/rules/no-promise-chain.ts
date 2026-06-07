@@ -7,7 +7,7 @@ const CHAIN_METHODS = new Set(['then', 'catch', 'finally'])
 /** Promise chains are not allowed. Use `async`/`await`. */
 export const noPromiseChain: Rule = {
     name: 'no-promise-chain',
-    visit(node, ctx) {
+    visit(node, ctx): void {
         if (!ts.isCallExpression(node)) return
         const expr = node.expression
         if (!ts.isPropertyAccessExpression(expr)) return

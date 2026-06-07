@@ -12,11 +12,11 @@ const BANNED = new Set([
 /** This utility type is banned. See `docs/LANGUAGE.md` for the canonical form. */
 export const noBannedUtilityTypes: Rule = {
     name: 'no-banned-utility-types',
-    visit(node, ctx) {
+    visit(node, ctx): void {
         if (
             ts.isTypeReferenceNode(node) &&
             ts.isIdentifier(node.typeName) &&
-            BANNED.has((node.typeName as ts.Identifier).escapedText as string)
+            BANNED.has(node.typeName.text)
         ) {
             ctx.push({ ...posOf(ctx.sourceFile, node), rule: 'no-banned-utility-types', message: 'This utility type is banned. See `docs/LANGUAGE.md` for the canonical form.' })
         }

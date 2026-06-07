@@ -12,7 +12,7 @@ const FN_KINDS = new Set([
 /** Trailing bare `return` is unnecessary. */
 export const noUselessReturn: Rule = {
     name: 'no-useless-return',
-    visit(node, ctx) {
+    visit(node, ctx): void {
         if (!ts.isReturnStatement(node)) return
         if (node.expression !== undefined) return
         const parent = node.parent

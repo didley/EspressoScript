@@ -16,7 +16,7 @@ function nodeText(node: ts.Node, sf: ts.SourceFile): string {
 /** Comparing a value to itself is a bug or a NaN-check abuse — use `Number.isNaN()`. */
 export const noSelfCompare: Rule = {
     name: 'no-self-compare',
-    visit(node, ctx) {
+    visit(node, ctx): void {
         if (!ts.isBinaryExpression(node)) return
         if (!CMP_OPS.has(node.operatorToken.kind)) return
         const lText = nodeText(node.left, ctx.sourceFile)

@@ -5,7 +5,7 @@ import { posOf } from '../pos.js'
 /** Array types must be declared `readonly T[]`. */
 export const requireReadonlyArrays: Rule = {
     name: 'require-readonly-arrays',
-    visit(node, ctx) {
+    visit(node, ctx): void {
         if (ts.isArrayTypeNode(node)) {
             const parent = node.parent
             const coveredByReadonly =

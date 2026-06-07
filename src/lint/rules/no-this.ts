@@ -5,7 +5,7 @@ import { posOf } from '../pos.js'
 /** `this` is not allowed. */
 export const noThis: Rule = {
     name: 'no-this',
-    visit(node, ctx) {
+    visit(node, ctx): void {
         if (node.kind === ts.SyntaxKind.ThisKeyword) {
             ctx.push({ ...posOf(ctx.sourceFile, node), rule: 'no-this', message: '`this` is not allowed.' })
         }

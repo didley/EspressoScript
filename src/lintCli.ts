@@ -3,7 +3,7 @@
 // Usage: shotscript 'src/**/*.ts'
 import { readFileSync } from 'node:fs'
 import { glob } from 'glob'
-import { check } from './lint/index.js'
+import { check } from './lint/check.js'
 
 const patterns = process.argv.slice(2)
 
@@ -21,7 +21,7 @@ for (const pattern of patterns) {
 const lines = []
 for (const file of files) {
     const source = readFileSync(file, 'utf8')
-    for (const d of check(file, source)) {
+    for (const d of check(file, source, null, null)) {
         lines.push(`${d.file}:${d.line}:${d.col} [${d.rule}] ${d.message}`)
     }
 }

@@ -5,7 +5,7 @@ import { posOf } from '../pos.js'
 /** Useless rename — drop the alias. */
 export const noUselessRename: Rule = {
     name: 'no-useless-rename',
-    visit(node, ctx) {
+    visit(node, ctx): void {
         if (ts.isImportSpecifier(node)) {
             if (node.propertyName && node.propertyName.text === node.name.text) {
                 const pos = posOf(ctx.sourceFile, node)

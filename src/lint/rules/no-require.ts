@@ -5,7 +5,7 @@ import { posOf } from '../pos.js'
 /** `require()` is not allowed. Use ESM `import`. */
 export const noRequire: Rule = {
     name: 'no-require',
-    visit(node, ctx) {
+    visit(node, ctx): void {
         if (!ts.isCallExpression(node)) return
         const expr = node.expression
         if (!ts.isIdentifier(expr)) return

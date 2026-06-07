@@ -3,6 +3,8 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 
+echo "shotscript pre-commit: running lint..."
+node --import tsx/esm "$ROOT/src/lintCli.ts" 'src/lint/**/*.ts' 'src/lintCli.ts'
 echo "shotscript pre-commit: running tests..."
 node --import tsx/esm "$ROOT/tests/runner.ts"
 node --import tsx/esm --test "$ROOT/tests/std.test.ts"

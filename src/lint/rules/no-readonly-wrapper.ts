@@ -5,11 +5,11 @@ import { posOf } from '../pos.js'
 /** `Readonly<T>` is redundant; declare each property `readonly`. */
 export const noReadonlyWrapper: Rule = {
     name: 'no-readonly-wrapper',
-    visit(node, ctx) {
+    visit(node, ctx): void {
         if (
             ts.isTypeReferenceNode(node) &&
             ts.isIdentifier(node.typeName) &&
-            (node.typeName as ts.Identifier).escapedText === 'Readonly'
+            node.typeName.text === 'Readonly'
         ) {
             ctx.push({ ...posOf(ctx.sourceFile, node), rule: 'no-readonly-wrapper', message: '`Readonly<T>` is redundant; declare each property `readonly`.' })
         }

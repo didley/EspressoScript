@@ -23,35 +23,32 @@ type Frame = {
     readonly isFunction: boolean
 }
 
-function collectNames(node: ts.BindingName): string[] {
+function collectNames(node: ts.BindingName): readonly string[] {
     if (ts.isIdentifier(node)) return [node.text]
-    const names: string[] = []
-    for (const elem of node.elements) {
-        if (ts.isBindingElement(elem)) names.push(...collectNames(elem.name))
-    }
-    return names
+    return node.elements.flatMap(function getNames(elem: ts.ArrayBindingElement): readonly string[] {
+        if (ts.isBindingElement(elem)) return collectNames(elem.name)
+        return []
+    })
 }
 
-function isParamInScope(frames: Frame[], name: string): boolean {
-    for (let i = frames.length - 1; i >= 0; i--) {
-        if (frames[i]!.isFunction) {
-            return frames[i]!.params.has(name)
-        }
+function isParamInScope(frames: readonly Frame[], name: string): boolean {
+    for (let i = frames.length - 1; i >= 0; i -= 1) {
+        const frame = frames[i]
+        if (frame === undefined) continue
+        if (frame.isFunction) return frame.params.has(name)
     }
     return false
 }
 
-function walk(node: ts.Node, frames: Frame[], ctx: Context): void {
+function walk(node: ts.Node, frames: readonly Frame[], ctx: Context): void {
     if (ts.isFunctionDeclaration(node) || ts.isFunctionExpression(node) || ts.isArrowFunction(node)) {
-        const fnNode = node as ts.FunctionDeclaration | ts.FunctionExpression | ts.ArrowFunction
-        const params = new Set<string>()
-        for (const param of fnNode.parameters) {
+        const params: Set<string> = new Set()
+        for (const param of node.parameters) {
             for (const name of collectNames(param.name)) params.add(name)
         }
-        frames.push({ params, isFunction: true })
-        const body = (node as ts.FunctionLikeDeclarationBase).body
-        if (body) walk(body, frames, ctx)
-        frames.pop()
+        const fnFrames = [...frames, { params, isFunction: true }]
+        const body = node.body
+        if (body) walk(body, fnFrames, ctx)
     } else if (ts.isBinaryExpression(node) && ASSIGN_OPS.has(node.operatorToken.kind)) {
         const lhs = node.left
         if (ts.isIdentifier(lhs) && isParamInScope(frames, lhs.text)) {
@@ -67,7 +64,7 @@ function walk(node: ts.Node, frames: Frame[], ctx: Context): void {
 /** Function parameters cannot be reassigned. Use a new `const`. */
 export const noParamReassign: Rule = {
     name: 'no-param-reassign',
-    visit(node, ctx) {
+    visit(node, ctx): void {
         if (node.kind !== ts.SyntaxKind.SourceFile) return
         ts.forEachChild(node, function walkChild(child: ts.Node): void {
             walk(child, [{ params: new Set(), isFunction: false }], ctx)

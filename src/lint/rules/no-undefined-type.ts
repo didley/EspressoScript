@@ -5,7 +5,7 @@ import { posOf } from '../pos.js'
 /** `undefined` is not allowed in types. Use `null` for absent values; use `void` for functions that return nothing. */
 export const noUndefinedType: Rule = {
     name: 'no-undefined-type',
-    visit(node, ctx) {
+    visit(node, ctx): void {
         // UndefinedKeyword only appears in type positions in the TS AST;
         // runtime `undefined` identifiers are Identifier nodes, not UndefinedKeyword.
         // Use `null` everywhere instead; use `void` for functions that return nothing.

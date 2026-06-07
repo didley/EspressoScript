@@ -95,7 +95,7 @@ import { requireTupleDestructure } from './require-tuple-destructure.js'
 import { requireAsyncTupleReturn } from './require-async-tuple-return.js'
 import { noFloatingPromises } from './no-floating-promises.js'
 
-export const rules: Rule[] = [
+export const rules: readonly Rule[] = [
     noArrowFunctions,
     noLetOutsideFor,
     noVar,

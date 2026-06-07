@@ -6,106 +6,95 @@ type ScopeFrame = {
     readonly bindings: Map<string, ts.Node>
 }
 
-function collectNames(node: ts.BindingName): string[] {
+function collectNames(node: ts.BindingName): readonly string[] {
     if (ts.isIdentifier(node)) return [node.text]
-    const names: string[] = []
-    for (const elem of node.elements) {
-        if (ts.isBindingElement(elem)) names.push(...collectNames(elem.name))
-        // OmittedExpression: skip
-    }
-    return names
+    return node.elements.flatMap(function getNames(elem: ts.ArrayBindingElement): readonly string[] {
+        if (ts.isBindingElement(elem)) return collectNames(elem.name)
+        return []
+    })
 }
 
-function isDefinedAbove(scopes: ScopeFrame[], name: string): boolean {
-    for (let i = scopes.length - 2; i >= 0; i--) {
-        if (scopes[i]!.bindings.has(name)) return true
+function isDefinedAbove(scopes: readonly ScopeFrame[], name: string): boolean {
+    for (let i = scopes.length - 2; i >= 0; i -= 1) {
+        const scope = scopes[i]
+        if (scope !== undefined && scope.bindings.has(name)) return true
     }
     return false
 }
 
 function addBinding(
-    scopes: ScopeFrame[],
+    scope: ScopeFrame,
     name: string,
     declNode: ts.Node,
+    scopes: readonly ScopeFrame[],
     ctx: Context,
 ): void {
     if (isDefinedAbove(scopes, name)) {
         const pos = posOf(ctx.sourceFile, declNode)
         ctx.push({ ...pos, rule: 'no-shadow', message: 'Variable shadowing is not allowed. Rename the inner binding.' })
     }
-    scopes[scopes.length - 1]!.bindings.set(name, declNode)
+    scope.bindings.set(name, declNode)
 }
 
-function walk(node: ts.Node, scopes: ScopeFrame[], ctx: Context): void {
+function walk(node: ts.Node, scopes: readonly ScopeFrame[], ctx: Context): void {
     if (ts.isFunctionDeclaration(node)) {
-        if (node.name) {
-            addBinding(scopes, node.name.text, node.name, ctx)
-        }
+        const top = scopes[scopes.length - 1]
+        if (node.name && top !== undefined) addBinding(top, node.name.text, node.name, scopes, ctx)
         const frame: ScopeFrame = { bindings: new Map() }
-        scopes.push(frame)
+        const fnScopes = [...scopes, frame]
         for (const param of node.parameters) {
-            for (const name of collectNames(param.name)) {
-                addBinding(scopes, name, param.name, ctx)
-            }
+            for (const name of collectNames(param.name)) addBinding(frame, name, param.name, fnScopes, ctx)
         }
-        if (node.body) walk(node.body, scopes, ctx)
-        scopes.pop()
+        if (node.body) walk(node.body, fnScopes, ctx)
     } else if (ts.isFunctionExpression(node)) {
         const frame: ScopeFrame = { bindings: new Map() }
-        scopes.push(frame)
-        if (node.name) {
-            frame.bindings.set(node.name.text, node.name)
-        }
+        const fnScopes = [...scopes, frame]
+        if (node.name) frame.bindings.set(node.name.text, node.name)
         for (const param of node.parameters) {
-            for (const name of collectNames(param.name)) {
-                addBinding(scopes, name, param.name, ctx)
-            }
+            for (const name of collectNames(param.name)) addBinding(frame, name, param.name, fnScopes, ctx)
         }
-        if (node.body) walk(node.body, scopes, ctx)
-        scopes.pop()
+        if (node.body) walk(node.body, fnScopes, ctx)
     } else if (ts.isArrowFunction(node)) {
         const frame: ScopeFrame = { bindings: new Map() }
-        scopes.push(frame)
+        const fnScopes = [...scopes, frame]
         for (const param of node.parameters) {
-            for (const name of collectNames(param.name)) {
-                addBinding(scopes, name, param.name, ctx)
-            }
+            for (const name of collectNames(param.name)) addBinding(frame, name, param.name, fnScopes, ctx)
         }
-        const body = node.body
-        if (ts.isBlock(body)) {
-            walk(body, scopes, ctx)
-        } else {
-            walk(body, scopes, ctx)
-        }
-        scopes.pop()
+        walk(node.body, fnScopes, ctx)
     } else if (ts.isBlock(node)) {
         const parent = node.parent
         const isFnBody = parent &&
             (ts.isFunctionDeclaration(parent) || ts.isFunctionExpression(parent) || ts.isArrowFunction(parent))
         if (!isFnBody) {
-            scopes.push({ bindings: new Map() })
+            const frame: ScopeFrame = { bindings: new Map() }
+            const blockScopes = [...scopes, frame]
+            ts.forEachChild(node, function walkChild(child: ts.Node): void { walk(child, blockScopes, ctx) })
+        } else {
+            ts.forEachChild(node, function walkChild(child: ts.Node): void { walk(child, scopes, ctx) })
         }
-        ts.forEachChild(node, function walkChild(child: ts.Node): void { walk(child, scopes, ctx) })
-        if (!isFnBody) scopes.pop()
     } else if (ts.isVariableDeclaration(node)) {
-        for (const name of collectNames(node.name)) {
-            addBinding(scopes, name, node.name, ctx)
+        const top = scopes[scopes.length - 1]
+        if (top !== undefined) {
+            for (const name of collectNames(node.name)) addBinding(top, name, node.name, scopes, ctx)
         }
         if (node.initializer) walk(node.initializer, scopes, ctx)
     } else if (ts.isForStatement(node) || ts.isForOfStatement(node) || ts.isForInStatement(node)) {
-        scopes.push({ bindings: new Map() })
-        ts.forEachChild(node, function walkChild(child: ts.Node): void { walk(child, scopes, ctx) })
-        scopes.pop()
+        const frame: ScopeFrame = { bindings: new Map() }
+        const forScopes = [...scopes, frame]
+        ts.forEachChild(node, function walkChild(child: ts.Node): void { walk(child, forScopes, ctx) })
     } else if (ts.isImportDeclaration(node)) {
-        const clause = node.importClause
-        if (clause) {
-            if (clause.name) addBinding(scopes, clause.name.text, clause.name, ctx)
-            if (clause.namedBindings) {
-                if (ts.isNamespaceImport(clause.namedBindings)) {
-                    addBinding(scopes, clause.namedBindings.name.text, clause.namedBindings.name, ctx)
-                } else if (ts.isNamedImports(clause.namedBindings)) {
-                    for (const spec of clause.namedBindings.elements) {
-                        addBinding(scopes, spec.name.text, spec.name, ctx)
+        const top = scopes[scopes.length - 1]
+        if (top !== undefined) {
+            const clause = node.importClause
+            if (clause) {
+                if (clause.name) addBinding(top, clause.name.text, clause.name, scopes, ctx)
+                if (clause.namedBindings) {
+                    if (ts.isNamespaceImport(clause.namedBindings)) {
+                        addBinding(top, clause.namedBindings.name.text, clause.namedBindings.name, scopes, ctx)
+                    } else if (ts.isNamedImports(clause.namedBindings)) {
+                        for (const spec of clause.namedBindings.elements) {
+                            addBinding(top, spec.name.text, spec.name, scopes, ctx)
+                        }
                     }
                 }
             }
@@ -118,9 +107,9 @@ function walk(node: ts.Node, scopes: ScopeFrame[], ctx: Context): void {
 /** Variable shadowing is not allowed. Rename the inner binding. */
 export const noShadow: Rule = {
     name: 'no-shadow',
-    visit(node, ctx) {
+    visit(node, ctx): void {
         if (node.kind !== ts.SyntaxKind.SourceFile) return
-        const scopes: ScopeFrame[] = [{ bindings: new Map() }]
-        ts.forEachChild(node, function walkChild(child: ts.Node): void { walk(child, scopes, ctx) })
+        const initialFrame: ScopeFrame = { bindings: new Map() }
+        ts.forEachChild(node, function walkChild(child: ts.Node): void { walk(child, [initialFrame], ctx) })
     },
 }

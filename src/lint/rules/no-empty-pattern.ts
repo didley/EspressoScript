@@ -5,7 +5,7 @@ import { posOf } from '../pos.js'
 /** Empty destructure has no effect. */
 export const noEmptyPattern: Rule = {
     name: 'no-empty-pattern',
-    visit(node, ctx) {
+    visit(node, ctx): void {
         if (ts.isObjectBindingPattern(node) && node.elements.length === 0) {
             const pos = posOf(ctx.sourceFile, node)
             ctx.push({ ...pos, rule: 'no-empty-pattern', message: 'Empty destructure has no effect.' })

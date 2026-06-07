@@ -10,7 +10,7 @@ function isBooleanLiteral(node: ts.TypeNode): boolean {
 /** `true | false` is just `boolean`. */
 export const noLiteralBooleanType: Rule = {
     name: 'no-literal-boolean-type',
-    visit(node, ctx) {
+    visit(node, ctx): void {
         if (ts.isUnionTypeNode(node) && node.types.length === 2) {
             const [a, b] = node.types
             if (a && b && isBooleanLiteral(a) && isBooleanLiteral(b)) {

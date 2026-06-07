@@ -34,7 +34,7 @@ function walk(node: ts.Node, inLoop: boolean, ctx: Context): void {
 /** Declaring a function inside a loop closes over the loop variable — extract it. */
 export const noLoopFunc: Rule = {
     name: 'no-loop-func',
-    visit(node, ctx) {
+    visit(node, ctx): void {
         if (node.kind !== ts.SyntaxKind.SourceFile) return
         ts.forEachChild(node, function walkChild(child: ts.Node): void { walk(child, false, ctx) })
     },

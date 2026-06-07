@@ -17,7 +17,7 @@ function isBannedPropertyAccess(node: ts.PropertyAccessExpression): boolean {
 /** This global throws on failure — wrap it in a safe function that returns [T, Error | null] instead. */
 export const noThrowingGlobals: Rule = {
     name: 'no-throwing-globals',
-    visit(node, ctx) {
+    visit(node, ctx): void {
         if (ts.isPropertyAccessExpression(node)) {
             if (isBannedPropertyAccess(node)) {
                 const pos = posOf(ctx.sourceFile, node)

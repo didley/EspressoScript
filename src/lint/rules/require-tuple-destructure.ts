@@ -14,22 +14,25 @@ function collectStdImports(sourceFile: ts.SourceFile): Set<string> {
         const bindings = stmt.importClause?.namedBindings
         if (!bindings || !ts.isNamedImports(bindings)) continue
         for (const el of bindings.elements) {
-            const name = el.name.escapedText as string
+            const name = el.name.text
             if (STD_FNS.has(name)) imported.add(name)
         }
     }
     return imported
 }
 
+function unwrapAwait(expr: ts.Expression): ts.Expression {
+    if (ts.isAwaitExpression(expr)) return expr.expression
+    return expr
+}
+
 function walk(node: ts.Node, stdImports: Set<string>, ctx: Parameters<Rule['visit']>[1]): void {
     if (ts.isVariableDeclaration(node)) {
         if (stdImports.size > 0 && ts.isIdentifier(node.name) && node.initializer) {
-            let init = node.initializer
-            // Peel one await
-            if (ts.isAwaitExpression(init)) init = init.expression
+            const init = unwrapAwait(node.initializer)
             if (ts.isCallExpression(init)) {
                 const callee = init.expression
-                if (ts.isIdentifier(callee) && stdImports.has((callee as ts.Identifier).escapedText as string)) {
+                if (ts.isIdentifier(callee) && stdImports.has(callee.text)) {
                     ctx.push({
                         ...posOf(ctx.sourceFile, node),
                         rule: 'require-tuple-destructure',
@@ -45,9 +48,9 @@ function walk(node: ts.Node, stdImports: Set<string>, ctx: Parameters<Rule['visi
 /** Tuple-returning calls must be destructured: use `const [result, err] = ...`. */
 export const requireTupleDestructure: Rule = {
     name: 'require-tuple-destructure',
-    visit(node, ctx) {
-        if (node.kind !== ts.SyntaxKind.SourceFile) return
-        const stdImports = collectStdImports(node as ts.SourceFile)
+    visit(node, ctx): void {
+        if (!ts.isSourceFile(node)) return
+        const stdImports = collectStdImports(node)
         ts.forEachChild(node, function walkChild(child: ts.Node): void { walk(child, stdImports, ctx) })
     },
 }

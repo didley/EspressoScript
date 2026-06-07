@@ -5,7 +5,7 @@ import { posOf } from '../pos.js'
 /** Don't use `&&` as conditional execution — use an `if` block. */
 export const noAndShorthand: Rule = {
     name: 'no-and-shorthand',
-    visit(node, ctx) {
+    visit(node, ctx): void {
         if (!ts.isExpressionStatement(node)) return
         const expr = node.expression
         if (!ts.isBinaryExpression(expr)) return

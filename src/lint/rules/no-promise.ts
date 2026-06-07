@@ -14,7 +14,7 @@ const PROMISE_STATIC_METHODS = new Set([
 /** new Promise() is not allowed. Use toPromiseResult(() => externalFn()) to wrap external Promise-returning functions. */
 export const noPromise: Rule = {
     name: 'no-promise',
-    visit(node, ctx) {
+    visit(node, ctx): void {
         // Ban: new Promise(...)
         if (
             ts.isNewExpression(node) &&

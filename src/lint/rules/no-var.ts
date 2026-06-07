@@ -5,7 +5,7 @@ import { posOf } from '../pos.js'
 /** `var` is not allowed. Use `const`. */
 export const noVar: Rule = {
     name: 'no-var',
-    visit(node, ctx) {
+    visit(node, ctx): void {
         if (!ts.isVariableDeclarationList(node)) return
         if ((node.flags & (ts.NodeFlags.Let | ts.NodeFlags.Const)) !== 0) return
         const pos = posOf(ctx.sourceFile, node)

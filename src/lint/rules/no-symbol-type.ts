@@ -5,7 +5,7 @@ import { posOf } from '../pos.js'
 /** `symbol` / `unique symbol` types are not allowed. */
 export const noSymbolType: Rule = {
     name: 'no-symbol-type',
-    visit(node, ctx) {
+    visit(node, ctx): void {
         if (node.kind === ts.SyntaxKind.SymbolKeyword) {
             // Skip the SymbolKeyword child of `unique symbol` — the TypeOperatorNode fires instead
             const parent = node.parent

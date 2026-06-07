@@ -1,5 +1,5 @@
 import type ts from 'typescript'
-import { check } from './lint/index.js'
+import { check } from './lint/check.js'
 
 /** TypeScript language service plugin that surfaces ShotScript diagnostics in the editor. */
 function init(modules: {
@@ -31,7 +31,7 @@ function init(modules: {
             if (sourceFile === undefined) return prior
 
             const source = sourceFile.getFullText()
-            const shotDiags = check(fileName, source, program?.getTypeChecker(), sourceFile)
+            const shotDiags = check(fileName, source, program?.getTypeChecker() ?? null, sourceFile)
 
             const converted: ts.Diagnostic[] = shotDiags.map(
                 function toDiagnostic(d: {

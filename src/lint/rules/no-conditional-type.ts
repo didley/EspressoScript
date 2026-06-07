@@ -4,13 +4,13 @@ import { posOf } from '../pos.js'
 
 function containsInfer(node: ts.Node): boolean {
     if (ts.isInferTypeNode(node)) return true
-    return !!ts.forEachChild(node, containsInfer)
+    return Boolean(ts.forEachChild(node, containsInfer))
 }
 
 /** Conditional types are not allowed. */
 export const noConditionalType: Rule = {
     name: 'no-conditional-type',
-    visit(node, ctx) {
+    visit(node, ctx): void {
         if (ts.isConditionalTypeNode(node)) {
             // If the conditional type contains `infer`, defer to no-infer to avoid double-reporting
             if (containsInfer(node)) return

@@ -5,7 +5,7 @@ import { posOf } from '../pos.js'
 /** Empty blocks are not allowed. */
 export const noEmpty: Rule = {
     name: 'no-empty',
-    visit(node, ctx) {
+    visit(node, ctx): void {
         if (!ts.isBlock(node)) return
         if (node.statements.length !== 0) return
         const pos = posOf(ctx.sourceFile, node)

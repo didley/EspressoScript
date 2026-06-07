@@ -5,7 +5,7 @@ import { posOf } from '../pos.js'
 /** Default parameters are not allowed (uses `undefined` as sentinel). Wrap with a thin function instead. */
 export const noDefaultParameter: Rule = {
     name: 'no-default-parameter',
-    visit(node, ctx) {
+    visit(node, ctx): void {
         if (ts.isParameter(node) && node.initializer !== undefined) {
             ctx.push({ ...posOf(ctx.sourceFile, node), rule: 'no-default-parameter', message: 'Default parameters are not allowed (uses `undefined` as sentinel). Wrap with a thin function instead.' })
         }

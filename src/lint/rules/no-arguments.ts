@@ -17,7 +17,7 @@ function isBindingPosition(node: ts.Identifier): boolean {
 /** `arguments` is not allowed. Use rest params `...args`. */
 export const noArguments: Rule = {
     name: 'no-arguments',
-    visit(node, ctx) {
+    visit(node, ctx): void {
         if (!ts.isIdentifier(node)) return
         if (node.text !== 'arguments') return
         if (isBindingPosition(node)) return

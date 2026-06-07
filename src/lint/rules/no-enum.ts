@@ -5,7 +5,7 @@ import { posOf } from '../pos.js'
 /** `enum` is not allowed. Use an `as const` object. */
 export const noEnum: Rule = {
     name: 'no-enum',
-    visit(node, ctx) {
+    visit(node, ctx): void {
         if (ts.isEnumDeclaration(node)) {
             ctx.push({ ...posOf(ctx.sourceFile, node), rule: 'no-enum', message: '`enum` is not allowed. Use an `as const` object.' })
         }

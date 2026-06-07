@@ -5,7 +5,7 @@ import { posOf } from '../pos.js'
 /** `infer` is not allowed. */
 export const noInfer: Rule = {
     name: 'no-infer',
-    visit(node, ctx) {
+    visit(node, ctx): void {
         if (ts.isInferTypeNode(node)) {
             ctx.push({ ...posOf(ctx.sourceFile, node), rule: 'no-infer', message: '`infer` is not allowed.' })
         }

@@ -5,7 +5,7 @@ import { posOf } from '../pos.js'
 /** `++` and `--` are not allowed. Use `+= 1` or `-= 1`. */
 export const noIncrementDecrement: Rule = {
     name: 'no-increment-decrement',
-    visit(node, ctx) {
+    visit(node, ctx): void {
         if (ts.isPostfixUnaryExpression(node)) {
             const op = node.operator
             if (op === ts.SyntaxKind.PlusPlusToken || op === ts.SyntaxKind.MinusMinusToken) {

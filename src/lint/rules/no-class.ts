@@ -17,7 +17,7 @@ function hasDecorator(node: ts.ClassDeclaration | ts.ClassExpression): boolean {
 /** `class` is not allowed. Use plain objects + functions. */
 export const noClass: Rule = {
     name: 'no-class',
-    visit(node, ctx) {
+    visit(node, ctx): void {
         if (ts.isClassDeclaration(node) || ts.isClassExpression(node)) {
             // Defer abstract classes to no-abstract and decorated to no-decorators
             if (hasAbstract(node) || hasDecorator(node)) return

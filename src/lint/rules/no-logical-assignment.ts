@@ -11,7 +11,7 @@ const LOGICAL_ASSIGN_OPS = new Set([
 /** Logical assignment is not allowed. Spell it out. */
 export const noLogicalAssignment: Rule = {
     name: 'no-logical-assignment',
-    visit(node, ctx) {
+    visit(node, ctx): void {
         if (!ts.isBinaryExpression(node)) return
         if (!LOGICAL_ASSIGN_OPS.has(node.operatorToken.kind)) return
         const pos = posOf(ctx.sourceFile, node)

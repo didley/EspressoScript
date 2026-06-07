@@ -15,7 +15,7 @@ function isAwaitable(checker: ts.TypeChecker, node: ts.Node): boolean {
 /** Promise must be handled. Use \`await\` to wait for the result, or \`void fn()\` to explicitly discard it. */
 export const noFloatingPromises: Rule = {
     name: 'no-floating-promises',
-    visit(node, ctx) {
+    visit(node, ctx): void {
         if (!ctx.typeChecker) return
         if (!ts.isExpressionStatement(node)) return
         const expr = node.expression

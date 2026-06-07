@@ -5,7 +5,7 @@ import { posOf } from '../pos.js'
 /** `let` is only allowed in a `for` header. Use `const`. */
 export const noLetOutsideFor: Rule = {
     name: 'no-let-outside-for',
-    visit(node, ctx) {
+    visit(node, ctx): void {
         if (!ts.isVariableStatement(node)) return
         if ((node.declarationList.flags & ts.NodeFlags.Let) === 0) return
         const pos = posOf(ctx.sourceFile, node)

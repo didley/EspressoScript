@@ -5,7 +5,7 @@ import { posOf } from '../pos.js'
 /** Loose equality is not allowed. Use `===` / `!==`. */
 export const noLooseEquality: Rule = {
     name: 'no-loose-equality',
-    visit(node, ctx) {
+    visit(node, ctx): void {
         if (!ts.isBinaryExpression(node)) return
         const op = node.operatorToken.kind
         if (op !== ts.SyntaxKind.EqualsEqualsToken && op !== ts.SyntaxKind.ExclamationEqualsToken) return

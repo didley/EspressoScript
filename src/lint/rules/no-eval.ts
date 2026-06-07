@@ -5,7 +5,7 @@ import { posOf } from '../pos.js'
 /** `eval` is not allowed. */
 export const noEval: Rule = {
     name: 'no-eval',
-    visit(node, ctx) {
+    visit(node, ctx): void {
         if (!ts.isCallExpression(node)) return
         const expr = node.expression
         if (!ts.isIdentifier(expr)) return

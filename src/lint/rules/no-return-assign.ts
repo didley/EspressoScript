@@ -14,7 +14,7 @@ const ASSIGN_OPS = new Set([
 /** Return value cannot be an assignment expression. */
 export const noReturnAssign: Rule = {
     name: 'no-return-assign',
-    visit(node, ctx) {
+    visit(node, ctx): void {
         if (!ts.isReturnStatement(node)) return
         const expr = node.expression
         if (!expr) return

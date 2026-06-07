@@ -5,7 +5,7 @@ import { posOf } from '../pos.js'
 /** `export {}` is meaningless under `moduleDetection: force`. */
 export const noUselessEmptyExport: Rule = {
     name: 'no-useless-empty-export',
-    visit(node, ctx) {
+    visit(node, ctx): void {
         if (!ts.isExportDeclaration(node)) return
         const clause = node.exportClause
         if (!clause) return

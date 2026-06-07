@@ -5,7 +5,7 @@ import { posOf } from '../pos.js'
 /** Concatenating string literals — write a single literal. */
 export const noUselessConcat: Rule = {
     name: 'no-useless-concat',
-    visit(node, ctx) {
+    visit(node, ctx): void {
         if (!ts.isBinaryExpression(node)) return
         if (node.operatorToken.kind !== ts.SyntaxKind.PlusToken) return
         if (!ts.isStringLiteral(node.left)) return

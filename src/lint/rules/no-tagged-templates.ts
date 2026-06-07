@@ -5,7 +5,7 @@ import { posOf } from '../pos.js'
 /** Tagged template literals are not allowed. */
 export const noTaggedTemplates: Rule = {
     name: 'no-tagged-templates',
-    visit(node, ctx) {
+    visit(node, ctx): void {
         if (!ts.isTaggedTemplateExpression(node)) return
         const pos = posOf(ctx.sourceFile, node)
         ctx.push({ ...pos, rule: 'no-tagged-templates', message: 'Tagged template literals are not allowed.' })

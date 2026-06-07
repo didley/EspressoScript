@@ -12,10 +12,11 @@ const TERMINATORS = new Set([
 /** Switch case must end with `break` or `return`. */
 export const switchNoFallthrough: Rule = {
     name: 'switch-no-fallthrough',
-    visit(node, ctx) {
+    visit(node, ctx): void {
         if (!ts.isCaseClause(node)) return
         if (node.statements.length === 0) return
-        const last = node.statements[node.statements.length - 1]!
+        const last = node.statements.at(-1)
+        if (last === undefined) return
         if (TERMINATORS.has(last.kind)) return
         const pos = posOf(ctx.sourceFile, node)
         ctx.push({ ...pos, rule: 'switch-no-fallthrough', message: 'Switch case must end with `break` or `return`.' })

@@ -14,7 +14,7 @@ export type Context = {
     readonly file: string
     readonly source: string
     readonly sourceFile: ts.SourceFile
-    readonly typeChecker: ts.TypeChecker | undefined
+    readonly typeChecker: ts.TypeChecker | null
     push(d: Omit<Diagnostic, 'file'>): void
 }
 

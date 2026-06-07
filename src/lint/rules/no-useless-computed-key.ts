@@ -7,7 +7,7 @@ const IDENT_RE = /^[a-zA-Z_$][a-zA-Z0-9_$]*$/
 /** Computed key is unnecessary — use the identifier form. */
 export const noUselessComputedKey: Rule = {
     name: 'no-useless-computed-key',
-    visit(node, ctx) {
+    visit(node, ctx): void {
         if (!ts.isComputedPropertyName(node)) return
         const expr = node.expression
         if (ts.isStringLiteral(expr) && IDENT_RE.test(expr.text)) {

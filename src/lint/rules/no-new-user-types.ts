@@ -25,7 +25,7 @@ const ALLOWED_CONSTRUCTORS = new Set([
 /** `new` is only allowed on built-in runtime constructors. */
 export const noNewUserTypes: Rule = {
     name: 'no-new-user-types',
-    visit(node, ctx) {
+    visit(node, ctx): void {
         if (!ts.isNewExpression(node)) return
         const expr = node.expression
         if (!ts.isIdentifier(expr)) return

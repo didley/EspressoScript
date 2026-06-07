@@ -5,7 +5,7 @@ import { posOf } from '../pos.js'
 /** Object type properties must be declared `readonly`. */
 export const requireReadonlyProperty: Rule = {
     name: 'require-readonly-property',
-    visit(node, ctx) {
+    visit(node, ctx): void {
         if (ts.isPropertySignature(node)) {
             const hasReadonly = node.modifiers?.some(function isReadonly(m: ts.ModifierLike): boolean {
                 return m.kind === ts.SyntaxKind.ReadonlyKeyword

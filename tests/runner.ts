@@ -16,7 +16,7 @@ function tsFiles(dir: string): readonly string[] {
 for (const file of tsFiles(PASS_DIR)) {
     test(`pass: ${file.split("/").slice(-2).join("/")}`, function runPass(): void {
         const source = readFileSync(file, "utf8")
-        const diags = check(file, source)
+        const diags = check(file, source, null, null)
         assert.equal(diags.length, 0, `Expected no diagnostics, got:\n${diags.map(function fmt(d: { rule: string; message: string; line: number; col: number }): string { return `  [${d.rule}] ${d.message} (${d.line}:${d.col})` }).join("\n")}`)
     })
 }
@@ -24,7 +24,7 @@ for (const file of tsFiles(PASS_DIR)) {
 for (const file of tsFiles(FAIL_DIR)) {
     test(`fail: ${file.split("/").slice(-2).join("/")}`, function runFail(): void {
         const source = readFileSync(file, "utf8")
-        const diags = check(file, source)
+        const diags = check(file, source, null, null)
         assert.ok(diags.length > 0, `Expected at least one diagnostic but got none for ${file}`)
     })
 }

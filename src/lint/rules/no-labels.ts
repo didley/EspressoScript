@@ -5,7 +5,7 @@ import { posOf } from '../pos.js'
 /** Labels are not allowed. Extract a function and `return`. */
 export const noLabels: Rule = {
     name: 'no-labels',
-    visit(node, ctx) {
+    visit(node, ctx): void {
         if (ts.isLabeledStatement(node)) {
             const pos = posOf(ctx.sourceFile, node)
             ctx.push({ ...pos, rule: 'no-labels', message: 'Labels are not allowed. Extract a function and `return`.' })

@@ -20,7 +20,7 @@ function isParseNumberCall(node: ts.CallExpression): boolean {
 /** Use `Number()` instead of `parseInt` / `parseFloat`. */
 export const noParseNumberFns: Rule = {
     name: 'no-parse-number-fns',
-    visit(node, ctx) {
+    visit(node, ctx): void {
         if (!ts.isCallExpression(node)) return
         if (!isParseNumberCall(node)) return
         const pos = posOf(ctx.sourceFile, node)

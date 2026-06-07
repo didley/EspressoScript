@@ -46,7 +46,7 @@ function hasNoSideEffect(expr: ts.Expression): boolean {
 /** Bare expression has no effect. */
 export const noUnusedExpressions: Rule = {
     name: 'no-unused-expressions',
-    visit(node, ctx) {
+    visit(node, ctx): void {
         if (!ts.isExpressionStatement(node)) return
         if (!hasNoSideEffect(node.expression)) return
         const pos = posOf(ctx.sourceFile, node)

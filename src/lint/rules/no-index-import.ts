@@ -17,7 +17,7 @@ function check(spec: string, node: ts.Node, ctx: Parameters<Rule['visit']>[1]): 
 /** Importing index files is not allowed. Import the specific module file instead (e.g. './dir/module.ts'). */
 export const noIndexImport: Rule = {
     name: 'no-index-import',
-    visit(node, ctx) {
+    visit(node, ctx): void {
         if (ts.isImportDeclaration(node) && ts.isStringLiteral(node.moduleSpecifier)) {
             check(node.moduleSpecifier.text, node.moduleSpecifier, ctx)
         } else if (ts.isExportDeclaration(node) && node.moduleSpecifier && ts.isStringLiteral(node.moduleSpecifier)) {

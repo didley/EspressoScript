@@ -5,7 +5,7 @@ import { posOf } from '../pos.js'
 /** Function expressions must be named. */
 export const requireNamedFunctions: Rule = {
     name: 'require-named-functions',
-    visit(node, ctx) {
+    visit(node, ctx): void {
         if (!ts.isFunctionExpression(node)) return
         if (node.name !== undefined) return
         const pos = posOf(ctx.sourceFile, node)

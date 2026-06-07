@@ -14,7 +14,7 @@ const ASSIGN_OPS = new Set([
 /** Chained assignment (`a = b = c`) is not allowed. */
 export const noMultiAssign: Rule = {
     name: 'no-multi-assign',
-    visit(node, ctx) {
+    visit(node, ctx): void {
         if (!ts.isBinaryExpression(node)) return
         if (node.operatorToken.kind !== ts.SyntaxKind.EqualsToken) return
         if (!ts.isBinaryExpression(node.right)) return

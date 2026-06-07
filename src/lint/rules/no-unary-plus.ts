@@ -5,7 +5,7 @@ import { posOf } from '../pos.js'
 /** Unary `+` coercion is not allowed. Use `Number()`. */
 export const noUnaryPlus: Rule = {
     name: 'no-unary-plus',
-    visit(node, ctx) {
+    visit(node, ctx): void {
         if (!ts.isPrefixUnaryExpression(node)) return
         if (node.operator !== ts.SyntaxKind.PlusToken) return
         const pos = posOf(ctx.sourceFile, node)

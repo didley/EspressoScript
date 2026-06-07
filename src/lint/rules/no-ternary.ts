@@ -5,7 +5,7 @@ import { posOf } from '../pos.js'
 /** Ternary expressions are not allowed. Use a named function. */
 export const noTernary: Rule = {
     name: 'no-ternary',
-    visit(node, ctx) {
+    visit(node, ctx): void {
         if (!ts.isConditionalExpression(node)) return
         const pos = posOf(ctx.sourceFile, node)
         ctx.push({ ...pos, rule: 'no-ternary', message: 'Ternary expressions are not allowed. Use a named function.' })

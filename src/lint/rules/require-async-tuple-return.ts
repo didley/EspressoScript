@@ -45,7 +45,7 @@ function isValidAsyncReturn(typeNode: ts.TypeNode): boolean {
 /** Async functions must return PromiseResult<T> or Promise<[T | null, E | null]>. Use a tuple return type so callers can handle errors explicitly. */
 export const requireAsyncTupleReturn: Rule = {
     name: 'require-async-tuple-return',
-    visit(node, ctx) {
+    visit(node, ctx): void {
         if (!ts.isFunctionDeclaration(node) && !ts.isFunctionExpression(node)) return
         const isAsync = node.modifiers?.some(function isAsyncMod(m: ts.ModifierLike): boolean {
             return m.kind === ts.SyntaxKind.AsyncKeyword

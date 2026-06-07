@@ -5,7 +5,7 @@ import { posOf } from '../pos.js'
 /** Lone blocks are not allowed. */
 export const noLoneBlocks: Rule = {
     name: 'no-lone-blocks',
-    visit(node, ctx) {
+    visit(node, ctx): void {
         if (!ts.isBlock(node)) return
         const parent = node.parent
         if (!parent) return

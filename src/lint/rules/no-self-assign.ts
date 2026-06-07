@@ -9,7 +9,7 @@ function nodeText(node: ts.Node, sf: ts.SourceFile): string {
 /** Self-assignment has no effect. */
 export const noSelfAssign: Rule = {
     name: 'no-self-assign',
-    visit(node, ctx) {
+    visit(node, ctx): void {
         if (!ts.isBinaryExpression(node)) return
         if (node.operatorToken.kind !== ts.SyntaxKind.EqualsToken) return
         const lText = nodeText(node.left, ctx.sourceFile)

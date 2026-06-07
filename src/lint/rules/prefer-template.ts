@@ -11,7 +11,7 @@ const VAR_KINDS = new Set([
 /** Use a template literal instead of `+`. */
 export const preferTemplate: Rule = {
     name: 'prefer-template',
-    visit(node, ctx) {
+    visit(node, ctx): void {
         if (!ts.isBinaryExpression(node)) return
         if (node.operatorToken.kind !== ts.SyntaxKind.PlusToken) return
         const left = node.left

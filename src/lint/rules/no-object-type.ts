@@ -5,13 +5,13 @@ import { posOf } from '../pos.js'
 /** `object` / `Object` is not allowed. Use a specific type. */
 export const noObjectType: Rule = {
     name: 'no-object-type',
-    visit(node, ctx) {
+    visit(node, ctx): void {
         if (node.kind === ts.SyntaxKind.ObjectKeyword) {
             ctx.push({ ...posOf(ctx.sourceFile, node), rule: 'no-object-type', message: '`object` / `Object` is not allowed. Use a specific type.' })
         } else if (
             ts.isTypeReferenceNode(node) &&
             ts.isIdentifier(node.typeName) &&
-            (node.typeName as ts.Identifier).escapedText === 'Object'
+            node.typeName.text === 'Object'
         ) {
             ctx.push({ ...posOf(ctx.sourceFile, node), rule: 'no-object-type', message: '`object` / `Object` is not allowed. Use a specific type.' })
         }
