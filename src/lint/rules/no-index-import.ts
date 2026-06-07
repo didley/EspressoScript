@@ -20,7 +20,7 @@ export const noIndexImport: Rule = {
     visit(node, ctx): void {
         if (ts.isImportDeclaration(node) && ts.isStringLiteral(node.moduleSpecifier)) {
             check(node.moduleSpecifier.text, node.moduleSpecifier, ctx)
-        } else if (ts.isExportDeclaration(node) && node.moduleSpecifier && ts.isStringLiteral(node.moduleSpecifier)) {
+        } else if (ts.isExportDeclaration(node) && node.moduleSpecifier !== undefined && ts.isStringLiteral(node.moduleSpecifier)) {
             check(node.moduleSpecifier.text, node.moduleSpecifier, ctx)
         }
     },

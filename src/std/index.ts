@@ -124,3 +124,89 @@ export function wrapError(message: string, cause: Error): Error {
     return err
 }
 
+/**
+ * Safe URL constructor — replaces the banned `new URL(str)` which throws on malformed input.
+ * Returns [URL, null] on success, [null, Error] on invalid URL string.
+ *
+ *   const [url, err] = safeURL(rawInput)
+ *   if (err !== null) { return [null, err] }
+ */
+export function safeURL(url: string, base: string | null = null): Result<URL> {
+    try {
+        return [new URL(url, base ?? undefined), null]
+    } catch (e) {
+        if (e instanceof Error) {
+            return [null, e]
+        }
+        return [null, new Error(`Invalid URL: ${String(e)}`)]
+    }
+}
+
+/**
+ * Safe decodeURIComponent — replaces the banned `decodeURIComponent()` which throws on malformed sequences.
+ * Returns [decoded, null] on success, [null, Error] on invalid percent-encoding.
+ *
+ *   const [decoded, err] = safeDecodeURIComponent(rawStr)
+ */
+export function safeDecodeURIComponent(str: string): Result<string> {
+    try {
+        return [decodeURIComponent(str), null]
+    } catch (e) {
+        if (e instanceof Error) {
+            return [null, e]
+        }
+        return [null, new Error(`decodeURIComponent failed: ${String(e)}`)]
+    }
+}
+
+/**
+ * Safe decodeURI — replaces the banned `decodeURI()` which throws on malformed sequences.
+ * Returns [decoded, null] on success, [null, Error] on invalid percent-encoding.
+ *
+ *   const [decoded, err] = safeDecodeURI(rawStr)
+ */
+export function safeDecodeURI(str: string): Result<string> {
+    try {
+        return [decodeURI(str), null]
+    } catch (e) {
+        if (e instanceof Error) {
+            return [null, e]
+        }
+        return [null, new Error(`decodeURI failed: ${String(e)}`)]
+    }
+}
+
+/**
+ * Safe atob — replaces the banned `atob()` which throws on invalid base64 input.
+ * Returns [decoded, null] on success, [null, Error] on invalid input.
+ *
+ *   const [bin, err] = safeAtob(base64Str)
+ */
+export function safeAtob(data: string): Result<string> {
+    try {
+        return [atob(data), null]
+    } catch (e) {
+        if (e instanceof Error) {
+            return [null, e]
+        }
+        return [null, new Error(`atob failed: ${String(e)}`)]
+    }
+}
+
+/**
+ * Safe btoa — replaces the banned `btoa()` which throws on non-Latin1 characters.
+ * Returns [encoded, null] on success, [null, Error] on invalid input.
+ *
+ *   const [b64, err] = safeBtoa(binaryStr)
+ */
+export function safeBtoa(data: string): Result<string> {
+    try {
+        return [btoa(data), null]
+    } catch (e) {
+        if (e instanceof Error) {
+            return [null, e]
+        }
+        return [null, new Error(`btoa failed: ${String(e)}`)]
+    }
+}
+

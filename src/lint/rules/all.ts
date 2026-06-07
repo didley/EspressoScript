@@ -55,6 +55,12 @@ import { noNewUserTypes } from './no-new-user-types.js'
 import { noIndexImport } from './no-index-import.js'
 import { noOverloads } from './no-overloads.js'
 import { noNamespace } from './no-namespace.js'
+import { noOrShorthand } from './no-or-shorthand.js'
+import { noAsyncWithoutAwait } from './no-async-without-await.js'
+import { noSparseArrays } from './no-sparse-arrays.js'
+import { requireReadonlyCollections } from './require-readonly-collections.js'
+import { noImplicitTruthy } from './no-implicit-truthy.js'
+import { noUnnecessaryCondition } from './no-unnecessary-condition.js'
 // T04 type rules
 import { noAny } from './no-any.js'
 import { noAssertion } from './no-assertion.js'
@@ -190,4 +196,10 @@ export const rules: readonly Rule[] = [
     requireTupleDestructure,
     requireAsyncTupleReturn,
     noFloatingPromises,
+    noOrShorthand,
+    noAsyncWithoutAwait,
+    noSparseArrays,
+    requireReadonlyCollections,
+    noImplicitTruthy,
+    noUnnecessaryCondition,
 ]

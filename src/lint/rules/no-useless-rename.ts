@@ -7,18 +7,18 @@ export const noUselessRename: Rule = {
     name: 'no-useless-rename',
     visit(node, ctx): void {
         if (ts.isImportSpecifier(node)) {
-            if (node.propertyName && node.propertyName.text === node.name.text) {
+            if (node.propertyName !== undefined && node.propertyName.text === node.name.text) {
                 const pos = posOf(ctx.sourceFile, node)
                 ctx.push({ ...pos, rule: 'no-useless-rename', message: 'Useless rename — drop the alias.' })
             }
         } else if (ts.isExportSpecifier(node)) {
-            if (node.propertyName && node.propertyName.text === node.name.text) {
+            if (node.propertyName !== undefined && node.propertyName.text === node.name.text) {
                 const pos = posOf(ctx.sourceFile, node)
                 ctx.push({ ...pos, rule: 'no-useless-rename', message: 'Useless rename — drop the alias.' })
             }
         } else if (ts.isBindingElement(node)) {
             const propName = node.propertyName
-            if (propName && ts.isIdentifier(propName) && ts.isIdentifier(node.name)) {
+            if (propName !== undefined && ts.isIdentifier(propName) && ts.isIdentifier(node.name)) {
                 if (propName.text === node.name.text) {
                     const pos = posOf(ctx.sourceFile, node)
                     ctx.push({ ...pos, rule: 'no-useless-rename', message: 'Useless rename — drop the alias.' })

@@ -21,6 +21,9 @@
     "./tsconfig/shotscript.json": "./src/tsconfig/shotscript.json",
     "./fmt": "./src/fmt/shotscript.json"
   },
+  "bin": {
+    "shotscript": "./dist/lintCli.js"
+  },
   "main": "./dist/lint/index.js",
   "types": "./dist/lint/index.d.ts",
   "files": [

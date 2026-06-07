@@ -4,8 +4,8 @@ import { posOf } from '../pos.js'
 
 function isAwaitable(checker: ts.TypeChecker, node: ts.Node): boolean {
     const type = checker.getTypeAtLocation(node)
-    if (type.flags & ts.TypeFlags.Any) return false
-    if (type.flags & ts.TypeFlags.Unknown) return false
+    if (Boolean(type.flags & ts.TypeFlags.Any)) return false
+    if (Boolean(type.flags & ts.TypeFlags.Unknown)) return false
     const thenProp = type.getProperty('then')
     if (!thenProp) return false
     const thenType = checker.getTypeOfSymbol(thenProp)

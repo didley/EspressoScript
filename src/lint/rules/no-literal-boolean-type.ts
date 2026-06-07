@@ -13,7 +13,7 @@ export const noLiteralBooleanType: Rule = {
     visit(node, ctx): void {
         if (ts.isUnionTypeNode(node) && node.types.length === 2) {
             const [a, b] = node.types
-            if (a && b && isBooleanLiteral(a) && isBooleanLiteral(b)) {
+            if (a !== undefined && b !== undefined && isBooleanLiteral(a) && isBooleanLiteral(b)) {
                 ctx.push({ ...posOf(ctx.sourceFile, node), rule: 'no-literal-boolean-type', message: '`true | false` is just `boolean`.' })
             }
         }

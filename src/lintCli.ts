@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 // CLI entry point — runs the ShotScript linter over glob patterns from argv
 // and exits with code 1 if any diagnostics are found.
 // Usage: shotscript 'src/**/*.ts'

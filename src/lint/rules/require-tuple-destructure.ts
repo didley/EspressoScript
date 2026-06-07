@@ -5,7 +5,7 @@ import { posOf } from '../pos.js'
 const STD_FNS = new Set(['jsonParse', 'jsonStringify', 'safeFetch', 'toResult', 'toPromiseResult'])
 
 /** Collects the subset of STD_FNS imported from shotscript/std in this file. */
-function collectStdImports(sourceFile: ts.SourceFile): Set<string> {
+function collectStdImports(sourceFile: ts.SourceFile): ReadonlySet<string> {
     const imported = new Set<string>()
     for (const stmt of sourceFile.statements) {
         if (!ts.isImportDeclaration(stmt)) continue
@@ -26,9 +26,9 @@ function unwrapAwait(expr: ts.Expression): ts.Expression {
     return expr
 }
 
-function walk(node: ts.Node, stdImports: Set<string>, ctx: Parameters<Rule['visit']>[1]): void {
+function walk(node: ts.Node, stdImports: ReadonlySet<string>, ctx: Parameters<Rule['visit']>[1]): void {
     if (ts.isVariableDeclaration(node)) {
-        if (stdImports.size > 0 && ts.isIdentifier(node.name) && node.initializer) {
+        if (stdImports.size > 0 && ts.isIdentifier(node.name) && node.initializer !== undefined) {
             const init = unwrapAwait(node.initializer)
             if (ts.isCallExpression(init)) {
                 const callee = init.expression

@@ -19,7 +19,7 @@ const ASSIGN_OPS = new Set([
 ])
 
 type Frame = {
-    readonly params: Set<string>
+    readonly params: ReadonlySet<string>
     readonly isFunction: boolean
 }
 
@@ -42,13 +42,13 @@ function isParamInScope(frames: readonly Frame[], name: string): boolean {
 
 function walk(node: ts.Node, frames: readonly Frame[], ctx: Context): void {
     if (ts.isFunctionDeclaration(node) || ts.isFunctionExpression(node) || ts.isArrowFunction(node)) {
-        const params: Set<string> = new Set()
+        const params = new Set<string>()
         for (const param of node.parameters) {
             for (const name of collectNames(param.name)) params.add(name)
         }
         const fnFrames = [...frames, { params, isFunction: true }]
         const body = node.body
-        if (body) walk(body, fnFrames, ctx)
+        if (body !== undefined) walk(body, fnFrames, ctx)
     } else if (ts.isBinaryExpression(node) && ASSIGN_OPS.has(node.operatorToken.kind)) {
         const lhs = node.left
         if (ts.isIdentifier(lhs) && isParamInScope(frames, lhs.text)) {

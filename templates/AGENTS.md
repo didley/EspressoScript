@@ -1,65 +1,42 @@
 # ShotScript — Agent Context
 
-This file is the coding style guide for **ShotScript** (`shotscript` npm package). You are writing TypeScript that follows the ShotScript rules. This file is authoritative. Follow it exactly. When in doubt, the explicit, verbose, named form always wins.
+This project uses **ShotScript** (`shotscript` npm package). You are writing TypeScript that follows the ShotScript rules. This file is authoritative. Follow it exactly. When in doubt, the explicit, verbose, named form always wins.
 
 **One canonical way to write every construct.** The same philosophy as Go: remove choices, not features. Code that looks the same everywhere is easier to read, review, and generate correctly.
 
 ---
 
-## Repo architecture
+## Setup
 
-ShotScript is a **published npm library** (`shotscript`). Users install it and run it against *their* projects. Every design decision must account for arbitrary user codebases — not just this repo's own source.
-
-### Package exports
-
-| Export | Entry point | Purpose |
-|---|---|---|
-| `shotscript` | `dist/lint/index.js` | Programmatic linter API (`check`, `posOf`) |
-| `shotscript/std` | `dist/std/index.js` | Standard library (`toResult`, `safeFetch`, etc.) |
-| `shotscript/plugin` | `dist/lintTsPlugin.cjs` | TypeScript language service plugin (IDE integration) |
-| `shotscript/tsconfig/shotscript.json` | `src/tsconfig/shotscript.json` | Strict tsconfig preset users extend |
-| `shotscript/fmt` | `src/fmt/shotscript.json` | Prettier config preset |
-
-The CLI binary (`shotscript`) is `src/lintCli.ts` — not part of the published API, just the command-line runner.
-
-### Source layout
-
-```
-src/
-  lintCli.ts          — CLI entry point (glob → check → print diagnostics → exit)
-  lintTsPlugin.ts     — TS language service plugin (IDE real-time linting)
-  lint/
-    check.ts          — core check() function: builds AST, walks nodes, collects diagnostics
-    types.ts          — Diagnostic, Context, Rule types
-    pos.ts            — posOf() helper: ts.Node → { line, col }
-    index.ts          — public re-exports for the programmatic API
-    rules/
-      all.ts          — imports every rule and exports the rules array
-      no-*.ts         — one file per rule
-      require-*.ts    — one file per rule
-  std/
-    index.ts          — toResult, safeFetch, jsonParse, jsonStringify, etc.
+```jsonc
+// tsconfig.json
+{
+  "extends": "shotscript/tsconfig/shotscript.json",
+  "compilerOptions": { "outDir": "dist" },
+  "include": ["src"]
+}
 ```
 
-### How the linter works
+```json
+// .prettierrc
+"shotscript/fmt"
+```
 
-1. **CLI** (`lintCli.ts`) resolves globs to absolute paths, reads the nearest `tsconfig.json` via `ts.findConfigFile`, then calls `ts.createProgram(allFiles, compilerOptions)` **once** for the entire run.
-2. **`check(file, source, typeChecker, programSourceFile)`** walks the AST of one file. When `typeChecker` and `programSourceFile` are provided (from the shared program), it uses them directly. When both are `null` (e.g. in tests), it falls back to building a per-file program.
-3. **Rules** receive every AST node via `visit(node, ctx)`. Rules that need type information check `if (!ctx.typeChecker) return` and skip gracefully when the checker is absent.
-4. **TS plugin** (`lintTsPlugin.ts`) calls `check()` with the existing program's checker — no extra compilation cost.
+Run the linter:
 
-### Adding a rule
+```sh
+npx shotscript 'src/**/*.ts'
+```
 
-1. Create `src/lint/rules/no-<name>.ts` exporting a `Rule` object with `name` and `visit`.
-2. Import and add it to the array in `src/lint/rules/all.ts`.
-3. Add a fixture file to `tests/pass/` or `tests/fail/` — the test runner picks them up automatically.
+IDE real-time linting (optional) — add to `tsconfig.json`:
 
-### Key constraints
-
-- **Never hardcode compiler options** in `lintCli.ts`. Always read the user's `tsconfig.json` via `ts.findConfigFile`. Users choose their own `target`, `lib`, `paths`, etc.
-- **One shared `ts.createProgram`** per CLI run. Creating a program per file adds ~50s to a 30-file run. The `check()` fallback exists for tests only.
-- **Rules must be side-effect free** — `visit` only calls `ctx.push()` to emit diagnostics. No state between files.
-- **The linter itself must pass its own rules.** The pre-commit hook runs `npm run lint` over `src/`. Any new code in `src/` must be valid ShotScript.
+```jsonc
+{
+  "compilerOptions": {
+    "plugins": [{ "name": "shotscript/plugin" }]
+  }
+}
+```
 
 ---
 
@@ -156,12 +133,12 @@ async function loadConfig(): Promise<[Config | null, Error | null]> { ... }
 
 ```ts
 // ❌
-throw new Error("bad input")
+throw new Error('bad input')
 try { riskyOp() } catch (e) { handle(e) }
 fetch(url).then(function handleRes(r: Response): Promise<unknown> { return r.json() })
 
 // ✅
-return [null, new Error("bad input")]
+return [null, new Error('bad input')]
 const [result, err] = toResult(function run(): unknown { return riskyOp() })
 const [res, err] = await safeFetch(url)
 ```
@@ -177,7 +154,7 @@ const [quotient, divErr] = divide(10, 2)
 if (divErr !== null) { return [null, divErr] }
 ```
 
-**Use ShotScriptStd (`shotscript/std`) for banned globals:**
+**Use ShotScript std (`shotscript/std`) for banned globals:**
 
 ```ts
 import { toResult, toPromiseResult, jsonParse, jsonStringify, safeFetch, wrapError } from 'shotscript/std'
@@ -191,6 +168,7 @@ const [val, err] = await toPromiseResult(function query(): Promise<Row> { return
 const [data, err] = jsonParse<Config>(text)
 const [json, err] = jsonStringify(payload)
 const [res, err] = await safeFetch('https://api.example.com')
+const [res, err] = await safeFetch('https://api.example.com/users', { method: 'POST', body: JSON.stringify(payload) })
 
 // add context when propagating errors
 const [cfg, cfgErr] = jsonParse<Config>(text)
@@ -347,26 +325,6 @@ type NullableUser = { readonly id: number | null; readonly name: string | null }
 
 **Use `Map<K, V>` for dictionaries. Not index signatures, not `Record`.**
 
-**`Map<K, V>` and `Set<T>` in type positions must be `ReadonlyMap<K, V>` and `ReadonlySet<T>`.** A "type position" is any explicit type annotation (`: Map<...>`), return type, or type alias body. `new Map<string, Node>()` in an expression is fine — it uses a type *argument*, not a type annotation.
-
-When you need a mutating `Map` or `Set` inside a type (e.g. you call `.set()` on it), **do not use `as Map<...>` to cast** — that violates `no-assertion`. Instead derive the type via `typeof`:
-
-```ts
-// Module-level proto — never written in a type annotation
-const _BINDINGS_PROTO = new Map<string, ts.Node>()
-
-type ScopeFrame = {
-    readonly bindings: typeof _BINDINGS_PROTO  // TypeQueryNode, not TypeReferenceNode — rule won't fire
-}
-
-function createFrame(): ScopeFrame {
-    return { bindings: new Map<string, ts.Node>() }
-}
-// scope.bindings.set(k, v) — works, because typeof resolves to the mutable Map type
-```
-
-**`new` is only allowed on built-in runtime constructors** (`Map`, `Set`, `Error`, `Date`, `URL`, `RegExp`, etc.). Never `new UserType()` — use plain object literals and factory functions instead.
-
 ---
 
 ## Async main
@@ -395,9 +353,9 @@ await main()
 
 ```ts
 function buildCatalog(books: readonly Book[]): Map<string, Book> {
-    const catalog = new Map<string, Book>()   // const binding
+    const catalog = new Map<string, Book>()
     for (const book of books) {
-        catalog.set(book.id, book)            // mutate the object, not the binding
+        catalog.set(book.id, book)
     }
     return catalog
 }
@@ -410,25 +368,6 @@ const [v1, err1] = addBook(empty, bookA, 'seed')
 if (err1 !== null) { return [null, err1] }
 const [v2, err2] = addBook(v1, bookB, 'seed')
 if (err2 !== null) { return [null, err2] }
-```
-
-**While loops without `let` — check external mutable state:**
-
-```ts
-// ❌ — needs a let counter
-let i = 0
-while (i < items.length) { i += 1 }
-
-// ✅ — const bindings inside the loop body; condition checks mutable Set.size
-const pending = new Set(items)
-while (pending.size > 0) {
-    const iter = pending.values()
-    const next = iter.next()
-    if (next.done !== true) {
-        process(next.value)
-        pending.delete(next.value)
-    }
-}
 ```
 
 ---
@@ -466,27 +405,6 @@ function labelFor(ready: boolean): string {
 ```
 
 **`===` / `!==` only. No `==` / `!=`.**
-
-**Every condition must be an explicit boolean expression — no implicit truthy/falsy (`no-implicit-truthy`).** This applies to `if`, `while`, `&&`, `||`, and ternary conditions.
-
-```ts
-// ❌ — implicit truthy on optional references, numbers, bitwise results
-if (node.name) { ... }
-if (node.body) walk(node.body)
-if (flags & ts.TypeFlags.Any) return false
-if (node.isExportEquals) return   // boolean | undefined is still not a boolean
-
-// ✅ — explicit comparisons
-if (node.name !== undefined) { ... }
-if (node.body !== undefined) walk(node.body)
-if (Boolean(flags & ts.TypeFlags.Any)) return false
-if (node.isExportEquals === true) return
-```
-
-Common patterns to always be explicit about:
-- Optional TS API fields (`node.name`, `node.body`, `node.initializer`, `clause.namedBindings`): `!== undefined`
-- Bitwise enum flags: `Boolean(x & Enum.Flag)`
-- Properties typed `boolean | undefined`: `=== true` / `!== true`
 
 **No `&&` shorthand for side effects. Use `if`.**
 
@@ -559,9 +477,9 @@ import { add } from './math/add.js'
 | `let` outside `for` header | `const` |
 | `var` | `const` |
 | `++` / `--` | `+= 1` / `-= 1` |
-| `JSON.parse` | `jsonParse<T>()` from ShotScriptStd (`shotscript/std`) |
-| `JSON.stringify` | `jsonStringify()` from ShotScriptStd (`shotscript/std`) |
-| `fetch(url)` | `safeFetch(url)` from ShotScriptStd (`shotscript/std`) |
+| `JSON.parse` | `jsonParse<T>()` from `shotscript/std` |
+| `JSON.stringify` | `jsonStringify()` from `shotscript/std` |
+| `fetch(url)` | `safeFetch(url)` from `shotscript/std` |
 | Third-party throws | `toResult(function fn() { return ... })` from `shotscript/std` |
 | `Record<K, V>` | `Map<K, V>` |
 | Index signature `[k: string]: T` | `Map<string, T>` |
@@ -578,11 +496,6 @@ import { add } from './math/add.js'
 | `&&` for side effects | `if (condition === true)` |
 | `!!value` | `Boolean(value)` |
 | `typeof x !== 'undefined'` | `x !== null` |
-| `Map<K,V>` or `Set<T>` in type annotations | `ReadonlyMap<K,V>` / `ReadonlySet<T>`, or `typeof _proto` when mutability is needed |
-| `new UserType()` | Plain object literal + factory function |
-| Truthy condition on optional/nullable (`if (x)`) | Explicit `if (x !== undefined)` or `if (x !== null)` |
-| `x & Enum.Flag` as condition | `Boolean(x & Enum.Flag)` |
-| `boolOrUndefinedProp` as condition | `boolOrUndefinedProp === true` |
 | `parseInt` / `parseFloat` | `Number(str)` |
 
 ---
@@ -599,7 +512,7 @@ import { add } from './math/add.js'
 
 5. **Using `undefined`** — the only nullable value is `null`. Write `string | null`, never `string | undefined`.
 
-6. **Calling `JSON.parse` / `fetch` directly** — import `jsonParse` / `safeFetch` from ShotScriptStd (`shotscript/std`) instead.
+6. **Calling `JSON.parse` / `fetch` directly** — import `jsonParse` / `safeFetch` from `shotscript/std` instead.
 
 7. **Writing optional properties** — `{ name?: string }` is banned. Write `{ readonly name: string | null }`.
 
@@ -619,21 +532,4 @@ import { add } from './math/add.js'
 
 15. **Using `ReadonlyMap<K, V>` as a function parameter type for a dictionary** — `new Map(existingMap)` accepts `Map<K, V>` but TypeScript doesn't accept `ReadonlyMap<K, V>` there. Use `Map<K, V>` as the type; `const` binding prevents reassignment.
 
-16. **Forgetting `no-floating-promises`** — always `await` async calls or ensure they're within an `async` function that is itself awaited.
-
-17. **Implicit truthy conditions on optional TypeScript API nodes** — `ts.Node` properties like `node.name`, `node.body`, `node.initializer`, `node.importClause`, and `clause.namedBindings` are typed as `T | undefined`. Writing `if (node.name)` is banned by `no-implicit-truthy`. Always write `if (node.name !== undefined)`. Bitwise flag tests (`flags & ts.TypeFlags.X`) return a number, not a boolean — use `Boolean(flags & ts.TypeFlags.X)`. A `boolean | undefined` property still needs `=== true`.
-
-18. **Reaching for a class or arrow function when a factory is needed** — `no-class`, `no-arrow-functions`, and `no-new-user-types` are all active. Factory functions must be named `function` declarations. Use plain object literals as the return value.
-
-19. **Writing `undefined` in a return type to drive `ts.forEachChild` short-circuit** — `undefined` is banned in type annotations. Use `void` instead: `true | void`. At runtime, `return` with no value produces `undefined`, which `ts.forEachChild` treats as "continue". The pattern:
-
-    ```ts
-    function walk(n: ts.Node): true | void {
-        if (ts.isAwaitExpression(n)) return true
-        if (BOUNDARIES.has(n.kind)) return   // implicit void/undefined — continues traversal
-        return ts.forEachChild(n, walk)
-    }
-    return ts.forEachChild(root, walk) === true
-    ```
-
-20. **Not reading the rule source before fixing a violation** — when a lint fix requires introducing a new type annotation pattern (readonly collections, type queries, etc.), read the rule implementation in `src/lint/rules/` first to understand exactly what AST node shape it checks. For example, `require-readonly-collections` only fires on `TypeReferenceNode`s — a `typeof` type query (`TypeQueryNode`) is invisible to it, which is the correct escape hatch when you need a mutable Map type without writing `Map<K,V>` in an annotation position.
+16. **Forgetting `no-floating-promises` is active** — always `await` async calls or ensure they're within an `async` function that is itself awaited.

@@ -2,13 +2,17 @@
 export type PromiseResult<T> = Promise<[T | null, Error | null]>
 
 export async function fetchData(): PromiseResult<string> {
-    return ["hello", null]
+    const [val, err] = await processData()
+    if (err !== null) { return [null, err] }
+    return [val, null]
 }
 
-export async function processData(): Promise<void> {
-    const [_val, _err] = await fetchData()
+export async function processData(): PromiseResult<string> {
+    const [val, err] = await fetchData()
+    if (err !== null) { return [null, err] }
+    return [val, null]
 }
 
-export async function fireAndForget(): Promise<void> {
+export function fireAndForget(): void {
     void fetchData()
 }

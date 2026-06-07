@@ -2,8 +2,14 @@ import ts from 'typescript'
 import type { Rule, Context } from '../types.js'
 import { posOf } from '../pos.js'
 
+const _SCOPE_BINDINGS_PROTO = new Map<string, ts.Node>()
+
 type ScopeFrame = {
-    readonly bindings: Map<string, ts.Node>
+    readonly bindings: typeof _SCOPE_BINDINGS_PROTO
+}
+
+function createFrame(): ScopeFrame {
+    return { bindings: new Map<string, ts.Node>() }
 }
 
 function collectNames(node: ts.BindingName): readonly string[] {
@@ -39,23 +45,23 @@ function addBinding(
 function walk(node: ts.Node, scopes: readonly ScopeFrame[], ctx: Context): void {
     if (ts.isFunctionDeclaration(node)) {
         const top = scopes[scopes.length - 1]
-        if (node.name && top !== undefined) addBinding(top, node.name.text, node.name, scopes, ctx)
-        const frame: ScopeFrame = { bindings: new Map() }
+        if (node.name !== undefined && top !== undefined) addBinding(top, node.name.text, node.name, scopes, ctx)
+        const frame = createFrame()
         const fnScopes = [...scopes, frame]
         for (const param of node.parameters) {
             for (const name of collectNames(param.name)) addBinding(frame, name, param.name, fnScopes, ctx)
         }
-        if (node.body) walk(node.body, fnScopes, ctx)
+        if (node.body !== undefined) walk(node.body, fnScopes, ctx)
     } else if (ts.isFunctionExpression(node)) {
-        const frame: ScopeFrame = { bindings: new Map() }
+        const frame = createFrame()
         const fnScopes = [...scopes, frame]
-        if (node.name) frame.bindings.set(node.name.text, node.name)
+        if (node.name !== undefined) frame.bindings.set(node.name.text, node.name)
         for (const param of node.parameters) {
             for (const name of collectNames(param.name)) addBinding(frame, name, param.name, fnScopes, ctx)
         }
-        if (node.body) walk(node.body, fnScopes, ctx)
+        if (node.body !== undefined) walk(node.body, fnScopes, ctx)
     } else if (ts.isArrowFunction(node)) {
-        const frame: ScopeFrame = { bindings: new Map() }
+        const frame = createFrame()
         const fnScopes = [...scopes, frame]
         for (const param of node.parameters) {
             for (const name of collectNames(param.name)) addBinding(frame, name, param.name, fnScopes, ctx)
@@ -66,7 +72,7 @@ function walk(node: ts.Node, scopes: readonly ScopeFrame[], ctx: Context): void 
         const isFnBody = parent &&
             (ts.isFunctionDeclaration(parent) || ts.isFunctionExpression(parent) || ts.isArrowFunction(parent))
         if (!isFnBody) {
-            const frame: ScopeFrame = { bindings: new Map() }
+            const frame = createFrame()
             const blockScopes = [...scopes, frame]
             ts.forEachChild(node, function walkChild(child: ts.Node): void { walk(child, blockScopes, ctx) })
         } else {
@@ -77,18 +83,18 @@ function walk(node: ts.Node, scopes: readonly ScopeFrame[], ctx: Context): void 
         if (top !== undefined) {
             for (const name of collectNames(node.name)) addBinding(top, name, node.name, scopes, ctx)
         }
-        if (node.initializer) walk(node.initializer, scopes, ctx)
+        if (node.initializer !== undefined) walk(node.initializer, scopes, ctx)
     } else if (ts.isForStatement(node) || ts.isForOfStatement(node) || ts.isForInStatement(node)) {
-        const frame: ScopeFrame = { bindings: new Map() }
+        const frame = createFrame()
         const forScopes = [...scopes, frame]
         ts.forEachChild(node, function walkChild(child: ts.Node): void { walk(child, forScopes, ctx) })
     } else if (ts.isImportDeclaration(node)) {
         const top = scopes[scopes.length - 1]
         if (top !== undefined) {
             const clause = node.importClause
-            if (clause) {
-                if (clause.name) addBinding(top, clause.name.text, clause.name, scopes, ctx)
-                if (clause.namedBindings) {
+            if (clause !== undefined) {
+                if (clause.name !== undefined) addBinding(top, clause.name.text, clause.name, scopes, ctx)
+                if (clause.namedBindings !== undefined) {
                     if (ts.isNamespaceImport(clause.namedBindings)) {
                         addBinding(top, clause.namedBindings.name.text, clause.namedBindings.name, scopes, ctx)
                     } else if (ts.isNamedImports(clause.namedBindings)) {
@@ -109,7 +115,7 @@ export const noShadow: Rule = {
     name: 'no-shadow',
     visit(node, ctx): void {
         if (node.kind !== ts.SyntaxKind.SourceFile) return
-        const initialFrame: ScopeFrame = { bindings: new Map() }
+        const initialFrame = createFrame()
         ts.forEachChild(node, function walkChild(child: ts.Node): void { walk(child, [initialFrame], ctx) })
     },
 }

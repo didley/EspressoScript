@@ -11,6 +11,7 @@ function isBindingPosition(node: ts.Identifier): boolean {
     if (ts.isFunctionDeclaration(parent) && parent.name === node) return true
     if (ts.isFunctionExpression(parent) && parent.name === node) return true
     if (ts.isPropertyAssignment(parent) && parent.name === node) return true
+    if (ts.isPropertyAccessExpression(parent) && parent.name === node) return true
     return false
 }
 

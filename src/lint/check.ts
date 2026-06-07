@@ -17,6 +17,7 @@ function buildProgram(file: string): ProgramResult | null {
         target: ts.ScriptTarget.ES2022,
         noEmit: true,
         skipLibCheck: true,
+        strictNullChecks: true,
     }
     const program = ts.createProgram([file], options)
     const sourceFile = program.getSourceFile(file)
