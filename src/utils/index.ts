@@ -1,12 +1,12 @@
 /**
- * shotscript/utils — safe wrappers for globals that throw.
+ * shotscript/std — safe wrappers for globals that throw.
  *
  * Every function here returns [value, error] instead of throwing.
  * These are the canonical replacements for the globals banned by
  * the no-throwing-globals rule.
  *
  * Usage:
- *   import { toResult, toPromiseResult, jsonParse, jsonStringify, safeFetch } from "shotscript/utils"
+ *   import { toResult, toPromiseResult, jsonParse, jsonStringify, safeFetch } from "shotscript/std"
  */
 export type Result<T, E extends Error = Error> = [T, null] | [null, E]
 

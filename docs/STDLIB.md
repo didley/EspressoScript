@@ -1,10 +1,10 @@
 # ShotScriptStd
 
-Safe, non-throwing wrappers for the globals ShotScript bans. Every function returns a tuple — never throws. Import from `shotscript/utils`.
+Safe, non-throwing wrappers for the globals ShotScript bans. Every function returns a tuple — never throws. Import from `shotscript/std`.
 
 ```ts
-import { jsonParse, jsonStringify, safeFetch, wrapError, toResult, toPromiseResult } from "shotscript/utils"
-import type { Result, PromiseResult } from "shotscript/utils"
+import { jsonParse, jsonStringify, safeFetch, wrapError, toResult, toPromiseResult } from "shotscript/std"
+import type { Result, PromiseResult } from "shotscript/std"
 ```
 
 ## Types
@@ -83,8 +83,8 @@ const [result, err] = await toPromiseResult(() => db.query(sql))
 ## Usage example
 
 ```ts
-import { safeFetch, jsonParse } from "shotscript/utils"
-import type { PromiseResult } from "shotscript/utils"
+import { safeFetch, jsonParse } from "shotscript/std"
+import type { PromiseResult } from "shotscript/std"
 
 type User = { readonly id: number; readonly name: string }
 

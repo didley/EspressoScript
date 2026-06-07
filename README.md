@@ -65,8 +65,8 @@ Extend in `tsconfig.json` (shown above with the plugin). The config alone, witho
 ### ShotScriptStd
 
 ```ts
-import { jsonParse, safeFetch, wrapError, toResult, toPromiseResult } from "shotscript/utils"
-import type { Result, PromiseResult } from "shotscript/utils"
+import { jsonParse, safeFetch, wrapError, toResult, toPromiseResult } from "shotscript/std"
+import type { Result, PromiseResult } from "shotscript/std"
 ```
 
 ---
@@ -82,8 +82,8 @@ async function getUser(id: number): Promise<User> {
 }
 
 // ✅ every failure path is explicit in the type
-import { safeFetch, jsonParse } from "shotscript/utils"
-import type { PromiseResult } from "shotscript/utils"
+import { safeFetch, jsonParse } from "shotscript/std"
+import type { PromiseResult } from "shotscript/std"
 
 async function getUser(id: number): PromiseResult<User> {
     const [res, fetchErr] = await safeFetch(`/users/${id.toString()}`)

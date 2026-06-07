@@ -75,7 +75,7 @@ async function getUser(id: number): Promise<User> {
 }
 
 // ✅ — errors are in the type signature
-import { safeFetch, jsonParse } from "shotscript/utils"
+import { safeFetch, jsonParse } from "shotscript/std"
 
 async function getUser(id: number): Promise<[User | null, Error | null]> {
     const [res, fetchErr] = await safeFetch(`/users/${id.toString()}`)
@@ -120,11 +120,11 @@ const [quotient, divErr] = divide(10, 2)
 if (divErr !== null) { return [null, divErr] }
 ```
 
-**Use ShotScriptStd (`shotscript/utils`) for banned globals:**
+**Use ShotScriptStd (`shotscript/std`) for banned globals:**
 
 ```ts
-import { toResult, toPromiseResult, jsonParse, jsonStringify, safeFetch, wrapError } from "shotscript/utils"
-import type { Result, PromiseResult } from "shotscript/utils"
+import { toResult, toPromiseResult, jsonParse, jsonStringify, safeFetch, wrapError } from "shotscript/std"
+import type { Result, PromiseResult } from "shotscript/std"
 
 // third-party calls that throw
 const [val, err] = toResult(function parse(): unknown { return thirdParty.parse(input) })
@@ -376,10 +376,10 @@ import { add } from './math/add.js'
 | `let` outside `for` header | `const` |
 | `var` | `const` |
 | `++` / `--` | `+= 1` / `-= 1` |
-| `JSON.parse` | `jsonParse<T>()` from ShotScriptStd (`shotscript/utils`) |
-| `JSON.stringify` | `jsonStringify()` from ShotScriptStd (`shotscript/utils`) |
-| `fetch(url)` | `safeFetch(url)` from ShotScriptStd (`shotscript/utils`) |
-| Third-party throws | `toResult(() => ...)` from ShotScriptStd (`shotscript/utils`) |
+| `JSON.parse` | `jsonParse<T>()` from ShotScriptStd (`shotscript/std`) |
+| `JSON.stringify` | `jsonStringify()` from ShotScriptStd (`shotscript/std`) |
+| `fetch(url)` | `safeFetch(url)` from ShotScriptStd (`shotscript/std`) |
+| Third-party throws | `toResult(() => ...)` from ShotScriptStd (`shotscript/std`) |
 | `Record<K, V>` | `Map<K, V>` |
 | Index signature `[k: string]: T` | `Map<string, T>` |
 | `Partial<T>` | Spell out optional fields with `\| null` |
@@ -411,7 +411,7 @@ import { add } from './math/add.js'
 
 5. **Using `undefined`** — the only nullable value is `null`. Write `string | null`, never `string | undefined`.
 
-6. **Calling `JSON.parse` / `fetch` directly** — import `jsonParse` / `safeFetch` from ShotScriptStd (`shotscript/utils`) instead.
+6. **Calling `JSON.parse` / `fetch` directly** — import `jsonParse` / `safeFetch` from ShotScriptStd (`shotscript/std`) instead.
 
 7. **Writing optional properties** — `{ name?: string }` is banned. Write `{ readonly name: string | null }`.
 

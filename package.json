@@ -13,7 +13,7 @@
       "import": "./dist/checker/index.js",
       "types": "./dist/checker/index.d.ts"
     },
-    "./utils": {
+    "./std": {
       "import": "./dist/utils/index.js",
       "types": "./dist/utils/index.d.ts"
     },

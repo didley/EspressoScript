@@ -9,7 +9,7 @@ function collectStdImports(sourceFile: ts.SourceFile): Set<string> {
     for (const stmt of sourceFile.statements) {
         if (!ts.isImportDeclaration(stmt)) continue
         const spec = stmt.moduleSpecifier
-        if (!ts.isStringLiteral(spec) || spec.text !== "shotscript/utils") continue
+        if (!ts.isStringLiteral(spec) || spec.text !== "shotscript/std") continue
         const bindings = stmt.importClause?.namedBindings
         if (!bindings || !ts.isNamedImports(bindings)) continue
         for (const el of bindings.elements) {

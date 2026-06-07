@@ -114,7 +114,7 @@ Rule: `no-promise`
 
 ### Async functions must return a tuple
 
-Every `async` function with a meaningful return must declare `Promise<[T | null, E | null]>` or the `PromiseResult<T, E>` alias from ShotScriptStd (`shotscript/utils`). `Promise<void>` is allowed for fire-and-forget side effects.
+Every `async` function with a meaningful return must declare `Promise<[T | null, E | null]>` or the `PromiseResult<T, E>` alias from ShotScriptStd (`shotscript/std`). `Promise<void>` is allowed for fire-and-forget side effects.
 
 ```ts
 // ❌
@@ -124,7 +124,7 @@ async function getUser(id: number): Promise<User> { ... }
 async function getUser(id: number): Promise<[User | null, Error | null]> { ... }
 
 // ✅ — canonical alias
-import type { PromiseResult } from "shotscript/utils"
+import type { PromiseResult } from "shotscript/std"
 async function getUser(id: number): PromiseResult<User> { ... }
 
 // ✅ — side-effect async with no meaningful return
@@ -174,7 +174,7 @@ if (err !== null) {
 To add context when propagating an error up the call stack, use `wrapError` from ShotScriptStd — the ShotScript equivalent of Go's `fmt.Errorf("context: %w", err)`:
 
 ```ts
-import { wrapError } from "shotscript/utils"
+import { wrapError } from "shotscript/std"
 
 async function loadConfig(path: string): PromiseResult<Config> {
     const [text, err] = await readFile(path)
@@ -187,10 +187,10 @@ async function loadConfig(path: string): PromiseResult<Config> {
 
 ### Wrapping external throwing APIs
 
-When importing external APIs that throw or reject instead of returning tuples, use `toResult` (sync) or `toPromiseResult` (async) from ShotScriptStd (`shotscript/utils`):
+When importing external APIs that throw or reject instead of returning tuples, use `toResult` (sync) or `toPromiseResult` (async) from ShotScriptStd (`shotscript/std`):
 
 ```ts
-import { toResult, toPromiseResult } from "shotscript/utils"
+import { toResult, toPromiseResult } from "shotscript/std"
 
 // synchronous third-party call that throws
 const [parsed, err] = toResult(() => someLib.parseSync(input))
@@ -467,7 +467,7 @@ function f(): void {}                    // empty function body
 { doThing() }                            // lone block
 const {} = obj                           // empty destructure
 const [] = arr                           // empty array destructure
-import { foo as foo } from "shotscript/utils"    // useless rename
+import { foo as foo } from "shotscript/std"    // useless rename
 function f(): void { doThing(); return } // useless trailing return
 const s = "hello" + " world"             // useless literal concat
 const obj = { ["foo"]: 1 }               // useless computed key
@@ -649,7 +649,7 @@ Rule: `no-metaprogramming-globals`
 
 ## Throwing globals → ShotScriptStd wrappers
 
-Functions that throw at the API boundary break the no-throw philosophy at every call site. Use the tuple-returning wrappers from ShotScriptStd (`shotscript/utils`).
+Functions that throw at the API boundary break the no-throw philosophy at every call site. Use the tuple-returning wrappers from ShotScriptStd (`shotscript/std`).
 
 ```ts
 // ❌
@@ -658,7 +658,7 @@ const json = JSON.stringify(value)
 const res = await fetch(url)
 
 // ✅
-import { jsonParse, jsonStringify, safeFetch } from "shotscript/utils"
+import { jsonParse, jsonStringify, safeFetch } from "shotscript/std"
 const [data, parseErr] = jsonParse<T>(text)
 const [res, fetchErr] = await safeFetch(url)
 ```
