@@ -476,10 +476,14 @@
                 margin-bottom: 2.5rem;
             }
 
-            @media (max-width: 640px) {
+            @media (max-width: 760px) {
                 .comparison {
                     grid-template-columns: 1fr;
                 }
+            }
+
+            .comparison pre {
+                font-size: 0.72rem;
             }
 
             .pane-label {
@@ -505,10 +509,12 @@
             }
             .pane-before {
                 background: var(--surface);
+                min-width: 0;
             }
             .pane-after {
                 background: #131318;
                 border-left: 1px solid var(--border);
+                min-width: 0;
             }
 
             pre {
