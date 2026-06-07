@@ -2,7 +2,7 @@
 // Not part of the published package — this avoids needing a CLI binary.
 import { readFileSync } from "node:fs"
 import { glob } from "glob"
-import { check } from "../dist/checker/index.js"
+import { check } from "../dist/lint/index.js"
 
 const patterns = [
     "examples/feature-showcase/src/**/*.ts",
@@ -14,7 +14,7 @@ let errorCount = 0
 
 for (const file of files) {
     const source = readFileSync(file, "utf8")
-    for (const d of check(file, source)) {
+    for (const d of check(file, source, null, null)) {
         process.stderr.write(`${d.file}:${d.line}:${d.col} [${d.rule}] ${d.message}\n`)
         errorCount++
     }

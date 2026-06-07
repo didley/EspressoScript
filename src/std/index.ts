@@ -26,7 +26,7 @@ export type PromiseResult<T, E extends Error = Error> = Promise<Result<T, E>>
  * Wraps any synchronous call that might throw.
  * Use for third-party library calls that ShotScript can't detect.
  *
- *   const [value, err] = toResult(() => someLib.parse(input))
+ *   const [value, err] = toResult(function parse(): ParsedData { return someLib.parse(input) })
  */
 export function toResult<T>(fn: () => T): Result<T> {
     try {
@@ -43,7 +43,7 @@ export function toResult<T>(fn: () => T): Result<T> {
  * Wraps any async call that might reject.
  * Use for third-party async functions that return a plain Promise.
  *
- *   const [value, err] = await toPromiseResult(() => someLib.fetchData(id))
+ *   const [value, err] = await toPromiseResult(function fetchData(): Promise<Data> { return someLib.fetchData(id) })
  */
 export async function toPromiseResult<T>(fn: () => Promise<T>): PromiseResult<T> {
     try {

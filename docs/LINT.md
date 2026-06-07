@@ -108,7 +108,7 @@ Promise.all([a, b])
 Promise.race([a, b])
 
 // ✅ — wrap external Promise-returning APIs with toPromiseResult
-const [result, err] = await toPromiseResult(() => externalLib.fetch(url))
+const [result, err] = await toPromiseResult(function doFetch(): Promise<Response> { return externalLib.fetch(url) })
 ```
 Rule: `no-promise`
 
@@ -193,10 +193,10 @@ When importing external APIs that throw or reject instead of returning tuples, u
 import { toResult, toPromiseResult } from "shotscript/std"
 
 // synchronous third-party call that throws
-const [parsed, err] = toResult(() => someLib.parseSync(input))
+const [parsed, err] = toResult(function parse(): ParsedData { return someLib.parseSync(input) })
 
 // async third-party call that rejects
-const [rows, err] = await toPromiseResult(() => db.query(sql))
+const [rows, err] = await toPromiseResult(function query(): Promise<Row[]> { return db.query(sql) })
 ```
 
 ## Strict typing — the baseline

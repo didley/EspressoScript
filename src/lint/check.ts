@@ -39,11 +39,6 @@ function resolveCheckProgram(
     return { sourceFile, checker: result?.checker ?? null }
 }
 
-/**
- * Runs all ShotScript rules against a single file and returns diagnostics.
- * Pass `typeChecker` and `programSourceFile` when called from the TS plugin
- * to reuse the existing program rather than building a new one.
- */
 export function check(
     file: string,
     source: string,

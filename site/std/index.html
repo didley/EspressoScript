@@ -449,7 +449,7 @@
                 </p>
                 <pre><span class="kw">function</span> <span class="fn">toResult</span>&lt;<span class="ty">T</span>&gt;(<span class="op">fn</span>: () => <span class="ty">T</span>): <span class="ty">Result</span>&lt;<span class="ty">T</span>&gt;
 
-<span class="kw">const</span> [<span class="op">parsed</span>, <span class="op">err</span>] = <span class="fn">toResult</span>(() => <span class="op">someLib</span>.<span class="fn">parseSync</span>(<span class="op">input</span>))</pre>
+<span class="kw">const</span> [<span class="op">parsed</span>, <span class="op">err</span>] = <span class="fn">toResult</span>(<span class="kw">function</span> <span class="fn">parse</span>(): <span class="ty">ParsedData</span> { <span class="kw">return</span> <span class="op">someLib</span>.<span class="fn">parseSync</span>(<span class="op">input</span>) })</pre>
             </div>
 
             <div class="fn-block" id="toPromiseResult">
@@ -465,7 +465,7 @@
     <span class="op">fn</span>: () => <span class="ty">Promise</span>&lt;<span class="ty">T</span>&gt;,
 ): <span class="ty">PromiseResult</span>&lt;<span class="ty">T</span>&gt;
 
-<span class="kw">const</span> [<span class="op">rows</span>, <span class="op">err</span>] = <span class="kw">await</span> <span class="fn">toPromiseResult</span>(() => <span class="op">db</span>.<span class="fn">query</span>(<span class="op">sql</span>))</pre>
+<span class="kw">const</span> [<span class="op">rows</span>, <span class="op">err</span>] = <span class="kw">await</span> <span class="fn">toPromiseResult</span>(<span class="kw">function</span> <span class="fn">query</span>(): <span class="ty">Promise</span>&lt;<span class="ty">Row</span>[]&gt; { <span class="kw">return</span> <span class="op">db</span>.<span class="fn">query</span>(<span class="op">sql</span>) })</pre>
             </div>
 
             <p style="font-size: 0.82rem; color: var(--muted); padding-top: 1rem">

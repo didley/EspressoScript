@@ -42,7 +42,8 @@ const lines = []
 for (const file of files) {
     const source = readFileSync(file, 'utf8')
     const programSourceFile = program.getSourceFile(file) ?? null
-    for (const d of check(file, source, typeChecker, programSourceFile)) {
+    const diags = check(file, source, typeChecker, programSourceFile)
+    for (const d of diags) {
         lines.push(`${d.file}:${d.line}:${d.col} [${d.rule}] ${d.message}`)
     }
 }

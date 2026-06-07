@@ -31,7 +31,8 @@ function init(modules: {
             if (sourceFile === undefined) return prior
 
             const source = sourceFile.getFullText()
-            const shotDiags = check(fileName, source, program?.getTypeChecker() ?? null, sourceFile)
+            const typeChecker = program?.getTypeChecker() ?? null
+            const shotDiags = check(fileName, source, typeChecker, sourceFile)
 
             const converted: ts.Diagnostic[] = shotDiags.map(
                 function toDiagnostic(d: {

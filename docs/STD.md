@@ -68,7 +68,7 @@ Wraps any synchronous call that might throw.
 function toResult<T>(fn: () => T): Result<T>
 ```
 ```ts
-const [parsed, err] = toResult(() => someLib.parseSync(input))
+const [parsed, err] = toResult(function parse(): ParsedData { return someLib.parseSync(input) })
 ```
 
 ### `toPromiseResult<T>(fn)`
@@ -77,7 +77,7 @@ Wraps any async call that might reject.
 function toPromiseResult<T>(fn: () => Promise<T>): PromiseResult<T>
 ```
 ```ts
-const [result, err] = await toPromiseResult(() => db.query(sql))
+const [rows, err] = await toPromiseResult(function query(): Promise<Row[]> { return db.query(sql) })
 ```
 
 ## Usage example
