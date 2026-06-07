@@ -465,6 +465,7 @@
         <div class="page-toc" style="padding-bottom: 2rem">
             <a href="#problem">The problem</a>
             <a href="#what">What is ShotScript</a>
+            <a href="#who">Is it for you?</a>
             <a href="#before-after">Before / after</a>
             <a href="#install">Install</a>
         </div>
@@ -598,6 +599,62 @@
                 </svg>
                 <div class="graph-node-wrap">
                     <div class="graph-node">ShotScript</div>
+                </div>
+            </div>
+        </section>
+
+        <hr class="divider" />
+
+        <!-- ── WHO IT'S FOR ── -->
+        <section class="section" id="who">
+            <div class="section-label">Is it for you?</div>
+            <h2>Not a linter. Almost a language.</h2>
+            <p class="section-desc">
+                ShotScript's constraint set is comprehensive enough that
+                valid code looks nothing like typical TypeScript. No classes,
+                no arrow callbacks, no ternaries, no <code style="font-family:'SF Mono','Fira Code',monospace;font-size:0.85em;color:#82aaff;background:rgba(130,170,255,0.08);padding:0.05rem 0.3rem;border-radius:3px">throw</code>, no raw
+                Promises — not because these features are bad, but because
+                having one canonical form is the point. Think of it less as
+                "stricter TypeScript" and more as a dialect: TypeScript
+                provides the type system and toolchain; ShotScript defines a
+                narrower syntax within it.
+            </p>
+
+            <div class="callout">
+                <strong>Designed for greenfield.</strong> ShotScript is for
+                teams who want a single, non-negotiable way to write typed
+                JavaScript from day one — not for incrementally hardening an
+                existing codebase.
+            </div>
+
+            <div class="rule-grid" style="grid-template-columns: repeat(auto-fill, minmax(280px, 1fr))">
+                <div class="rule-card">
+                    <div class="rule-name" style="color: var(--muted)">Existing codebases</div>
+                    <div class="rule-desc">
+                        Rules like <code>no-class</code>,
+                        <code>no-promise</code>, and
+                        <code>no-arrow-functions</code> require
+                        architectural rewrites, not search-and-replace.
+                        There is no gradual migration path.
+                    </div>
+                </div>
+                <div class="rule-card">
+                    <div class="rule-name" style="color: var(--muted)">Class-based frameworks</div>
+                    <div class="rule-desc">
+                        Angular, NestJS, and similar frameworks are built
+                        around classes, constructors, and decorators —
+                        constructs ShotScript bans outright.
+                    </div>
+                </div>
+                <div class="rule-card">
+                    <div class="rule-name" style="color: var(--muted)">Rule-by-rule opt-in</div>
+                    <div class="rule-desc">
+                        There is no config surface. The rules are
+                        interdependent: <code>no-throw</code> only makes
+                        sense once you have <code>PromiseResult</code>;
+                        <code>require-async-tuple-return</code> only makes
+                        sense once raw Promises are gone.
+                    </div>
                 </div>
             </div>
         </section>

@@ -25,6 +25,22 @@ Four tools. One way to write TypeScript.
 
 ---
 
+## Is it for you?
+
+ShotScript is designed for greenfield projects and teams starting fresh. It is probably **not** what you want if:
+
+- **You have an existing codebase.** Rules like `no-class`, `no-promise`, `no-throw`, and `no-arrow-functions` require architectural rewrites, not mechanical search-replace. There is no gradual migration path.
+- **You're using a class-based framework.** Angular, NestJS, and similar frameworks are built around classes, constructors, and decorators — constructs ShotScript bans outright.
+- **You want to opt in rule-by-rule.** There is no config surface. The rules are interdependent by design: `no-throw`/`no-try` only makes sense once you have `PromiseResult`; `require-async-tuple-return` only makes sense once raw Promises are gone.
+
+### A different way to think about it
+
+ShotScript is better understood as a dialect of TypeScript than as a linter. The constraint set is comprehensive enough that valid ShotScript looks nothing like typical TypeScript — no classes, no arrow callbacks, no ternaries, no throw, no raw Promises, every field readonly. These aren't missing features; they're the point.
+
+If you want a stricter ESLint config, this is not that. ShotScript is for teams who want a single, non-negotiable way to write typed JavaScript from day one.
+
+---
+
 ## Install
 
 ```sh
