@@ -1,13 +1,9 @@
 import ts from 'typescript'
 import type { Rule } from '../types.js'
-import { posOf } from '../pos.js'
+import { defineSyntaxRule } from './_define.js'
 
-/** `throw` is not allowed. Return `[T, Error | null]` tuples. */
-export const noThrow: Rule = {
+export const noThrow: Rule = defineSyntaxRule({
     name: 'no-throw',
-    visit(node, ctx): void {
-        if (!ts.isThrowStatement(node)) return
-        const pos = posOf(ctx.sourceFile, node)
-        ctx.report({ ...pos, rule: 'no-throw', message: '`throw` is not allowed. Return `[T, Error | null]` tuples.' })
-    },
-}
+    match: ts.isThrowStatement,
+    message: '`throw` is not allowed. Return `[T, Error | null]` tuples.',
+})

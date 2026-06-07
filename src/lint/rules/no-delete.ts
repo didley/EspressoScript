@@ -1,13 +1,9 @@
 import ts from 'typescript'
 import type { Rule } from '../types.js'
-import { posOf } from '../pos.js'
+import { defineSyntaxRule } from './_define.js'
 
-/** `delete` is not allowed. */
-export const noDelete: Rule = {
+export const noDelete: Rule = defineSyntaxRule({
     name: 'no-delete',
-    visit(node, ctx): void {
-        if (!ts.isDeleteExpression(node)) return
-        const pos = posOf(ctx.sourceFile, node)
-        ctx.report({ ...pos, rule: 'no-delete', message: '`delete` is not allowed.' })
-    },
-}
+    match: ts.isDeleteExpression,
+    message: '`delete` is not allowed.',
+})
