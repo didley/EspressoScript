@@ -2,6 +2,7 @@ import ts from 'typescript'
 import type { Rule } from '../types.js'
 import { posOf } from '../pos.js'
 
+/** Mapped types are not allowed. */
 export const noMappedType: Rule = {
     name: 'no-mapped-type',
     visit(node, ctx) {

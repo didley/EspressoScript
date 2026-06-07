@@ -9,6 +9,7 @@ const BANNED = new Set([
     'PropertyDecorator', 'ParameterDecorator',
 ])
 
+/** This utility type is banned. See `docs/LANGUAGE.md` for the canonical form. */
 export const noBannedUtilityTypes: Rule = {
     name: 'no-banned-utility-types',
     visit(node, ctx) {

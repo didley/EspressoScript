@@ -2,6 +2,7 @@ import ts from 'typescript'
 import type { Rule } from '../types.js'
 import { posOf } from '../pos.js'
 
+/** `try`/`catch`/`finally` is not allowed. */
 export const noTry: Rule = {
     name: 'no-try',
     visit(node, ctx) {

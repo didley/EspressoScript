@@ -2,6 +2,7 @@ import ts from 'typescript'
 import type { Rule } from '../types.js'
 import { posOf } from '../pos.js'
 
+/** `require()` is not allowed. Use ESM `import`. */
 export const noRequire: Rule = {
     name: 'no-require',
     visit(node, ctx) {

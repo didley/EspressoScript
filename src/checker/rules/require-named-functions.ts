@@ -2,6 +2,7 @@ import ts from 'typescript'
 import type { Rule } from '../types.js'
 import { posOf } from '../pos.js'
 
+/** Function expressions must be named. */
 export const requireNamedFunctions: Rule = {
     name: 'require-named-functions',
     visit(node, ctx) {

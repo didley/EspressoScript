@@ -2,6 +2,7 @@ import ts from 'typescript'
 import type { Rule } from '../types.js'
 import { posOf } from '../pos.js'
 
+/** Non-null assertions (`!`) are not allowed. */
 export const noNonNull: Rule = {
     name: 'no-non-null',
     visit(node, ctx) {

@@ -9,6 +9,7 @@ function hasAbstractModifier(node: ts.Node): boolean {
     }) ?? false
 }
 
+/** `abstract` is not allowed. */
 export const noAbstract: Rule = {
     name: 'no-abstract',
     visit(node, ctx) {

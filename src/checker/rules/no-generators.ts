@@ -2,6 +2,7 @@ import ts from 'typescript'
 import type { Rule } from '../types.js'
 import { posOf } from '../pos.js'
 
+/** Generators are not allowed. */
 export const noGenerators: Rule = {
     name: 'no-generators',
     visit(node, ctx) {

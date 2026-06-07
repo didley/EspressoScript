@@ -9,6 +9,7 @@ const TERMINATORS = new Set([
     ts.SyntaxKind.ContinueStatement,
 ])
 
+/** Switch case must end with `break` or `return`. */
 export const switchNoFallthrough: Rule = {
     name: 'switch-no-fallthrough',
     visit(node, ctx) {

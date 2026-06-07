@@ -2,6 +2,7 @@ import ts from 'typescript'
 import type { Rule } from '../types.js'
 import { posOf } from '../pos.js'
 
+/** One variable declaration per statement. */
 export const noMultiVarDecl: Rule = {
     name: 'no-multi-var-decl',
     visit(node, ctx) {

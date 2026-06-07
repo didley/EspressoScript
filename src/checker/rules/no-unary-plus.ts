@@ -2,6 +2,7 @@ import ts from 'typescript'
 import type { Rule } from '../types.js'
 import { posOf } from '../pos.js'
 
+/** Unary `+` coercion is not allowed. Use `Number()`. */
 export const noUnaryPlus: Rule = {
     name: 'no-unary-plus',
     visit(node, ctx) {

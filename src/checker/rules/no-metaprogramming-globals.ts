@@ -10,6 +10,7 @@ const BANNED_OBJECT_METHODS = new Set([
     'getPrototypeOf', 'setPrototypeOf',
 ])
 
+/** Metaprogramming globals are banned. */
 export const noMetaprogrammingGlobals: Rule = {
     name: 'no-metaprogramming-globals',
     visit(node, ctx) {

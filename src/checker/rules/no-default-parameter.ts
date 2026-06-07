@@ -2,6 +2,7 @@ import ts from 'typescript'
 import type { Rule } from '../types.js'
 import { posOf } from '../pos.js'
 
+/** Default parameters are not allowed (uses `undefined` as sentinel). Wrap with a thin function instead. */
 export const noDefaultParameter: Rule = {
     name: 'no-default-parameter',
     visit(node, ctx) {

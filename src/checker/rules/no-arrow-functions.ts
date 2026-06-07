@@ -2,6 +2,7 @@ import ts from 'typescript'
 import type { Rule } from '../types.js'
 import { posOf } from '../pos.js'
 
+/** Arrow functions are not allowed. Use the `function` keyword. */
 export const noArrowFunctions: Rule = {
     name: 'no-arrow-functions',
     visit(node, ctx) {

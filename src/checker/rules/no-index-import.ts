@@ -14,6 +14,7 @@ function check(spec: string, node: ts.Node, ctx: Parameters<Rule['visit']>[1]): 
     ctx.push({ ...posOf(ctx.sourceFile, node), rule: 'no-index-import', message: `Importing index files is not allowed. Import the specific module file instead (e.g. './dir/module.ts').` })
 }
 
+/** Importing index files is not allowed. Import the specific module file instead (e.g. './dir/module.ts'). */
 export const noIndexImport: Rule = {
     name: 'no-index-import',
     visit(node, ctx) {

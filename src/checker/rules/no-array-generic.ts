@@ -4,6 +4,7 @@ import { posOf } from '../pos.js'
 
 const BANNED = new Set(['Array', 'ReadonlyArray'])
 
+/** Use `readonly T[]` instead of `Array<T>` or `ReadonlyArray<T>`. */
 export const noArrayGeneric: Rule = {
     name: 'no-array-generic',
     visit(node, ctx) {

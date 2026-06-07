@@ -8,6 +8,7 @@ const VAR_KINDS = new Set([
     ts.SyntaxKind.CallExpression,
 ])
 
+/** Use a template literal instead of `+`. */
 export const preferTemplate: Rule = {
     name: 'prefer-template',
     visit(node, ctx) {

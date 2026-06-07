@@ -2,6 +2,7 @@ import ts from 'typescript'
 import type { Rule } from '../types.js'
 import { posOf } from '../pos.js'
 
+/** Empty destructure has no effect. */
 export const noEmptyPattern: Rule = {
     name: 'no-empty-pattern',
     visit(node, ctx) {

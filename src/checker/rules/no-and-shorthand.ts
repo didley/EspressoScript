@@ -2,6 +2,7 @@ import ts from 'typescript'
 import type { Rule } from '../types.js'
 import { posOf } from '../pos.js'
 
+/** Don't use `&&` as conditional execution — use an `if` block. */
 export const noAndShorthand: Rule = {
     name: 'no-and-shorthand',
     visit(node, ctx) {

@@ -2,6 +2,7 @@ import ts from 'typescript'
 import type { Rule } from '../types.js'
 import { posOf } from '../pos.js'
 
+/** `do...while` is not allowed. Use `while`. */
 export const noDoWhile: Rule = {
     name: 'no-do-while',
     visit(node, ctx) {

@@ -11,6 +11,7 @@ const ASSIGN_OPS = new Set([
     ts.SyntaxKind.PercentEqualsToken,
 ])
 
+/** Chained assignment (`a = b = c`) is not allowed. */
 export const noMultiAssign: Rule = {
     name: 'no-multi-assign',
     visit(node, ctx) {

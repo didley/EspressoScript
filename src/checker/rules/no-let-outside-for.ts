@@ -2,6 +2,7 @@ import ts from 'typescript'
 import type { Rule } from '../types.js'
 import { posOf } from '../pos.js'
 
+/** `let` is only allowed in a `for` header. Use `const`. */
 export const noLetOutsideFor: Rule = {
     name: 'no-let-outside-for',
     visit(node, ctx) {

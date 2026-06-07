@@ -17,6 +17,7 @@ function isParseNumberCall(node: ts.CallExpression): boolean {
     return false
 }
 
+/** Use `Number()` instead of `parseInt` / `parseFloat`. */
 export const noParseNumberFns: Rule = {
     name: 'no-parse-number-fns',
     visit(node, ctx) {

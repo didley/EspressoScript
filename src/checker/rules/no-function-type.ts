@@ -2,6 +2,7 @@ import ts from 'typescript'
 import type { Rule } from '../types.js'
 import { posOf } from '../pos.js'
 
+/** `Function` is not allowed. Declare the specific function signature. */
 export const noFunctionType: Rule = {
     name: 'no-function-type',
     visit(node, ctx) {

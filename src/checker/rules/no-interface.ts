@@ -2,6 +2,7 @@ import ts from 'typescript'
 import type { Rule } from '../types.js'
 import { posOf } from '../pos.js'
 
+/** `interface` is not allowed. Use `type`. */
 export const noInterface: Rule = {
     name: 'no-interface',
     visit(node, ctx) {

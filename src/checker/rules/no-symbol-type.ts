@@ -2,6 +2,7 @@ import ts from 'typescript'
 import type { Rule } from '../types.js'
 import { posOf } from '../pos.js'
 
+/** `symbol` / `unique symbol` types are not allowed. */
 export const noSymbolType: Rule = {
     name: 'no-symbol-type',
     visit(node, ctx) {

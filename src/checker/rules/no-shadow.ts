@@ -115,6 +115,7 @@ function walk(node: ts.Node, scopes: ScopeFrame[], ctx: Context): void {
     }
 }
 
+/** Variable shadowing is not allowed. Rename the inner binding. */
 export const noShadow: Rule = {
     name: 'no-shadow',
     visit(node, ctx) {

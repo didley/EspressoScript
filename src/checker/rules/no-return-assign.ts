@@ -11,6 +11,7 @@ const ASSIGN_OPS = new Set([
     ts.SyntaxKind.PercentEqualsToken,
 ])
 
+/** Return value cannot be an assignment expression. */
 export const noReturnAssign: Rule = {
     name: 'no-return-assign',
     visit(node, ctx) {

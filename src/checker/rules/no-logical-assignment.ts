@@ -8,6 +8,7 @@ const LOGICAL_ASSIGN_OPS = new Set([
     ts.SyntaxKind.QuestionQuestionEqualsToken,
 ])
 
+/** Logical assignment is not allowed. Spell it out. */
 export const noLogicalAssignment: Rule = {
     name: 'no-logical-assignment',
     visit(node, ctx) {

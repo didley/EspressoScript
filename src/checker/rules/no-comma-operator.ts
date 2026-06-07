@@ -2,6 +2,7 @@ import ts from 'typescript'
 import type { Rule } from '../types.js'
 import { posOf } from '../pos.js'
 
+/** Comma operator is not allowed. */
 export const noCommaOperator: Rule = {
     name: 'no-comma-operator',
     visit(node, ctx) {

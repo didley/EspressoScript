@@ -7,6 +7,7 @@ function isBooleanLiteral(node: ts.TypeNode): boolean {
         (node.literal.kind === ts.SyntaxKind.TrueKeyword || node.literal.kind === ts.SyntaxKind.FalseKeyword)
 }
 
+/** `true | false` is just `boolean`. */
 export const noLiteralBooleanType: Rule = {
     name: 'no-literal-boolean-type',
     visit(node, ctx) {

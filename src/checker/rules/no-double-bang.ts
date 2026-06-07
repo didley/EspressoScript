@@ -2,6 +2,7 @@ import ts from 'typescript'
 import type { Rule } from '../types.js'
 import { posOf } from '../pos.js'
 
+/** `!!` is not allowed. Use `Boolean()`. */
 export const noDoubleBang: Rule = {
     name: 'no-double-bang',
     visit(node, ctx) {

@@ -2,6 +2,7 @@ import ts from 'typescript'
 import type { Rule } from '../types.js'
 import { posOf } from '../pos.js'
 
+/** `var` is not allowed. Use `const`. */
 export const noVar: Rule = {
     name: 'no-var',
     visit(node, ctx) {

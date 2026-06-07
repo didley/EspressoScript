@@ -2,6 +2,7 @@ import ts from 'typescript'
 import type { Rule } from '../types.js'
 import { posOf } from '../pos.js'
 
+/** `object` / `Object` is not allowed. Use a specific type. */
 export const noObjectType: Rule = {
     name: 'no-object-type',
     visit(node, ctx) {

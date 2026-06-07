@@ -2,6 +2,7 @@ import ts from 'typescript'
 import type { Rule } from '../types.js'
 import { posOf } from '../pos.js'
 
+/** `this` is not allowed. */
 export const noThis: Rule = {
     name: 'no-this',
     visit(node, ctx) {

@@ -4,6 +4,7 @@ import { posOf } from '../pos.js'
 
 const CHAIN_METHODS = new Set(['then', 'catch', 'finally'])
 
+/** Promise chains are not allowed. Use `async`/`await`. */
 export const noPromiseChain: Rule = {
     name: 'no-promise-chain',
     visit(node, ctx) {

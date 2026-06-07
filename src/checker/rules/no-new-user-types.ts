@@ -22,6 +22,7 @@ const ALLOWED_CONSTRUCTORS = new Set([
     'Worker',
 ])
 
+/** `new` is only allowed on built-in runtime constructors. */
 export const noNewUserTypes: Rule = {
     name: 'no-new-user-types',
     visit(node, ctx) {

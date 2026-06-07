@@ -2,6 +2,7 @@ import ts from 'typescript'
 import type { Rule } from '../types.js'
 import { posOf } from '../pos.js'
 
+/** Variadic tuples are not allowed. Give the rest a name in a struct type. */
 export const noVariadicTuple: Rule = {
     name: 'no-variadic-tuple',
     visit(node, ctx) {

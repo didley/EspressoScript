@@ -11,6 +11,7 @@ const PROMISE_STATIC_METHODS = new Set([
     'any',
 ])
 
+/** new Promise() is not allowed. Use toPromiseResult(() => externalFn()) to wrap external Promise-returning functions. */
 export const noPromise: Rule = {
     name: 'no-promise',
     visit(node, ctx) {

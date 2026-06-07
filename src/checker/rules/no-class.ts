@@ -14,6 +14,7 @@ function hasDecorator(node: ts.ClassDeclaration | ts.ClassExpression): boolean {
     }) ?? false
 }
 
+/** `class` is not allowed. Use plain objects + functions. */
 export const noClass: Rule = {
     name: 'no-class',
     visit(node, ctx) {

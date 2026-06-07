@@ -2,6 +2,7 @@ import ts from 'typescript'
 import type { Rule } from '../types.js'
 import { posOf } from '../pos.js'
 
+/** Tagged template literals are not allowed. */
 export const noTaggedTemplates: Rule = {
     name: 'no-tagged-templates',
     visit(node, ctx) {

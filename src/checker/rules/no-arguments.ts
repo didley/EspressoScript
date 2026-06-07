@@ -14,6 +14,7 @@ function isBindingPosition(node: ts.Identifier): boolean {
     return false
 }
 
+/** `arguments` is not allowed. Use rest params `...args`. */
 export const noArguments: Rule = {
     name: 'no-arguments',
     visit(node, ctx) {

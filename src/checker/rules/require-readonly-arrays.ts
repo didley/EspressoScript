@@ -2,6 +2,7 @@ import ts from 'typescript'
 import type { Rule } from '../types.js'
 import { posOf } from '../pos.js'
 
+/** Array types must be declared `readonly T[]`. */
 export const requireReadonlyArrays: Rule = {
     name: 'require-readonly-arrays',
     visit(node, ctx) {

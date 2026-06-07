@@ -2,6 +2,7 @@ import ts from 'typescript'
 import type { Rule } from '../types.js'
 import { posOf } from '../pos.js'
 
+/** `void` is only allowed to explicitly discard a promise: `void someCall()`. Use `await` or direct assignment instead. */
 export const noVoid: Rule = {
     name: 'no-void',
     visit(node, ctx) {

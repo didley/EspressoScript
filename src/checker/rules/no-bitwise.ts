@@ -17,6 +17,7 @@ const BITWISE_BINARY = new Set([
     ts.SyntaxKind.GreaterThanGreaterThanGreaterThanEqualsToken,
 ])
 
+/** Bitwise operators are not allowed. */
 export const noBitwise: Rule = {
     name: 'no-bitwise',
     visit(node, ctx) {

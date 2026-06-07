@@ -2,6 +2,7 @@ import ts from 'typescript'
 import type { Rule } from '../types.js'
 import { posOf } from '../pos.js'
 
+/** `++` and `--` are not allowed. Use `+= 1` or `-= 1`. */
 export const noIncrementDecrement: Rule = {
     name: 'no-increment-decrement',
     visit(node, ctx) {

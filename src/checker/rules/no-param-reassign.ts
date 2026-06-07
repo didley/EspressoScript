@@ -64,6 +64,7 @@ function walk(node: ts.Node, frames: Frame[], ctx: Context): void {
     }
 }
 
+/** Function parameters cannot be reassigned. Use a new `const`. */
 export const noParamReassign: Rule = {
     name: 'no-param-reassign',
     visit(node, ctx) {

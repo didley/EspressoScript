@@ -2,6 +2,7 @@ import ts from 'typescript'
 import type { Rule } from '../types.js'
 import { posOf } from '../pos.js'
 
+/** Function declarations must have an explicit return type annotation. */
 export const requireExplicitReturnType: Rule = {
     name: 'require-explicit-return-type',
     visit(node, ctx) {

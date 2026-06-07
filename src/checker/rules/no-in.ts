@@ -2,6 +2,7 @@ import ts from 'typescript'
 import type { Rule } from '../types.js'
 import { posOf } from '../pos.js'
 
+/** `in` operator is not allowed. */
 export const noIn: Rule = {
     name: 'no-in',
     visit(node, ctx) {

@@ -2,6 +2,7 @@ import ts from 'typescript'
 import type { Rule } from '../types.js'
 import { posOf } from '../pos.js'
 
+/** `undefined` is not allowed in types. Use `null` for absent values; use `void` for functions that return nothing. */
 export const noUndefinedType: Rule = {
     name: 'no-undefined-type',
     visit(node, ctx) {

@@ -42,6 +42,7 @@ function walk(node: ts.Node, stdImports: Set<string>, ctx: Parameters<Rule['visi
     ts.forEachChild(node, function walkChild(child: ts.Node): void { walk(child, stdImports, ctx) })
 }
 
+/** Tuple-returning calls must be destructured: use `const [result, err] = ...`. */
 export const requireTupleDestructure: Rule = {
     name: 'require-tuple-destructure',
     visit(node, ctx) {

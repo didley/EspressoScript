@@ -20,6 +20,7 @@ function scanComments(source: string, pos: number, ctx: Parameters<Rule['visit']
     }
 }
 
+/** TS escape-hatch comments are not allowed. */
 export const noTsComment: Rule = {
     name: 'no-ts-comment',
     visit(node, ctx) {

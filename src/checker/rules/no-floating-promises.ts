@@ -12,6 +12,7 @@ function isAwaitable(checker: ts.TypeChecker, node: ts.Node): boolean {
     return thenType.getCallSignatures().length > 0
 }
 
+/** Promise must be handled. Use \`await\` to wait for the result, or \`void fn()\` to explicitly discard it. */
 export const noFloatingPromises: Rule = {
     name: 'no-floating-promises',
     visit(node, ctx) {

@@ -42,6 +42,7 @@ function isValidAsyncReturn(typeNode: ts.TypeNode): boolean {
     return second !== undefined && containsNull(second)
 }
 
+/** Async functions must return PromiseResult<T> or Promise<[T | null, E | null]>. Use a tuple return type so callers can handle errors explicitly. */
 export const requireAsyncTupleReturn: Rule = {
     name: 'require-async-tuple-return',
     visit(node, ctx) {

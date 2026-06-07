@@ -2,6 +2,7 @@ import ts from 'typescript'
 import type { Rule } from '../types.js'
 import { posOf } from '../pos.js'
 
+/** Ternary expressions are not allowed. Use a named function. */
 export const noTernary: Rule = {
     name: 'no-ternary',
     visit(node, ctx) {

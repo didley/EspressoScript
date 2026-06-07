@@ -2,6 +2,7 @@ import ts from 'typescript'
 import type { Rule } from '../types.js'
 import { posOf } from '../pos.js'
 
+/** Optional parameters are not allowed. Use `| null` and require explicit values. */
 export const noOptionalParameter: Rule = {
     name: 'no-optional-parameter',
     visit(node, ctx) {

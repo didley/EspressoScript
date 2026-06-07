@@ -2,6 +2,7 @@ import ts from 'typescript'
 import type { Rule } from '../types.js'
 import { posOf } from '../pos.js'
 
+/** `Readonly<T>` is redundant; declare each property `readonly`. */
 export const noReadonlyWrapper: Rule = {
     name: 'no-readonly-wrapper',
     visit(node, ctx) {

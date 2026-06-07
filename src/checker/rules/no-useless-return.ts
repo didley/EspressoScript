@@ -9,6 +9,7 @@ const FN_KINDS = new Set([
     ts.SyntaxKind.MethodDeclaration,
 ])
 
+/** Trailing bare `return` is unnecessary. */
 export const noUselessReturn: Rule = {
     name: 'no-useless-return',
     visit(node, ctx) {

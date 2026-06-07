@@ -2,6 +2,7 @@ import ts from 'typescript'
 import type { Rule } from '../types.js'
 import { posOf } from '../pos.js'
 
+/** Concatenating string literals — write a single literal. */
 export const noUselessConcat: Rule = {
     name: 'no-useless-concat',
     visit(node, ctx) {

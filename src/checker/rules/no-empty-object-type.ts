@@ -2,6 +2,7 @@ import ts from 'typescript'
 import type { Rule } from '../types.js'
 import { posOf } from '../pos.js'
 
+/** `{}` is not allowed as a type. Use `unknown` or a specific shape. */
 export const noEmptyObjectType: Rule = {
     name: 'no-empty-object-type',
     visit(node, ctx) {

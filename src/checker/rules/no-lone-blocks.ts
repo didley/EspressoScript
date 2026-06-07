@@ -2,6 +2,7 @@ import ts from 'typescript'
 import type { Rule } from '../types.js'
 import { posOf } from '../pos.js'
 
+/** Lone blocks are not allowed. */
 export const noLoneBlocks: Rule = {
     name: 'no-lone-blocks',
     visit(node, ctx) {

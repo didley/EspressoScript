@@ -6,6 +6,7 @@ function nodeText(node: ts.Node, sf: ts.SourceFile): string {
     return sf.text.slice(node.getStart(sf), node.getEnd())
 }
 
+/** Self-assignment has no effect. */
 export const noSelfAssign: Rule = {
     name: 'no-self-assign',
     visit(node, ctx) {

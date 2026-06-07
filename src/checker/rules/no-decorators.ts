@@ -2,6 +2,7 @@ import ts from 'typescript'
 import type { Rule } from '../types.js'
 import { posOf } from '../pos.js'
 
+/** Decorators are not allowed. */
 export const noDecorators: Rule = {
     name: 'no-decorators',
     visit(node, ctx) {

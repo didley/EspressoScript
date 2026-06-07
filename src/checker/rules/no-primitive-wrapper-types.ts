@@ -4,6 +4,7 @@ import { posOf } from '../pos.js'
 
 const BANNED = new Set(['String', 'Number', 'Boolean', 'Symbol'])
 
+/** Use the lowercase primitive type. */
 export const noPrimitiveWrapperTypes: Rule = {
     name: 'no-primitive-wrapper-types',
     visit(node, ctx) {

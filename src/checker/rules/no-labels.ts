@@ -2,6 +2,7 @@ import ts from 'typescript'
 import type { Rule } from '../types.js'
 import { posOf } from '../pos.js'
 
+/** Labels are not allowed. Extract a function and `return`. */
 export const noLabels: Rule = {
     name: 'no-labels',
     visit(node, ctx) {

@@ -13,6 +13,7 @@ function nodeText(node: ts.Node, sf: ts.SourceFile): string {
     return sf.text.slice(node.getStart(sf), node.getEnd())
 }
 
+/** Comparing a value to itself is a bug or a NaN-check abuse — use `Number.isNaN()`. */
 export const noSelfCompare: Rule = {
     name: 'no-self-compare',
     visit(node, ctx) {

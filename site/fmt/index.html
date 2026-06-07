@@ -1,0 +1,506 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>ShotScriptFmt — Opinionated TypeScript formatter</title>
+        <style>
+            :root {
+                --bg: #0d0d10;
+                --surface: #16161a;
+                --border: #2a2a32;
+                --text: #e8e8f0;
+                --muted: #7a7a90;
+                --accent: #c8702a;
+                --green: #4ec994;
+                --red: #e05c5c;
+                --keyword: #c792ea;
+                --string: #c3e88d;
+                --type: #82aaff;
+                --comment: #546e7a;
+                --fn: #82aaff;
+                --num: #f78c6c;
+            }
+
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+
+            body {
+                background: var(--bg);
+                color: var(--text);
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+                font-size: 16px;
+                line-height: 1.6;
+            }
+
+            a { color: var(--accent); text-decoration: none; }
+            a:hover { text-decoration: underline; }
+            a.ext::after { content: " ↗"; font-size: 0.75em; opacity: 0.5; }
+
+            /* ── Nav ── */
+            nav {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 1.25rem 2rem;
+                border-bottom: 1px solid var(--border);
+                position: sticky;
+                top: 0;
+                background: rgba(13, 13, 16, 0.92);
+                backdrop-filter: blur(8px);
+                z-index: 10;
+            }
+
+            .nav-logo {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 1.05rem;
+                font-weight: 700;
+                letter-spacing: -0.02em;
+                text-decoration: none;
+            }
+            .nav-logo .brand { color: var(--accent); }
+            .nav-logo .route { color: var(--text); }
+
+            .nav-links {
+                display: flex;
+                gap: 0.2rem;
+                list-style: none;
+            }
+            .nav-links a {
+                font-size: 0.82rem;
+                color: var(--muted);
+                padding: 0.3rem 0.7rem;
+                border-radius: 5px;
+            }
+            .nav-links a:hover {
+                color: var(--text);
+                background: rgba(255, 255, 255, 0.05);
+                text-decoration: none;
+            }
+            .nav-links a[aria-current="page"] { color: var(--text); }
+
+            /* ── Page header ── */
+            .page-header {
+                max-width: 860px;
+                margin: 0 auto;
+                padding: 4rem 2rem 3rem;
+            }
+
+            .page-badge {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.68rem;
+                letter-spacing: 0.14em;
+                color: var(--accent);
+                text-transform: uppercase;
+                margin-bottom: 0.6rem;
+            }
+
+            .page-header h1 {
+                font-size: clamp(1.8rem, 4vw, 2.4rem);
+                font-weight: 800;
+                letter-spacing: -0.035em;
+                line-height: 1.2;
+                margin-bottom: 0.75rem;
+            }
+
+            .page-header h1 em {
+                font-style: normal;
+                color: var(--accent);
+            }
+
+            .page-header .sub {
+                font-size: 1rem;
+                color: var(--muted);
+                max-width: 540px;
+                line-height: 1.7;
+                margin-bottom: 2rem;
+            }
+
+            /* ── Content sections ── */
+            .content {
+                max-width: 860px;
+                margin: 0 auto;
+                padding: 0 2rem 4rem;
+            }
+
+            .section-label {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.68rem;
+                letter-spacing: 0.14em;
+                color: var(--accent);
+                text-transform: uppercase;
+                margin-bottom: 0.6rem;
+            }
+
+            h2 {
+                font-size: 1.35rem;
+                font-weight: 700;
+                letter-spacing: -0.025em;
+                margin-bottom: 0.5rem;
+            }
+
+            .section-desc {
+                color: var(--muted);
+                font-size: 0.92rem;
+                line-height: 1.7;
+                margin-bottom: 1.75rem;
+            }
+
+            /* ── Install ── */
+            .install-step {
+                border: 1px solid var(--border);
+                border-radius: 8px;
+                overflow: hidden;
+                margin-bottom: 0.75rem;
+            }
+            .install-step-label {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.65rem;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+                color: var(--accent);
+                padding: 0.5rem 1.25rem;
+                border-bottom: 1px solid var(--border);
+                background: #0f0f13;
+            }
+            .install-step pre { background: var(--surface); margin: 0; }
+
+            .install-cmd {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.6rem;
+                background: var(--surface);
+                border: 1px solid var(--border);
+                border-radius: 8px;
+                padding: 0.6rem 1.1rem;
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.82rem;
+                margin-bottom: 1.75rem;
+            }
+            .install-cmd .prompt { color: var(--muted); }
+            .install-cmd .cmd { color: var(--green); }
+
+            /* ── Spec grid ── */
+            .spec-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: 1px;
+                border: 1px solid var(--border);
+                border-radius: 10px;
+                overflow: hidden;
+                background: var(--border);
+                margin-bottom: 2.5rem;
+            }
+
+            .spec-card {
+                background: var(--surface);
+                padding: 1.1rem 1.35rem;
+            }
+
+            .spec-key {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.75rem;
+                color: var(--muted);
+                margin-bottom: 0.25rem;
+            }
+
+            .spec-value {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 1rem;
+                font-weight: 700;
+                color: var(--accent);
+            }
+
+            /* ── Comparison ── */
+            .comparison {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 0;
+                border: 1px solid var(--border);
+                border-radius: 10px;
+                overflow: hidden;
+                margin-bottom: 2.5rem;
+            }
+
+            @media (max-width: 640px) {
+                .comparison { grid-template-columns: 1fr; }
+            }
+
+            .pane-label {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                padding: 0.6rem 1rem;
+                font-size: 0.72rem;
+                font-weight: 600;
+                letter-spacing: 0.06em;
+                text-transform: uppercase;
+                border-bottom: 1px solid var(--border);
+            }
+
+            .pane-before .pane-label {
+                background: rgba(224, 92, 92, 0.08);
+                color: var(--red);
+            }
+            .pane-after .pane-label {
+                background: rgba(78, 201, 148, 0.08);
+                color: var(--green);
+                border-left: 1px solid var(--border);
+            }
+            .pane-before { background: var(--surface); }
+            .pane-after { background: #131318; border-left: 1px solid var(--border); }
+
+            pre {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.8rem;
+                line-height: 1.7;
+                padding: 1.25rem 1.25rem 1.5rem;
+                overflow-x: auto;
+                white-space: pre;
+            }
+
+            .dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; }
+            .dot-red { background: var(--red); opacity: 0.7; }
+            .dot-green { background: var(--green); opacity: 0.7; }
+
+            /* ── Syntax highlighting ── */
+            .kw { color: var(--keyword); }
+            .ty { color: var(--type); }
+            .fn { color: var(--fn); }
+            .st { color: var(--string); }
+            .cm { color: var(--comment); }
+            .nu { color: var(--num); }
+            .op { color: var(--muted); }
+
+            .callout {
+                background: var(--surface);
+                border: 1px solid var(--border);
+                border-left: 3px solid var(--accent);
+                border-radius: 8px;
+                padding: 1rem 1.25rem;
+                font-size: 0.875rem;
+                color: var(--muted);
+                margin-bottom: 2.5rem;
+            }
+            .callout strong { color: var(--text); }
+            .callout code {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.8em;
+                color: var(--type);
+                background: rgba(130, 170, 255, 0.08);
+                padding: 0.05rem 0.3rem;
+                border-radius: 3px;
+            }
+
+            hr { border: none; border-top: 1px solid var(--border); }
+
+            footer {
+                text-align: center;
+                padding: 2.5rem 2rem;
+                font-size: 0.825rem;
+                color: var(--muted);
+                border-top: 1px solid var(--border);
+            }
+        </style>
+    </head>
+    <body>
+        <nav>
+            <a href="/" class="nav-logo">
+                <span class="brand">ShotScript</span><span class="route">Fmt</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="/">ShotScript</a></li>
+                <li><a href="/lint/">Lint</a></li>
+                <li><a href="/fmt/" aria-current="page">Fmt</a></li>
+                <li><a href="/typing/">Typing</a></li>
+                <li><a href="/std/">Std</a></li>
+            </ul>
+        </nav>
+
+        <div class="page-header">
+            <div class="page-badge">ShotScriptFmt</div>
+            <h1>Zero-config formatting.<br /><em>No debates.</em></h1>
+            <p class="sub">
+                A Biome preset enforcing a single canonical style. 80-char
+                lines, no semicolons, 4-space indent, single quotes.
+                Consistent diffs, readable in any terminal.
+            </p>
+        </div>
+
+        <div class="content">
+            <div class="section-label" style="margin-bottom: 1.25rem">
+                Install
+            </div>
+
+            <div class="install-step">
+                <div class="install-step-label">biome.json</div>
+                <pre><span class="cm">// biome.json</span>
+{
+  <span class="st">"extends"</span>: [<span class="st">"shotscript/fmt"</span>]
+}</pre>
+            </div>
+
+            <div class="install-cmd" style="margin-top: 1rem">
+                <span class="prompt">$</span>
+                <span class="cmd">npx @biomejs/biome format --write src/</span>
+            </div>
+
+            <hr style="margin-bottom: 2.5rem" />
+
+            <div class="section-label" style="margin-bottom: 1.25rem">
+                Format spec
+            </div>
+
+            <div class="spec-grid">
+                <div class="spec-card">
+                    <div class="spec-key">line width</div>
+                    <div class="spec-value">80</div>
+                </div>
+                <div class="spec-card">
+                    <div class="spec-key">indent</div>
+                    <div class="spec-value">4 spaces</div>
+                </div>
+                <div class="spec-card">
+                    <div class="spec-key">semicolons</div>
+                    <div class="spec-value">none</div>
+                </div>
+                <div class="spec-card">
+                    <div class="spec-key">quotes</div>
+                    <div class="spec-value">single</div>
+                </div>
+                <div class="spec-card">
+                    <div class="spec-key">trailing commas</div>
+                    <div class="spec-value">all</div>
+                </div>
+                <div class="spec-card">
+                    <div class="spec-key">bracket spacing</div>
+                    <div class="spec-value">true</div>
+                </div>
+            </div>
+
+            <div class="callout">
+                <strong>Why these choices:</strong> 80 chars fits a split
+                terminal. 4-space indent makes nesting depth visible
+                before it becomes a problem. No semis removes line-noise
+                with no semantic cost. Single quotes are one less keystroke
+                for the common case.
+            </div>
+
+            <hr style="margin-bottom: 2.5rem" />
+
+            <div class="section-label" style="margin-bottom: 0.75rem">
+                Before / after
+            </div>
+            <h2 style="margin-bottom: 1rem">
+                What formatting changes.
+            </h2>
+
+            <!-- Imports + spacing -->
+            <p
+                class="section-label"
+                style="margin-bottom: 0.75rem; color: var(--muted)"
+            >
+                Imports, spacing &amp; semicolons
+            </p>
+            <div class="comparison">
+                <div class="pane-before">
+                    <div class="pane-label">
+                        <span class="dot dot-red"></span>unformatted
+                    </div>
+                    <pre><span class="kw">import</span> {<span class="ty">UserService</span>} <span class="kw">from</span> <span class="st">"./services"</span>;
+<span class="kw">import</span> {<span class="ty">Database</span>,<span class="ty">Config</span>} <span class="kw">from</span> <span class="st">"./db"</span>;
+
+<span class="kw">async function</span> <span class="fn">getUser</span>(id:<span class="ty">number</span>):<span class="ty">Promise</span>&lt;<span class="ty">User</span>|<span class="kw">null</span>&gt;{
+  <span class="kw">const</span> svc:UserService = {db:<span class="fn">getDb</span>()}
+  <span class="kw">return</span> <span class="fn">findUserById</span>(svc,id)
+}</pre>
+                </div>
+                <div class="pane-after">
+                    <div class="pane-label">
+                        <span class="dot dot-green"></span>ShotScriptFmt
+                    </div>
+                    <pre><span class="kw">import</span> { <span class="ty">UserService</span> } <span class="kw">from</span> <span class="st">'./services'</span>
+<span class="kw">import</span> { <span class="ty">Database</span>, <span class="ty">Config</span> } <span class="kw">from</span> <span class="st">'./db'</span>
+
+<span class="kw">async function</span> <span class="fn">getUser</span>(
+    <span class="op">id</span>: <span class="ty">number</span>,
+): <span class="ty">Promise</span>&lt;<span class="ty">User</span> | <span class="kw">null</span>&gt; {
+    <span class="kw">const</span> <span class="op">svc</span>: <span class="ty">UserService</span> = { <span class="op">db</span>: <span class="fn">getDb</span>() }
+    <span class="kw">return</span> <span class="fn">findUserById</span>(<span class="op">svc</span>, <span class="op">id</span>)
+}</pre>
+                </div>
+            </div>
+
+            <!-- Long parameter lists -->
+            <p
+                class="section-label"
+                style="margin-bottom: 0.75rem; color: var(--muted)"
+            >
+                Long parameter lists
+            </p>
+            <div class="comparison">
+                <div class="pane-before">
+                    <div class="pane-label">
+                        <span class="dot dot-red"></span>unformatted
+                    </div>
+                    <pre><span class="kw">function</span> <span class="fn">createOrder</span>(userId:<span class="ty">number</span>,items:<span class="ty">readonly</span> <span class="ty">Item</span>[],shippingAddress:<span class="ty">Address</span>,paymentMethod:<span class="ty">PaymentMethod</span>):<span class="ty">Result</span>&lt;<span class="ty">Order</span>&gt; {
+  <span class="cm">// ...</span>
+}</pre>
+                </div>
+                <div class="pane-after">
+                    <div class="pane-label">
+                        <span class="dot dot-green"></span>ShotScriptFmt
+                    </div>
+                    <pre><span class="kw">function</span> <span class="fn">createOrder</span>(
+    <span class="op">userId</span>: <span class="ty">number</span>,
+    <span class="op">items</span>: <span class="kw">readonly</span> <span class="ty">Item</span>[],
+    <span class="op">shippingAddress</span>: <span class="ty">Address</span>,
+    <span class="op">paymentMethod</span>: <span class="ty">PaymentMethod</span>,
+): <span class="ty">Result</span>&lt;<span class="ty">Order</span>&gt; {
+    <span class="cm">// ...</span>
+}</pre>
+                </div>
+            </div>
+
+            <!-- Object literals -->
+            <p
+                class="section-label"
+                style="margin-bottom: 0.75rem; color: var(--muted)"
+            >
+                Object literals
+            </p>
+            <div class="comparison">
+                <div class="pane-before">
+                    <div class="pane-label">
+                        <span class="dot dot-red"></span>unformatted
+                    </div>
+                    <pre><span class="kw">const</span> <span class="op">config</span>: <span class="ty">Config</span> = {host:<span class="st">"localhost"</span>,port:<span class="nu">3000</span>,debug:<span class="kw">true</span>,timeout:<span class="nu">5000</span>,retries:<span class="nu">3</span>}
+
+<span class="kw">const</span> <span class="op">updated</span> = {...<span class="op">config</span>,port:<span class="nu">4000</span>,debug:<span class="kw">false</span>}</pre>
+                </div>
+                <div class="pane-after">
+                    <div class="pane-label">
+                        <span class="dot dot-green"></span>ShotScriptFmt
+                    </div>
+                    <pre><span class="kw">const</span> <span class="op">config</span>: <span class="ty">Config</span> = {
+    <span class="op">host</span>: <span class="st">'localhost'</span>,
+    <span class="op">port</span>: <span class="nu">3000</span>,
+    <span class="op">debug</span>: <span class="kw">true</span>,
+    <span class="op">timeout</span>: <span class="nu">5000</span>,
+    <span class="op">retries</span>: <span class="nu">3</span>,
+}
+
+<span class="kw">const</span> <span class="op">updated</span> = { ...<span class="op">config</span>, <span class="op">port</span>: <span class="nu">4000</span>, <span class="op">debug</span>: <span class="kw">false</span> }</pre>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>
+                ShotScript is pre-v1 and open source. ·
+                <a href="https://github.com/didley/shotscript" class="ext"
+                    >shotscript on GitHub</a
+                >
+            </p>
+        </footer>
+    </body>
+</html>

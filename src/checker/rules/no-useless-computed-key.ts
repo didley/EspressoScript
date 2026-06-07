@@ -4,6 +4,7 @@ import { posOf } from '../pos.js'
 
 const IDENT_RE = /^[a-zA-Z_$][a-zA-Z0-9_$]*$/
 
+/** Computed key is unnecessary — use the identifier form. */
 export const noUselessComputedKey: Rule = {
     name: 'no-useless-computed-key',
     visit(node, ctx) {

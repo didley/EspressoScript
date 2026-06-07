@@ -43,6 +43,7 @@ function hasNoSideEffect(expr: ts.Expression): boolean {
     return false
 }
 
+/** Bare expression has no effect. */
 export const noUnusedExpressions: Rule = {
     name: 'no-unused-expressions',
     visit(node, ctx) {

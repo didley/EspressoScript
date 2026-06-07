@@ -2,6 +2,7 @@ import ts from 'typescript'
 import type { Rule } from '../types.js'
 import { posOf } from '../pos.js'
 
+/** Useless rename — drop the alias. */
 export const noUselessRename: Rule = {
     name: 'no-useless-rename',
     visit(node, ctx) {

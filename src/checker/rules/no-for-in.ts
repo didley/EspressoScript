@@ -2,6 +2,7 @@ import ts from 'typescript'
 import type { Rule } from '../types.js'
 import { posOf } from '../pos.js'
 
+/** `for...in` is not allowed. Use `for...of` or indexed `for`. */
 export const noForIn: Rule = {
     name: 'no-for-in',
     visit(node, ctx) {

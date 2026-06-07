@@ -7,6 +7,7 @@ function containsInfer(node: ts.Node): boolean {
     return !!ts.forEachChild(node, containsInfer)
 }
 
+/** Conditional types are not allowed. */
 export const noConditionalType: Rule = {
     name: 'no-conditional-type',
     visit(node, ctx) {

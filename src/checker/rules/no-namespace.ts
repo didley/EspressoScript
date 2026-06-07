@@ -2,6 +2,7 @@ import ts from 'typescript'
 import type { Rule } from '../types.js'
 import { posOf } from '../pos.js'
 
+/** \`…\` declarations are not allowed. Use ES modules instead. */
 export const noNamespace: Rule = {
     name: 'no-namespace',
     visit(node, ctx) {

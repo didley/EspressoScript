@@ -9,6 +9,7 @@ function isAsConst(node: ts.AsExpression): boolean {
         (t.typeName as ts.Identifier).escapedText === 'const'
 }
 
+/** Type assertions are not allowed. `as const` is the only exception. */
 export const noAssertion: Rule = {
     name: 'no-assertion',
     visit(node, ctx) {

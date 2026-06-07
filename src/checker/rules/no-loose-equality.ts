@@ -2,6 +2,7 @@ import ts from 'typescript'
 import type { Rule } from '../types.js'
 import { posOf } from '../pos.js'
 
+/** Loose equality is not allowed. Use `===` / `!==`. */
 export const noLooseEquality: Rule = {
     name: 'no-loose-equality',
     visit(node, ctx) {
