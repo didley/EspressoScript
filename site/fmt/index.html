@@ -546,53 +546,21 @@
             </div>
 
             <div id="minimal-diffs" class="section-label">Minimal diffs</div>
-            <p class="section-desc">Trailing commas on every item mean adding a new argument only shows one added line — the line above is untouched. Breaking at 80 chars keeps each argument on its own line, so a new argument never rewraps the whole signature.</p>
+            <p class="section-desc">Trailing commas mean adding a parameter shows one added line. 80-char wrapping means the signature is already split, so nothing else moves.</p>
 
             <div class="comparison">
                 <div class="pane-before">
                     <div class="pane-label">
-                        <span class="dot dot-red"></span>without trailing commas + long line limit
+                        <span class="dot dot-red"></span>without trailing commas
                     </div>
-                    <pre><span class="diff-hunk">@@ -1,6 +1,6 @@</span>
-<span class="diff-ctx"> import { UserService } from './services'</span>
-<span class="diff-ctx"> import { Database, Config } from './db'</span>
-<span class="diff-ctx"> </span>
+                    <pre><span class="diff-hunk">@@ long line — rewraps entire signature</span>
 <span class="diff-rem">-async function getUser(id: number, options: Options): Promise&lt;User | null&gt; {</span>
 <span class="diff-add">+async function getUser(id: number, options: Options, fallback: User | null): Promise&lt;User | null&gt; {</span>
 <span class="diff-ctx">     const svc = { db: getDb() }</span>
 <span class="diff-ctx">     return findUserById(svc, id)</span>
-<span class="diff-ctx"> }</span></pre>
-                </div>
-                <div class="pane-after">
-                    <div class="pane-label">
-                        <span class="dot dot-green"></span>ShotScriptFmt — trailing commas + 80 chars
-                    </div>
-                    <pre><span class="diff-hunk">@@ -1,9 +1,10 @@</span>
-<span class="diff-ctx"> import { UserService } from './services'</span>
-<span class="diff-ctx"> import { Database, Config } from './db'</span>
-<span class="diff-ctx"> </span>
-<span class="diff-ctx"> async function getUser(</span>
-<span class="diff-ctx">     id: number,</span>
-<span class="diff-ctx">     options: Options,</span>
-<span class="diff-add">+    fallback: User | null,</span>
-<span class="diff-ctx"> ): Promise&lt;User | null&gt; {</span>
-<span class="diff-ctx">     const svc = { db: getDb() }</span>
-<span class="diff-ctx">     return findUserById(svc, id)</span>
-<span class="diff-ctx"> }</span></pre>
-                </div>
-            </div>
+<span class="diff-ctx"> }</span>
 
-            <p class="section-desc" style="margin-top:1.5rem;">Even when the signature is already wrapped — a missing trailing comma still contaminates the line above.</p>
-
-            <div class="comparison">
-                <div class="pane-before">
-                    <div class="pane-label">
-                        <span class="dot dot-red"></span>without trailing commas + already wrapped
-                    </div>
-                    <pre><span class="diff-hunk">@@ -1,9 +1,10 @@</span>
-<span class="diff-ctx"> import { UserService } from './services'</span>
-<span class="diff-ctx"> import { Database, Config } from './db'</span>
-<span class="diff-ctx"> </span>
+<span class="diff-hunk">@@ already wrapped — still contaminates line above</span>
 <span class="diff-ctx"> async function getUser(</span>
 <span class="diff-ctx">     id: number,</span>
 <span class="diff-rem">-    options: Options</span>
@@ -607,10 +575,17 @@
                     <div class="pane-label">
                         <span class="dot dot-green"></span>ShotScriptFmt — trailing commas + 80 chars
                     </div>
-                    <pre><span class="diff-hunk">@@ -1,9 +1,10 @@</span>
-<span class="diff-ctx"> import { UserService } from './services'</span>
-<span class="diff-ctx"> import { Database, Config } from './db'</span>
-<span class="diff-ctx"> </span>
+                    <pre><span class="diff-hunk">@@ long line → auto-wrapped, 1 line added</span>
+<span class="diff-ctx"> async function getUser(</span>
+<span class="diff-ctx">     id: number,</span>
+<span class="diff-ctx">     options: Options,</span>
+<span class="diff-add">+    fallback: User | null,</span>
+<span class="diff-ctx"> ): Promise&lt;User | null&gt; {</span>
+<span class="diff-ctx">     const svc = { db: getDb() }</span>
+<span class="diff-ctx">     return findUserById(svc, id)</span>
+<span class="diff-ctx"> }</span>
+
+<span class="diff-hunk">@@ already wrapped — 1 line added</span>
 <span class="diff-ctx"> async function getUser(</span>
 <span class="diff-ctx">     id: number,</span>
 <span class="diff-ctx">     options: Options,</span>
