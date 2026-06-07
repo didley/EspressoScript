@@ -6,6 +6,63 @@ This file is the coding style guide for **ShotScript** (`shotscript` npm package
 
 ---
 
+## Repo architecture
+
+ShotScript is a **published npm library** (`shotscript`). Users install it and run it against *their* projects. Every design decision must account for arbitrary user codebases — not just this repo's own source.
+
+### Package exports
+
+| Export | Entry point | Purpose |
+|---|---|---|
+| `shotscript` | `dist/lint/index.js` | Programmatic linter API (`check`, `posOf`) |
+| `shotscript/std` | `dist/std/index.js` | Standard library (`toResult`, `safeFetch`, etc.) |
+| `shotscript/plugin` | `dist/lintTsPlugin.cjs` | TypeScript language service plugin (IDE integration) |
+| `shotscript/tsconfig/shotscript.json` | `src/tsconfig/shotscript.json` | Strict tsconfig preset users extend |
+| `shotscript/fmt` | `src/fmt/shotscript.json` | Prettier config preset |
+
+The CLI binary (`shotscript`) is `src/lintCli.ts` — not part of the published API, just the command-line runner.
+
+### Source layout
+
+```
+src/
+  lintCli.ts          — CLI entry point (glob → check → print diagnostics → exit)
+  lintTsPlugin.ts     — TS language service plugin (IDE real-time linting)
+  lint/
+    check.ts          — core check() function: builds AST, walks nodes, collects diagnostics
+    types.ts          — Diagnostic, Context, Rule types
+    pos.ts            — posOf() helper: ts.Node → { line, col }
+    index.ts          — public re-exports for the programmatic API
+    rules/
+      all.ts          — imports every rule and exports the rules array
+      no-*.ts         — one file per rule
+      require-*.ts    — one file per rule
+  std/
+    index.ts          — toResult, safeFetch, jsonParse, jsonStringify, etc.
+```
+
+### How the linter works
+
+1. **CLI** (`lintCli.ts`) resolves globs to absolute paths, reads the nearest `tsconfig.json` via `ts.findConfigFile`, then calls `ts.createProgram(allFiles, compilerOptions)` **once** for the entire run.
+2. **`check(file, source, typeChecker, programSourceFile)`** walks the AST of one file. When `typeChecker` and `programSourceFile` are provided (from the shared program), it uses them directly. When both are `null` (e.g. in tests), it falls back to building a per-file program.
+3. **Rules** receive every AST node via `visit(node, ctx)`. Rules that need type information check `if (!ctx.typeChecker) return` and skip gracefully when the checker is absent.
+4. **TS plugin** (`lintTsPlugin.ts`) calls `check()` with the existing program's checker — no extra compilation cost.
+
+### Adding a rule
+
+1. Create `src/lint/rules/no-<name>.ts` exporting a `Rule` object with `name` and `visit`.
+2. Import and add it to the array in `src/lint/rules/all.ts`.
+3. Add a fixture file to `tests/pass/` or `tests/fail/` — the test runner picks them up automatically.
+
+### Key constraints
+
+- **Never hardcode compiler options** in `lintCli.ts`. Always read the user's `tsconfig.json` via `ts.findConfigFile`. Users choose their own `target`, `lib`, `paths`, etc.
+- **One shared `ts.createProgram`** per CLI run. Creating a program per file adds ~50s to a 30-file run. The `check()` fallback exists for tests only.
+- **Rules must be side-effect free** — `visit` only calls `ctx.push()` to emit diagnostics. No state between files.
+- **The linter itself must pass its own rules.** The pre-commit hook runs `npm run lint` over `src/`. Any new code in `src/` must be valid ShotScript.
+
+---
+
 ## Functions
 
 **Only `function` declarations. No arrow functions, ever.**
