@@ -727,17 +727,6 @@
                 Absent values
             </p>
 
-            <div class="callout">
-                <strong>Why it matters:</strong> TypeScript has three ways
-                to express "this might not exist" — <code>?</code>,
-                <code>| undefined</code>, and <code>| null</code> — and
-                most codebases mix all three. ShotScript picks one:
-                <code>null</code>. Every optional field is
-                <code>T | null</code>, every fallible return is
-                <code>[T | null, Error | null]</code>. No more checking for
-                both.
-            </div>
-
             <div class="comparison">
                 <div class="pane-before">
                     <div class="pane-label">
@@ -769,6 +758,17 @@
   <span class="id">id</span>: <span class="ty">number</span>
 ): [<span class="ty">User</span> | <span class="kw">null</span>, <span class="ty">Error</span> | <span class="kw">null</span>] { <span class="cm">/* ... */</span> }</pre>
                 </div>
+            </div>
+
+            <div class="callout">
+                <strong>Why it matters:</strong> TypeScript has three ways
+                to express "this might not exist" — <code>?</code>,
+                <code>| undefined</code>, and <code>| null</code> — and
+                most codebases mix all three. ShotScript picks one:
+                <code>null</code>. Every optional field is
+                <code>T | null</code>, every fallible return is
+                <code>[T | null, Error | null]</code>. No more checking for
+                both.
             </div>
 
             <!-- 3: Type complexity -->
@@ -825,14 +825,6 @@
                 Immutable by default
             </p>
 
-            <div class="callout">
-                <strong>Why it matters:</strong> mutable data structures
-                mean any function, at any call site, can change state you
-                didn't expect. <code>readonly</code> makes the compiler
-                enforce immutability — mutation becomes opt-in, visible,
-                and intentional.
-            </div>
-
             <div class="comparison">
                 <div class="pane-before">
                     <div class="pane-label">
@@ -861,6 +853,14 @@
 
 <span class="cm">// compiler rejects any write to these</span></pre>
                 </div>
+            </div>
+
+            <div class="callout">
+                <strong>Why it matters:</strong> mutable data structures
+                mean any function, at any call site, can change state you
+                didn't expect. <code>readonly</code> makes the compiler
+                enforce immutability — mutation becomes opt-in, visible,
+                and intentional.
             </div>
 
             <!-- 5: Data + behaviour -->
@@ -917,13 +917,6 @@
                 Callbacks
             </p>
 
-            <div class="callout">
-                <strong>Why it matters:</strong> named functions are
-                testable in isolation, searchable with grep, and show up in
-                stack traces. Anonymous arrow callbacks disappear the moment
-                they fail.
-            </div>
-
             <div class="comparison">
                 <div class="pane-before">
                     <div class="pane-label">
@@ -955,6 +948,13 @@
   .<span class="fn">map</span>(<span class="fn">doubleScore</span>)
   .<span class="fn">reduce</span>(<span class="fn">sumScore</span>, <span class="nu">0</span>)</pre>
                 </div>
+            </div>
+
+            <div class="callout">
+                <strong>Why it matters:</strong> named functions are
+                testable in isolation, searchable with grep, and show up in
+                stack traces. Anonymous arrow callbacks disappear the moment
+                they fail.
             </div>
 
             <!-- 7: Conditionals -->
