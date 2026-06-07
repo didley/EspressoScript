@@ -1,0 +1,514 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>ShotScriptSkills — Three Claude Code commands.</title>
+        <style>
+            :root {
+                --bg: #0d0d10;
+                --surface: #16161a;
+                --border: #2a2a32;
+                --text: #e8e8f0;
+                --muted: #7a7a90;
+                --accent: #c8702a;
+                --green: #4ec994;
+                --red: #e05c5c;
+                --keyword: #c792ea;
+                --string: #c3e88d;
+                --type: #82aaff;
+                --comment: #546e7a;
+                --fn: #82aaff;
+                --num: #f78c6c;
+            }
+
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+
+            body {
+                background: var(--bg);
+                color: var(--text);
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+                font-size: 16px;
+                line-height: 1.6;
+            }
+
+            a { color: var(--accent); text-decoration: none; }
+            a:hover { text-decoration: underline; }
+            a.ext::after { content: " ↗"; font-size: 0.75em; opacity: 0.5; }
+
+            nav {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 1.25rem 2rem;
+                border-bottom: 1px solid var(--border);
+                position: sticky;
+                top: 0;
+                background: rgba(13, 13, 16, 0.92);
+                backdrop-filter: blur(8px);
+                z-index: 10;
+            }
+
+            .nav-logo {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 1.05rem;
+                font-weight: 700;
+                letter-spacing: -0.02em;
+                text-decoration: none;
+            }
+            .nav-logo .brand { color: var(--accent); }
+            .nav-logo .route { color: var(--text); }
+
+            .nav-links {
+                display: flex;
+                gap: 0.2rem;
+                list-style: none;
+            }
+            .nav-links a {
+                font-size: 0.82rem;
+                color: var(--muted);
+                padding: 0.3rem 0.7rem;
+                border-radius: 5px;
+            }
+            .nav-links a:hover {
+                color: var(--text);
+                background: rgba(255, 255, 255, 0.05);
+                text-decoration: none;
+            }
+            .nav-links a[aria-current="page"] { color: var(--text); }
+
+            .nav-divider {
+                width: 1px;
+                height: 1rem;
+                background: var(--border);
+                margin: 0 0.3rem;
+                align-self: center;
+                list-style: none;
+            }
+
+            .nav-ext { font-size: 0.78rem !important; }
+
+            .page-header {
+                max-width: 860px;
+                margin: 0 auto;
+                padding: 4rem 2rem 3rem;
+            }
+
+            .page-badge {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.68rem;
+                letter-spacing: 0.14em;
+                color: var(--accent);
+                text-transform: uppercase;
+                margin-bottom: 0.6rem;
+            }
+
+            .page-header h1 {
+                font-size: clamp(1.8rem, 4vw, 2.4rem);
+                font-weight: 800;
+                letter-spacing: -0.035em;
+                line-height: 1.2;
+                margin-bottom: 0.75rem;
+            }
+
+            .page-header h1 em {
+                font-style: normal;
+                color: var(--green);
+            }
+
+            .page-header .sub {
+                font-size: 1rem;
+                color: var(--muted);
+                max-width: 540px;
+                line-height: 1.7;
+                margin-bottom: 2rem;
+            }
+
+            .content {
+                max-width: 860px;
+                margin: 0 auto;
+                padding: 0 2rem 4rem;
+            }
+
+            .section-label {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.68rem;
+                letter-spacing: 0.14em;
+                color: var(--accent);
+                text-transform: uppercase;
+                margin-bottom: 0.6rem;
+            }
+
+            h2 {
+                font-size: 1.35rem;
+                font-weight: 700;
+                letter-spacing: -0.025em;
+                margin-bottom: 0.5rem;
+            }
+
+            .section-desc {
+                color: var(--muted);
+                font-size: 0.92rem;
+                line-height: 1.7;
+                margin-bottom: 1.75rem;
+            }
+
+            .section-desc code {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.85em;
+                color: var(--type);
+                background: rgba(130, 170, 255, 0.08);
+                padding: 0.05rem 0.3rem;
+                border-radius: 3px;
+            }
+
+            .install-block {
+                max-width: 860px;
+                margin: 0 auto;
+                padding: 0 2rem 3rem;
+            }
+
+            .install-label {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.65rem;
+                letter-spacing: 0.12em;
+                color: var(--accent);
+                text-transform: uppercase;
+                margin-bottom: 0.6rem;
+            }
+
+            .install-row {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.75rem;
+                margin-bottom: 1.25rem;
+                align-items: center;
+            }
+
+            .install-cmd {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.6rem;
+                background: var(--surface);
+                border: 1px solid var(--border);
+                border-radius: 8px;
+                padding: 0.6rem 1.1rem;
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.82rem;
+            }
+            .install-cmd .prompt { color: var(--muted); }
+            .install-cmd .cmd { color: var(--green); }
+
+            .install-note {
+                font-size: 0.8rem;
+                color: var(--muted);
+                margin-top: 0.5rem;
+            }
+            .install-note code {
+                font-family: "SF Mono", "Fira Code", monospace;
+                color: var(--text);
+                background: var(--surface);
+                padding: 0.1rem 0.3rem;
+                border-radius: 3px;
+            }
+
+            .callout {
+                background: var(--surface);
+                border: 1px solid var(--border);
+                border-left: 3px solid var(--accent);
+                border-radius: 8px;
+                padding: 1rem 1.25rem;
+                font-size: 0.875rem;
+                color: var(--muted);
+                margin-bottom: 2.5rem;
+            }
+            .callout strong { color: var(--text); }
+            .callout code {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.8em;
+                color: var(--type);
+                background: rgba(130, 170, 255, 0.08);
+                padding: 0.05rem 0.3rem;
+                border-radius: 3px;
+            }
+
+            .cmd-block {
+                margin-bottom: 3rem;
+                padding-bottom: 3rem;
+                border-bottom: 1px solid var(--border);
+            }
+            .cmd-block:last-child {
+                border-bottom: none;
+                padding-bottom: 0;
+            }
+
+            .cmd-header {
+                display: flex;
+                align-items: baseline;
+                gap: 0.6rem;
+                margin-bottom: 0.6rem;
+            }
+
+            .cmd-name {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 1.05rem;
+                font-weight: 700;
+                color: var(--green);
+            }
+
+            .cmd-desc {
+                font-size: 0.9rem;
+                color: var(--muted);
+                line-height: 1.65;
+                margin-bottom: 1.25rem;
+                max-width: 580px;
+            }
+
+            .cmd-desc code {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.82em;
+                color: var(--type);
+                background: rgba(130, 170, 255, 0.08);
+                padding: 0.05rem 0.3rem;
+                border-radius: 3px;
+            }
+
+            .step-list {
+                display: flex;
+                flex-direction: column;
+                border: 1px solid var(--border);
+                border-radius: 10px;
+                overflow: hidden;
+                margin-bottom: 1.5rem;
+            }
+
+            .step-item {
+                display: grid;
+                grid-template-columns: 180px 1fr;
+                gap: 1rem;
+                padding: 0.85rem 1.25rem;
+                background: var(--surface);
+                border-bottom: 1px solid var(--border);
+                align-items: start;
+            }
+            .step-item:last-child { border-bottom: none; }
+            .step-item:nth-child(even) { background: #131318; }
+
+            @media (max-width: 600px) {
+                .step-item { grid-template-columns: 1fr; gap: 0.25rem; }
+            }
+
+            .step-key {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.75rem;
+                color: var(--accent);
+                padding-top: 0.05rem;
+            }
+
+            .step-val {
+                font-size: 0.875rem;
+                color: var(--muted);
+                line-height: 1.55;
+            }
+
+            .step-val code {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.8em;
+                color: var(--type);
+                background: rgba(130, 170, 255, 0.08);
+                padding: 0.05rem 0.3rem;
+                border-radius: 3px;
+            }
+
+            pre {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.8rem;
+                line-height: 1.7;
+                padding: 1.25rem 1.25rem 1.5rem;
+                overflow-x: auto;
+                white-space: pre;
+            }
+
+            .kw { color: var(--keyword); }
+            .ty { color: var(--type); }
+            .fn { color: var(--fn); }
+            .st { color: var(--string); }
+            .cm { color: var(--comment); }
+            .nu { color: var(--num); }
+            .op { color: var(--muted); }
+            .id { color: var(--muted); }
+
+            hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
+
+            footer {
+                text-align: center;
+                padding: 2.5rem 2rem;
+                font-size: 0.825rem;
+                color: var(--muted);
+                border-top: 1px solid var(--border);
+            }
+        </style>
+    </head>
+    <body>
+        <nav>
+            <a href="/" class="nav-logo">
+                <span class="brand">ShotScript</span><span class="route">/skills</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="/">ShotScript</a></li>
+                <li><a href="/lint/">Lint</a></li>
+                <li><a href="/fmt/">Fmt</a></li>
+                <li><a href="/typing/">Typing</a></li>
+                <li><a href="/std/">Std</a></li>
+                <li><a href="/skills/" aria-current="page">Skills</a></li>
+                <li class="nav-divider" aria-hidden="true"></li>
+                <li><a href="https://github.com/didley/shotscript" class="nav-ext" target="_blank" rel="noopener">GitHub ↗</a></li>
+                <li><a href="https://www.npmjs.com/package/shotscript" class="nav-ext" target="_blank" rel="noopener">npm ↗</a></li>
+            </ul>
+        </nav>
+
+        <div class="page-header">
+            <div class="page-badge">ShotScriptSkills</div>
+            <h1>Three commands. <em>Zero manual rewrites.</em></h1>
+            <p class="sub">
+                Claude Code slash commands that understand every ShotScript rule.
+                Fix violations in-place, migrate entire codebases, or explain
+                any rule on demand — without introducing new violations while
+                fixing existing ones.
+            </p>
+        </div>
+
+        <div class="install-block">
+            <div class="install-label">Install</div>
+            <div class="install-row">
+                <div class="install-cmd">
+                    <span class="prompt">$</span>
+                    <span class="cmd">npx shotscript commands</span>
+                </div>
+            </div>
+            <p class="install-note">
+                Copies <code>/shotscript-fix</code>, <code>/shotscript-migrate</code>, and
+                <code>/shotscript-explain</code> into <code>.claude/commands/</code> in
+                your project. Requires
+                <a href="https://claude.ai/code" target="_blank" rel="noopener" class="ext">Claude Code</a>.
+            </p>
+        </div>
+
+        <div class="content">
+
+            <div class="callout">
+                <strong>No gradual migration path — unless you use Claude.</strong>
+                Rules like <code>no-class</code> and <code>no-throw</code> require
+                architectural rewrites, not search-and-replace.
+                <code>/shotscript-migrate</code> handles the rewrite, including
+                updating every call site.
+            </div>
+
+            <!-- ── FIX ── -->
+            <div class="cmd-block" id="fix">
+                <div class="cmd-header">
+                    <span class="cmd-name">/shotscript-fix</span>
+                </div>
+                <p class="cmd-desc">
+                    Runs the linter against your source files, reads every flagged
+                    file, and rewrites violations in-place. Re-runs until zero
+                    violations remain. Pass a glob to target specific files, or
+                    omit it to let the command infer from <code>package.json</code>.
+                </p>
+
+                <div class="step-list">
+                    <div class="step-item">
+                        <span class="step-key">1. Run linter</span>
+                        <span class="step-val">Executes <code>npx shotscript 'src/**/*.ts'</code> and parses the output — one violation per line in <code>file:line:col [rule] message</code> format.</span>
+                    </div>
+                    <div class="step-item">
+                        <span class="step-key">2. Fix per rule</span>
+                        <span class="step-val">Applies the correct rewrite for each rule — <code>interface</code> → <code>type</code>, <code>T[]</code> → <code>readonly T[]</code>, <code>throw</code> → <code>return [null, err]</code>, and all others. Never introduces new violations while fixing.</span>
+                    </div>
+                    <div class="step-item">
+                        <span class="step-key">3. Verify</span>
+                        <span class="step-val">Re-runs the linter after each file. Repeats until the output is clean.</span>
+                    </div>
+                </div>
+
+                <p class="section-desc" style="margin-bottom: 0">
+                    Best for: day-to-day use when you wrote something that triggered a rule
+                    and want it fixed without looking up the correct form.
+                </p>
+            </div>
+
+            <!-- ── MIGRATE ── -->
+            <div class="cmd-block" id="migrate">
+                <div class="cmd-header">
+                    <span class="cmd-name">/shotscript-migrate [glob]</span>
+                </div>
+                <p class="cmd-desc">
+                    Staged migration for an existing TypeScript codebase. Audits
+                    violations first, then works through them in two phases —
+                    mechanical fixes before structural rewrites — to avoid
+                    cascading breakage.
+                </p>
+
+                <div class="step-list">
+                    <div class="step-item">
+                        <span class="step-key">Phase 1 — Audit</span>
+                        <span class="step-val">Counts violations per rule, categorises them as mechanical or structural, and confirms with you before making any changes.</span>
+                    </div>
+                    <div class="step-item">
+                        <span class="step-key">Phase 2 — Mechanical</span>
+                        <span class="step-val">Fixes safe, local rewrites first: <code>interface</code> → <code>type</code>, optional properties → <code>| null</code>, <code>T[]</code> → <code>readonly T[]</code>, <code>let</code> → <code>const</code>, <code>==</code> → <code>===</code>, <code>enum</code> → <code>as const</code>, and more.</span>
+                    </div>
+                    <div class="step-item">
+                        <span class="step-key">Phase 3 — Structural</span>
+                        <span class="step-val">Tackles changes that cascade across call sites: arrow functions → named <code>function</code> declarations, classes → plain types + functions, <code>throw</code>/<code>try</code> → <code>Result</code> tuple returns with <code>toResult</code>/<code>safeFetch</code> from <code>shotscript/std</code>. Updates every call site.</span>
+                    </div>
+                    <div class="step-item">
+                        <span class="step-key">Phase 4 — Verify</span>
+                        <span class="step-val">Final linter pass. Zero violations is the target before finishing.</span>
+                    </div>
+                </div>
+
+                <p class="section-desc" style="margin-bottom: 0">
+                    Best for: onboarding an existing TypeScript project to ShotScript.
+                    The structural phase handles the rewrites that would otherwise
+                    require days of manual work.
+                </p>
+            </div>
+
+            <!-- ── EXPLAIN ── -->
+            <div class="cmd-block" id="explain">
+                <div class="cmd-header">
+                    <span class="cmd-name">/shotscript-explain [rule]</span>
+                </div>
+                <p class="cmd-desc">
+                    Explains any ShotScript rule or violation. Pass a rule name
+                    or paste a full violation line from the linter output — the
+                    command returns what's banned, why, and a before/after example.
+                </p>
+
+                <div class="step-list">
+                    <div class="step-item">
+                        <span class="step-key">Input</span>
+                        <span class="step-val">A rule name (e.g. <code>no-arrow-functions</code>), or a pasted violation line (e.g. <code>src/api.ts:12:5 [no-throw] Use return instead of throw.</code>)</span>
+                    </div>
+                    <div class="step-item">
+                        <span class="step-key">Output</span>
+                        <span class="step-val"><strong>What's banned</strong> — the specific construct with an example. <strong>Why</strong> — the design principle in one sentence. <strong>The fix</strong> — a before/after code pair showing the ShotScript-compliant form.</span>
+                    </div>
+                </div>
+
+                <p class="section-desc" style="margin-bottom: 0">
+                    Best for: onboarding new team members to the dialect, or quickly
+                    looking up the correct form for an unfamiliar rule.
+                </p>
+            </div>
+
+        </div>
+
+        <footer>
+            <p>
+                By <a href="https://github.com/didley" target="_blank" rel="noopener">didley</a> in Melbourne (Naarm), Australia.
+            </p>
+        </footer>
+    </body>
+</html>

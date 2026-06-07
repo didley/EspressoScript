@@ -339,7 +339,7 @@
                 display: flex;
                 flex-direction: column;
                 gap: 4px;
-                height: 240px;
+                height: 300px;
             }
 
             .graph-item-inner {
@@ -378,7 +378,7 @@
 
             .graph-svg {
                 width: 80px;
-                height: 240px;
+                height: 300px;
                 flex-shrink: 0;
                 overflow: visible;
             }
@@ -609,6 +609,7 @@
                 <li><a href="/fmt/">Fmt</a></li>
                 <li><a href="/typing/">Typing</a></li>
                 <li><a href="/std/">Std</a></li>
+                <li><a href="/skills/">Skills</a></li>
                 <li class="nav-divider" aria-hidden="true"></li>
                 <li>
                     <a
@@ -636,7 +637,7 @@
             <div class="hero-content">
                 <div class="hero-brand">ShotScript</div>
                 <p class="hero-desc">
-                    TypeScript with ~75% fewer ways to write the same thing.
+                    TypeScript with <span class="reduction-pct">~79%</span> fewer ways to write the same thing.
                     One way to handle errors. One way to say nothing. One way
                     to structure types.
                 </p>
@@ -765,7 +766,7 @@
             </div>
 
             <div class="callout">
-                <strong>ShotScript removes ~75% of TypeScript's ways to write
+                <strong>ShotScript removes <span class="reduction-pct">~79%</span> of TypeScript's ways to write
                 the same thing</strong> and standardises the rest to one. Your
                 files are unchanged — it's a list of rules, not a compiler.
             </div>
@@ -887,32 +888,44 @@
                             require.
                         </div>
                     </a>
+                    <a href="/skills/" class="graph-item-inner">
+                        <div class="graph-item-name">ShotScriptSkills</div>
+                        <div class="graph-item-desc">
+                            Claude Code commands — fix, migrate, and explain
+                            violations on demand.
+                        </div>
+                    </a>
                 </div>
                 <svg
                     class="graph-svg"
-                    viewBox="0 0 80 240"
+                    viewBox="0 0 80 300"
                     xmlns="http://www.w3.org/2000/svg"
                     aria-hidden="true"
                 >
                     <path
                         class="ant-line"
-                        d="M0,30 C40,30 40,120 80,120"
+                        d="M0,30 C40,30 40,150 80,150"
                         style="animation-delay: 0s"
                     />
                     <path
                         class="ant-line"
-                        d="M0,90 C40,90 40,120 80,120"
+                        d="M0,90 C40,90 40,150 80,150"
                         style="animation-delay: -0.2s"
                     />
                     <path
                         class="ant-line"
-                        d="M0,150 C40,150 40,120 80,120"
+                        d="M0,150 C40,150 40,150 80,150"
                         style="animation-delay: -0.4s"
                     />
                     <path
                         class="ant-line"
-                        d="M0,210 C40,210 40,120 80,120"
+                        d="M0,210 C40,210 40,150 80,150"
                         style="animation-delay: -0.6s"
+                    />
+                    <path
+                        class="ant-line"
+                        d="M0,270 C40,270 40,150 80,150"
+                        style="animation-delay: -0.8s"
                     />
                 </svg>
                 <div class="graph-node-wrap">
@@ -1255,63 +1268,55 @@
 
         <hr class="divider" />
 
-        <!-- ── CLAUDE CODE ── -->
+        <!-- ── CLAUDE CODE (teaser) ── -->
         <section class="section" id="claude">
             <div class="section-label">Claude Code</div>
-            <h2>Three commands. Zero manual fixes.</h2>
+            <h2>AI-native compliance.</h2>
             <p class="section-desc">
-                Install three
-                <a href="https://claude.ai/code" target="_blank" rel="noopener" class="ext">Claude Code</a>
-                slash commands into your project. They read your source files,
-                understand every ShotScript rule, and won't introduce new
-                violations while fixing existing ones.
+                Three Claude Code slash commands — fix violations in-place,
+                migrate existing codebases end-to-end, and explain any rule on
+                demand. One install command, no manual rewrites.
             </p>
-
-            <div class="install-cmd" style="margin-bottom: 1.5rem">
-                <span class="prompt">$</span>
-                <span class="cmd">npx shotscript commands</span>
-            </div>
-            <p class="section-desc" style="margin-bottom: 2rem; margin-top: -0.5rem; font-size: 0.82rem">
-                Copies <code>/shotscript-fix</code>, <code>/shotscript-migrate</code>, and
-                <code>/shotscript-explain</code> into <code>.claude/commands/</code> in your project.
-            </p>
-
-            <div class="rule-grid" style="grid-template-columns: repeat(auto-fill, minmax(260px, 1fr))">
-                <div class="rule-card">
-                    <div class="rule-name" style="color: var(--green)">/shotscript-fix</div>
-                    <div class="rule-desc">
-                        Runs the linter, reads every flagged file, and rewrites
-                        violations in-place — mechanical and structural. Re-runs
-                        until zero violations remain.
-                    </div>
-                </div>
-                <div class="rule-card">
-                    <div class="rule-name" style="color: var(--green)">/shotscript-migrate</div>
-                    <div class="rule-desc">
-                        Staged migration for an existing TypeScript codebase.
-                        Mechanical fixes first, then arrow functions, classes,
-                        and the error-handling rewrite to <code>Result</code>
-                        tuples — with call-site updates throughout.
-                    </div>
-                </div>
-                <div class="rule-card">
-                    <div class="rule-name" style="color: var(--green)">/shotscript-explain [rule]</div>
-                    <div class="rule-desc">
-                        Pass a rule name or paste a violation line. Returns
-                        what's banned, why, and a before/after example — useful
-                        when onboarding a team to the dialect.
-                    </div>
-                </div>
-            </div>
-
-            <div class="callout">
-                <strong>No gradual migration path — unless you use Claude.</strong>
-                The README says rules like <code>no-class</code> and
-                <code>no-throw</code> require architectural rewrites, not
-                search-and-replace. <code>/shotscript-migrate</code> handles
-                that rewrite, including updating every call site.
-            </div>
+            <a href="/skills/" style="font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.82rem; color: var(--accent)">ShotScriptSkills →</a>
         </section>
+
+        <!-- ── Reduction percentage — computed from data, not hardcoded ── -->
+        <!-- Mirror of scripts/reduction.mjs. Update both when rules change.  -->
+        <!-- Formula: (Σts − Σss) / Σts  where ts = TypeScript forms, ss = ShotScript permitted forms -->
+        <script>
+        (function () {
+            var REDUCTION_DATA = [
+                { ts: 3,  ss: 1 }, // variable declaration
+                { ts: 5,  ss: 1 }, // function syntax
+                { ts: 5,  ss: 1 }, // error-handling patterns
+                { ts: 4,  ss: 1 }, // expressing absence / nothing
+                { ts: 3,  ss: 1 }, // type shape definition
+                { ts: 5,  ss: 1 }, // type composition
+                { ts: 3,  ss: 1 }, // async sequencing
+                { ts: 6,  ss: 1 }, // conditional / branching expression
+                { ts: 6,  ss: 3 }, // loop constructs
+                { ts: 3,  ss: 1 }, // boolean coercion
+                { ts: 4,  ss: 1 }, // number coercion / parsing
+                { ts: 2,  ss: 1 }, // string concatenation
+                { ts: 3,  ss: 1 }, // object merging / update
+                { ts: 6,  ss: 0 }, // type-safety escape hatches
+                { ts: 3,  ss: 1 }, // export style
+                { ts: 3,  ss: 1 }, // module syntax
+                { ts: 4,  ss: 2 }, // increment / decrement
+                { ts: 9,  ss: 0 }, // in-place array mutation methods
+                { ts: 7,  ss: 0 }, // OOP constructs
+                { ts: 6,  ss: 0 }, // advanced type-system features
+                { ts: 4,  ss: 2 }, // equality operators
+                { ts: 5,  ss: 0 }, // legacy / unsafe globals
+            ];
+            var tsTotal = REDUCTION_DATA.reduce(function (n, c) { return n + c.ts; }, 0);
+            var ssTotal = REDUCTION_DATA.reduce(function (n, c) { return n + c.ss; }, 0);
+            var pct = Math.round((tsTotal - ssTotal) / tsTotal * 100);
+            document.querySelectorAll('.reduction-pct').forEach(function (el) {
+                el.textContent = '~' + pct + '%';
+            });
+        })();
+        </script>
 
         <script>
         (function () {
