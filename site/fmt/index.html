@@ -444,6 +444,32 @@
 
             hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
 
+            .page-toc-wrap {
+                padding: 0.75rem 2rem 1.75rem;
+                max-width: 860px;
+                margin: 0 auto;
+            }
+
+            .page-toc {
+                display: flex;
+                gap: 0.25rem;
+                flex-wrap: wrap;
+            }
+
+            .page-toc a {
+                font-size: 0.8rem;
+                color: var(--muted);
+                padding: 0.3rem 0.7rem;
+                border-radius: 5px;
+                border: 1px solid var(--border);
+                background: var(--surface);
+            }
+            .page-toc a:hover {
+                color: var(--text);
+                border-color: var(--accent);
+                text-decoration: none;
+            }
+
             footer {
                 text-align: center;
                 padding: 2.5rem 2rem;
@@ -482,26 +508,54 @@
             <p class="sub">Formatting optimised for minimum diffs and terminal previews. 80-char lines, no semicolons, 4-space indent, single quotes.</p>
         </div>
 
+        <div class="page-toc-wrap">
+            <div class="page-toc">
+                <a href="#minimal-diffs">Minimal diffs</a>
+                <a href="#narrow-terminals">Narrow terminals</a>
+                <a href="#install">Install</a>
+                <a href="#format-spec">Format spec</a>
+            </div>
+        </div>
+
         <div class="fmt-highlight">
-            <div class="section-label">Minimal diffs</div>
-            <p class="section-desc">When everyone formats the same way, PRs show only logic changes — not whitespace, quote, or spacing noise.</p>
+            <div id="minimal-diffs" class="section-label">Minimal diffs</div>
+            <p class="section-desc">Trailing commas on every item mean adding a new argument only shows one added line — the line above is untouched. Breaking at 80 chars keeps each argument on its own line, so a new argument never rewraps the whole signature.</p>
 
             <div class="comparison">
                 <div class="pane-before">
                     <div class="pane-label">
-                        <span class="dot dot-red"></span>without shared formatting
+                        <span class="dot dot-red"></span>without trailing commas + long line limit
                     </div>
-                    <pre><span class="diff-hunk">@@ -1,10 +1,10 @@</span><span class="diff-rem">-import {UserService} from "./services";</span><span class="diff-add">+import { UserService } from './services'</span><span class="diff-rem">-import {Database, Config} from "./db";</span><span class="diff-add">+import { Database, Config } from './db'</span><span class="diff-ctx"> </span><span class="diff-rem">-async function getUser(id:number) {</span><span class="diff-add">+async function getUser(id: number, fallback: User | null) {</span><span class="diff-rem">-  const svc = {db:getDb()}</span><span class="diff-add">+    const svc = { db: getDb() }</span><span class="diff-rem">-  return findUserById(svc,id)</span><span class="diff-add">+    return findUserById(svc, id) ?? fallback</span><span class="diff-ctx"> }</span></pre>
+                    <pre><span class="diff-hunk">@@ -1,6 +1,6 @@</span>
+<span class="diff-ctx"> import { UserService } from './services'</span>
+<span class="diff-ctx"> import { Database, Config } from './db'</span>
+<span class="diff-ctx"> </span>
+<span class="diff-rem">-async function getUser(id: number, options: Options): Promise&lt;User | null&gt; {</span>
+<span class="diff-add">+async function getUser(id: number, options: Options, fallback: User | null): Promise&lt;User | null&gt; {</span>
+<span class="diff-ctx">     const svc = { db: getDb() }</span>
+<span class="diff-ctx">     return findUserById(svc, id)</span>
+<span class="diff-ctx"> }</span></pre>
                 </div>
                 <div class="pane-after">
                     <div class="pane-label">
-                        <span class="dot dot-green"></span>ShotScriptFmt
+                        <span class="dot dot-green"></span>ShotScriptFmt — trailing commas + 80 chars
                     </div>
-                    <pre><span class="diff-hunk">@@ -1,7 +1,7 @@</span><span class="diff-ctx"> import { UserService } from './services'</span><span class="diff-ctx"> import { Database, Config } from './db'</span><span class="diff-ctx"> </span><span class="diff-rem">-async function getUser(id: number) {</span><span class="diff-add">+async function getUser(id: number, fallback: User | null) {</span><span class="diff-ctx">     const svc = { db: getDb() }</span><span class="diff-rem">-    return findUserById(svc, id)</span><span class="diff-add">+    return findUserById(svc, id) ?? fallback</span><span class="diff-ctx"> }</span></pre>
+                    <pre><span class="diff-hunk">@@ -1,9 +1,10 @@</span>
+<span class="diff-ctx"> import { UserService } from './services'</span>
+<span class="diff-ctx"> import { Database, Config } from './db'</span>
+<span class="diff-ctx"> </span>
+<span class="diff-ctx"> async function getUser(</span>
+<span class="diff-ctx">     id: number,</span>
+<span class="diff-ctx">     options: Options,</span>
+<span class="diff-add">+    fallback: User | null,</span>
+<span class="diff-ctx"> ): Promise&lt;User | null&gt; {</span>
+<span class="diff-ctx">     const svc = { db: getDb() }</span>
+<span class="diff-ctx">     return findUserById(svc, id)</span>
+<span class="diff-ctx"> }</span></pre>
                 </div>
             </div>
 
-            <div class="section-label">Fits narrow terminals</div>
+            <div id="narrow-terminals" class="section-label">Fits narrow terminals</div>
             <p class="section-desc">80-char lines fit cleanly in a split terminal. Longer limits force horizontal scroll on one side.</p>
 
             <div class="comparison">
@@ -531,7 +585,7 @@
 
         <div class="content">
 
-            <div class="section-label">Install</div>
+            <div id="install" class="section-label">Install</div>
 
             <div class="install-step">
                 <div class="install-step-label">biome.json</div>
@@ -548,7 +602,7 @@
 
             <hr />
 
-            <div class="section-label">Format spec</div>
+            <div id="format-spec" class="section-label">Format spec</div>
 
             <div class="spec-grid">
                 <div class="spec-card">
@@ -579,95 +633,6 @@
 
             <div class="callout"><strong>Why these choices:</strong> 80 chars fits a split terminal. 4-space indent makes nesting depth visible before it becomes a problem. No semis removes line-noise with no semantic cost. Single quotes are one less keystroke for the common case.</div>
 
-            <hr />
-
-            <div class="section-label">Before / after</div>
-
-            <h2>What formatting changes.</h2>
-
-            <div class="section-label">Imports, spacing &amp; semicolons</div>
-
-            <div class="comparison">
-                <div class="pane-before">
-                    <div class="pane-label">
-                        <span class="dot dot-red"></span>unformatted
-                    </div>
-                    <pre><span class="kw">import</span> {<span class="ty">UserService</span>} <span class="kw">from</span> <span class="st">&quot;./services&quot;</span>;
-<span class="kw">import</span> {<span class="ty">Database</span>,<span class="ty">Config</span>} <span class="kw">from</span> <span class="st">&quot;./db&quot;</span>;
-
-<span class="kw">async</span> <span class="kw">function</span> <span class="fn">getUser</span>(<span class="op">id</span>:<span class="ty">number</span>):<span class="ty">Promise</span>&lt;<span class="ty">User</span>|<span class="kw">null</span>&gt;{
-  <span class="kw">const</span> <span class="op">svc</span>:<span class="ty">UserService</span> = {<span class="op">db</span>:<span class="fn">getDb</span>()}
-  <span class="kw">return</span> <span class="fn">findUserById</span>(<span class="op">svc</span>,<span class="op">id</span>)
-}</pre>
-                </div>
-                <div class="pane-after">
-                    <div class="pane-label">
-                        <span class="dot dot-green"></span>ShotScriptFmt
-                    </div>
-                    <pre><span class="kw">import</span> { <span class="ty">UserService</span> } <span class="kw">from</span> <span class="st">'./services'</span>
-<span class="kw">import</span> { <span class="ty">Database</span>, <span class="ty">Config</span> } <span class="kw">from</span> <span class="st">'./db'</span>
-
-<span class="kw">async</span> <span class="kw">function</span> <span class="fn">getUser</span>(
-    <span class="op">id</span>: <span class="ty">number</span>,
-): <span class="ty">Promise</span>&lt;<span class="ty">User</span> | <span class="kw">null</span>&gt; {
-    <span class="kw">const</span> <span class="op">svc</span>: <span class="ty">UserService</span> = { <span class="op">db</span>: <span class="fn">getDb</span>() }
-    <span class="kw">return</span> <span class="fn">findUserById</span>(<span class="op">svc</span>, <span class="op">id</span>)
-}</pre>
-                </div>
-            </div>
-
-            <div class="section-label">Long parameter lists</div>
-
-            <div class="comparison">
-                <div class="pane-before">
-                    <div class="pane-label">
-                        <span class="dot dot-red"></span>unformatted
-                    </div>
-                    <pre><span class="kw">function</span> <span class="fn">createOrder</span>(<span class="op">userId</span>:<span class="ty">number</span>,<span class="op">items</span>:<span class="kw">readonly</span> <span class="ty">Item</span>[],<span class="op">shippingAddress</span>:<span class="ty">Address</span>,<span class="op">paymentMethod</span>:<span class="ty">PaymentMethod</span>):<span class="ty">Result</span>&lt;<span class="ty">Order</span>&gt; {
-  <span class="cm">// ...</span>
-}</pre>
-                </div>
-                <div class="pane-after">
-                    <div class="pane-label">
-                        <span class="dot dot-green"></span>ShotScriptFmt
-                    </div>
-                    <pre><span class="kw">function</span> <span class="fn">createOrder</span>(
-    <span class="op">userId</span>: <span class="ty">number</span>,
-    <span class="op">items</span>: <span class="kw">readonly</span> <span class="ty">Item</span>[],
-    <span class="op">shippingAddress</span>: <span class="ty">Address</span>,
-    <span class="op">paymentMethod</span>: <span class="ty">PaymentMethod</span>,
-): <span class="ty">Result</span>&lt;<span class="ty">Order</span>&gt; {
-    <span class="cm">// ...</span>
-}</pre>
-                </div>
-            </div>
-
-            <div class="section-label">Object literals</div>
-
-            <div class="comparison">
-                <div class="pane-before">
-                    <div class="pane-label">
-                        <span class="dot dot-red"></span>unformatted
-                    </div>
-                    <pre><span class="kw">const</span> <span class="op">config</span>: <span class="ty">Config</span> = {<span class="op">host</span>:<span class="st">&quot;localhost&quot;</span>,<span class="op">port</span>:<span class="nu">3000</span>,<span class="op">debug</span>:<span class="kw">true</span>,<span class="op">timeout</span>:<span class="nu">5000</span>,<span class="op">retries</span>:<span class="nu">3</span>}
-
-<span class="kw">const</span> <span class="op">updated</span> = {...<span class="op">config</span>,<span class="op">port</span>:<span class="nu">4000</span>,<span class="op">debug</span>:<span class="kw">false</span>}</pre>
-                </div>
-                <div class="pane-after">
-                    <div class="pane-label">
-                        <span class="dot dot-green"></span>ShotScriptFmt
-                    </div>
-                    <pre><span class="kw">const</span> <span class="op">config</span>: <span class="ty">Config</span> = {
-    <span class="op">host</span>: <span class="st">'localhost'</span>,
-    <span class="op">port</span>: <span class="nu">3000</span>,
-    <span class="op">debug</span>: <span class="kw">true</span>,
-    <span class="op">timeout</span>: <span class="nu">5000</span>,
-    <span class="op">retries</span>: <span class="nu">3</span>,
-}
-
-<span class="kw">const</span> <span class="op">updated</span> = { ...<span class="op">config</span>, <span class="op">port</span>: <span class="nu">4000</span>, <span class="op">debug</span>: <span class="kw">false</span> }</pre>
-                </div>
-            </div>
         </div>
 
         <footer>
