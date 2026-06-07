@@ -196,6 +196,74 @@
                 margin-bottom: 2rem;
             }
 
+            .section-desc code {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.82em;
+                color: var(--type);
+                background: rgba(130, 170, 255, 0.08);
+                padding: 0.05rem 0.3rem;
+                border-radius: 3px;
+            }
+
+            /* ── Reduction list ── */
+            .reduction-list {
+                display: flex;
+                flex-direction: column;
+                gap: 0.55rem;
+                margin-bottom: 2rem;
+            }
+
+            .reduction-item {
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+                font-size: 0.875rem;
+            }
+
+            .reduction-count {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.72rem;
+                font-weight: 700;
+                color: var(--accent);
+                background: rgba(200, 112, 42, 0.1);
+                border: 1px solid rgba(200, 112, 42, 0.25);
+                border-radius: 4px;
+                padding: 0.1rem 0.5rem;
+                min-width: 2.2rem;
+                text-align: center;
+                flex-shrink: 0;
+            }
+
+            .reduction-label {
+                color: var(--muted);
+                flex: 1;
+            }
+
+            .reduction-label code {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.82em;
+                color: var(--type);
+                background: rgba(130, 170, 255, 0.08);
+                padding: 0.05rem 0.3rem;
+                border-radius: 3px;
+            }
+
+            .reduction-arrow {
+                color: var(--border);
+                flex-shrink: 0;
+                font-size: 0.8rem;
+            }
+
+            .reduction-result {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.78rem;
+                color: var(--green);
+                background: rgba(78, 201, 148, 0.08);
+                padding: 0.1rem 0.5rem;
+                border-radius: 3px;
+                flex-shrink: 0;
+            }
+
             /* ── Callout ── */
             .callout {
                 background: var(--surface);
@@ -664,6 +732,33 @@
                 to generate subtly wrong code.
             </p>
 
+            <div class="reduction-list">
+                <div class="reduction-item">
+                    <span class="reduction-count">5</span>
+                    <span class="reduction-label">error patterns — <code>throw</code>, <code>try/catch</code>, rejected Promise, error-first callback, return tuple</span>
+                    <span class="reduction-arrow">→</span>
+                    <code class="reduction-result">PromiseResult&lt;T&gt;</code>
+                </div>
+                <div class="reduction-item">
+                    <span class="reduction-count">3</span>
+                    <span class="reduction-label">ways to say "nothing" — <code>?</code>, <code>| undefined</code>, <code>| null</code></span>
+                    <span class="reduction-arrow">→</span>
+                    <code class="reduction-result">| null</code>
+                </div>
+                <div class="reduction-item">
+                    <span class="reduction-count">4</span>
+                    <span class="reduction-label">function forms — arrow, declaration, expression, method</span>
+                    <span class="reduction-arrow">→</span>
+                    <code class="reduction-result">function f() {}</code>
+                </div>
+                <div class="reduction-item">
+                    <span class="reduction-count">3</span>
+                    <span class="reduction-label">type-shape constructs — <code>type</code>, <code>interface</code>, <code>class</code></span>
+                    <span class="reduction-arrow">→</span>
+                    <code class="reduction-result">type T = {}</code>
+                </div>
+            </div>
+
             <div class="callout">
                 <strong>ShotScript's answer:</strong> a strict lint pass, a
                 formatter, and a tsconfig that enforce one way of doing things. Your
@@ -824,19 +919,7 @@
                 ShotScript's constraint set is comprehensive enough that valid
                 code looks nothing like typical TypeScript. No classes, no arrow
                 callbacks, no ternaries, no
-                <code
-                    style="
-                        font-family:
-                            &quot;SF Mono&quot;, &quot;Fira Code&quot;,
-                            monospace;
-                        font-size: 0.85em;
-                        color: #82aaff;
-                        background: rgba(130, 170, 255, 0.08);
-                        padding: 0.05rem 0.3rem;
-                        border-radius: 3px;
-                    "
-                    >throw</code
-                >, no raw Promises — not because these features are bad, but
+                <code>throw</code>, no raw Promises — not because these features are bad, but
                 because having one way of doing things is the point. Think of it less
                 as "stricter TypeScript" and more as a dialect: TypeScript
                 provides the type system and toolchain; ShotScript defines a
@@ -901,10 +984,11 @@
         <!-- ── BEFORE / AFTER ── -->
         <section class="section" id="before-after">
             <div class="section-label">Before / after</div>
-            <h2>What the simplifications look like.</h2>
+            <h2>The three biggest simplifications.</h2>
             <p class="section-desc">
-                Real patterns. The left column is TypeScript as commonly
-                written; the right column is the ShotScript equivalent.
+                The left column is TypeScript as commonly written. The right
+                column is the ShotScript equivalent — the same logic, one way
+                to express it.
             </p>
 
             <!-- 1: Error handling -->
@@ -953,17 +1037,64 @@
 
             <div class="callout">
                 <strong>Why it matters:</strong> thrown exceptions don't appear
-                in function signatures. Callers have no idea a function can fail
-                without reading its source.
-                <code>PromiseResult&lt;T, E&gt;</code> makes every failure path
-                explicit in the type, enforced by the checker.
+                in function signatures — callers can't know a function can fail
+                without reading its source. <code>PromiseResult&lt;T&gt;</code>
+                puts every failure path in the type, enforced by the checker.
             </div>
 
-            <!-- 2: Absent values -->
+            <!-- 2: Data + behaviour -->
+            <p class="section-label" style="margin-bottom: 0.75rem">
+                Data + behaviour
+            </p>
+            <div class="comparison">
+                <div class="pane-before">
+                    <div class="pane-label">
+                        <span class="dot dot-red"></span>TypeScript
+                    </div>
+                    <pre><span class="kw">class</span> <span class="ty">UserService</span> {
+  <span class="kw">private readonly</span> <span class="id">db</span>: <span class="ty">Database</span>
+
+  <span class="kw">constructor</span>(<span class="id">db</span>: <span class="ty">Database</span>) {
+    <span class="kw">this</span>.<span class="id">db</span> = <span class="id">db</span>
+  }
+
+  <span class="kw">async</span> <span class="fn">findById</span>(
+    <span class="id">id</span>: <span class="ty">number</span>
+  ): <span class="ty">Promise</span>&lt;<span class="ty">User</span> | <span class="kw">null</span>&gt; {
+    <span class="cm">// ...</span>
+  }
+}
+
+<span class="kw">const</span> <span class="id">svc</span> = <span class="kw">new</span> <span class="ty">UserService</span>(<span class="id">db</span>)</pre>
+                </div>
+                <div class="pane-after">
+                    <div class="pane-label">
+                        <span class="dot dot-green"></span>ShotScript
+                    </div>
+                    <pre><span class="kw">type</span> <span class="ty">UserService</span> = { <span class="kw">readonly</span> <span class="id">db</span>: <span class="ty">Database</span> }
+
+<span class="kw">async function</span> <span class="fn">findUserById</span>(
+  <span class="id">svc</span>: <span class="ty">UserService</span>,
+  <span class="id">id</span>: <span class="ty">number</span>,
+): <span class="ty">PromiseResult</span>&lt;<span class="ty">User</span>&gt; {
+  <span class="cm">// ...</span>
+}
+
+<span class="kw">const</span> <span class="id">svc</span>: <span class="ty">UserService</span> = { <span class="id">db</span> }</pre>
+                </div>
+            </div>
+
+            <div class="callout">
+                <strong>Why it matters:</strong> a <code>type</code> is data, a
+                function is behaviour — separate, independently testable. No
+                hidden state, no inheritance graph to trace, no
+                <code>this</code> context to reason about.
+            </div>
+
+            <!-- 3: Absent values -->
             <p class="section-label" style="margin-bottom: 0.75rem">
                 Absent values
             </p>
-
             <div class="comparison">
                 <div class="pane-before">
                     <div class="pane-label">
@@ -998,238 +1129,12 @@
             </div>
 
             <div class="callout">
-                <strong>Why it matters:</strong> TypeScript has three ways to
-                express "this might not exist" — <code>?</code>,
-                <code>| undefined</code>, and <code>| null</code> — and most
-                codebases mix all three. ShotScript picks one:
-                <code>null</code>. Every optional field is
+                <strong>Why it matters:</strong> most codebases mix <code>?</code>,
+                <code>| undefined</code>, and <code>| null</code>. ShotScript
+                picks one: <code>null</code>. Every optional field is
                 <code>T | null</code>, every fallible return is
-                <code>[T | null, Error | null]</code>. No more checking for
-                both.
-            </div>
-
-            <!-- 3: Type complexity -->
-            <p class="section-label" style="margin-bottom: 0.75rem">
-                Type complexity
-            </p>
-            <div class="comparison">
-                <div class="pane-before">
-                    <div class="pane-label">
-                        <span class="dot dot-red"></span>TypeScript
-                    </div>
-                    <pre><span class="cm">// intersection to "extend" a base type</span>
-<span class="kw">type</span> <span class="ty">User</span> = {
-  <span class="kw">readonly</span> <span class="id">id</span>: <span class="ty">number</span>
-  <span class="kw">readonly</span> <span class="id">name</span>: <span class="ty">string</span>
-}
-
-<span class="kw">type</span> <span class="ty">AdminUser</span> =
-  <span class="ty">User</span> & { <span class="kw">readonly</span> <span class="id">role</span>: <span class="st">'admin'</span> }
-
-<span class="cm">// what fields does AdminUser have?</span>
-<span class="cm">// depends on what User is today</span></pre>
-                </div>
-                <div class="pane-after">
-                    <div class="pane-label">
-                        <span class="dot dot-green"></span>ShotScript
-                    </div>
-                    <pre><span class="cm">// embed as a named field — Go/Rust-style</span>
-<span class="kw">type</span> <span class="ty">User</span> = {
-  <span class="kw">readonly</span> <span class="id">id</span>: <span class="ty">number</span>
-  <span class="kw">readonly</span> <span class="id">name</span>: <span class="ty">string</span>
-}
-
-<span class="kw">type</span> <span class="ty">AdminUser</span> = {
-  <span class="kw">readonly</span> <span class="id">user</span>: <span class="ty">User</span>
-  <span class="kw">readonly</span> <span class="id">role</span>: <span class="st">'admin'</span>
-}
-
-<span class="cm">// access: admin.user.id</span></pre>
-                </div>
-            </div>
-
-            <div class="callout">
-                <strong>Why it matters:</strong> intersection types hide fields
-                behind indirection. ShotScript bans <code>&amp;</code>,
-                conditional types, mapped types, and <code>infer</code>. Instead
-                of extending, embed: give the base type a named field. Every
-                shape is self-contained and readable where it's defined.
-            </div>
-
-            <!-- 4: Immutable by default -->
-            <p class="section-label" style="margin-bottom: 0.75rem">
-                Immutable by default
-            </p>
-
-            <div class="comparison">
-                <div class="pane-before">
-                    <div class="pane-label">
-                        <span class="dot dot-red"></span>TypeScript
-                    </div>
-                    <pre><span class="kw">type</span> <span class="ty">Config</span> = {
-  <span class="id">host</span>: <span class="ty">string</span>
-  <span class="id">port</span>: <span class="ty">number</span>
-}
-
-<span class="kw">const</span> <span class="id">ids</span>: <span class="ty">number</span>[] = []
-
-<span class="cm">// any function can mutate these</span>
-<span class="cm">// nothing in the types stops it</span></pre>
-                </div>
-                <div class="pane-after">
-                    <div class="pane-label">
-                        <span class="dot dot-green"></span>ShotScript
-                    </div>
-                    <pre><span class="kw">type</span> <span class="ty">Config</span> = {
-  <span class="kw">readonly</span> <span class="id">host</span>: <span class="ty">string</span>
-  <span class="kw">readonly</span> <span class="id">port</span>: <span class="ty">number</span>
-}
-
-<span class="kw">const</span> <span class="id">ids</span>: <span class="kw">readonly</span> <span class="ty">number</span>[] = []
-
-<span class="cm">// compiler rejects any write to these</span></pre>
-                </div>
-            </div>
-
-            <div class="callout">
-                <strong>Why it matters:</strong> mutable data structures mean
-                any function, at any call site, can change state you didn't
-                expect. <code>readonly</code> makes the compiler enforce
-                immutability — mutation becomes opt-in, visible, and
-                intentional.
-            </div>
-
-            <!-- 5: Data + behaviour -->
-            <p class="section-label" style="margin-bottom: 0.75rem">
-                Data + behaviour
-            </p>
-            <div class="comparison">
-                <div class="pane-before">
-                    <div class="pane-label">
-                        <span class="dot dot-red"></span>TypeScript
-                    </div>
-                    <pre><span class="kw">class</span> <span class="ty">UserService</span> {
-  <span class="kw">private readonly</span> <span class="id">db</span>: <span class="ty">Database</span>
-
-  <span class="kw">constructor</span>(<span class="id">db</span>: <span class="ty">Database</span>) {
-    <span class="kw">this</span>.<span class="id">db</span> = <span class="id">db</span>
-  }
-
-  <span class="kw">async</span> <span class="fn">findById</span>(
-    <span class="id">id</span>: <span class="ty">number</span>
-  ): <span class="ty">Promise</span>&lt;<span class="ty">User</span> | <span class="kw">null</span>&gt; {
-    <span class="cm">// ...</span>
-  }
-}
-
-<span class="kw">const</span> <span class="id">svc</span> = <span class="kw">new</span> <span class="ty">UserService</span>(<span class="id">db</span>)</pre>
-                </div>
-                <div class="pane-after">
-                    <div class="pane-label">
-                        <span class="dot dot-green"></span>ShotScript
-                    </div>
-                    <pre><span class="kw">type</span> <span class="ty">UserService</span> = { <span class="kw">readonly</span> <span class="id">db</span>: <span class="ty">Database</span> }
-
-<span class="kw">async function</span> <span class="fn">findUserById</span>(
-  <span class="id">svc</span>: <span class="ty">UserService</span>,
-  <span class="id">id</span>: <span class="ty">number</span>,
-): <span class="ty">Promise</span>&lt;[<span class="ty">User</span> | <span class="kw">null</span>, <span class="ty">Error</span> | <span class="kw">null</span>]&gt; {
-  <span class="cm">// ...</span>
-}
-
-<span class="kw">const</span> <span class="id">svc</span>: <span class="ty">UserService</span> = { <span class="id">db</span> }</pre>
-                </div>
-            </div>
-
-            <div class="callout">
-                <strong>Why it matters:</strong> a <code>type</code> is data. A
-                function is behaviour. There is no hidden state, no inheritance
-                graph to trace, no <code>this</code> context to reason about.
-                Both are independently testable.
-            </div>
-
-            <!-- 6: Callbacks -->
-            <p class="section-label" style="margin-bottom: 0.75rem">
-                Callbacks
-            </p>
-
-            <div class="comparison">
-                <div class="pane-before">
-                    <div class="pane-label">
-                        <span class="dot dot-red"></span>TypeScript
-                    </div>
-                    <pre><span class="kw">const</span> <span class="id">total</span> = <span class="id">items</span>
-  .<span class="fn">filter</span>(<span class="id">x</span> => <span class="id">x</span>.<span class="id">active</span>)
-  .<span class="fn">map</span>(<span class="id">x</span> => ({ ...<span class="id">x</span>, <span class="id">score</span>: <span class="id">x</span>.<span class="id">score</span> * <span class="nu">2</span> }))
-  .<span class="fn">reduce</span>((<span class="id">acc</span>, <span class="id">x</span>) => <span class="id">acc</span> + <span class="id">x</span>.<span class="id">score</span>, <span class="nu">0</span>)
-
-<span class="cm">// inline logic · untestable · no names to grep</span></pre>
-                </div>
-                <div class="pane-after">
-                    <div class="pane-label">
-                        <span class="dot dot-green"></span>ShotScript
-                    </div>
-                    <pre><span class="kw">function</span> <span class="fn">isActive</span>(<span class="id">item</span>: <span class="ty">Item</span>): <span class="ty">boolean</span> {
-  <span class="kw">return</span> <span class="id">item</span>.<span class="id">active</span>
-}
-<span class="kw">function</span> <span class="fn">doubleScore</span>(<span class="id">item</span>: <span class="ty">Item</span>): <span class="ty">Item</span> {
-  <span class="kw">return</span> { ...<span class="id">item</span>, <span class="id">score</span>: <span class="id">item</span>.<span class="id">score</span> * <span class="nu">2</span> }
-}
-<span class="kw">function</span> <span class="fn">sumScore</span>(<span class="id">acc</span>: <span class="ty">number</span>, <span class="id">item</span>: <span class="ty">Item</span>): <span class="ty">number</span> {
-  <span class="kw">return</span> <span class="id">acc</span> + <span class="id">item</span>.<span class="id">score</span>
-}
-
-<span class="kw">const</span> <span class="id">total</span> = <span class="id">items</span>
-  .<span class="fn">filter</span>(<span class="fn">isActive</span>)
-  .<span class="fn">map</span>(<span class="fn">doubleScore</span>)
-  .<span class="fn">reduce</span>(<span class="fn">sumScore</span>, <span class="nu">0</span>)</pre>
-                </div>
-            </div>
-
-            <div class="callout">
-                <strong>Why it matters:</strong> named functions are testable in
-                isolation, searchable with grep, and show up in stack traces.
-                Anonymous arrow callbacks disappear the moment they fail.
-            </div>
-
-            <!-- 7: Conditionals -->
-            <p class="section-label" style="margin-bottom: 0.75rem">
-                Conditionals
-            </p>
-            <div class="comparison">
-                <div class="pane-before">
-                    <div class="pane-label">
-                        <span class="dot dot-red"></span>TypeScript
-                    </div>
-                    <pre><span class="kw">const</span> <span class="id">label</span> = <span class="id">isAdmin</span>
-  ? (<span class="id">isSuperAdmin</span> ? <span class="st">"Super Admin"</span> : <span class="st">"Admin"</span>)
-  : <span class="st">"User"</span>
-
-<span class="cm">// nesting grows with every new role</span></pre>
-                </div>
-                <div class="pane-after">
-                    <div class="pane-label">
-                        <span class="dot dot-green"></span>ShotScript
-                    </div>
-                    <pre><span class="kw">function</span> <span class="fn">roleLabel</span>(
-  <span class="id">isAdmin</span>: <span class="ty">boolean</span>,
-  <span class="id">isSuperAdmin</span>: <span class="ty">boolean</span>,
-): <span class="ty">string</span> {
-  <span class="kw">if</span> (<span class="id">isSuperAdmin</span>) {
-    <span class="kw">return</span> <span class="st">"Super Admin"</span>
-  }
-  <span class="kw">if</span> (<span class="id">isAdmin</span>) {
-    <span class="kw">return</span> <span class="st">"Admin"</span>
-  }
-  <span class="kw">return</span> <span class="st">"User"</span>
-}</pre>
-                </div>
-            </div>
-
-            <div class="callout">
-                <strong>Why it matters:</strong> each branch has a name. Adding
-                a new role means adding a clause, not untangling a nested
-                expression. The complexity stays flat.
+                <code>[T | null, Error | null]</code>. One pattern to check for,
+                everywhere.
             </div>
         </section>
 
