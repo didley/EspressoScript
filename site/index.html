@@ -142,15 +142,17 @@
             .hero-content {
                 position: relative;
                 z-index: 1;
-                max-width: 640px;
+                max-width: 900px;
+                width: 100%;
                 text-align: center;
             }
 
             .hero-brand {
                 font-family: 'Monument Extended', sans-serif;
-                font-size: clamp(3.5rem, 10vw, 6rem);
+                font-size: clamp(3rem, 9vw, 5.5rem);
                 font-weight: 400;
                 letter-spacing: 0.02em;
+                text-indent: 0.02em;
                 line-height: 1;
                 margin-bottom: 1.5rem;
                 color: var(--text);
@@ -703,7 +705,6 @@
             <div class="page-toc">
                 <a href="#problem">The problem</a>
                 <a href="#what">What is ShotScript</a>
-                <a href="#who">Is it for you?</a>
                 <a href="#before-after">Before / after</a>
                 <a href="#install">Install</a>
                 <a href="#claude">Claude Code</a>
@@ -818,6 +819,30 @@
                     <span class="reduction-arrow">→</span>
                     <code class="reduction-result">type T = {}</code>
                 </div>
+                <div class="reduction-item">
+                    <span class="reduction-count">3</span>
+                    <span class="reduction-label">variable declaration forms — <code>var</code>, <code>let</code>, <code>const</code></span>
+                    <span class="reduction-arrow">→</span>
+                    <code class="reduction-result">const</code>
+                </div>
+                <div class="reduction-item">
+                    <span class="reduction-count">6</span>
+                    <span class="reduction-label">conditional forms — ternary, <code>&amp;&amp;</code>, <code>||</code>, <code>??</code>, <code>?.</code>, switch expression</span>
+                    <span class="reduction-arrow">→</span>
+                    <code class="reduction-result">if / else</code>
+                </div>
+                <div class="reduction-item">
+                    <span class="reduction-count">7</span>
+                    <span class="reduction-label">OOP constructs — <code>class</code>, <code>extends</code>, <code>implements</code>, <code>abstract</code>, <code>private</code>, <code>protected</code>, <code>new</code></span>
+                    <span class="reduction-arrow">→</span>
+                    <code class="reduction-result">banned</code>
+                </div>
+                <div class="reduction-item">
+                    <span class="reduction-count">6</span>
+                    <span class="reduction-label">type escape hatches — <code>as</code>, <code>any</code>, <code>!</code>, <code>@ts-ignore</code>, <code>@ts-expect-error</code>, <code>satisfies</code></span>
+                    <span class="reduction-arrow">→</span>
+                    <code class="reduction-result">banned</code>
+                </div>
             </div>
 
             <div class="callout">
@@ -857,8 +882,7 @@
                     <a href="/typing/" class="graph-item-inner">
                         <div class="graph-item-name">ShotScriptTyping</div>
                         <div class="graph-item-desc">
-                            The strict settings TypeScript recommends but can't
-                            enable by default.
+                            TypeScript's strict settings, enforced by default.
                         </div>
                     </a>
                     <a href="/std/" class="graph-item-inner">
@@ -916,286 +940,98 @@
 
         <hr class="divider" />
 
-        <!-- ── WHO IT'S FOR ── -->
-        <section class="section" id="who">
-            <div class="section-label">Is it for you?</div>
-            <h2>Not a linter. Almost a language.</h2>
-            <p class="section-desc">
-                ShotScript's constraint set is comprehensive enough that valid
-                code looks nothing like typical TypeScript. No classes, no arrow
-                callbacks, no ternaries, no
-                <code>throw</code>, no raw Promises — not because these features are bad, but
-                because having one way of doing things is the point. Think of it less
-                as "stricter TypeScript" and more as a dialect: TypeScript
-                provides the type system and toolchain; ShotScript defines a
-                narrower syntax within it.
-            </p>
-
-            <div class="callout">
-                <strong>Designed for greenfield.</strong> ShotScript is for
-                teams who want a single, non-negotiable way to write typed
-                JavaScript from day one — not for incrementally hardening an
-                existing codebase.
-            </div>
-
-            <div
-                class="rule-grid"
-                style="
-                    grid-template-columns: repeat(
-                        auto-fill,
-                        minmax(280px, 1fr)
-                    );
-                "
-            >
-                <div class="rule-card">
-                    <div class="rule-name" style="color: var(--green)">
-                        Existing codebases
-                    </div>
-                    <div class="rule-desc">
-                        Rules like <code>no-class</code>,
-                        <code>no-promise</code>, and
-                        <code>no-arrow-functions</code> require architectural
-                        rewrites, not search-and-replace.
-                        <a href="/skills/#migrate"><code>/shotscript-migrate</code></a>
-                        handles the rewrite end-to-end — but on a brownfield
-                        project this is a large, high-stakes operation. Treat it
-                        like a major refactor: solid test coverage before you
-                        start, review the changes carefully, and expect surprises
-                        in complex call graphs.
-                    </div>
-                </div>
-                <div class="rule-card">
-                    <div class="rule-name" style="color: var(--muted)">
-                        Class-based frameworks
-                    </div>
-                    <div class="rule-desc">
-                        Angular, NestJS, and similar frameworks are built around
-                        classes, constructors, and decorators — constructs
-                        ShotScript bans outright.
-                    </div>
-                </div>
-                <div class="rule-card">
-                    <div class="rule-name" style="color: var(--muted)">
-                        Rule-by-rule opt-in
-                    </div>
-                    <div class="rule-desc">
-                        There is no config surface. The rules are
-                        interdependent: <code>no-throw</code> only makes sense
-                        once you have <code>PromiseResult</code>;
-                        <code>require-async-tuple-return</code> only makes sense
-                        once raw Promises are gone.
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <hr class="divider" />
-
         <!-- ── BEFORE / AFTER ── -->
         <section class="section" id="before-after">
             <div class="section-label">Before / after</div>
-            <h2>Same logic. Fewer states.</h2>
+            <h2>One codebase, rewritten.</h2>
             <p class="section-desc">
-                Three real examples — types, async, and stateful services —
-                shown as commonly written TypeScript and as ShotScript with
-                every rule applied.
+                Interface, class, <code>try/catch</code>, arrow functions, ternaries, <code>any</code> — common TypeScript, with every ShotScript rule applied.
             </p>
 
-            <!-- 1: Type structure -->
-            <p class="section-label" style="margin-bottom: 0.75rem">
-                Type structure
-            </p>
+            <!-- kitchen sink -->
             <div class="comparison">
                 <div class="pane-before">
                     <div class="pane-label">
                         <span class="dot dot-red"></span>TypeScript
                     </div>
-                    <pre><span class="kw">type</span> <span class="ty">Role</span> = <span class="st">'admin'</span> | <span class="st">'member'</span> | <span class="kw">undefined</span>
-
-<span class="kw">interface</span> <span class="ty">Timestamps</span> {
-  <span class="id">createdAt</span>: <span class="ty">Date</span>
-  <span class="id">updatedAt</span>?: <span class="ty">Date</span>
-}
-
+                    <pre><span class="cm">// ❌ interface · optional fields</span>
 <span class="kw">interface</span> <span class="ty">BaseUser</span> {
   <span class="id">id</span>: <span class="ty">number</span>
-  <span class="id">email</span>: <span class="ty">string</span>
-  <span class="id">avatar</span>?: <span class="ty">string</span> | <span class="kw">null</span>
-  <span class="id">metadata</span>?: <span class="ty">Record</span>&lt;<span class="ty">string</span>, <span class="ty">any</span>&gt;
+  <span class="id">name</span>: <span class="ty">string</span>
 }
 
-<span class="kw">type</span> <span class="ty">User</span> = <span class="ty">BaseUser</span> &amp; <span class="ty">Timestamps</span> &amp; {
-  <span class="id">role</span>?: <span class="ty">Role</span>
-  <span class="id">deletedAt</span>?: <span class="ty">Date</span> | <span class="kw">null</span>
+<span class="cm">// ❌ intersection · optional fields</span>
+<span class="kw">type</span> <span class="ty">User</span> = <span class="ty">BaseUser</span> &amp; {
+  <span class="id">avatar</span>?: <span class="ty">string</span>
+  <span class="id">role</span>?: <span class="st">'admin'</span> | <span class="st">'member'</span>
 }
 
-<span class="cm">// null · undefined · ? · any — all in one type</span>
-<span class="cm">// User's fields are scattered across 3 declarations</span></pre>
+<span class="cm">// ❌ class · constructor · private · this</span>
+<span class="kw">class</span> <span class="ty">UserService</span> {
+  <span class="kw">private</span> <span class="id">cache</span>: <span class="ty">Map</span>&lt;<span class="ty">number</span>, <span class="ty">User</span>&gt; = <span class="kw">new</span> <span class="ty">Map</span>()
+  <span class="kw">constructor</span>(<span class="kw">private readonly</span> <span class="id">db</span>: <span class="ty">Database</span>) {}
+
+  <span class="cm">// ❌ optional param · try/catch · throw · as</span>
+  <span class="kw">async</span> <span class="fn">findUser</span>(<span class="id">id</span>?: <span class="ty">number</span>): <span class="ty">Promise</span>&lt;<span class="ty">User</span> | <span class="kw">undefined</span>&gt; {
+    <span class="kw">if</span> (!<span class="id">id</span>) <span class="kw">return undefined</span>
+    <span class="kw">try</span> {
+      <span class="kw">const</span> <span class="id">res</span> = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="st">`/users/<span class="op">${</span><span class="id">id</span><span class="op">}</span>`</span>)
+      <span class="kw">if</span> (!<span class="id">res</span>.<span class="id">ok</span>) <span class="kw">throw new</span> <span class="ty">Error</span>(<span class="st">`HTTP <span class="op">${</span><span class="id">res</span>.<span class="id">status</span><span class="op">}</span>`</span>)
+      <span class="kw">return</span> <span class="id">res</span>.<span class="fn">json</span>() <span class="kw">as</span> <span class="ty">User</span>
+    } <span class="kw">catch</span> (<span class="id">e</span>) { <span class="kw">return undefined</span> }
+  }
+}
+
+<span class="cm">// ❌ arrow fn · ternary · optional chaining · any</span>
+<span class="kw">const</span> <span class="fn">label</span> = (<span class="id">u</span>?: <span class="ty">User</span>): <span class="ty">string</span> =>
+  <span class="id">u</span>?.<span class="id">avatar</span> ? <span class="st">`&lt;img src="<span class="op">${</span><span class="id">u</span>.<span class="id">avatar</span><span class="op">}</span>"&gt;`</span> : <span class="id">u</span>?.<span class="id">name</span> ?? <span class="st">'Unknown'</span>
+
+<span class="cm">// ❌ let · any · anonymous callback</span>
+<span class="kw">let</span> <span class="id">names</span>: <span class="ty">any</span>[] = <span class="id">users</span>.<span class="fn">map</span>(<span class="id">u</span> => <span class="id">u</span>.<span class="id">name</span>)</pre>
                 </div>
                 <div class="pane-after">
                     <div class="pane-label">
                         <span class="dot dot-green"></span>ShotScript
                     </div>
-                    <pre><span class="kw">type</span> <span class="ty">Role</span> = <span class="st">'admin'</span> | <span class="st">'member'</span>
-
-<span class="kw">type</span> <span class="ty">Timestamps</span> = {
-  <span class="kw">readonly</span> <span class="id">createdAt</span>: <span class="ty">Date</span>
-  <span class="kw">readonly</span> <span class="id">updatedAt</span>: <span class="ty">Date</span> | <span class="kw">null</span>
-}
+                    <pre><span class="kw">import type</span> { <span class="ty">PromiseResult</span> } <span class="kw">from</span> <span class="st">'shotscript/std'</span>
+<span class="kw">import</span> { <span class="fn">safeFetch</span>, <span class="fn">jsonParse</span> } <span class="kw">from</span> <span class="st">'shotscript/std'</span>
 
 <span class="kw">type</span> <span class="ty">BaseUser</span> = {
   <span class="kw">readonly</span> <span class="id">id</span>: <span class="ty">number</span>
-  <span class="kw">readonly</span> <span class="id">email</span>: <span class="ty">string</span>
-  <span class="kw">readonly</span> <span class="id">avatar</span>: <span class="ty">string</span> | <span class="kw">null</span>
-  <span class="kw">readonly</span> <span class="id">metadata</span>: <span class="ty">Record</span>&lt;<span class="ty">string</span>, <span class="ty">unknown</span>&gt;
+  <span class="kw">readonly</span> <span class="id">name</span>: <span class="ty">string</span>
 }
 
+<span class="cm">// nested property, not &amp; — fields stay in one place</span>
 <span class="kw">type</span> <span class="ty">User</span> = {
   <span class="kw">readonly</span> <span class="id">base</span>: <span class="ty">BaseUser</span>
-  <span class="kw">readonly</span> <span class="id">timestamps</span>: <span class="ty">Timestamps</span>
-  <span class="kw">readonly</span> <span class="id">role</span>: <span class="ty">Role</span> | <span class="kw">null</span>
-  <span class="kw">readonly</span> <span class="id">deletedAt</span>: <span class="ty">Date</span> | <span class="kw">null</span>
+  <span class="kw">readonly</span> <span class="id">avatar</span>: <span class="ty">string</span> | <span class="kw">null</span>
+  <span class="kw">readonly</span> <span class="id">role</span>: <span class="st">'admin'</span> | <span class="st">'member'</span> | <span class="kw">null</span>
 }
-
-<span class="cm">// T | null only — one null form throughout</span>
-<span class="cm">// explicit nesting — every field has one home</span></pre>
-                </div>
-            </div>
-
-            <div class="callout">
-                <strong>Why it matters:</strong> intersection merges
-                <code>BaseUser</code> and <code>Timestamps</code> into
-                <code>User</code> invisibly — fields appear from nowhere, and
-                <code>role</code> alone can be <code>'admin'</code>,
-                <code>'member'</code>, <code>undefined</code>, or missing.
-                ShotScript keeps the reuse but as <em>nested properties</em>:
-                <code>user.base.email</code> and
-                <code>user.timestamps.createdAt</code> are explicit at the call
-                site, every absent value is <code>| null</code>, and
-                <code>any</code> is gone.
-            </div>
-
-            <!-- 2: Error handling + async -->
-            <p class="section-label" style="margin-bottom: 0.75rem">
-                Async + error handling
-            </p>
-            <div class="comparison">
-                <div class="pane-before">
-                    <div class="pane-label">
-                        <span class="dot dot-red"></span>TypeScript
-                    </div>
-                    <pre><span class="kw">async function</span> <span class="fn">getUser</span>(
-  <span class="id">id</span>?: <span class="ty">number</span>
-): <span class="ty">Promise</span>&lt;<span class="ty">User</span> | <span class="kw">undefined</span>&gt; {
-  <span class="kw">if</span> (!<span class="id">id</span>) <span class="kw">return undefined</span>
-  <span class="kw">try</span> {
-    <span class="kw">const</span> <span class="id">res</span> = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="st">`/users/<span class="op">${</span><span class="id">id</span><span class="op">}</span>`</span>)
-    <span class="kw">if</span> (!<span class="id">res</span>.<span class="id">ok</span>) <span class="kw">throw new</span> <span class="ty">Error</span>(
-      <span class="st">`HTTP <span class="op">${</span><span class="id">res</span>.<span class="id">status</span><span class="op">}</span>`</span>
-    )
-    <span class="kw">const</span> <span class="id">data</span> = <span class="kw">await</span> <span class="id">res</span>.<span class="fn">json</span>() <span class="kw">as</span> <span class="ty">any</span>
-    <span class="kw">return</span> <span class="id">data</span> <span class="kw">as</span> <span class="ty">User</span>
-  } <span class="kw">catch</span> (<span class="id">e</span>) {
-    <span class="fn">console</span>.<span class="fn">error</span>(<span class="id">e</span>)
-    <span class="kw">return undefined</span>
-  }
-}
-
-<span class="cm">// failure is invisible to callers · `as` silences the checker</span></pre>
-                </div>
-                <div class="pane-after">
-                    <div class="pane-label">
-                        <span class="dot dot-green"></span>ShotScript
-                    </div>
-                    <pre><span class="kw">import</span> { <span class="fn">safeFetch</span>, <span class="fn">jsonParse</span> } <span class="kw">from</span> <span class="st">'shotscript/std'</span>
-<span class="kw">import type</span> { <span class="ty">PromiseResult</span> } <span class="kw">from</span> <span class="st">'shotscript/std'</span>
-
-<span class="kw">async function</span> <span class="fn">getUser</span>(
-  <span class="id">id</span>: <span class="ty">number</span>
-): <span class="ty">PromiseResult</span>&lt;<span class="ty">User</span>&gt; {
-  <span class="kw">const</span> [<span class="id">res</span>, <span class="id">fetchErr</span>] = <span class="kw">await</span> <span class="fn">safeFetch</span>(
-    <span class="st">`/users/<span class="op">${</span><span class="id">id</span><span class="op">}</span>`</span>
-  )
-  <span class="kw">if</span> (<span class="id">fetchErr</span> !== <span class="kw">null</span>) <span class="kw">return</span> [<span class="kw">null</span>, <span class="id">fetchErr</span>]
-  <span class="kw">return</span> <span class="fn">jsonParse</span>&lt;<span class="ty">User</span>&gt;(<span class="kw">await</span> <span class="id">res</span>.<span class="fn">text</span>())
-}
-
-<span class="cm">// every failure is in the signature · no `as`, no `throw`</span></pre>
-                </div>
-            </div>
-
-            <div class="callout">
-                <strong>Why it matters:</strong> the left function can return
-                <code>undefined</code> for "no id," <code>undefined</code> for
-                "network failed," <code>undefined</code> for "bad JSON" — all
-                indistinguishable. <code>as User</code> hides shape mismatches.
-                The right version makes the input required, returns a
-                <code>PromiseResult</code> tuple so every error path is typed,
-                and uses <code>jsonParse&lt;User&gt;</code> instead of a cast.
-            </div>
-
-            <!-- 3: Data + behaviour -->
-            <p class="section-label" style="margin-bottom: 0.75rem">
-                Data + behaviour
-            </p>
-            <div class="comparison">
-                <div class="pane-before">
-                    <div class="pane-label">
-                        <span class="dot dot-red"></span>TypeScript
-                    </div>
-                    <pre><span class="kw">class</span> <span class="ty">UserService</span> {
-  <span class="kw">private</span> <span class="id">cache</span>: <span class="ty">Map</span>&lt;<span class="ty">number</span>, <span class="ty">User</span>&gt; = <span class="kw">new</span> <span class="ty">Map</span>()
-
-  <span class="kw">constructor</span>(<span class="kw">private readonly</span> <span class="id">db</span>: <span class="ty">Database</span>) {}
-
-  <span class="kw">async</span> <span class="fn">findById</span>(<span class="id">id</span>: <span class="ty">number</span>) {
-    <span class="kw">const</span> <span class="id">hit</span> = <span class="kw">this</span>.<span class="id">cache</span>.<span class="fn">get</span>(<span class="id">id</span>)
-    <span class="kw">if</span> (<span class="id">hit</span>) <span class="kw">return</span> <span class="id">hit</span>
-    <span class="kw">const</span> <span class="id">user</span> = <span class="kw">await</span> <span class="kw">this</span>.<span class="id">db</span>.<span class="fn">find</span>(<span class="id">id</span>)!
-    <span class="kw">this</span>.<span class="id">cache</span>.<span class="fn">set</span>(<span class="id">id</span>, <span class="id">user</span>)
-    <span class="kw">return</span> <span class="id">user</span>
-  }
-}
-
-<span class="kw">const</span> <span class="id">svc</span> = <span class="kw">new</span> <span class="ty">UserService</span>(<span class="id">db</span>)
-<span class="kw">const</span> <span class="id">u</span> = <span class="kw">await</span> <span class="id">svc</span>.<span class="fn">findById</span>(<span class="nu">42</span>)</pre>
-                </div>
-                <div class="pane-after">
-                    <div class="pane-label">
-                        <span class="dot dot-green"></span>ShotScript
-                    </div>
-                    <pre><span class="kw">import</span> { <span class="fn">safeMapGet</span> } <span class="kw">from</span> <span class="st">'shotscript/std'</span>
 
 <span class="kw">type</span> <span class="ty">UserService</span> = {
   <span class="kw">readonly</span> <span class="id">db</span>: <span class="ty">Database</span>
   <span class="kw">readonly</span> <span class="id">cache</span>: <span class="ty">Map</span>&lt;<span class="ty">number</span>, <span class="ty">User</span>&gt;
 }
 
-<span class="kw">async function</span> <span class="fn">findUserById</span>(
+<span class="kw">async function</span> <span class="fn">findUser</span>(
   <span class="id">svc</span>: <span class="ty">UserService</span>,
   <span class="id">id</span>: <span class="ty">number</span>,
 ): <span class="ty">PromiseResult</span>&lt;<span class="ty">User</span>&gt; {
-  <span class="kw">const</span> <span class="id">hit</span> = <span class="fn">safeMapGet</span>(<span class="id">svc</span>.<span class="id">cache</span>, <span class="id">id</span>)
-  <span class="kw">if</span> (<span class="id">hit</span> !== <span class="kw">null</span>) <span class="kw">return</span> [<span class="id">hit</span>, <span class="kw">null</span>]
-  <span class="kw">const</span> [<span class="id">user</span>, <span class="id">err</span>] = <span class="kw">await</span> <span class="id">svc</span>.<span class="id">db</span>.<span class="fn">find</span>(<span class="id">id</span>)
+  <span class="kw">const</span> [<span class="id">res</span>, <span class="id">err</span>] = <span class="kw">await</span> <span class="fn">safeFetch</span>(<span class="st">`/users/<span class="op">${</span><span class="id">id</span><span class="op">}</span>`</span>)
   <span class="kw">if</span> (<span class="id">err</span> !== <span class="kw">null</span>) <span class="kw">return</span> [<span class="kw">null</span>, <span class="id">err</span>]
-  <span class="id">svc</span>.<span class="id">cache</span>.<span class="fn">set</span>(<span class="id">id</span>, <span class="id">user</span>)
-  <span class="kw">return</span> [<span class="id">user</span>, <span class="kw">null</span>]
+  <span class="kw">return</span> <span class="fn">jsonParse</span>&lt;<span class="ty">User</span>&gt;(<span class="kw">await</span> <span class="id">res</span>.<span class="fn">text</span>())
 }
 
-<span class="kw">const</span> <span class="id">svc</span>: <span class="ty">UserService</span> = { <span class="id">db</span>, <span class="id">cache</span>: <span class="kw">new</span> <span class="ty">Map</span>() }
-<span class="kw">const</span> [<span class="id">u</span>, <span class="id">err</span>] = <span class="kw">await</span> <span class="fn">findUserById</span>(<span class="id">svc</span>, <span class="nu">42</span>)</pre>
-                </div>
-            </div>
+<span class="kw">function</span> <span class="fn">label</span>(<span class="id">user</span>: <span class="ty">User</span>): <span class="ty">string</span> {
+  <span class="kw">if</span> (<span class="id">user</span>.<span class="id">avatar</span> !== <span class="kw">null</span>) {
+    <span class="kw">return</span> <span class="st">`&lt;img src="<span class="op">${</span><span class="id">user</span>.<span class="id">avatar</span><span class="op">}</span>"&gt;`</span>
+  }
+  <span class="kw">return</span> <span class="id">user</span>.<span class="id">base</span>.<span class="id">name</span>
+}
 
-            <div class="callout">
-                <strong>Why it matters:</strong> the class hides state behind
-                <code>private</code>, leans on <code>this</code>, and uses
-                <code>!</code> to silence the checker on <code>db.find</code>.
-                The ShotScript version makes the data shape explicit, the
-                function callable in isolation, and forces the caller to handle
-                the error tuple — no hidden control flow, no non-null
-                assertion, nothing to mock around.
+<span class="kw">function</span> <span class="fn">toName</span>(<span class="id">user</span>: <span class="ty">User</span>): <span class="ty">string</span> { <span class="kw">return</span> <span class="id">user</span>.<span class="id">base</span>.<span class="id">name</span> }
+<span class="kw">const</span> <span class="id">names</span>: <span class="ty">string</span>[] = <span class="id">users</span>.<span class="fn">map</span>(<span class="fn">toName</span>)</pre>
+                </div>
             </div>
         </section>
 

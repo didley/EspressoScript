@@ -662,7 +662,7 @@
         <div class="page-toc-wrap">
             <div class="page-toc">
                 <a href="#syntax-reduction">Syntax reduction</a>
-                <a href="#example">Example</a>
+                <a href="#example">Examples</a>
                 <a href="#all-rules">All rules</a>
                 <a href="#install">Install</a>
             </div>
@@ -729,86 +729,110 @@
         <hr />
 
         <div id="example" class="example-section">
-            <div class="section-label">Example</div>
+            <div class="section-label">Examples</div>
             <h2>What linting looks like.</h2>
-            <p class="section-desc">Eight violations, one file. Intersection types, three different function styles, optional params, ternaries, try/catch — common patterns that ShotScript rejects.</p>
 
+            <p class="section-label" style="margin-bottom: 0.75rem">Type structure</p>
             <div class="comparison">
                 <div class="pane-before">
                     <div class="pane-label">
                         <span class="dot dot-red"></span>TypeScript
                     </div>
-                    <pre><span class="cm">// ❌ interface</span>
+                    <pre><span class="kw">type</span> <span class="ty">Role</span> = <span class="st">'admin'</span> | <span class="st">'member'</span> | <span class="kw">undefined</span>
+
+<span class="kw">interface</span> <span class="ty">Timestamps</span> {
+  <span class="id">createdAt</span>: <span class="ty">Date</span>
+  <span class="id">updatedAt</span>?: <span class="ty">Date</span>
+}
+
 <span class="kw">interface</span> <span class="ty">BaseUser</span> {
-    <span class="op">id</span>: <span class="ty">number</span>
-    <span class="op">createdAt</span>: <span class="ty">Date</span>
+  <span class="id">id</span>: <span class="ty">number</span>
+  <span class="id">email</span>: <span class="ty">string</span>
+  <span class="id">avatar</span>?: <span class="ty">string</span> | <span class="kw">null</span>
+  <span class="id">metadata</span>?: <span class="ty">Record</span>&lt;<span class="ty">string</span>, <span class="ty">any</span>&gt;
 }
 
-<span class="cm">// ❌ intersection — what fields does Admin have?</span>
-<span class="kw">type</span> <span class="ty">Admin</span> = <span class="ty">BaseUser</span> &amp; {
-    <span class="op">role</span>?: <span class="st">'admin'</span> | <span class="st">'superadmin'</span>  <span class="cm">// ❌ optional</span>
-    <span class="op">permissions</span>?: <span class="ty">string</span>[]           <span class="cm">// ❌ optional</span>
+<span class="kw">type</span> <span class="ty">User</span> = <span class="ty">BaseUser</span> &amp; <span class="ty">Timestamps</span> &amp; {
+  <span class="id">role</span>?: <span class="ty">Role</span>
+  <span class="id">deletedAt</span>?: <span class="ty">Date</span> | <span class="kw">null</span>
 }
 
-<span class="cm">// ❌ arrow fn · optional param · ternary</span>
-<span class="kw">const</span> <span class="op">getLabel</span> = (<span class="op">a</span>?: <span class="ty">Admin</span>): <span class="ty">string</span> =&gt;
-    <span class="op">a</span>?.<span class="op">role</span> === <span class="st">'superadmin'</span> ? <span class="st">'Super'</span> : <span class="st">'Admin'</span>
-
-<span class="cm">// ❌ arrow fn · try/catch · as assertion</span>
-<span class="kw">const</span> <span class="op">findAdmin</span> = <span class="kw">async</span> (
-    <span class="op">id</span>: <span class="ty">number</span>
-): <span class="ty">Promise</span>&lt;<span class="ty">Admin</span>&gt; =&gt; {
-    <span class="kw">try</span> {
-        <span class="kw">const</span> <span class="op">res</span> = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="st">`/admins/${</span><span class="op">${</span><span class="op">id</span><span class="op">}</span><span class="st">`</span>)
-        <span class="kw">return</span> <span class="op">res</span>.<span class="fn">json</span>() <span class="kw">as</span> <span class="ty">Admin</span>
-    } <span class="kw">catch</span> (<span class="op">e</span>) {
-        <span class="kw">throw</span> <span class="kw">new</span> <span class="ty">Error</span>(<span class="st">`failed: ${</span><span class="op">${</span><span class="op">e</span><span class="op">}</span><span class="st">`</span>)
-    }
-}
-
-<span class="cm">// ❌ anonymous callback</span>
-<span class="kw">const</span> <span class="op">ids</span> = <span class="op">admins</span>.<span class="fn">map</span>(<span class="op">a</span> =&gt; <span class="op">a</span>.<span class="op">id</span>)</pre>
+<span class="cm">// 4 ways to say "nothing" · 8 states for `role`</span>
+<span class="cm">// fields are merged invisibly across 3 decls</span></pre>
                 </div>
                 <div class="pane-after">
                     <div class="pane-label">
                         <span class="dot dot-green"></span>ShotScript
                     </div>
-                    <pre><span class="kw">import</span> <span class="kw">type</span> { <span class="ty">PromiseResult</span> } <span class="kw">from</span> <span class="st">'shotscript/std'</span>
-<span class="kw">import</span> { <span class="op">safeFetch</span>, <span class="op">jsonParse</span> } <span class="kw">from</span> <span class="st">'shotscript/std'</span>
+                    <pre><span class="kw">type</span> <span class="ty">Role</span> = <span class="st">'admin'</span> | <span class="st">'member'</span>
+
+<span class="kw">type</span> <span class="ty">Timestamps</span> = {
+  <span class="kw">readonly</span> <span class="id">createdAt</span>: <span class="ty">Date</span>
+  <span class="kw">readonly</span> <span class="id">updatedAt</span>: <span class="ty">Date</span> | <span class="kw">null</span>
+}
 
 <span class="kw">type</span> <span class="ty">BaseUser</span> = {
-    <span class="kw">readonly</span> <span class="op">id</span>: <span class="ty">number</span>
-    <span class="kw">readonly</span> <span class="op">createdAt</span>: <span class="ty">Date</span>
+  <span class="kw">readonly</span> <span class="id">id</span>: <span class="ty">number</span>
+  <span class="kw">readonly</span> <span class="id">email</span>: <span class="ty">string</span>
+  <span class="kw">readonly</span> <span class="id">avatar</span>: <span class="ty">string</span> | <span class="kw">null</span>
+  <span class="kw">readonly</span> <span class="id">metadata</span>: <span class="ty">Record</span>&lt;<span class="ty">string</span>, <span class="ty">unknown</span>&gt;
 }
 
-<span class="cm">// embed — no &amp; — every field is visible here</span>
-<span class="kw">type</span> <span class="ty">Admin</span> = {
-    <span class="kw">readonly</span> <span class="op">user</span>: <span class="ty">BaseUser</span>
-    <span class="kw">readonly</span> <span class="op">role</span>: <span class="st">'admin'</span> | <span class="st">'superadmin'</span>
-    <span class="kw">readonly</span> <span class="op">permissions</span>: <span class="kw">readonly</span> <span class="ty">string</span>[] | <span class="kw">null</span>
+<span class="kw">type</span> <span class="ty">User</span> = {
+  <span class="kw">readonly</span> <span class="id">base</span>: <span class="ty">BaseUser</span>
+  <span class="kw">readonly</span> <span class="id">timestamps</span>: <span class="ty">Timestamps</span>
+  <span class="kw">readonly</span> <span class="id">role</span>: <span class="ty">Role</span> | <span class="kw">null</span>
+  <span class="kw">readonly</span> <span class="id">deletedAt</span>: <span class="ty">Date</span> | <span class="kw">null</span>
 }
 
-<span class="kw">function</span> <span class="fn">getLabel</span>(<span class="op">admin</span>: <span class="ty">Admin</span>): <span class="ty">string</span> {
-    <span class="kw">if</span> (<span class="op">admin</span>.<span class="op">role</span> === <span class="st">'superadmin'</span>) {
-        <span class="kw">return</span> <span class="st">'Super Admin'</span>
-    }
-    <span class="kw">return</span> <span class="st">'Admin'</span>
+<span class="cm">// 1 way to say "nothing" · 3 states for `role`</span>
+<span class="cm">// reuse by nesting — every field has one home</span></pre>
+                </div>
+            </div>
+
+            <p class="section-label" style="margin-bottom: 0.75rem; margin-top: 2rem">Async + error handling</p>
+            <div class="comparison">
+                <div class="pane-before">
+                    <div class="pane-label">
+                        <span class="dot dot-red"></span>TypeScript
+                    </div>
+                    <pre><span class="kw">async function</span> <span class="fn">getUser</span>(
+  <span class="id">id</span>?: <span class="ty">number</span>
+): <span class="ty">Promise</span>&lt;<span class="ty">User</span> | <span class="kw">undefined</span>&gt; {
+  <span class="kw">if</span> (!<span class="id">id</span>) <span class="kw">return undefined</span>
+  <span class="kw">try</span> {
+    <span class="kw">const</span> <span class="id">res</span> = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="st">`/users/<span class="op">${</span><span class="id">id</span><span class="op">}</span>`</span>)
+    <span class="kw">if</span> (!<span class="id">res</span>.<span class="id">ok</span>) <span class="kw">throw new</span> <span class="ty">Error</span>(
+      <span class="st">`HTTP <span class="op">${</span><span class="id">res</span>.<span class="id">status</span><span class="op">}</span>`</span>
+    )
+    <span class="kw">const</span> <span class="id">data</span> = <span class="kw">await</span> <span class="id">res</span>.<span class="fn">json</span>() <span class="kw">as</span> <span class="ty">any</span>
+    <span class="kw">return</span> <span class="id">data</span> <span class="kw">as</span> <span class="ty">User</span>
+  } <span class="kw">catch</span> (<span class="id">e</span>) {
+    <span class="fn">console</span>.<span class="fn">error</span>(<span class="id">e</span>)
+    <span class="kw">return undefined</span>
+  }
 }
 
-<span class="kw">async</span> <span class="kw">function</span> <span class="fn">findAdmin</span>(
-    <span class="op">id</span>: <span class="ty">number</span>,
-): <span class="ty">PromiseResult</span>&lt;<span class="ty">Admin</span>&gt; {
-    <span class="kw">const</span> [<span class="op">res</span>, <span class="op">err</span>] = <span class="kw">await</span> <span class="fn">safeFetch</span>(<span class="st">`/admins/${</span><span class="op">${</span><span class="op">id</span><span class="op">}</span><span class="st">`</span>)
-    <span class="kw">if</span> (<span class="op">err</span> !== <span class="kw">null</span>) {
-        <span class="kw">return</span> [<span class="kw">null</span>, <span class="op">err</span>]
-    }
-    <span class="kw">return</span> <span class="op">jsonParse</span>&lt;<span class="ty">Admin</span>&gt;(<span class="kw">await</span> <span class="op">res</span>.<span class="fn">text</span>())
+<span class="cm">// failure is invisible to callers · `as` silences the checker</span></pre>
+                </div>
+                <div class="pane-after">
+                    <div class="pane-label">
+                        <span class="dot dot-green"></span>ShotScript
+                    </div>
+                    <pre><span class="kw">import</span> { <span class="fn">safeFetch</span>, <span class="fn">jsonParse</span> } <span class="kw">from</span> <span class="st">'shotscript/std'</span>
+<span class="kw">import type</span> { <span class="ty">PromiseResult</span> } <span class="kw">from</span> <span class="st">'shotscript/std'</span>
+
+<span class="kw">async function</span> <span class="fn">getUser</span>(
+  <span class="id">id</span>: <span class="ty">number</span>
+): <span class="ty">PromiseResult</span>&lt;<span class="ty">User</span>&gt; {
+  <span class="kw">const</span> [<span class="id">res</span>, <span class="id">fetchErr</span>] = <span class="kw">await</span> <span class="fn">safeFetch</span>(
+    <span class="st">`/users/<span class="op">${</span><span class="id">id</span><span class="op">}</span>`</span>
+  )
+  <span class="kw">if</span> (<span class="id">fetchErr</span> !== <span class="kw">null</span>) <span class="kw">return</span> [<span class="kw">null</span>, <span class="id">fetchErr</span>]
+  <span class="kw">return</span> <span class="fn">jsonParse</span>&lt;<span class="ty">User</span>&gt;(<span class="kw">await</span> <span class="id">res</span>.<span class="fn">text</span>())
 }
 
-<span class="kw">function</span> <span class="fn">toId</span>(<span class="op">admin</span>: <span class="ty">Admin</span>): <span class="ty">number</span> {
-    <span class="kw">return</span> <span class="op">admin</span>.<span class="op">user</span>.<span class="op">id</span>
-}
-<span class="kw">const</span> <span class="op">ids</span> = <span class="op">admins</span>.<span class="fn">map</span>(<span class="op">toId</span>)</pre>
+<span class="cm">// every failure is in the signature · no `as`, no `throw`</span></pre>
                 </div>
             </div>
         </div>
