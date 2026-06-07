@@ -1,10 +1,10 @@
-import ts from "typescript"
-import type { Rule } from "../types.js"
-import { posOf } from "../pos.js"
+import ts from 'typescript'
+import type { Rule } from '../types.js'
+import { posOf } from '../pos.js'
 
 const BANNED_MEMBERS: ReadonlyMap<string, ReadonlySet<string>> = new Map([
-    ["JSON", new Set(["parse", "stringify"])],
-    ["globalThis", new Set(["fetch"])],
+    ['JSON', new Set(['parse', 'stringify'])],
+    ['globalThis', new Set(['fetch'])],
 ])
 
 function isBannedPropertyAccess(node: ts.PropertyAccessExpression): boolean {
@@ -15,18 +15,18 @@ function isBannedPropertyAccess(node: ts.PropertyAccessExpression): boolean {
 }
 
 export const noThrowingGlobals: Rule = {
-    name: "no-throwing-globals",
+    name: 'no-throwing-globals',
     visit(node, ctx) {
         if (ts.isPropertyAccessExpression(node)) {
             if (isBannedPropertyAccess(node)) {
                 const pos = posOf(ctx.sourceFile, node)
-                ctx.push({ ...pos, rule: "no-throwing-globals", message: "This global throws on failure — wrap it in a safe function that returns [T, Error | null] instead." })
+                ctx.push({ ...pos, rule: 'no-throwing-globals', message: 'This global throws on failure — wrap it in a safe function that returns [T, Error | null] instead.' })
             }
         } else if (ts.isCallExpression(node)) {
             const expr = node.expression
-            if (ts.isIdentifier(expr) && expr.text === "fetch") {
+            if (ts.isIdentifier(expr) && expr.text === 'fetch') {
                 const pos = posOf(ctx.sourceFile, node)
-                ctx.push({ ...pos, rule: "no-throwing-globals", message: "This global throws on failure — wrap it in a safe function that returns [T, Error | null] instead." })
+                ctx.push({ ...pos, rule: 'no-throwing-globals', message: 'This global throws on failure — wrap it in a safe function that returns [T, Error | null] instead.' })
             }
         }
     },

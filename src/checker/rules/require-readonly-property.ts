@@ -1,14 +1,16 @@
-import ts from "typescript"
-import type { Rule } from "../types.js"
-import { posOf } from "../pos.js"
+import ts from 'typescript'
+import type { Rule } from '../types.js'
+import { posOf } from '../pos.js'
 
 export const requireReadonlyProperty: Rule = {
-    name: "require-readonly-property",
+    name: 'require-readonly-property',
     visit(node, ctx) {
         if (ts.isPropertySignature(node)) {
-            const hasReadonly = node.modifiers?.some(m => m.kind === ts.SyntaxKind.ReadonlyKeyword) ?? false
+            const hasReadonly = node.modifiers?.some(function isReadonly(m: ts.ModifierLike): boolean {
+                return m.kind === ts.SyntaxKind.ReadonlyKeyword
+            }) ?? false
             if (!hasReadonly) {
-                ctx.push({ ...posOf(ctx.sourceFile, node), rule: "require-readonly-property", message: "Object type properties must be declared `readonly`." })
+                ctx.push({ ...posOf(ctx.sourceFile, node), rule: 'require-readonly-property', message: 'Object type properties must be declared `readonly`.' })
             }
         }
     },

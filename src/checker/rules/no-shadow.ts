@@ -1,9 +1,9 @@
-import ts from "typescript"
-import type { Rule, Context } from "../types.js"
-import { posOf } from "../pos.js"
+import ts from 'typescript'
+import type { Rule, Context } from '../types.js'
+import { posOf } from '../pos.js'
 
 type ScopeFrame = {
-    bindings: Map<string, ts.Node>
+    readonly bindings: Map<string, ts.Node>
 }
 
 function collectNames(node: ts.BindingName): string[] {
@@ -31,7 +31,7 @@ function addBinding(
 ): void {
     if (isDefinedAbove(scopes, name)) {
         const pos = posOf(ctx.sourceFile, declNode)
-        ctx.push({ ...pos, rule: "no-shadow", message: "Variable shadowing is not allowed. Rename the inner binding." })
+        ctx.push({ ...pos, rule: 'no-shadow', message: 'Variable shadowing is not allowed. Rename the inner binding.' })
     }
     scopes[scopes.length - 1]!.bindings.set(name, declNode)
 }
@@ -85,7 +85,7 @@ function walk(node: ts.Node, scopes: ScopeFrame[], ctx: Context): void {
         if (!isFnBody) {
             scopes.push({ bindings: new Map() })
         }
-        ts.forEachChild(node, (child) => walk(child, scopes, ctx))
+        ts.forEachChild(node, function walkChild(child: ts.Node): void { walk(child, scopes, ctx) })
         if (!isFnBody) scopes.pop()
     } else if (ts.isVariableDeclaration(node)) {
         for (const name of collectNames(node.name)) {
@@ -94,7 +94,7 @@ function walk(node: ts.Node, scopes: ScopeFrame[], ctx: Context): void {
         if (node.initializer) walk(node.initializer, scopes, ctx)
     } else if (ts.isForStatement(node) || ts.isForOfStatement(node) || ts.isForInStatement(node)) {
         scopes.push({ bindings: new Map() })
-        ts.forEachChild(node, (child) => walk(child, scopes, ctx))
+        ts.forEachChild(node, function walkChild(child: ts.Node): void { walk(child, scopes, ctx) })
         scopes.pop()
     } else if (ts.isImportDeclaration(node)) {
         const clause = node.importClause
@@ -111,15 +111,15 @@ function walk(node: ts.Node, scopes: ScopeFrame[], ctx: Context): void {
             }
         }
     } else {
-        ts.forEachChild(node, (child) => walk(child, scopes, ctx))
+        ts.forEachChild(node, function walkChild(child: ts.Node): void { walk(child, scopes, ctx) })
     }
 }
 
 export const noShadow: Rule = {
-    name: "no-shadow",
+    name: 'no-shadow',
     visit(node, ctx) {
         if (node.kind !== ts.SyntaxKind.SourceFile) return
         const scopes: ScopeFrame[] = [{ bindings: new Map() }]
-        ts.forEachChild(node, (child) => walk(child, scopes, ctx))
+        ts.forEachChild(node, function walkChild(child: ts.Node): void { walk(child, scopes, ctx) })
     },
 }

@@ -1,6 +1,6 @@
-import ts from "typescript"
-import type { Rule } from "../types.js"
-import { posOf } from "../pos.js"
+import ts from 'typescript'
+import type { Rule } from '../types.js'
+import { posOf } from '../pos.js'
 
 function isBindingPosition(node: ts.Identifier): boolean {
     const parent = node.parent
@@ -15,12 +15,12 @@ function isBindingPosition(node: ts.Identifier): boolean {
 }
 
 export const noArguments: Rule = {
-    name: "no-arguments",
+    name: 'no-arguments',
     visit(node, ctx) {
         if (!ts.isIdentifier(node)) return
-        if (node.text !== "arguments") return
+        if (node.text !== 'arguments') return
         if (isBindingPosition(node)) return
         const pos = posOf(ctx.sourceFile, node)
-        ctx.push({ ...pos, rule: "no-arguments", message: "`arguments` is not allowed. Use rest params `...args`." })
+        ctx.push({ ...pos, rule: 'no-arguments', message: '`arguments` is not allowed. Use rest params `...args`.' })
     },
 }

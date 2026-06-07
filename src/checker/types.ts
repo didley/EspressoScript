@@ -1,22 +1,25 @@
-import type ts from "typescript"
+import type ts from 'typescript'
 
+/** A single rule violation reported by the checker. */
 export type Diagnostic = {
-    file: string
-    line: number
-    col: number
-    rule: string
-    message: string
+    readonly file: string
+    readonly line: number
+    readonly col: number
+    readonly rule: string
+    readonly message: string
 }
 
+/** Shared context passed to every rule's `visit` function. */
 export type Context = {
-    file: string
-    source: string
-    sourceFile: ts.SourceFile
-    typeChecker: ts.TypeChecker | undefined
-    push(d: Omit<Diagnostic, "file">): void
+    readonly file: string
+    readonly source: string
+    readonly sourceFile: ts.SourceFile
+    readonly typeChecker: ts.TypeChecker | undefined
+    push(d: Omit<Diagnostic, 'file'>): void
 }
 
+/** A single ShotScript lint rule. */
 export type Rule = {
-    name: string
+    readonly name: string
     visit(node: ts.Node, ctx: Context): void
 }

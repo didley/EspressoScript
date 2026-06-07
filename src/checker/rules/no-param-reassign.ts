@@ -1,6 +1,6 @@
-import ts from "typescript"
-import type { Rule, Context } from "../types.js"
-import { posOf } from "../pos.js"
+import ts from 'typescript'
+import type { Rule, Context } from '../types.js'
+import { posOf } from '../pos.js'
 
 const ASSIGN_OPS = new Set([
     ts.SyntaxKind.EqualsToken,
@@ -19,8 +19,8 @@ const ASSIGN_OPS = new Set([
 ])
 
 type Frame = {
-    params: Set<string>
-    isFunction: boolean
+    readonly params: Set<string>
+    readonly isFunction: boolean
 }
 
 function collectNames(node: ts.BindingName): string[] {
@@ -56,18 +56,20 @@ function walk(node: ts.Node, frames: Frame[], ctx: Context): void {
         const lhs = node.left
         if (ts.isIdentifier(lhs) && isParamInScope(frames, lhs.text)) {
             const pos = posOf(ctx.sourceFile, lhs)
-            ctx.push({ ...pos, rule: "no-param-reassign", message: "Function parameters cannot be reassigned. Use a new `const`." })
+            ctx.push({ ...pos, rule: 'no-param-reassign', message: 'Function parameters cannot be reassigned. Use a new `const`.' })
         }
         walk(node.right, frames, ctx)
     } else {
-        ts.forEachChild(node, (child) => walk(child, frames, ctx))
+        ts.forEachChild(node, function walkChild(child: ts.Node): void { walk(child, frames, ctx) })
     }
 }
 
 export const noParamReassign: Rule = {
-    name: "no-param-reassign",
+    name: 'no-param-reassign',
     visit(node, ctx) {
         if (node.kind !== ts.SyntaxKind.SourceFile) return
-        ts.forEachChild(node, (child) => walk(child, [{ params: new Set(), isFunction: false }], ctx))
+        ts.forEachChild(node, function walkChild(child: ts.Node): void {
+            walk(child, [{ params: new Set(), isFunction: false }], ctx)
+        })
     },
 }

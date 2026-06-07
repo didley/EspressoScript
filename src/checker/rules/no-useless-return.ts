@@ -1,6 +1,6 @@
-import ts from "typescript"
-import type { Rule } from "../types.js"
-import { posOf } from "../pos.js"
+import ts from 'typescript'
+import type { Rule } from '../types.js'
+import { posOf } from '../pos.js'
 
 const FN_KINDS = new Set([
     ts.SyntaxKind.FunctionDeclaration,
@@ -10,7 +10,7 @@ const FN_KINDS = new Set([
 ])
 
 export const noUselessReturn: Rule = {
-    name: "no-useless-return",
+    name: 'no-useless-return',
     visit(node, ctx) {
         if (!ts.isReturnStatement(node)) return
         if (node.expression !== undefined) return
@@ -22,6 +22,6 @@ export const noUselessReturn: Rule = {
         const grandParent = parent.parent
         if (!grandParent || !FN_KINDS.has(grandParent.kind)) return
         const pos = posOf(ctx.sourceFile, node)
-        ctx.push({ ...pos, rule: "no-useless-return", message: "Trailing bare `return` is unnecessary." })
+        ctx.push({ ...pos, rule: 'no-useless-return', message: 'Trailing bare `return` is unnecessary.' })
     },
 }

@@ -1,32 +1,44 @@
-import ts from "typescript"
-import type { Diagnostic, Context } from "./types.js"
-import { rules } from "./rules/index.js"
-export { posOf } from "./pos.js"
+import ts from 'typescript'
+import type { Diagnostic, Context } from './types.js'
+import { rules } from './rules/index.js'
+import { toResult } from '../std/index.js'
+export { posOf } from './pos.js'
 
-type ProgramResult = { sourceFile: ts.SourceFile; checker: ts.TypeChecker }
-
-function buildProgram(file: string, source: string): ProgramResult | undefined {
-    try {
-        const options: ts.CompilerOptions = {
-            target: ts.ScriptTarget.ES2022,
-            noEmit: true,
-            skipLibCheck: true,
-        }
-        const host = ts.createCompilerHost(options)
-        const base = host.getSourceFile.bind(host)
-        host.getSourceFile = (name: string, ver: ts.ScriptTarget) =>
-            name === file
-                ? ts.createSourceFile(name, source, ver, true)
-                : base(name, ver)
-        const program = ts.createProgram([file], options, host)
-        const sourceFile = program.getSourceFile(file)
-        if (!sourceFile) return undefined
-        return { sourceFile, checker: program.getTypeChecker() }
-    } catch {
-        return undefined
-    }
+type ProgramResult = {
+    readonly sourceFile: ts.SourceFile
+    readonly checker: ts.TypeChecker
 }
 
+/** Builds a single-file TypeScript program for type-aware rule checks. */
+function buildProgram(file: string, source: string): ProgramResult | undefined {
+    const options: ts.CompilerOptions = {
+        target: ts.ScriptTarget.ES2022,
+        noEmit: true,
+        skipLibCheck: true,
+    }
+    const host = ts.createCompilerHost(options)
+    const base = host.getSourceFile.bind(host)
+    host.getSourceFile = function getSourceFile(
+        name: string,
+        ver: ts.ScriptTarget,
+    ): ts.SourceFile | undefined {
+        if (name === file) return ts.createSourceFile(name, source, ver, true)
+        return base(name, ver)
+    }
+    const [program, err] = toResult(function createTs(): ts.Program {
+        return ts.createProgram([file], options, host)
+    })
+    if (err !== null) return undefined
+    const sourceFile = program.getSourceFile(file)
+    if (!sourceFile) return undefined
+    return { sourceFile, checker: program.getTypeChecker() }
+}
+
+/**
+ * Runs all ShotScript rules against a single file and returns diagnostics.
+ * Pass `typeChecker` and `programSourceFile` when called from the TS plugin
+ * to reuse the existing program rather than building a new one.
+ */
 export function check(
     file: string,
     source: string,
@@ -48,9 +60,7 @@ export function check(
         checker = result?.checker
     }
 
-    interface SourceFileInternal {
-        parseDiagnostics?: ts.DiagnosticWithLocation[]
-    }
+    type SourceFileInternal = { parseDiagnostics?: ts.DiagnosticWithLocation[] }
     const parseDiags = (sourceFile as unknown as SourceFileInternal).parseDiagnostics ?? []
     if (parseDiags.length > 0) {
         const d = parseDiags[0]
@@ -60,8 +70,8 @@ export function check(
             file,
             line: pos.line + 1,
             col: pos.character + 1,
-            rule: "parse-error",
-            message: ts.flattenDiagnosticMessageText(d.messageText, " "),
+            rule: 'parse-error',
+            message: ts.flattenDiagnosticMessageText(d.messageText, ' '),
         })
         return diagnostics
     }

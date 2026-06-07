@@ -1,6 +1,6 @@
-import ts from "typescript"
-import type { Rule, Context } from "../types.js"
-import { posOf } from "../pos.js"
+import ts from 'typescript'
+import type { Rule, Context } from '../types.js'
+import { posOf } from '../pos.js'
 
 const LOOP_KINDS = new Set([
     ts.SyntaxKind.ForStatement,
@@ -23,18 +23,18 @@ function walk(node: ts.Node, inLoop: boolean, ctx: Context): void {
 
     if (isFn && inLoop) {
         const pos = posOf(ctx.sourceFile, node)
-        ctx.push({ ...pos, rule: "no-loop-func", message: "Declaring a function inside a loop closes over the loop variable — extract it." })
-        ts.forEachChild(node, (child) => walk(child, false, ctx))
+        ctx.push({ ...pos, rule: 'no-loop-func', message: 'Declaring a function inside a loop closes over the loop variable — extract it.' })
+        ts.forEachChild(node, function walkChild(child: ts.Node): void { walk(child, false, ctx) })
         return
     }
 
-    ts.forEachChild(node, (child) => walk(child, inLoop || isLoop, ctx))
+    ts.forEachChild(node, function walkChild(child: ts.Node): void { walk(child, inLoop || isLoop, ctx) })
 }
 
 export const noLoopFunc: Rule = {
-    name: "no-loop-func",
+    name: 'no-loop-func',
     visit(node, ctx) {
         if (node.kind !== ts.SyntaxKind.SourceFile) return
-        ts.forEachChild(node, (child) => walk(child, false, ctx))
+        ts.forEachChild(node, function walkChild(child: ts.Node): void { walk(child, false, ctx) })
     },
 }

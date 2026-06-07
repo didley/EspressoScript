@@ -1,6 +1,6 @@
-import ts from "typescript"
-import type { Rule } from "../types.js"
-import { posOf } from "../pos.js"
+import ts from 'typescript'
+import type { Rule } from '../types.js'
+import { posOf } from '../pos.js'
 
 const ASSIGN_OPS = new Set([
     ts.SyntaxKind.EqualsToken,
@@ -44,11 +44,11 @@ function hasNoSideEffect(expr: ts.Expression): boolean {
 }
 
 export const noUnusedExpressions: Rule = {
-    name: "no-unused-expressions",
+    name: 'no-unused-expressions',
     visit(node, ctx) {
         if (!ts.isExpressionStatement(node)) return
         if (!hasNoSideEffect(node.expression)) return
         const pos = posOf(ctx.sourceFile, node)
-        ctx.push({ ...pos, rule: "no-unused-expressions", message: "Bare expression has no effect." })
+        ctx.push({ ...pos, rule: 'no-unused-expressions', message: 'Bare expression has no effect.' })
     },
 }

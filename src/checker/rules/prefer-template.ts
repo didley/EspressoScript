@@ -1,6 +1,6 @@
-import ts from "typescript"
-import type { Rule } from "../types.js"
-import { posOf } from "../pos.js"
+import ts from 'typescript'
+import type { Rule } from '../types.js'
+import { posOf } from '../pos.js'
 
 const VAR_KINDS = new Set([
     ts.SyntaxKind.Identifier,
@@ -9,7 +9,7 @@ const VAR_KINDS = new Set([
 ])
 
 export const preferTemplate: Rule = {
-    name: "prefer-template",
+    name: 'prefer-template',
     visit(node, ctx) {
         if (!ts.isBinaryExpression(node)) return
         if (node.operatorToken.kind !== ts.SyntaxKind.PlusToken) return
@@ -21,6 +21,6 @@ export const preferTemplate: Rule = {
         const rightIsVar = VAR_KINDS.has(right.kind)
         if (!((leftIsStr && rightIsVar) || (rightIsStr && leftIsVar))) return
         const pos = posOf(ctx.sourceFile, node)
-        ctx.push({ ...pos, rule: "prefer-template", message: "Use a template literal instead of `+`." })
+        ctx.push({ ...pos, rule: 'prefer-template', message: 'Use a template literal instead of `+`.' })
     },
 }
