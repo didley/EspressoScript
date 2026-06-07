@@ -14,3 +14,8 @@ site/docs/*.md
 # Editor / OS artifacts
 .DS_Store
 *.local
+
+# tsx/esm build artifacts (bare module names at repo root)
+/glob
+/typescript
+/node:*
