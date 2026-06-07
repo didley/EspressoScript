@@ -2,6 +2,7 @@
 // and exits with code 1 if any diagnostics are found.
 // Usage: shotscript 'src/**/*.ts'
 import { readFileSync } from 'node:fs'
+import path from 'node:path'
 import { glob } from 'glob'
 import ts from 'typescript'
 import { check } from './lint/check.js'
@@ -19,11 +20,22 @@ for (const pattern of patterns) {
     files.push(...matches)
 }
 
-const program = ts.createProgram(files, {
-    target: ts.ScriptTarget.ES2022,
-    noEmit: true,
-    skipLibCheck: true,
-})
+const configPath = ts.findConfigFile(files[0] ?? process.cwd(), ts.sys.fileExists)
+
+function resolveCompilerOptions(cfgPath: string | null): ts.CompilerOptions {
+    if (cfgPath === null) {
+        return { target: ts.ScriptTarget.ES2022, noEmit: true, skipLibCheck: true }
+    }
+    return ts.parseJsonConfigFileContent(
+        ts.readConfigFile(cfgPath, ts.sys.readFile).config,
+        ts.sys,
+        path.dirname(cfgPath),
+    ).options
+}
+
+const compilerOptions = resolveCompilerOptions(configPath ?? null)
+
+const program = ts.createProgram(files, { ...compilerOptions, noEmit: true })
 const typeChecker = program.getTypeChecker()
 
 const lines = []
