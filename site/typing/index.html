@@ -621,6 +621,59 @@
                 </div>
             </div>
 
+            <div class="section-label">Enums — no-enum</div>
+
+            <div class="callout"><strong>Why it matters:</strong> <code>enum</code> emits runtime JavaScript — it's one of the few TypeScript constructs that isn't erased. Numeric enums are also unsound: any <code>number</code> is assignable to them. The replacement is a <code>const</code> object, which is pure type-level and tree-shakeable.</div>
+
+            <div class="comparison">
+                <div class="pane-before">
+                    <div class="pane-label">
+                        <span class="dot dot-red"></span>enum — emits runtime JS
+                    </div>
+                    <pre><span class="kw">enum</span> <span class="ty">Status</span> {
+    <span class="op">Active</span>  = <span class="st">'active'</span>,
+    <span class="op">Pending</span> = <span class="st">'pending'</span>,
+    <span class="op">Closed</span>  = <span class="st">'closed'</span>,
+}
+
+<span class="kw">function</span> <span class="fn">setStatus</span>(<span class="op">s</span>: <span class="ty">Status</span>): <span class="ty">void</span> { <span class="cm">/* ... */</span> }
+
+<span class="fn">setStatus</span>(<span class="ty">Status</span>.<span class="op">Active</span>)  <span class="cm">// ✓</span>
+<span class="fn">setStatus</span>(<span class="st">'active'</span>)         <span class="cm">// ✗ — must use enum ref</span></pre>
+                </div>
+                <div class="pane-after">
+                    <div class="pane-label">
+                        <span class="dot dot-green"></span>const object — erased, tree-shakeable
+                    </div>
+                    <pre><span class="kw">const</span> <span class="ty">Status</span> = {
+    <span class="op">Active</span>:  <span class="st">'active'</span>,
+    <span class="op">Pending</span>: <span class="st">'pending'</span>,
+    <span class="op">Closed</span>:  <span class="st">'closed'</span>,
+} <span class="kw">as const</span>
+
+<span class="kw">type</span> <span class="ty">Status</span> = <span class="kw">typeof</span> <span class="ty">Status</span>[<span class="kw">keyof typeof</span> <span class="ty">Status</span>]
+
+<span class="kw">function</span> <span class="fn">setStatus</span>(<span class="op">s</span>: <span class="ty">Status</span>): <span class="ty">void</span> { <span class="cm">/* ... */</span> }
+
+<span class="fn">setStatus</span>(<span class="ty">Status</span>.<span class="op">Active</span>)  <span class="cm">// ✓</span>
+<span class="fn">setStatus</span>(<span class="st">'active'</span>)         <span class="cm">// ✓ — duck-typing accepted</span></pre>
+                </div>
+            </div>
+
+            <div class="callout"><strong>Enforced reference usage (branded types):</strong> the <code>const</code> object pattern accepts raw string literals — <code>setStatus('active')</code> compiles. If you want the enum behaviour of rejecting duck-typed strings, use a branded type. The brand is a compile-time phantom — no runtime cost.
+<pre style="margin-top: 0.75rem; font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.8em; line-height: 1.7; background: rgba(130,170,255,0.04); border-radius: 6px; padding: 0.75rem 1rem; overflow-x: auto"><span class="kw">type</span> <span class="ty">Brand</span>&lt;<span class="ty">T</span>, <span class="ty">B</span> <span class="kw">extends</span> <span class="ty">string</span>&gt; = <span class="ty">T</span> &amp; { <span class="kw">readonly</span> <span class="op">__brand</span>: <span class="ty">B</span> }
+<span class="kw">type</span> <span class="ty">Status</span> = <span class="ty">Brand</span>&lt;<span class="st">'active'</span> | <span class="st">'pending'</span> | <span class="st">'closed'</span>, <span class="st">'Status'</span>&gt;
+
+<span class="kw">const</span> <span class="ty">Status</span> = {
+    <span class="op">Active</span>:  <span class="st">'active'</span>  <span class="kw">as</span> <span class="ty">Status</span>,
+    <span class="op">Pending</span>: <span class="st">'pending'</span> <span class="kw">as</span> <span class="ty">Status</span>,
+    <span class="op">Closed</span>:  <span class="st">'closed'</span>  <span class="kw">as</span> <span class="ty">Status</span>,
+} <span class="kw">as const</span>
+
+<span class="fn">setStatus</span>(<span class="ty">Status</span>.<span class="op">Active</span>)  <span class="cm">// ✓</span>
+<span class="fn">setStatus</span>(<span class="st">'active'</span>)         <span class="cm">// ✗ — rejected, same as enum</span></pre>
+</div>
+
             <hr />
 
             <div id="what-it-enables" class="section-label">What it enables</div>

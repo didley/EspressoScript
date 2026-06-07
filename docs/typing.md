@@ -119,3 +119,51 @@ if (user === null) {
 // user: User — now safe
 console.log(user.name) // ✓
 ```
+
+{label} Enums — no-enum
+
+> **Why it matters:** `enum` emits runtime JavaScript — it's one of the few TypeScript constructs that isn't erased. Numeric enums are also unsound: any `number` is assignable to them. The replacement is a `const` object, which is pure type-level and tree-shakeable.
+
+```ts ❌
+enum Status {
+    Active  = 'active',
+    Pending = 'pending',
+    Closed  = 'closed',
+}
+
+function setStatus(s: Status): void { /* ... */ }
+
+setStatus(Status.Active)  // ✓
+setStatus('active')         // ✗ — must use enum ref
+```
+
+```ts ✅
+const Status = {
+    Active:  'active',
+    Pending: 'pending',
+    Closed:  'closed',
+} as const
+
+type Status = typeof Status[keyof typeof Status]
+
+function setStatus(s: Status): void { /* ... */ }
+
+setStatus(Status.Active)  // ✓
+setStatus('active')         // ✓ — duck-typing accepted
+```
+
+> **Enforced reference usage (branded types):** the `const` object pattern accepts raw string literals — `setStatus('active')` compiles. If you want the enum behaviour of rejecting duck-typed strings, use a branded type. The brand is a compile-time phantom — no runtime cost.
+
+```ts
+type Brand<T, B extends string> = T & { readonly __brand: B }
+type Status = Brand<'active' | 'pending' | 'closed', 'Status'>
+
+const Status = {
+    Active:  'active'  as Status,
+    Pending: 'pending' as Status,
+    Closed:  'closed'  as Status,
+} as const
+
+setStatus(Status.Active)  // ✓
+setStatus('active')         // ✗ — rejected, same as enum
+```
