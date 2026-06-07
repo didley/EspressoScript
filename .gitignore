@@ -1,2 +1,16 @@
-site/docs/*.md
+# Dependencies
 node_modules/
+
+# Build output — not committed; built on publish via `pnpm build`
+dist/
+
+# Package manager lock files — pnpm-lock.yaml is committed; others are not
+bun.lock
+yarn.lock
+
+# Generated site docs (built from source markdown at deploy time)
+site/docs/*.md
+
+# Editor / OS artifacts
+.DS_Store
+*.local
