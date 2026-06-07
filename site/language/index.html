@@ -560,8 +560,8 @@
                             </div>
                             <div class="code-pane code-pane-good">
                                 <div class="code-label">✅</div>
-                                <pre><span class="kw">import</span> { safeFetch, jsonParse } <span class="kw">from</span> <span class="st">"shot:std"</span>
-<span class="kw">import type</span> { <span class="ty">PromiseResult</span> } <span class="kw">from</span> <span class="st">"shot:std"</span>
+                                <pre><span class="kw">import</span> { safeFetch, jsonParse } <span class="kw">from</span> <span class="st">"shotscript/std"</span>
+<span class="kw">import type</span> { <span class="ty">PromiseResult</span> } <span class="kw">from</span> <span class="st">"shotscript/std"</span>
 
 <span class="kw">async function</span> <span class="fn">getUser</span>(id: <span class="ty">number</span>): <span class="ty">PromiseResult</span>&lt;<span class="ty">User</span>&gt; {
   <span class="kw">const</span> [res, err] = <span class="kw">await</span> <span class="fn">safeFetch</span>(`/users/${id}`)
@@ -599,7 +599,7 @@
                         <p>
                             Use <code>toResult</code> (sync) or
                             <code>toPromiseResult</code> (async) from
-                            <code>shot:std</code> to wrap external APIs that
+                            <code>shotscript/std</code> to wrap external APIs that
                             throw.
                         </p>
                         <pre
@@ -609,7 +609,7 @@
                                 border-radius: 8px;
                                 padding: 1rem 1.25rem;
                             "
-                        ><span class="kw">import</span> { toResult, toPromiseResult } <span class="kw">from</span> <span class="st">"shot:std"</span>
+                        ><span class="kw">import</span> { toResult, toPromiseResult } <span class="kw">from</span> <span class="st">"shotscript/std"</span>
 
 <span class="kw">const</span> [parsed, err] = toResult(() => someLib.parseSync(input))
 <span class="kw">const</span> [rows, err] = <span class="kw">await</span> toPromiseResult(() => db.query(sql))</pre>
@@ -1107,7 +1107,7 @@ math/
                     >ShotScript on GitHub</a
                 >
                 ·
-                <a href="https://github.com/didley/shot-lint" class="ext"
+                <a href="https://github.com/didley/shotscript" class="ext"
                     >ShotLint on GitHub</a
                 >
             </p>

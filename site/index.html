@@ -511,7 +511,7 @@
 
                     <div class="install-cmd">
                         <span class="prompt">$</span>
-                        <span class="cmd">npm install --save-dev shot-script</span>
+                        <span class="cmd">npm install --save-dev shotscript</span>
                     </div>
 
                     <div class="install-steps">
@@ -520,22 +520,22 @@
                             <pre><span class="cm">// tsconfig.json</span>
 {
   <span class="st">"compilerOptions"</span>: {
-    <span class="st">"plugins"</span>: [{ <span class="st">"name"</span>: <span class="st">"shot-script/plugin"</span> }]
+    <span class="st">"plugins"</span>: [{ <span class="st">"name"</span>: <span class="st">"shotscript/plugin"</span> }]
   }
 }</pre>
                         </div>
                         <div class="install-step">
-                            <div class="install-step-label">ShotScriptFmt — biome formatter</div>
+                            <div class="install-step-label">ShotScriptFmt — biome config</div>
                             <pre><span class="cm">// biome.json</span>
 {
-  <span class="st">"extends"</span>: [<span class="st">"shot-script/biome"</span>]
+  <span class="st">"extends"</span>: [<span class="st">"shotscript/fmt"</span>]
 }</pre>
                         </div>
                         <div class="install-step">
                             <div class="install-step-label">ShotScriptTyping — tsconfig strict mode</div>
                             <pre><span class="cm">// tsconfig.json</span>
 {
-  <span class="st">"extends"</span>: <span class="st">"shot-script/tsconfig/shot-script.json"</span>
+  <span class="st">"extends"</span>: <span class="st">"shotscript/tsconfig/shotscript.json"</span>
 }</pre>
                         </div>
                     </div>
@@ -708,8 +708,8 @@
                             <div class="pane-label">
                                 <span class="dot dot-green"></span>ShotScript
                             </div>
-                            <pre><span class="kw">import</span> { <span class="fn">safeFetch</span>, <span class="fn">jsonParse</span> } <span class="kw">from</span> <span class="st">"shot:std"</span>
-<span class="kw">import type</span> { <span class="ty">PromiseResult</span> } <span class="kw">from</span> <span class="st">"shot:std"</span>
+                            <pre><span class="kw">import</span> { <span class="fn">safeFetch</span>, <span class="fn">jsonParse</span> } <span class="kw">from</span> <span class="st">"shotscript/std"</span>
+<span class="kw">import type</span> { <span class="ty">PromiseResult</span> } <span class="kw">from</span> <span class="st">"shotscript/std"</span>
 
 <span class="kw">async function</span> <span class="fn">getUser</span>(
   <span class="id">id</span>: <span class="ty">number</span>
@@ -1016,8 +1016,8 @@
         <footer>
             <p>
                 ShotScript is pre-v1 and open source. ·
-                <a href="https://github.com/didley/shot-script" class="ext"
-                    >shot-script on GitHub</a
+                <a href="https://github.com/didley/shotscript" class="ext"
+                    >shotscript on GitHub</
                 >
             </p>
         </footer>

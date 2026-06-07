@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>shot:std — Standard Library</title>
+        <title>ShotScriptStd — Standard Library</title>
         <style>
             :root {
                 --bg: #0d0d10;
@@ -286,7 +286,7 @@
     <body>
         <nav>
             <a href="/" class="nav-logo"
-                ><span>shot</span><span class="sep">·</span>stdlib</a
+                >ShotScriptStd</
             >
             <ul class="nav-links">
                 <li><a href="/">Home</a></li>
@@ -329,12 +329,11 @@
             <main>
                 <div class="content-header">
                     <div class="label">Standard Library</div>
-                    <h1>shot:std</h1>
+                    <h1>ShotScriptStd</h1>
                     <p>
-                        The standard library. Ships as
-                        <code>@shotscript/std</code> on NPM; imported via the
-                        <code>shot:std</code> specifier in
-                        <code>.shot</code> source. Every function returns a
+                        The standard library. Ships as part of the
+                        <code>shotscript</code> package; imported via
+                        <code>shotscript/std</code>. Every function returns a
                         tuple — never throws. Internal <code>try</code>/<code
                             >catch</code
                         >
@@ -346,11 +345,11 @@
                     <strong>Import:</strong>
                     <code
                         >import { safeFetch, jsonParse, wrapError } from
-                        "shot:std"</code
+                        "shotscript/std"</code
                     ><br />
                     <code
                         >import type { Result, PromiseResult } from
-                        "shot:std"</code
+                        "shotscript/std"</code
                     >
                 </div>
 
@@ -539,8 +538,8 @@
                         >
                         to convert thrown errors into the second tuple slot. The
                         ban on <code>try</code>/<code>catch</code> applies to
-                        <code>.shot</code> user code; stdlib is
-                        <code>.ts</code> and exempt. Errors from stdlib wrappers
+                        ShotScript user code; ShotScriptStd is
+                        exempt. Errors from ShotScriptStd wrappers
                         are returned as <code>Error</code> instances.
                     </p>
                 </div>
@@ -549,13 +548,9 @@
 
         <footer>
             <p>
-                Shot is pre-v1 and open source. ·
-                <a href="https://github.com/didley/ShotScript" class="ext"
-                    >ShotScript on GitHub</a
-                >
-                ·
-                <a href="https://github.com/didley/shot-lint" class="ext"
-                    >ShotLint on GitHub</a
+                ShotScript is pre-v1 and open source. ·
+                <a href="https://github.com/didley/shotscript" class="ext"
+                    >shotscript on GitHub</a
                 >
             </p>
         </footer>

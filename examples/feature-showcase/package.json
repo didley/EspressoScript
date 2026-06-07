@@ -1,0 +1,13 @@
+{
+  "name": "feature-showcase-example",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "lint": "shotscript 'src/**/*.ts'",
+    "start": "node --import tsx/esm src/featureShowcase.ts"
+  },
+  "devDependencies": {
+    "shotscript": "*",
+    "tsx": "^4.0.0"
+  }
+}

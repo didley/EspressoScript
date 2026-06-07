@@ -5,7 +5,7 @@ import { glob } from "glob"
 import { check } from "../dist/checker/index.js"
 
 const patterns = [
-    "../examples/hello-world/src/**/*.ts",
+    "examples/feature-showcase/src/**/*.ts",
 ]
 
 const files = (await Promise.all(patterns.map((p) => glob(p, { absolute: true })))).flat()
