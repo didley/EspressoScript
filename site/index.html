@@ -634,8 +634,8 @@
                 <div class="hero-brand">ShotScript</div>
                 <p class="hero-desc">
                     TypeScript with ~75% fewer ways to write the same thing.
-                    One way to handle errors, one way to express nothing, one
-                    way to structure types.
+                    One way to handle errors. One way to say nothing. One way
+                    to structure types.
                 </p>
             </div>
         </div>
@@ -646,6 +646,7 @@
                 <a href="#who">Is it for you?</a>
                 <a href="#before-after">Before / after</a>
                 <a href="#install">Install</a>
+                <a href="#claude">Claude Code</a>
             </div>
         </div>
 
@@ -992,11 +993,11 @@
         <!-- ── BEFORE / AFTER ── -->
         <section class="section" id="before-after">
             <div class="section-label">Before / after</div>
-            <h2>The three biggest simplifications.</h2>
+            <h2>Same logic. Fewer states.</h2>
             <p class="section-desc">
-                The left column is TypeScript as commonly written. The right
-                column is the same logic under every ShotScript rule at once —
-                flatter types, fewer states, no hidden control flow.
+                Three real examples — types, async, and stateful services —
+                shown as commonly written TypeScript and as ShotScript with
+                every rule applied.
             </p>
 
             <!-- 1: Type structure -->
@@ -1162,7 +1163,9 @@
                     <div class="pane-label">
                         <span class="dot dot-green"></span>ShotScript
                     </div>
-                    <pre><span class="kw">type</span> <span class="ty">UserService</span> = {
+                    <pre><span class="kw">import</span> { <span class="fn">safeMapGet</span> } <span class="kw">from</span> <span class="st">'shotscript/std'</span>
+
+<span class="kw">type</span> <span class="ty">UserService</span> = {
   <span class="kw">readonly</span> <span class="id">db</span>: <span class="ty">Database</span>
   <span class="kw">readonly</span> <span class="id">cache</span>: <span class="ty">Map</span>&lt;<span class="ty">number</span>, <span class="ty">User</span>&gt;
 }
@@ -1171,8 +1174,8 @@
   <span class="id">svc</span>: <span class="ty">UserService</span>,
   <span class="id">id</span>: <span class="ty">number</span>,
 ): <span class="ty">PromiseResult</span>&lt;<span class="ty">User</span>&gt; {
-  <span class="kw">const</span> <span class="id">hit</span> = <span class="id">svc</span>.<span class="id">cache</span>.<span class="fn">get</span>(<span class="id">id</span>)
-  <span class="kw">if</span> (<span class="id">hit</span> !== <span class="kw">undefined</span>) <span class="kw">return</span> [<span class="id">hit</span>, <span class="kw">null</span>]
+  <span class="kw">const</span> <span class="id">hit</span> = <span class="fn">safeMapGet</span>(<span class="id">svc</span>.<span class="id">cache</span>, <span class="id">id</span>)
+  <span class="kw">if</span> (<span class="id">hit</span> !== <span class="kw">null</span>) <span class="kw">return</span> [<span class="id">hit</span>, <span class="kw">null</span>]
   <span class="kw">const</span> [<span class="id">user</span>, <span class="id">err</span>] = <span class="kw">await</span> <span class="id">svc</span>.<span class="id">db</span>.<span class="fn">find</span>(<span class="id">id</span>)
   <span class="kw">if</span> (<span class="id">err</span> !== <span class="kw">null</span>) <span class="kw">return</span> [<span class="kw">null</span>, <span class="id">err</span>]
   <span class="id">svc</span>.<span class="id">cache</span>.<span class="fn">set</span>(<span class="id">id</span>, <span class="id">user</span>)
@@ -1244,6 +1247,66 @@
                     <pre><span class="kw">import</span> { <span class="fn">safeFetch</span>, <span class="fn">jsonParse</span> } <span class="kw">from</span> <span class="st">'shotscript/std'</span>
 <span class="kw">import type</span> { <span class="ty">Result</span>, <span class="ty">PromiseResult</span> } <span class="kw">from</span> <span class="st">'shotscript/std'</span></pre>
                 </div>
+            </div>
+        </section>
+
+        <hr class="divider" />
+
+        <!-- ── CLAUDE CODE ── -->
+        <section class="section" id="claude">
+            <div class="section-label">Claude Code</div>
+            <h2>Three commands. Zero manual fixes.</h2>
+            <p class="section-desc">
+                Install three
+                <a href="https://claude.ai/code" target="_blank" rel="noopener" class="ext">Claude Code</a>
+                slash commands into your project. They read your source files,
+                understand every ShotScript rule, and won't introduce new
+                violations while fixing existing ones.
+            </p>
+
+            <div class="install-cmd" style="margin-bottom: 1.5rem">
+                <span class="prompt">$</span>
+                <span class="cmd">npx shotscript commands</span>
+            </div>
+            <p class="section-desc" style="margin-bottom: 2rem; margin-top: -0.5rem; font-size: 0.82rem">
+                Copies <code>/shotscript-fix</code>, <code>/shotscript-migrate</code>, and
+                <code>/shotscript-explain</code> into <code>.claude/commands/</code> in your project.
+            </p>
+
+            <div class="rule-grid" style="grid-template-columns: repeat(auto-fill, minmax(260px, 1fr))">
+                <div class="rule-card">
+                    <div class="rule-name" style="color: var(--green)">/shotscript-fix</div>
+                    <div class="rule-desc">
+                        Runs the linter, reads every flagged file, and rewrites
+                        violations in-place — mechanical and structural. Re-runs
+                        until zero violations remain.
+                    </div>
+                </div>
+                <div class="rule-card">
+                    <div class="rule-name" style="color: var(--green)">/shotscript-migrate</div>
+                    <div class="rule-desc">
+                        Staged migration for an existing TypeScript codebase.
+                        Mechanical fixes first, then arrow functions, classes,
+                        and the error-handling rewrite to <code>Result</code>
+                        tuples — with call-site updates throughout.
+                    </div>
+                </div>
+                <div class="rule-card">
+                    <div class="rule-name" style="color: var(--green)">/shotscript-explain [rule]</div>
+                    <div class="rule-desc">
+                        Pass a rule name or paste a violation line. Returns
+                        what's banned, why, and a before/after example — useful
+                        when onboarding a team to the dialect.
+                    </div>
+                </div>
+            </div>
+
+            <div class="callout">
+                <strong>No gradual migration path — unless you use Claude.</strong>
+                The README says rules like <code>no-class</code> and
+                <code>no-throw</code> require architectural rewrites, not
+                search-and-replace. <code>/shotscript-migrate</code> handles
+                that rewrite, including updating every call site.
             </div>
         </section>
 
