@@ -468,22 +468,12 @@
             /* ── Comparison ── */
             .comparison {
                 display: grid;
-                grid-template-columns: 1fr 1fr;
+                grid-template-columns: 1fr;
                 gap: 0;
                 border: 1px solid var(--border);
                 border-radius: 10px;
                 overflow: hidden;
                 margin-bottom: 2.5rem;
-            }
-
-            @media (max-width: 760px) {
-                .comparison {
-                    grid-template-columns: 1fr;
-                }
-            }
-
-            .comparison pre {
-                font-size: 0.72rem;
             }
 
             .pane-label {
@@ -505,16 +495,14 @@
             .pane-after .pane-label {
                 background: rgba(78, 201, 148, 0.08);
                 color: var(--green);
-                border-left: 1px solid var(--border);
+                border-top: 1px solid var(--border);
             }
             .pane-before {
                 background: var(--surface);
-                min-width: 0;
             }
             .pane-after {
                 background: #131318;
-                border-left: 1px solid var(--border);
-                min-width: 0;
+                border-top: 1px solid var(--border);
             }
 
             pre {
