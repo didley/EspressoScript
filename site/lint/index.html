@@ -661,32 +661,68 @@
 
         <div class="page-toc-wrap">
             <div class="page-toc">
-                <a href="#install">Install</a>
-                <a href="#example">Example</a>
                 <a href="#syntax-reduction">Syntax reduction</a>
+                <a href="#example">Example</a>
                 <a href="#all-rules">All rules</a>
+                <a href="#install">Install</a>
             </div>
         </div>
 
-        <div id="install" class="install-block">
-            <div class="install-label">Install</div>
-            <div class="install-step">
-                <div class="install-step-label">tsconfig.json</div>
-                <pre><span class="cm">// tsconfig.json</span>
-{
-  <span class="st">&quot;compilerOptions&quot;</span>: {
-    <span class="st">&quot;plugins&quot;</span>: [{ <span class="st">&quot;name&quot;</span>: <span class="st">&quot;shotscript/plugin&quot;</span> }]
-  }
-}</pre>
-            </div>
-
-            <div style="margin-top: 1rem">
-                <div class="install-label">Run</div>
-                <div class="install-cmd">
-                    <span class="prompt">$</span>
-                    <span class="cmd">npx shotscript 'src/**/*.ts'</span>
+        <div class="removed-section" id="syntax-reduction">
+            <div class="section-label">What gets removed</div>
+            <h2>~79% of TypeScript's syntax surface, banned.</h2>
+            <p class="section-desc">By syntax construct count, ShotScript removes ~79% of what TypeScript allows. We count every distinct way to express the same thing — variable declaration forms, function syntaxes, error-handling patterns — and reduce each category to one. Some disappear entirely; none are banned because they're bad, only because fewer forms is the goal.</p>
+            <div class="pct-grid">
+                <div class="pct-row">
+                    <div class="pct-meta">
+                        <div class="pct-cat">OOP</div>
+                        <div class="pct-items">class · this · extends · decorators · abstract</div>
+                    </div>
+                    <div class="pct-bar-wrap">
+                        <div class="pct-bar-fill" style="width: 100%"></div>
+                    </div>
+                    <div class="pct-value">all of it</div>
                 </div>
-                <p class="install-note" style="margin-top: 0.4rem">Exits <code>0</code> when clean, <code>1</code> on violations. Add <code>--json</code> for machine-readable output.</p>
+                <div class="pct-row">
+                    <div class="pct-meta">
+                        <div class="pct-cat">Error handling</div>
+                        <div class="pct-items">try · catch · finally · throw</div>
+                    </div>
+                    <div class="pct-bar-wrap">
+                        <div class="pct-bar-fill" style="width: 100%"></div>
+                    </div>
+                    <div class="pct-value">all of it</div>
+                </div>
+                <div class="pct-row">
+                    <div class="pct-meta">
+                        <div class="pct-cat">Type constructs</div>
+                        <div class="pct-items">interface · enum · &amp; · conditional · mapped · infer · any · void · undefined</div>
+                    </div>
+                    <div class="pct-bar-wrap">
+                        <div class="pct-bar-fill" style="width: 65%"></div>
+                    </div>
+                    <div class="pct-value">~65%</div>
+                </div>
+                <div class="pct-row">
+                    <div class="pct-meta">
+                        <div class="pct-cat">Function syntax</div>
+                        <div class="pct-items">arrow functions · generators · overloads · default params · optional params</div>
+                    </div>
+                    <div class="pct-bar-wrap">
+                        <div class="pct-bar-fill" style="width: 50%"></div>
+                    </div>
+                    <div class="pct-value">~50%</div>
+                </div>
+                <div class="pct-row">
+                    <div class="pct-meta">
+                        <div class="pct-cat">Control flow</div>
+                        <div class="pct-items">ternary · do-while · for-in · labels</div>
+                    </div>
+                    <div class="pct-bar-wrap">
+                        <div class="pct-bar-fill" style="width: 40%"></div>
+                    </div>
+                    <div class="pct-value">~40%</div>
+                </div>
             </div>
         </div>
 
@@ -773,66 +809,6 @@
     <span class="kw">return</span> <span class="op">admin</span>.<span class="op">user</span>.<span class="op">id</span>
 }
 <span class="kw">const</span> <span class="op">ids</span> = <span class="op">admins</span>.<span class="fn">map</span>(<span class="op">toId</span>)</pre>
-                </div>
-            </div>
-        </div>
-
-        <hr />
-
-        <div class="removed-section" id="syntax-reduction">
-            <div class="section-label">What gets removed</div>
-            <h2>~79% of TypeScript's syntax surface, banned.</h2>
-            <p class="section-desc">By syntax construct count, ShotScript removes ~79% of what TypeScript allows. We count every distinct way to express the same thing — variable declaration forms, function syntaxes, error-handling patterns — and reduce each category to one. Some disappear entirely; none are banned because they're bad, only because fewer forms is the goal.</p>
-            <div class="pct-grid">
-                <div class="pct-row">
-                    <div class="pct-meta">
-                        <div class="pct-cat">OOP</div>
-                        <div class="pct-items">class · this · extends · decorators · abstract</div>
-                    </div>
-                    <div class="pct-bar-wrap">
-                        <div class="pct-bar-fill" style="width: 100%"></div>
-                    </div>
-                    <div class="pct-value">all of it</div>
-                </div>
-                <div class="pct-row">
-                    <div class="pct-meta">
-                        <div class="pct-cat">Error handling</div>
-                        <div class="pct-items">try · catch · finally · throw</div>
-                    </div>
-                    <div class="pct-bar-wrap">
-                        <div class="pct-bar-fill" style="width: 100%"></div>
-                    </div>
-                    <div class="pct-value">all of it</div>
-                </div>
-                <div class="pct-row">
-                    <div class="pct-meta">
-                        <div class="pct-cat">Type constructs</div>
-                        <div class="pct-items">interface · enum · &amp; · conditional · mapped · infer · any · void · undefined</div>
-                    </div>
-                    <div class="pct-bar-wrap">
-                        <div class="pct-bar-fill" style="width: 65%"></div>
-                    </div>
-                    <div class="pct-value">~65%</div>
-                </div>
-                <div class="pct-row">
-                    <div class="pct-meta">
-                        <div class="pct-cat">Function syntax</div>
-                        <div class="pct-items">arrow functions · generators · overloads · default params · optional params</div>
-                    </div>
-                    <div class="pct-bar-wrap">
-                        <div class="pct-bar-fill" style="width: 50%"></div>
-                    </div>
-                    <div class="pct-value">~50%</div>
-                </div>
-                <div class="pct-row">
-                    <div class="pct-meta">
-                        <div class="pct-cat">Control flow</div>
-                        <div class="pct-items">ternary · do-while · for-in · labels</div>
-                    </div>
-                    <div class="pct-bar-wrap">
-                        <div class="pct-bar-fill" style="width: 40%"></div>
-                    </div>
-                    <div class="pct-value">~40%</div>
                 </div>
             </div>
         </div>
@@ -1315,6 +1291,30 @@
                         <div class="rule-desc"><code>.hasOwnProperty()</code>, <code>.isPrototypeOf()</code>, <code>.propertyIsEnumerable()</code> as method calls are banned. Use <code>Object.hasOwn</code> etc.</div>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <hr />
+
+        <div id="install" class="install-block">
+            <div class="install-label">Install</div>
+            <div class="install-step">
+                <div class="install-step-label">tsconfig.json</div>
+                <pre><span class="cm">// tsconfig.json</span>
+{
+  <span class="st">&quot;compilerOptions&quot;</span>: {
+    <span class="st">&quot;plugins&quot;</span>: [{ <span class="st">&quot;name&quot;</span>: <span class="st">&quot;shotscript/plugin&quot;</span> }]
+  }
+}</pre>
+            </div>
+
+            <div style="margin-top: 1rem">
+                <div class="install-label">Run</div>
+                <div class="install-cmd">
+                    <span class="prompt">$</span>
+                    <span class="cmd">npx shotscript 'src/**/*.ts'</span>
+                </div>
+                <p class="install-note" style="margin-top: 0.4rem">Exits <code>0</code> when clean, <code>1</code> on violations. Add <code>--json</code> for machine-readable output.</p>
             </div>
         </div>
 
