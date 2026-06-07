@@ -78,6 +78,19 @@
             }
             .nav-links a[aria-current="page"] { color: var(--text); }
 
+            .nav-divider {
+                width: 1px;
+                height: 1rem;
+                background: var(--border);
+                margin: 0 0.3rem;
+                align-self: center;
+                list-style: none;
+            }
+
+            .nav-ext {
+                font-size: 0.78rem !important;
+            }
+
             /* ── Hero ── */
             .hero {
                 max-width: 640px;
@@ -200,75 +213,73 @@
             }
 
             /* ── Graph ── */
-            .graph {
+            .graph-wrap {
                 display: flex;
-                align-items: stretch;
-                max-width: 560px;
+                align-items: center;
+                max-width: 600px;
                 margin: 2.5rem auto 0;
             }
 
-            .graph-items {
+            .graph-boxes {
                 flex: 1;
                 display: flex;
                 flex-direction: column;
-                border-right: 1px solid var(--border);
+                height: 240px;
             }
-
-            .graph-item {
-                flex: 1;
-                padding: 0.75rem 1.25rem 0.75rem 0;
-            }
-
-            .graph-item + .graph-item { border-top: 1px solid var(--border); }
 
             .graph-item-inner {
+                flex: 1;
                 background: var(--surface);
                 border: 1px solid var(--border);
-                border-radius: 6px;
-                padding: 0.6rem 1rem;
+                border-right: none;
+                padding: 0 1rem;
                 text-decoration: none;
-                display: block;
-                transition: border-color 0.15s;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                transition: border-color 0.15s, background 0.15s;
             }
+            .graph-item-inner + .graph-item-inner {
+                border-top: none;
+            }
+            .graph-item-inner:first-child { border-radius: 8px 0 0 0; }
+            .graph-item-inner:last-child  { border-radius: 0 0 0 8px; border-bottom: 1px solid var(--border); }
             .graph-item-inner:hover {
-                border-color: var(--accent);
+                background: rgba(200, 112, 42, 0.05);
                 text-decoration: none;
             }
 
             .graph-item-name {
                 font-family: "SF Mono", "Fira Code", monospace;
-                font-size: 0.8rem;
+                font-size: 0.78rem;
                 color: var(--accent);
-                margin-bottom: 0.2rem;
+                margin-bottom: 0.15rem;
             }
 
             .graph-item-desc {
-                font-size: 0.78rem;
+                font-size: 0.75rem;
                 color: var(--muted);
                 line-height: 1.4;
             }
 
-            .graph-connector {
-                width: 2.5rem;
-                position: relative;
+            .graph-svg {
+                width: 80px;
+                height: 240px;
                 flex-shrink: 0;
+                overflow: visible;
             }
 
-            .graph-connector::before {
-                content: '';
-                position: absolute;
-                top: 50%; left: 0; right: 7px;
-                height: 1px;
-                background: var(--border);
+            @keyframes ant-march {
+                to { stroke-dashoffset: -10; }
             }
 
-            .graph-connector::after {
-                content: '';
-                position: absolute;
-                top: calc(50% - 4px); right: 0;
-                border-top: 4px solid transparent;
-                border-bottom: 4px solid transparent;
-                border-left: 7px solid var(--border);
+            .ant-line {
+                fill: none;
+                stroke: var(--accent);
+                stroke-width: 1.5;
+                stroke-dasharray: 5 5;
+                stroke-opacity: 0.55;
+                animation: ant-march 0.6s linear infinite;
             }
 
             .graph-node-wrap {
@@ -287,6 +298,7 @@
                 font-weight: 700;
                 color: var(--accent);
                 white-space: nowrap;
+                box-shadow: 0 0 16px rgba(200, 112, 42, 0.15);
             }
 
             /* ── Install ── */

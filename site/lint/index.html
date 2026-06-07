@@ -22,19 +22,33 @@
                 --num: #f78c6c;
             }
 
-            * { box-sizing: border-box; margin: 0; padding: 0; }
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
 
             body {
                 background: var(--bg);
                 color: var(--text);
-                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+                font-family:
+                    -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
                 font-size: 16px;
                 line-height: 1.6;
             }
 
-            a { color: var(--accent); text-decoration: none; }
-            a:hover { text-decoration: underline; }
-            a.ext::after { content: " ↗"; font-size: 0.75em; opacity: 0.5; }
+            a {
+                color: var(--accent);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            a.ext::after {
+                content: " ↗";
+                font-size: 0.75em;
+                opacity: 0.5;
+            }
 
             /* ── Nav ── */
             nav {
@@ -57,8 +71,12 @@
                 letter-spacing: -0.02em;
                 text-decoration: none;
             }
-            .nav-logo .brand { color: var(--accent); }
-            .nav-logo .route { color: var(--text); }
+            .nav-logo .brand {
+                color: var(--accent);
+            }
+            .nav-logo .route {
+                color: var(--text);
+            }
 
             .nav-links {
                 display: flex;
@@ -76,7 +94,9 @@
                 background: rgba(255, 255, 255, 0.05);
                 text-decoration: none;
             }
-            .nav-links a[aria-current="page"] { color: var(--text); }
+            .nav-links a[aria-current="page"] {
+                color: var(--text);
+            }
 
             /* ── Page header ── */
             .page-header {
@@ -150,8 +170,12 @@
                 font-family: "SF Mono", "Fira Code", monospace;
                 font-size: 0.82rem;
             }
-            .install-cmd .prompt { color: var(--muted); }
-            .install-cmd .cmd { color: var(--green); }
+            .install-cmd .prompt {
+                color: var(--muted);
+            }
+            .install-cmd .cmd {
+                color: var(--green);
+            }
 
             .install-note {
                 font-size: 0.8rem;
@@ -181,7 +205,10 @@
                 border-bottom: 1px solid var(--border);
                 background: #0f0f13;
             }
-            .install-step pre { background: var(--surface); margin: 0; }
+            .install-step pre {
+                background: var(--surface);
+                margin: 0;
+            }
 
             /* ── Example section ── */
             .example-section {
@@ -234,7 +261,9 @@
             }
 
             @media (max-width: 640px) {
-                .terminal-example { grid-template-columns: 1fr; }
+                .terminal-example {
+                    grid-template-columns: 1fr;
+                }
             }
 
             .pane-file {
@@ -321,11 +350,18 @@
                 border-bottom: 1px solid var(--border);
                 align-items: start;
             }
-            .rule-item:last-child { border-bottom: none; }
-            .rule-item:nth-child(even) { background: #131318; }
+            .rule-item:last-child {
+                border-bottom: none;
+            }
+            .rule-item:nth-child(even) {
+                background: #131318;
+            }
 
             @media (max-width: 620px) {
-                .rule-item { grid-template-columns: 1fr; gap: 0.25rem; }
+                .rule-item {
+                    grid-template-columns: 1fr;
+                    gap: 0.25rem;
+                }
             }
 
             .rule-name {
@@ -351,15 +387,32 @@
             }
 
             /* ── Syntax highlighting ── */
-            .kw { color: var(--keyword); }
-            .ty { color: var(--type); }
-            .fn { color: var(--fn); }
-            .st { color: var(--string); }
-            .cm { color: var(--comment); }
-            .nu { color: var(--num); }
-            .op { color: var(--muted); }
+            .kw {
+                color: var(--keyword);
+            }
+            .ty {
+                color: var(--type);
+            }
+            .fn {
+                color: var(--fn);
+            }
+            .st {
+                color: var(--string);
+            }
+            .cm {
+                color: var(--comment);
+            }
+            .nu {
+                color: var(--num);
+            }
+            .op {
+                color: var(--muted);
+            }
 
-            hr { border: none; border-top: 1px solid var(--border); }
+            hr {
+                border: none;
+                border-top: 1px solid var(--border);
+            }
 
             footer {
                 text-align: center;
@@ -373,7 +426,8 @@
     <body>
         <nav>
             <a href="/" class="nav-logo">
-                <span class="brand">ShotScript</span><span class="route">Lint</span>
+                <span class="brand">ShotScript</span
+                ><span class="route">Lint</span>
             </a>
             <ul class="nav-links">
                 <li><a href="/">ShotScript</a></li>
@@ -388,10 +442,9 @@
             <div class="page-badge">ShotScriptLint</div>
             <h1>95+ rules enforcing<br /><em>one canonical form.</em></h1>
             <p class="sub">
-                A TypeScript language service plugin. Drop it into any
-                project — no special runtime or file extension required.
-                Violations surface as compiler errors in your editor and
-                CI.
+                A TypeScript language service plugin. Drop it into any project —
+                no special runtime or file extension required. Violations
+                surface as compiler errors in your editor and CI.
             </p>
         </div>
 
@@ -411,12 +464,12 @@
                 <div class="install-label">Run</div>
                 <div class="install-cmd">
                     <span class="prompt">$</span>
-                    <span class="cmd">npx shot-lint 'src/**/*.ts'</span>
+                    <span class="cmd">npx shotscript 'src/**/*.ts'</span>
                 </div>
                 <p class="install-note" style="margin-top: 0.4rem">
                     Exits <code>0</code> when clean, <code>1</code> on
-                    violations. Add <code>--json</code> for
-                    machine-readable output.
+                    violations. Add <code>--json</code> for machine-readable
+                    output.
                 </p>
             </div>
         </div>
@@ -428,7 +481,7 @@
             <h2>What linting looks like.</h2>
             <p class="section-desc">
                 Run
-                <code>npx shot-lint 'src/**/*.ts'</code> on any TypeScript
+                <code>npx shotscript 'src/**/*.ts'</code> on any TypeScript
                 file. Violations exit non-zero with precise diagnostics.
             </p>
 
@@ -452,7 +505,7 @@
                 </div>
                 <div class="pane-terminal">
                     <div class="pane-header">terminal</div>
-                    <pre><span style="color:var(--muted)">$ npx shot-lint 'src/**/*.ts'</span>
+                    <pre><span style="color:var(--muted)">$ npx shotscript 'src/**/*.ts'</span>
 
 <span style="color:var(--text)">src/user.ts</span><span style="color:var(--muted)">:4:7</span>   <span style="color:var(--red)">no-arrow-functions</span>
             Arrow functions are banned.
@@ -482,7 +535,9 @@
 
         <!-- ── RULES ── -->
         <div class="rules-section" style="padding-top: 3rem">
-            <div class="section-label" style="margin-bottom: 1.5rem">All rules</div>
+            <div class="section-label" style="margin-bottom: 1.5rem">
+                All rules
+            </div>
 
             <!-- Functions -->
             <div class="rules-category" id="functions">
@@ -495,17 +550,17 @@
                         <div class="rule-name">no-arrow-functions</div>
                         <div class="rule-desc">
                             Arrow functions are banned. Use named
-                            <code>function</code> declarations or
-                            expressions — they show up in stack traces, are
-                            grep-able, and are testable in isolation.
+                            <code>function</code> declarations or expressions —
+                            they show up in stack traces, are grep-able, and are
+                            testable in isolation.
                         </div>
                     </div>
                     <div class="rule-item">
                         <div class="rule-name">require-named-functions</div>
                         <div class="rule-desc">
-                            Function expressions passed as arguments must
-                            be named. Anonymous callbacks disappear in
-                            stack traces.
+                            Function expressions passed as arguments must be
+                            named. Anonymous callbacks disappear in stack
+                            traces.
                         </div>
                     </div>
                     <div class="rule-item">
@@ -513,17 +568,17 @@
                             require-explicit-return-type
                         </div>
                         <div class="rule-desc">
-                            Every function declaration must have an
-                            explicit return type annotation. Inference
-                            hides contracts from callers.
+                            Every function declaration must have an explicit
+                            return type annotation. Inference hides contracts
+                            from callers.
                         </div>
                     </div>
                     <div class="rule-item">
                         <div class="rule-name">no-default-parameter</div>
                         <div class="rule-desc">
                             Default parameters are banned. Accept
-                            <code>T | null</code> and handle the null
-                            branch explicitly inside the body.
+                            <code>T | null</code> and handle the null branch
+                            explicitly inside the body.
                         </div>
                     </div>
                 </div>
@@ -540,16 +595,15 @@
                         <div class="rule-name">no-throw</div>
                         <div class="rule-desc">
                             Throwing is banned. Return
-                            <code>[null, new Error(...)]</code> — errors
-                            belong in the type signature, not in hidden
-                            control flow.
+                            <code>[null, new Error(...)]</code> — errors belong
+                            in the type signature, not in hidden control flow.
                         </div>
                     </div>
                     <div class="rule-item">
                         <div class="rule-name">no-try</div>
                         <div class="rule-desc">
-                            <code>try</code>/<code>catch</code> is banned.
-                            Wrap third-party throwing code with
+                            <code>try</code>/<code>catch</code> is banned. Wrap
+                            third-party throwing code with
                             <code>toResult</code> or
                             <code>toPromiseResult</code> from
                             <code>shotscript/std</code>.
@@ -567,33 +621,29 @@
                         <div class="rule-name">no-floating-promises</div>
                         <div class="rule-desc">
                             Every Promise-returning call must be
-                            <code>await</code>ed or explicitly discarded
-                            with <code>void fn()</code>. Unhandled
-                            promises silently swallow errors.
+                            <code>await</code>ed or explicitly discarded with
+                            <code>void fn()</code>. Unhandled promises silently
+                            swallow errors.
                         </div>
                     </div>
                     <div class="rule-item">
-                        <div class="rule-name">
-                            require-tuple-destructure
-                        </div>
+                        <div class="rule-name">require-tuple-destructure</div>
                         <div class="rule-desc">
                             Calls to functions that return a
-                            <code>[T | null, E | null]</code> tuple must
-                            be destructured immediately —
+                            <code>[T | null, E | null]</code> tuple must be
+                            destructured immediately —
                             <code>const [val, err] = fn()</code>.
                         </div>
                     </div>
                     <div class="rule-item">
-                        <div class="rule-name">
-                            require-async-tuple-return
-                        </div>
+                        <div class="rule-name">require-async-tuple-return</div>
                         <div class="rule-desc">
                             Async functions must return
                             <code>Promise&lt;void&gt;</code>,
                             <code>PromiseResult&lt;T, E&gt;</code>, or an
                             explicit tuple form. A bare
-                            <code>Promise&lt;User&gt;</code> hides the
-                            failure path.
+                            <code>Promise&lt;User&gt;</code> hides the failure
+                            path.
                         </div>
                     </div>
                 </div>
@@ -609,47 +659,44 @@
                     <div class="rule-item">
                         <div class="rule-name">no-var</div>
                         <div class="rule-desc">
-                            <code>var</code> is banned. Use
-                            <code>const</code>.
+                            <code>var</code> is banned. Use <code>const</code>.
                         </div>
                     </div>
                     <div class="rule-item">
                         <div class="rule-name">no-let-outside-for</div>
                         <div class="rule-desc">
                             <code>let</code> is only allowed inside
-                            <code>for</code> loop headers. Everything else
-                            is <code>const</code>.
+                            <code>for</code> loop headers. Everything else is
+                            <code>const</code>.
                         </div>
                     </div>
                     <div class="rule-item">
                         <div class="rule-name">no-multi-var-decl</div>
                         <div class="rule-desc">
-                            Multiple declarators in one statement
-                            (<code>const a = 1, b = 2</code>) are banned.
-                            One declaration per statement.
+                            Multiple declarators in one statement (<code
+                                >const a = 1, b = 2</code
+                            >) are banned. One declaration per statement.
                         </div>
                     </div>
                     <div class="rule-item">
                         <div class="rule-name">no-increment-decrement</div>
                         <div class="rule-desc">
-                            <code>++</code> and <code>--</code> are
-                            banned. Use <code>+= 1</code> and
-                            <code>-= 1</code>.
+                            <code>++</code> and <code>--</code> are banned. Use
+                            <code>+= 1</code> and <code>-= 1</code>.
                         </div>
                     </div>
                     <div class="rule-item">
                         <div class="rule-name">no-shadow</div>
                         <div class="rule-desc">
-                            Variable shadowing is banned. Inner scopes
-                            cannot declare names that already exist in
-                            outer scopes.
+                            Variable shadowing is banned. Inner scopes cannot
+                            declare names that already exist in outer scopes.
                         </div>
                     </div>
                     <div class="rule-item">
                         <div class="rule-name">no-param-reassign</div>
                         <div class="rule-desc">
-                            Reassigning function parameters is banned. Use
-                            a new <code>const</code> with a distinct name.
+                            Reassigning function parameters is banned. Use a new
+                            <code>const</code> with a distinct name.
                         </div>
                     </div>
                     <div class="rule-item">
@@ -680,8 +727,8 @@
                         <div class="rule-name">no-ternary</div>
                         <div class="rule-desc">
                             Ternary expressions are banned. Use
-                            <code>if</code>/<code>else</code> or extract a
-                            named function.
+                            <code>if</code>/<code>else</code> or extract a named
+                            function.
                         </div>
                     </div>
                     <div class="rule-item">
@@ -689,18 +736,14 @@
                         <div class="rule-desc">
                             <code>condition &amp;&amp; doThing()</code>
                             for side effects is banned. Use
-                            <code
-                                >if (condition === true) { doThing()
-                                }</code
-                            >.
+                            <code>if (condition === true) { doThing() }</code>.
                         </div>
                     </div>
                     <div class="rule-item">
                         <div class="rule-name">no-loose-equality</div>
                         <div class="rule-desc">
-                            <code>==</code> and <code>!=</code> are
-                            banned. Use <code>===</code> and
-                            <code>!==</code> only.
+                            <code>==</code> and <code>!=</code> are banned. Use
+                            <code>===</code> and <code>!==</code> only.
                         </div>
                     </div>
                     <div class="rule-item">
@@ -722,8 +765,8 @@
                         <div class="rule-name">no-labels</div>
                         <div class="rule-desc">
                             Labelled statements and
-                            <code>break</code>/<code>continue</code> with
-                            labels are banned. Extract a function and
+                            <code>break</code>/<code>continue</code> with labels
+                            are banned. Extract a function and
                             <code>return</code> instead.
                         </div>
                     </div>
@@ -732,41 +775,38 @@
                         <div class="rule-desc">
                             Every <code>switch</code> case must end with
                             <code>break</code>, <code>return</code>, or
-                            <code>throw</code>. Implicit fallthrough is
-                            banned.
+                            <code>throw</code>. Implicit fallthrough is banned.
                         </div>
                     </div>
                     <div class="rule-item">
                         <div class="rule-name">no-logical-assignment</div>
                         <div class="rule-desc">
-                            Logical assignment operators
-                            (<code>??=</code>, <code>||=</code>,
-                            <code>&amp;&amp;=</code>) are banned.
+                            Logical assignment operators (<code>??=</code>,
+                            <code>||=</code>, <code>&amp;&amp;=</code>) are
+                            banned.
                         </div>
                     </div>
                     <div class="rule-item">
-                        <div class="rule-name">
-                            no-destructuring-default
-                        </div>
+                        <div class="rule-name">no-destructuring-default</div>
                         <div class="rule-desc">
-                            Defaults inside destructuring patterns
-                            (<code>const { x = 5 } = obj</code>) are
-                            banned. Use explicit null checks.
+                            Defaults inside destructuring patterns (<code
+                                >const { x = 5 } = obj</code
+                            >) are banned. Use explicit null checks.
                         </div>
                     </div>
                     <div class="rule-item">
                         <div class="rule-name">no-generators</div>
                         <div class="rule-desc">
-                            Generator functions (<code>function*</code>)
-                            and <code>yield</code> are banned.
+                            Generator functions (<code>function*</code>) and
+                            <code>yield</code> are banned.
                         </div>
                     </div>
                     <div class="rule-item">
                         <div class="rule-name">no-loop-func</div>
                         <div class="rule-desc">
-                            Function declarations or expressions inside
-                            loops are banned — they close over a mutable
-                            loop variable.
+                            Function declarations or expressions inside loops
+                            are banned — they close over a mutable loop
+                            variable.
                         </div>
                     </div>
                     <div class="rule-item">
@@ -778,15 +818,15 @@
                     <div class="rule-item">
                         <div class="rule-name">no-self-compare</div>
                         <div class="rule-desc">
-                            Comparing a value to itself
-                            (<code>x === x</code>) is always a bug.
+                            Comparing a value to itself (<code>x === x</code>)
+                            is always a bug.
                         </div>
                     </div>
                     <div class="rule-item">
                         <div class="rule-name">no-self-assign</div>
                         <div class="rule-desc">
-                            Assigning a variable to itself
-                            (<code>x = x</code>) is always a bug.
+                            Assigning a variable to itself (<code>x = x</code>)
+                            is always a bug.
                         </div>
                     </div>
                 </div>
@@ -810,8 +850,8 @@
                         <div class="rule-name">no-class</div>
                         <div class="rule-desc">
                             Classes are banned. Use a plain
-                            <code>type</code> for data and plain functions
-                            for behaviour.
+                            <code>type</code> for data and plain functions for
+                            behaviour.
                         </div>
                     </div>
                     <div class="rule-item">
@@ -840,8 +880,8 @@
                         <div class="rule-name">no-assertion</div>
                         <div class="rule-desc">
                             Type assertions (<code>value as T</code>) are
-                            banned. Parse and validate at boundaries;
-                            return a result tuple.
+                            banned. Parse and validate at boundaries; return a
+                            result tuple.
                         </div>
                     </div>
                     <div class="rule-item">
@@ -856,8 +896,8 @@
                         <div class="rule-desc">
                             <code>@ts-ignore</code>,
                             <code>@ts-expect-error</code>, and
-                            <code>@ts-nocheck</code> are banned. Fix the
-                            type error.
+                            <code>@ts-nocheck</code> are banned. Fix the type
+                            error.
                         </div>
                     </div>
                     <div class="rule-item">
@@ -871,33 +911,30 @@
                     <div class="rule-item">
                         <div class="rule-name">no-optional-property</div>
                         <div class="rule-desc">
-                            Optional properties (<code>prop?: T</code>)
-                            are banned. Use <code>prop: T | null</code>.
+                            Optional properties (<code>prop?: T</code>) are
+                            banned. Use <code>prop: T | null</code>.
                         </div>
                     </div>
                     <div class="rule-item">
                         <div class="rule-name">no-optional-parameter</div>
                         <div class="rule-desc">
-                            Optional parameters (<code>x?: T</code>) are
-                            banned. Use <code>x: T | null</code>.
+                            Optional parameters (<code>x?: T</code>) are banned.
+                            Use <code>x: T | null</code>.
                         </div>
                     </div>
                     <div class="rule-item">
-                        <div class="rule-name">
-                            require-readonly-property
-                        </div>
+                        <div class="rule-name">require-readonly-property</div>
                         <div class="rule-desc">
                             Every object type property must be
-                            <code>readonly</code>. Mutation is explicit,
-                            not the default.
+                            <code>readonly</code>. Mutation is explicit, not the
+                            default.
                         </div>
                     </div>
                     <div class="rule-item">
                         <div class="rule-name">require-readonly-arrays</div>
                         <div class="rule-desc">
                             Array type annotations must use
-                            <code>readonly T[]</code>. Not
-                            <code>T[]</code>, not
+                            <code>readonly T[]</code>. Not <code>T[]</code>, not
                             <code>Array&lt;T&gt;</code>.
                         </div>
                     </div>
@@ -905,42 +942,37 @@
                         <div class="rule-name">no-array-generic</div>
                         <div class="rule-desc">
                             <code>Array&lt;T&gt;</code> and
-                            <code>ReadonlyArray&lt;T&gt;</code> in
-                            annotations are banned. Use
-                            <code>readonly T[]</code>.
+                            <code>ReadonlyArray&lt;T&gt;</code> in annotations
+                            are banned. Use <code>readonly T[]</code>.
                         </div>
                     </div>
                     <div class="rule-item">
                         <div class="rule-name">no-intersection-types</div>
                         <div class="rule-desc">
-                            Intersection types (<code>A &amp; B</code>)
-                            are banned. Spell out the combined fields, or
-                            compose by value.
+                            Intersection types (<code>A &amp; B</code>) are
+                            banned. Spell out the combined fields, or compose by
+                            value.
                         </div>
                     </div>
                     <div class="rule-item">
                         <div class="rule-name">no-conditional-type</div>
                         <div class="rule-desc">
-                            Conditional types
-                            (<code>T extends U ? X : Y</code>) are
-                            banned.
+                            Conditional types (<code>T extends U ? X : Y</code>)
+                            are banned.
                         </div>
                     </div>
                     <div class="rule-item">
                         <div class="rule-name">no-mapped-type</div>
                         <div class="rule-desc">
-                            Mapped types
-                            (<code>{ [K in keyof T]: ... }</code>) are
-                            banned.
+                            Mapped types (<code>{ [K in keyof T]: ... }</code>)
+                            are banned.
                         </div>
                     </div>
                     <div class="rule-item">
-                        <div class="rule-name">
-                            no-template-literal-type
-                        </div>
+                        <div class="rule-name">no-template-literal-type</div>
                         <div class="rule-desc">
-                            Template literal types
-                            (<code>`prefix-${T}`</code>) are banned.
+                            Template literal types (<code>`prefix-${T}`</code>)
+                            are banned.
                         </div>
                     </div>
                     <div class="rule-item">
@@ -960,9 +992,8 @@
                     <div class="rule-item">
                         <div class="rule-name">no-index-signature</div>
                         <div class="rule-desc">
-                            Index signatures
-                            (<code>[k: string]: T</code>) are banned. Use
-                            <code>Map&lt;K, V&gt;</code>.
+                            Index signatures (<code>[k: string]: T</code>) are
+                            banned. Use <code>Map&lt;K, V&gt;</code>.
                         </div>
                     </div>
                     <div class="rule-item">
@@ -971,22 +1002,19 @@
                             <code>Partial</code>, <code>Required</code>,
                             <code>Record</code>, <code>InstanceType</code>,
                             <code>ConstructorParameters</code>, and
-                            <code>ThisType</code> are banned. Spell out
-                            the shape.
+                            <code>ThisType</code> are banned. Spell out the
+                            shape.
                         </div>
                     </div>
                     <div class="rule-item">
                         <div class="rule-name">no-readonly-wrapper</div>
                         <div class="rule-desc">
-                            <code>Readonly&lt;T&gt;</code> wrapper is
-                            banned. Mark each property
-                            <code>readonly</code> directly.
+                            <code>Readonly&lt;T&gt;</code> wrapper is banned.
+                            Mark each property <code>readonly</code> directly.
                         </div>
                     </div>
                     <div class="rule-item">
-                        <div class="rule-name">
-                            no-primitive-wrapper-types
-                        </div>
+                        <div class="rule-name">no-primitive-wrapper-types</div>
                         <div class="rule-desc">
                             Boxed primitive types (<code>String</code>,
                             <code>Number</code>, <code>Boolean</code>,
@@ -997,15 +1025,16 @@
                     <div class="rule-item">
                         <div class="rule-name">no-constructor-type</div>
                         <div class="rule-desc">
-                            Constructor type signatures
-                            (<code>new (...args): T</code>) are banned.
+                            Constructor type signatures (<code
+                                >new (...args): T</code
+                            >) are banned.
                         </div>
                     </div>
                     <div class="rule-item">
                         <div class="rule-name">no-function-type</div>
                         <div class="rule-desc">
-                            The <code>Function</code> type is banned. Use
-                            an explicit call signature type.
+                            The <code>Function</code> type is banned. Use an
+                            explicit call signature type.
                         </div>
                     </div>
                     <div class="rule-item">
@@ -1018,8 +1047,8 @@
                     <div class="rule-item">
                         <div class="rule-name">no-empty-object-type</div>
                         <div class="rule-desc">
-                            The empty object type <code>{}</code> in
-                            annotations is banned.
+                            The empty object type <code>{}</code> in annotations
+                            is banned.
                         </div>
                     </div>
                     <div class="rule-item">
@@ -1031,24 +1060,24 @@
                     <div class="rule-item">
                         <div class="rule-name">no-literal-boolean-type</div>
                         <div class="rule-desc">
-                            <code>true | false</code> is banned — it is
-                            just <code>boolean</code>.
+                            <code>true | false</code> is banned — it is just
+                            <code>boolean</code>.
                         </div>
                     </div>
                     <div class="rule-item">
                         <div class="rule-name">no-overloads</div>
                         <div class="rule-desc">
-                            Function overload signatures are banned. Use a
-                            union parameter type and handle variants inside
-                            the body.
+                            Function overload signatures are banned. Use a union
+                            parameter type and handle variants inside the body.
                         </div>
                     </div>
                     <div class="rule-item">
                         <div class="rule-name">no-namespace</div>
                         <div class="rule-desc">
-                            TypeScript namespaces and modules
-                            (<code>namespace</code> /
-                            <code>module</code> declarations) are banned.
+                            TypeScript namespaces and modules (<code
+                                >namespace</code
+                            >
+                            / <code>module</code> declarations) are banned.
                         </div>
                     </div>
                     <div class="rule-item">
@@ -1058,8 +1087,8 @@
                     <div class="rule-item">
                         <div class="rule-name">no-this</div>
                         <div class="rule-desc">
-                            <code>this</code> is banned in all forms — no
-                            method context, no <code>this</code>
+                            <code>this</code> is banned in all forms — no method
+                            context, no <code>this</code>
                             parameters.
                         </div>
                     </div>
@@ -1076,9 +1105,8 @@
                     <div class="rule-item">
                         <div class="rule-name">no-default-export</div>
                         <div class="rule-desc">
-                            Default exports are banned. Named exports only
-                            — every export is addressable and
-                            tree-shakeable.
+                            Default exports are banned. Named exports only —
+                            every export is addressable and tree-shakeable.
                         </div>
                     </div>
                     <div class="rule-item">
@@ -1091,16 +1119,15 @@
                     <div class="rule-item">
                         <div class="rule-name">no-index-import</div>
                         <div class="rule-desc">
-                            Importing from an <code>index</code> file or a
-                            bare directory is banned. Import the specific
-                            file.
+                            Importing from an <code>index</code> file or a bare
+                            directory is banned. Import the specific file.
                         </div>
                     </div>
                     <div class="rule-item">
                         <div class="rule-name">no-useless-empty-export</div>
                         <div class="rule-desc">
-                            Empty <code>export {}</code> statements that
-                            serve no purpose are banned.
+                            Empty <code>export {}</code> statements that serve
+                            no purpose are banned.
                         </div>
                     </div>
                 </div>
@@ -1116,8 +1143,8 @@
                     <div class="rule-item">
                         <div class="rule-name">prefer-template</div>
                         <div class="rule-desc">
-                            String concatenation with <code>+</code> is
-                            banned when a template literal would work. Use
+                            String concatenation with <code>+</code> is banned
+                            when a template literal would work. Use
                             <code>`hello ${name}`</code>.
                         </div>
                     </div>
@@ -1131,8 +1158,8 @@
                     <div class="rule-item">
                         <div class="rule-name">no-unary-plus</div>
                         <div class="rule-desc">
-                            Unary <code>+</code> for coercion is banned.
-                            Use <code>Number(value)</code>.
+                            Unary <code>+</code> for coercion is banned. Use
+                            <code>Number(value)</code>.
                         </div>
                     </div>
                     <div class="rule-item">
@@ -1148,20 +1175,18 @@
                         <div class="rule-desc">
                             <code>JSON.parse</code>,
                             <code>JSON.stringify</code>, and bare
-                            <code>fetch</code> are banned. Use the safe
-                            wrappers from <code>shotscript/std</code>.
+                            <code>fetch</code> are banned. Use the safe wrappers
+                            from <code>shotscript/std</code>.
                         </div>
                     </div>
                     <div class="rule-item">
-                        <div class="rule-name">
-                            no-metaprogramming-globals
-                        </div>
+                        <div class="rule-name">no-metaprogramming-globals</div>
                         <div class="rule-desc">
                             <code>Proxy</code>, <code>Reflect</code>,
                             <code>Object.assign</code>,
                             <code>Object.create</code>,
-                            <code>Object.defineProperty</code>, and
-                            similar metaprogramming APIs are banned.
+                            <code>Object.defineProperty</code>, and similar
+                            metaprogramming APIs are banned.
                         </div>
                     </div>
                     <div class="rule-item">
@@ -1175,33 +1200,30 @@
                     <div class="rule-item">
                         <div class="rule-name">no-new-user-types</div>
                         <div class="rule-desc">
-                            <code>new</code> on user-defined constructors
-                            is banned. No classes means no
-                            <code>new</code>.
+                            <code>new</code> on user-defined constructors is
+                            banned. No classes means no <code>new</code>.
                         </div>
                     </div>
                     <div class="rule-item">
                         <div class="rule-name">no-delete</div>
                         <div class="rule-desc">
-                            The <code>delete</code> operator is banned.
-                            Build a new object without the key.
+                            The <code>delete</code> operator is banned. Build a
+                            new object without the key.
                         </div>
                     </div>
                     <div class="rule-item">
                         <div class="rule-name">no-in</div>
                         <div class="rule-desc">
-                            The <code>in</code> operator is banned. Use
-                            explicit property checks or discriminated
-                            unions.
+                            The <code>in</code> operator is banned. Use explicit
+                            property checks or discriminated unions.
                         </div>
                     </div>
                     <div class="rule-item">
                         <div class="rule-name">no-bitwise</div>
                         <div class="rule-desc">
                             Bitwise operators (<code>&amp;</code>,
-                            <code>|</code>, <code>^</code>,
-                            <code>~</code>, <code>&lt;&lt;</code>,
-                            <code>&gt;&gt;</code>,
+                            <code>|</code>, <code>^</code>, <code>~</code>,
+                            <code>&lt;&lt;</code>, <code>&gt;&gt;</code>,
                             <code>&gt;&gt;&gt;</code>) are banned.
                         </div>
                     </div>
@@ -1214,8 +1236,8 @@
                     <div class="rule-item">
                         <div class="rule-name">no-arguments</div>
                         <div class="rule-desc">
-                            The <code>arguments</code> object is banned.
-                            Use explicit rest parameters.
+                            The <code>arguments</code> object is banned. Use
+                            explicit rest parameters.
                         </div>
                     </div>
                     <div class="rule-item">
@@ -1223,8 +1245,8 @@
                         <div class="rule-desc">
                             <code>void expr</code> is banned except as an
                             explicit promise discard:
-                            <code>void someCall()</code> is the only
-                            permitted form.
+                            <code>void someCall()</code> is the only permitted
+                            form.
                         </div>
                     </div>
                     <div class="rule-item">
@@ -1236,40 +1258,40 @@
                     <div class="rule-item">
                         <div class="rule-name">no-empty</div>
                         <div class="rule-desc">
-                            Empty block bodies (<code>{}</code>) on
-                            functions, <code>if</code>,
-                            <code>while</code>, etc. are banned.
+                            Empty block bodies (<code>{}</code>) on functions,
+                            <code>if</code>, <code>while</code>, etc. are
+                            banned.
                         </div>
                     </div>
                     <div class="rule-item">
                         <div class="rule-name">no-empty-pattern</div>
                         <div class="rule-desc">
-                            Empty destructuring patterns
-                            (<code>const {} = x</code>,
-                            <code>const [] = x</code>) are banned.
+                            Empty destructuring patterns (<code
+                                >const {} = x</code
+                            >, <code>const [] = x</code>) are banned.
                         </div>
                     </div>
                     <div class="rule-item">
                         <div class="rule-name">no-lone-blocks</div>
                         <div class="rule-desc">
-                            Standalone block statements
-                            (<code>{ ... }</code> not attached to control
-                            flow) are banned.
+                            Standalone block statements (<code>{ ... }</code>
+                            not attached to control flow) are banned.
                         </div>
                     </div>
                     <div class="rule-item">
                         <div class="rule-name">no-unused-expressions</div>
                         <div class="rule-desc">
-                            Expressions whose result is not used are
-                            banned. Every expression must be assigned,
-                            returned, or have a deliberate side effect.
+                            Expressions whose result is not used are banned.
+                            Every expression must be assigned, returned, or have
+                            a deliberate side effect.
                         </div>
                     </div>
                     <div class="rule-item">
                         <div class="rule-name">no-useless-rename</div>
                         <div class="rule-desc">
-                            Renaming an import or export to the same name
-                            (<code>import { x as x }</code>) is banned.
+                            Renaming an import or export to the same name (<code
+                                >import { x as x }</code
+                            >) is banned.
                         </div>
                     </div>
                     <div class="rule-item">
@@ -1282,17 +1304,16 @@
                     <div class="rule-item">
                         <div class="rule-name">no-useless-concat</div>
                         <div class="rule-desc">
-                            Concatenation of two string literals
-                            (<code>"a" + "b"</code>) is banned — just
-                            write <code>"ab"</code>.
+                            Concatenation of two string literals (<code
+                                >"a" + "b"</code
+                            >) is banned — just write <code>"ab"</code>.
                         </div>
                     </div>
                     <div class="rule-item">
                         <div class="rule-name">no-useless-computed-key</div>
                         <div class="rule-desc">
-                            Computed property keys that are string
-                            literals (<code>{ ["x"]: 1 }</code>) are
-                            banned.
+                            Computed property keys that are string literals
+                            (<code>{ ["x"]: 1 }</code>) are banned.
                         </div>
                     </div>
                 </div>
