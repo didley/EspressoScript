@@ -444,9 +444,8 @@
                     <span class="fn-kind">sync</span>
                 </div>
                 <p class="fn-desc">
-                    Wraps any synchronous third-party call that might
-                    throw. Use when calling <code>node:*</code> or
-                    <code>bun:*</code> APIs that don't return tuples.
+                    Wraps any synchronous dependency call that might
+                    throw — any library that doesn't return tuples.
                 </p>
                 <pre><span class="kw">function</span> <span class="fn">toResult</span>&lt;<span class="ty">T</span>&gt;(<span class="op">fn</span>: () => <span class="ty">T</span>): <span class="ty">Result</span>&lt;<span class="ty">T</span>&gt;
 
@@ -459,9 +458,8 @@
                     <span class="fn-kind">async</span>
                 </div>
                 <p class="fn-desc">
-                    Wraps any async third-party call that might reject.
-                    Use when calling <code>node:*</code> or
-                    <code>bun:*</code> APIs that return plain Promises.
+                    Wraps any async dependency call that might reject —
+                    any library that returns plain Promises.
                 </p>
                 <pre><span class="kw">function</span> <span class="fn">toPromiseResult</span>&lt;<span class="ty">T</span>&gt;(
     <span class="op">fn</span>: () => <span class="ty">Promise</span>&lt;<span class="ty">T</span>&gt;,
