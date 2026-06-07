@@ -262,8 +262,8 @@
                 border-radius: 3px;
             }
 
-            /* terminal example */
-            .terminal-example {
+            /* ── Comparison ── */
+            .comparison {
                 display: grid;
                 grid-template-columns: 1fr 1fr;
                 gap: 0;
@@ -274,18 +274,36 @@
             }
 
             @media (max-width: 640px) {
-                .terminal-example {
-                    grid-template-columns: 1fr;
-                }
+                .comparison { grid-template-columns: 1fr; }
             }
 
-            .pane-file {
-                background: var(--surface);
+            .pane-label {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                padding: 0.6rem 1rem;
+                font-size: 0.72rem;
+                font-weight: 600;
+                letter-spacing: 0.06em;
+                text-transform: uppercase;
+                border-bottom: 1px solid var(--border);
             }
-            .pane-terminal {
-                background: #0a0a0d;
+
+            .pane-before .pane-label {
+                background: rgba(224, 92, 92, 0.08);
+                color: var(--red);
+            }
+            .pane-after .pane-label {
+                background: rgba(78, 201, 148, 0.08);
+                color: var(--green);
                 border-left: 1px solid var(--border);
             }
+            .pane-before { background: var(--surface); }
+            .pane-after  { background: #131318; border-left: 1px solid var(--border); }
+
+            .dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; }
+            .dot-red   { background: var(--red);   opacity: 0.7; }
+            .dot-green { background: var(--green); opacity: 0.7; }
 
             .pane-header {
                 display: flex;
@@ -496,53 +514,70 @@
             <div class="section-label">Example</div>
             <h2>What linting looks like.</h2>
             <p class="section-desc">
-                Run
-                <code>npx shotscript 'src/**/*.ts'</code> on any TypeScript
-                file. Violations exit non-zero with precise diagnostics.
+                Both sides use ShotScript formatting — 4-space indent, no
+                semis, 80-char. The only difference is whether the lint
+                rules pass.
             </p>
 
-            <div class="terminal-example">
-                <div class="pane-file">
-                    <div class="pane-header">src/user.ts</div>
-                    <pre><span style="color:var(--keyword)">import</span> { <span style="color:var(--type)">UserService</span> } <span style="color:var(--keyword)">from</span> <span style="color:var(--string)">'./services'</span>
+            <div class="comparison">
+                <div class="pane-before">
+                    <div class="pane-label">
+                        <span class="dot dot-red"></span>TypeScript
+                    </div>
+                    <pre><span class="kw">import</span> { <span class="fn">db</span> } <span class="kw">from</span> <span class="st">'./db'</span>
 
-<span style="color:var(--comment)">// ❌ arrow function, optional param</span>
-<span style="color:var(--keyword)">const</span> <span style="color:var(--fn)">getUser</span> = <span style="color:var(--keyword)">async</span> (id?: <span style="color:var(--type)">number</span>) =&gt; {
-  <span style="color:var(--comment)">// ❌ try/catch</span>
-  <span style="color:var(--keyword)">try</span> {
-    <span style="color:var(--keyword)">const</span> res = <span style="color:var(--keyword)">await</span> <span style="color:var(--fn)">fetch</span>(`/users/${id}`)
-    <span style="color:var(--comment)">// ❌ type assertion</span>
-    <span style="color:var(--keyword)">return</span> res.<span style="color:var(--fn)">json</span>() <span style="color:var(--keyword)">as</span> <span style="color:var(--type)">User</span>
-  } <span style="color:var(--keyword)">catch</span> (e) {
-    <span style="color:var(--comment)">// ❌ throw</span>
-    <span style="color:var(--keyword)">throw new</span> <span style="color:var(--type)">Error</span>(`Failed: ${e}`)
-  }
-}</pre>
+<span class="cm">// ❌ interface (use type)</span>
+<span class="kw">interface</span> <span class="ty">User</span> {
+    <span class="id">id</span>: <span class="ty">number</span>
+    <span class="id">name</span>: <span class="ty">string</span>
+    <span class="cm">// ❌ optional property</span>
+    <span class="id">avatar</span>?: <span class="ty">string</span>
+}
+
+<span class="cm">// ❌ arrow function, optional param</span>
+<span class="kw">const</span> <span class="fn">findUser</span> = <span class="kw">async</span> (<span class="id">id</span>?: <span class="ty">number</span>) => {
+    <span class="cm">// ❌ try/catch</span>
+    <span class="kw">try</span> {
+        <span class="kw">const</span> <span class="id">res</span> = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="st">`/users/<span class="op">${</span><span class="id">id</span><span class="op">}</span>`</span>)
+        <span class="cm">// ❌ type assertion</span>
+        <span class="kw">return</span> <span class="id">res</span>.<span class="fn">json</span>() <span class="kw">as</span> <span class="ty">User</span>
+    } <span class="kw">catch</span> (<span class="id">e</span>) {
+        <span class="cm">// ❌ throw</span>
+        <span class="kw">throw new</span> <span class="ty">Error</span>(<span class="st">`findUser failed: <span class="op">${</span><span class="id">e</span><span class="op">}</span>`</span>)
+    }
+}
+
+<span class="cm">// ❌ arrow function</span>
+<span class="kw">const</span> <span class="fn">formatName</span> = (<span class="id">user</span>: <span class="ty">User</span>): <span class="ty">string</span> =>
+    <span class="id">user</span>.<span class="id">name</span>.<span class="fn">trim</span>()</pre>
                 </div>
-                <div class="pane-terminal">
-                    <div class="pane-header">terminal</div>
-                    <pre><span style="color:var(--muted)">$ npx shotscript 'src/**/*.ts'</span>
+                <div class="pane-after">
+                    <div class="pane-label">
+                        <span class="dot dot-green"></span>ShotScript
+                    </div>
+                    <pre><span class="kw">import type</span> { <span class="ty">PromiseResult</span> } <span class="kw">from</span> <span class="st">'shotscript/std'</span>
+<span class="kw">import</span> { <span class="fn">safeFetch</span>, <span class="fn">jsonParse</span> } <span class="kw">from</span> <span class="st">'shotscript/std'</span>
 
-<span style="color:var(--text)">src/user.ts</span><span style="color:var(--muted)">:4:7</span>   <span style="color:var(--red)">no-arrow-functions</span>
-            Arrow functions are banned.
+<span class="kw">type</span> <span class="ty">User</span> = {
+    <span class="kw">readonly</span> <span class="id">id</span>: <span class="ty">number</span>
+    <span class="kw">readonly</span> <span class="id">name</span>: <span class="ty">string</span>
+    <span class="cm">// null — the only absent value</span>
+    <span class="kw">readonly</span> <span class="id">avatar</span>: <span class="ty">string</span> | <span class="kw">null</span>
+}
 
-<span style="color:var(--text)">src/user.ts</span><span style="color:var(--muted)">:4:20</span>  <span style="color:var(--red)">no-optional-parameter</span>
-            Optional parameters are banned.
-            Use <span style="color:var(--type)">id: number | null</span>.
+<span class="kw">async function</span> <span class="fn">findUser</span>(
+    <span class="id">id</span>: <span class="ty">number</span>,
+): <span class="ty">PromiseResult</span>&lt;<span class="ty">User</span>&gt; {
+    <span class="kw">const</span> [<span class="id">res</span>, <span class="id">err</span>] = <span class="kw">await</span> <span class="fn">safeFetch</span>(<span class="st">`/users/<span class="op">${</span><span class="id">id</span><span class="op">}</span>`</span>)
+    <span class="kw">if</span> (<span class="id">err</span> !== <span class="kw">null</span>) {
+        <span class="kw">return</span> [<span class="kw">null</span>, <span class="id">err</span>]
+    }
+    <span class="kw">return</span> <span class="fn">jsonParse</span>&lt;<span class="ty">User</span>&gt;(<span class="kw">await</span> <span class="id">res</span>.<span class="fn">text</span>())
+}
 
-<span style="color:var(--text)">src/user.ts</span><span style="color:var(--muted)">:6:3</span>   <span style="color:var(--red)">no-try</span>
-            try/catch is banned. Return errors
-            as values instead.
-
-<span style="color:var(--text)">src/user.ts</span><span style="color:var(--muted)">:9:26</span>  <span style="color:var(--red)">no-assertion</span>
-            Type assertions (as T) are banned.
-
-<span style="color:var(--text)">src/user.ts</span><span style="color:var(--muted)">:12:5</span>  <span style="color:var(--red)">no-throw</span>
-            throw is banned. Return
-            <span style="color:var(--type)">[null, new Error(...)]</span>.
-
-<span style="color:var(--muted)">──────────────────────────────────</span>
-<span style="color:var(--red)">5 violations</span> · exit 1</pre>
+<span class="kw">function</span> <span class="fn">formatName</span>(<span class="id">user</span>: <span class="ty">User</span>): <span class="ty">string</span> {
+    <span class="kw">return</span> <span class="id">user</span>.<span class="id">name</span>.<span class="fn">trim</span>()
+}</pre>
                 </div>
             </div>
         </div>
@@ -1338,10 +1373,7 @@
 
         <footer>
             <p>
-                ShotScript is pre-v1 and open source. ·
-                <a href="https://github.com/didley/shotscript" class="ext"
-                    >shotscript on GitHub</a
-                >
+                By <a href="https://github.com/didley" target="_blank" rel="noopener">didley</a> in Melbourne (Naarm), Australia.
             </p>
         </footer>
     </body>
