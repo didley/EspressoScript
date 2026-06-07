@@ -152,7 +152,6 @@ export const rules: Rule[] = [
     noIndexImport,
     noOverloads,
     noNamespace,
-    // T04 type rules
     noAny,
     noAssertion,
     noNonNull,
