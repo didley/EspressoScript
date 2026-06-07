@@ -2,7 +2,8 @@
 // CLI entry point — runs the ShotScript linter over glob patterns from argv
 // and exits with code 1 if any diagnostics are found.
 // Usage: shotscript 'src/**/*.ts'
-import { readFileSync } from 'node:fs'
+import { readFileSync, mkdirSync, readdirSync, copyFileSync } from 'node:fs'
+import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 import { glob } from 'glob'
 import ts from 'typescript'
@@ -12,8 +13,22 @@ import type { Diagnostic } from './lint/types.js'
 const patterns = process.argv.slice(2)
 
 if (patterns.length === 0) {
-    process.stderr.write('Usage: shotscript <glob> [...glob]\n')
+    process.stderr.write('Usage: shotscript <glob> [...glob]\n       shotscript commands -- install Claude Code skills\n')
     process.exit(1)
+}
+
+if (patterns[0] === 'commands') {
+    const pkgRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
+    const src = path.join(pkgRoot, 'commands')
+    const dest = path.join(process.cwd(), '.claude', 'commands')
+    mkdirSync(dest, { recursive: true })
+    const files = readdirSync(src)
+    for (const file of files) {
+        copyFileSync(path.join(src, file), path.join(dest, file))
+    }
+    process.stdout.write('ShotScript Claude skills installed to .claude/commands/\n')
+    process.stdout.write('Available in Claude Code: /shotscript-fix  /shotscript-migrate  /shotscript-explain\n')
+    process.exit(0)
 }
 
 const fileGroups = []

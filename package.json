@@ -29,6 +29,7 @@
   "files": [
     "dist/",
     "templates/",
+    "commands/",
     "src/tsconfig/",
     "src/fmt/"
   ],

@@ -145,3 +145,23 @@ Key bans: `no-throw`, `no-try`, `no-arrow-functions`, `no-any`, `no-assertion`, 
 ## AGENTS.md
 
 Drop the [AGENTS.md](./AGENTS.md) into any project. AI coding assistants will generate ShotScript-compliant code from the first message — no rule-by-rule prompting.
+
+---
+
+## Claude Code skills
+
+Three slash commands for [Claude Code](https://claude.ai/code) — install with:
+
+```sh
+npx shotscript commands
+```
+
+This copies three commands into `.claude/commands/` in your project.
+
+| Command | What it does |
+|---|---|
+| `/shotscript-fix` | Runs the linter and fixes all violations in-place — mechanical and structural |
+| `/shotscript-migrate` | Staged migration for an existing TypeScript codebase: mechanical fixes first, then arrow functions, classes, and error-handling rewrites |
+| `/shotscript-explain [rule]` | Explains any ShotScript rule or pasted violation with a before/after example |
+
+The skills read your actual source files and follow the same rules as `AGENTS.md` — they won't introduce new violations while fixing existing ones.
