@@ -29,7 +29,7 @@ Five tools. One way to write TypeScript.
 
 ShotScript is designed for greenfield projects and teams starting fresh. It is probably **not** what you want if:
 
-- **You have an existing codebase.** Rules like `no-class`, `no-promise`, `no-throw`, and `no-arrow-functions` require architectural rewrites, not mechanical search-replace. There is no gradual migration path.
+- **You have an existing codebase.** Rules like `no-class`, `no-promise`, `no-throw`, and `no-arrow-functions` require architectural rewrites, not mechanical search-replace. There is no gradual migration path — though [`/shotscript-migrate`](#claude-code-skills) can handle the rewrite end-to-end.
 - **You're using a class-based framework.** Angular, NestJS, and similar frameworks are built around classes, constructors, and decorators — constructs ShotScript bans outright.
 - **You want to opt in rule-by-rule.** There is no config surface. The rules are interdependent by design: `no-throw`/`no-try` only makes sense once you have `PromiseResult`; `require-async-tuple-return` only makes sense once raw Promises are gone.
 
