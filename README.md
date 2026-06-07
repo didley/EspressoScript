@@ -14,7 +14,7 @@ TypeScript has too many ways to write the same thing. ShotScript picks one — a
 
 ## What it is
 
-Four tools. One way to write TypeScript.
+Five tools. One way to write TypeScript.
 
 | | |
 |---|---|
