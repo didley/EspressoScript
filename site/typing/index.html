@@ -231,16 +231,12 @@
 
             .comparison {
                 display: grid;
-                grid-template-columns: 1fr 1fr;
+                grid-template-columns: 1fr;
                 gap: 0;
                 border: 1px solid var(--border);
                 border-radius: 10px;
                 overflow: hidden;
                 margin-bottom: 2.5rem;
-            }
-
-            @media (max-width: 640px) {
-                .comparison { grid-template-columns: 1fr; }
             }
 
             .pane-label {
@@ -262,10 +258,10 @@
             .pane-after .pane-label {
                 background: rgba(78, 201, 148, 0.08);
                 color: var(--green);
-                border-left: 1px solid var(--border);
+                border-top: 1px solid var(--border);
             }
             .pane-before { background: var(--surface); }
-            .pane-after { background: #131318; border-left: 1px solid var(--border); }
+            .pane-after { background: #131318; border-top: 1px solid var(--border); }
 
             .dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; }
             .dot-red { background: var(--red); opacity: 0.7; }

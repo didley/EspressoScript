@@ -231,16 +231,12 @@
 
             .comparison {
                 display: grid;
-                grid-template-columns: 1fr 1fr;
+                grid-template-columns: 1fr;
                 gap: 0;
                 border: 1px solid var(--border);
                 border-radius: 10px;
                 overflow: hidden;
                 margin-bottom: 2.5rem;
-            }
-
-            @media (max-width: 640px) {
-                .comparison { grid-template-columns: 1fr; }
             }
 
             .pane-label {
@@ -262,10 +258,10 @@
             .pane-after .pane-label {
                 background: rgba(78, 201, 148, 0.08);
                 color: var(--green);
-                border-left: 1px solid var(--border);
+                border-top: 1px solid var(--border);
             }
             .pane-before { background: var(--surface); }
-            .pane-after { background: #131318; border-left: 1px solid var(--border); }
+            .pane-after { background: #131318; border-top: 1px solid var(--border); }
 
             .dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; }
             .dot-red { background: var(--red); opacity: 0.7; }
@@ -455,6 +451,11 @@
                 color: var(--muted);
                 border-top: 1px solid var(--border);
             }
+            .fmt-highlight { max-width: 860px; margin: 0 auto; padding: 0 2rem 3rem; }
+            .diff-add { color: var(--green); background: rgba(78,201,148,0.07); display: block; margin: 0 -1.25rem; padding: 0 1.25rem; }
+            .diff-rem { color: var(--red); background: rgba(224,92,92,0.07); display: block; margin: 0 -1.25rem; padding: 0 1.25rem; }
+            .diff-ctx { color: var(--muted); display: block; }
+            .diff-hunk { color: var(--comment); display: block; }
         </style>
     </head>
     <body>
@@ -479,6 +480,53 @@
             <div class="page-badge">ShotScriptFmt</div>
             <h1>Zero-config formatting. <em>No debates.</em></h1>
             <p class="sub">Formatting optimised for minimum diffs and terminal previews. 80-char lines, no semicolons, 4-space indent, single quotes.</p>
+        </div>
+
+        <div class="fmt-highlight">
+            <div class="section-label">Minimal diffs</div>
+            <p class="section-desc">When everyone formats the same way, PRs show only logic changes — not whitespace, quote, or spacing noise.</p>
+
+            <div class="comparison">
+                <div class="pane-before">
+                    <div class="pane-label">
+                        <span class="dot dot-red"></span>without shared formatting
+                    </div>
+                    <pre><span class="diff-hunk">@@ -1,10 +1,10 @@</span><span class="diff-rem">-import {UserService} from "./services";</span><span class="diff-add">+import { UserService } from './services'</span><span class="diff-rem">-import {Database, Config} from "./db";</span><span class="diff-add">+import { Database, Config } from './db'</span><span class="diff-ctx"> </span><span class="diff-rem">-async function getUser(id:number) {</span><span class="diff-add">+async function getUser(id: number, fallback: User | null) {</span><span class="diff-rem">-  const svc = {db:getDb()}</span><span class="diff-add">+    const svc = { db: getDb() }</span><span class="diff-rem">-  return findUserById(svc,id)</span><span class="diff-add">+    return findUserById(svc, id) ?? fallback</span><span class="diff-ctx"> }</span></pre>
+                </div>
+                <div class="pane-after">
+                    <div class="pane-label">
+                        <span class="dot dot-green"></span>ShotScriptFmt
+                    </div>
+                    <pre><span class="diff-hunk">@@ -1,7 +1,7 @@</span><span class="diff-ctx"> import { UserService } from './services'</span><span class="diff-ctx"> import { Database, Config } from './db'</span><span class="diff-ctx"> </span><span class="diff-rem">-async function getUser(id: number) {</span><span class="diff-add">+async function getUser(id: number, fallback: User | null) {</span><span class="diff-ctx">     const svc = { db: getDb() }</span><span class="diff-rem">-    return findUserById(svc, id)</span><span class="diff-add">+    return findUserById(svc, id) ?? fallback</span><span class="diff-ctx"> }</span></pre>
+                </div>
+            </div>
+
+            <div class="section-label">Fits narrow terminals</div>
+            <p class="section-desc">80-char lines fit cleanly in a split terminal. Longer limits force horizontal scroll on one side.</p>
+
+            <div class="comparison">
+                <div class="pane-before">
+                    <div class="pane-label">
+                        <span class="dot dot-red"></span>120-char limit
+                    </div>
+                    <pre><span class="kw">function</span> <span class="fn">createOrder</span>(<span class="op">userId</span>: <span class="ty">number</span>, <span class="op">items</span>: <span class="kw">readonly</span> <span class="ty">Item</span>[], <span class="op">shippingAddress</span>: <span class="ty">Address</span>, <span class="op">paymentMethod</span>: <span class="ty">PaymentMethod</span>): <span class="ty">Result</span>&lt;<span class="ty">Order</span>&gt; {
+    <span class="cm">// ...</span>
+}</pre>
+                </div>
+                <div class="pane-after">
+                    <div class="pane-label">
+                        <span class="dot dot-green"></span>ShotScriptFmt — 80 chars
+                    </div>
+                    <pre><span class="kw">function</span> <span class="fn">createOrder</span>(
+    <span class="op">userId</span>: <span class="ty">number</span>,
+    <span class="op">items</span>: <span class="kw">readonly</span> <span class="ty">Item</span>[],
+    <span class="op">shippingAddress</span>: <span class="ty">Address</span>,
+    <span class="op">paymentMethod</span>: <span class="ty">PaymentMethod</span>,
+): <span class="ty">Result</span>&lt;<span class="ty">Order</span>&gt; {
+    <span class="cm">// ...</span>
+}</pre>
+                </div>
+            </div>
         </div>
 
         <div class="content">
