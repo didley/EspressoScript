@@ -780,11 +780,10 @@
             <div class="section-label">The problem</div>
             <h2>Too many ways to write the same thing.</h2>
             <p class="section-desc">
-                TypeScript lets you declare variables three ways, write
-                functions four ways, handle errors five ways. Reading unfamiliar
-                code is hard. Code review is harder. LLM-assisted generation
-                amplifies every inconsistency — more valid forms means more ways
-                to generate subtly wrong code.
+                TypeScript gives you three ways to declare variables, four ways
+                to write functions, five ways to handle errors. More forms means
+                harder reads, harder reviews, and more ways for LLMs to generate
+                subtly wrong code.
             </p>
 
             <div class="reduction-list">
@@ -818,81 +817,6 @@
                 <strong>ShotScript removes <a href="/lint/#syntax-reduction"><span class="reduction-pct">~79%</span></a> of TypeScript's ways to write
                 the same thing</strong> and standardises the rest to one. Your
                 files are unchanged — it's a list of rules, not a compiler.
-            </div>
-
-            <div class="rule-grid">
-                <div class="rule-card">
-                    <div class="rule-name">no-throw / no-try</div>
-                    <div class="rule-desc">
-                        Errors are values — return
-                        <code>PromiseResult&lt;T, E&gt;</code> tuples. Failure
-                        is in the type signature, not the air.
-                    </div>
-                </div>
-                <div class="rule-card">
-                    <div class="rule-name">
-                        no-undefined-type / no-optional-property
-                    </div>
-                    <div class="rule-desc">
-                        <code>null</code> is the only absent value. No
-                        <code>?</code>, no <code>| undefined</code> — one way to
-                        say "nothing."
-                    </div>
-                </div>
-                <div class="rule-card">
-                    <div class="rule-name">
-                        require-readonly-property / require-readonly-arrays
-                    </div>
-                    <div class="rule-desc">
-                        Every field and array is readonly by default. Mutation
-                        is opt-in and explicit.
-                    </div>
-                </div>
-                <div class="rule-card">
-                    <div class="rule-name">
-                        no-any / no-assertion / no-non-null
-                    </div>
-                    <div class="rule-desc">
-                        Type safety is not optional. <code>any</code>,
-                        <code>as</code>, <code>!</code>, and
-                        <code>@ts-ignore</code> are all banned.
-                    </div>
-                </div>
-                <div class="rule-card">
-                    <div class="rule-name">no-class / no-this</div>
-                    <div class="rule-desc">
-                        Plain <code>type</code> + plain functions. No hidden
-                        state, no inheritance, no <code>this</code>.
-                    </div>
-                </div>
-                <div class="rule-card">
-                    <div class="rule-name">no-arrow-functions</div>
-                    <div class="rule-desc">
-                        Every function is named and grep-able. Callbacks become
-                        testable, findable units.
-                    </div>
-                </div>
-                <div class="rule-card">
-                    <div class="rule-name">no-interface / no-enum</div>
-                    <div class="rule-desc">
-                        One way to define a shape: <code>type</code>. No
-                        parallel declaration syntax.
-                    </div>
-                </div>
-                <div class="rule-card">
-                    <div class="rule-name">no-intersection-types</div>
-                    <div class="rule-desc">
-                        <code>&amp;</code> is banned. Spell every field out
-                        directly — flat types are fully readable where they're
-                        defined, with no hidden merges to untangle.
-                    </div>
-                </div>
-                <div class="rule-card">
-                    <div class="rule-name">no-ternary</div>
-                    <div class="rule-desc">
-                        If/else forces names onto branches. Nesting disappears.
-                    </div>
-                </div>
             </div>
         </section>
 
