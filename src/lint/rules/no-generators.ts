@@ -11,10 +11,10 @@ export const noGenerators: Rule = {
             node.asteriskToken !== undefined
         ) {
             const pos = posOf(ctx.sourceFile, node)
-            ctx.push({ ...pos, rule: 'no-generators', message: 'Generators are not allowed.' })
+            ctx.report({ ...pos, rule: 'no-generators', message: 'Generators are not allowed.' })
         } else if (ts.isYieldExpression(node)) {
             const pos = posOf(ctx.sourceFile, node)
-            ctx.push({ ...pos, rule: 'no-generators', message: 'Generators are not allowed.' })
+            ctx.report({ ...pos, rule: 'no-generators', message: 'Generators are not allowed.' })
         }
     },
 }

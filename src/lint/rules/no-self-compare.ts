@@ -23,6 +23,6 @@ export const noSelfCompare: Rule = {
         const rText = nodeText(node.right, ctx.sourceFile)
         if (lText !== rText) return
         const pos = posOf(ctx.sourceFile, node)
-        ctx.push({ ...pos, rule: 'no-self-compare', message: 'Comparing a value to itself is a bug or a NaN-check abuse — use `Number.isNaN()`.' })
+        ctx.report({ ...pos, rule: 'no-self-compare', message: 'Comparing a value to itself is a bug or a NaN-check abuse — use `Number.isNaN()`.' })
     },
 }

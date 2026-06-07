@@ -8,6 +8,6 @@ export const noForIn: Rule = {
     visit(node, ctx): void {
         if (!ts.isForInStatement(node)) return
         const pos = posOf(ctx.sourceFile, node)
-        ctx.push({ ...pos, rule: 'no-for-in', message: '`for...in` is not allowed. Use `for...of` or indexed `for`.' })
+        ctx.report({ ...pos, rule: 'no-for-in', message: '`for...in` is not allowed. Use `for...of` or indexed `for`.' })
     },
 }

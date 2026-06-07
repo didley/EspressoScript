@@ -8,6 +8,6 @@ export const noDelete: Rule = {
     visit(node, ctx): void {
         if (!ts.isDeleteExpression(node)) return
         const pos = posOf(ctx.sourceFile, node)
-        ctx.push({ ...pos, rule: 'no-delete', message: '`delete` is not allowed.' })
+        ctx.report({ ...pos, rule: 'no-delete', message: '`delete` is not allowed.' })
     },
 }

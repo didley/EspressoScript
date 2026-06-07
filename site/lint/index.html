@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>ShotScriptLint — 95+ rules enforcing one way of doing things.</title>
+        <title>ShotScriptLint — 110+ rules enforcing one way of doing things.</title>
         <style>
             :root {
                 --bg: #0d0d10;
@@ -632,7 +632,7 @@
 
         <div class="page-header">
             <div class="page-badge">ShotScriptLint</div>
-            <h1>95+ rules enforcing <em>one way of doing things.</em></h1>
+            <h1>110+ rules enforcing <em>one way of doing things.</em></h1>
             <p class="sub">A TypeScript language service plugin. Drop it into any project — no special runtime or file extension required. Violations surface as compiler errors in your editor and CI.</p>
         </div>
 
@@ -912,7 +912,7 @@
             <div class="rules-category" id="control-flow">
                 <div class="rules-category-header">
                     <h3>Control flow</h3>
-                    <span class="rule-count">14 rules</span>
+                    <span class="rule-count">15 rules</span>
                 </div>
                 <div class="rule-list">
                     <div class="rule-item">
@@ -971,13 +971,17 @@
                         <div class="rule-name">no-self-assign</div>
                         <div class="rule-desc">Assigning a variable to itself (<code>x = x</code>) is always a bug.</div>
                     </div>
+                    <div class="rule-item">
+                        <div class="rule-name">no-return-await</div>
+                        <div class="rule-desc"><code>return await x</code> is redundant; use <code>return x</code>. Since <code>no-try</code> bans try blocks, there is no case where <code>return await</code> changes behavior.</div>
+                    </div>
                 </div>
             </div>
 
             <div class="rules-category" id="types">
                 <div class="rules-category-header">
                     <h3>Types</h3>
-                    <span class="rule-count">35 rules</span>
+                    <span class="rule-count">36 rules</span>
                 </div>
                 <div class="rule-list">
                     <div class="rule-item">
@@ -1116,13 +1120,17 @@
                         <div class="rule-name">no-this</div>
                         <div class="rule-desc"><code>this</code> is banned in all forms — no method context, no <code>this</code> parameters.</div>
                     </div>
+                    <div class="rule-item">
+                        <div class="rule-name">require-readonly-parameters</div>
+                        <div class="rule-desc">Inline array and object-literal parameter types must be readonly — <code>xs: readonly number[]</code> and <code>{ readonly x: number }</code>.</div>
+                    </div>
                 </div>
             </div>
 
             <div class="rules-category" id="imports--exports">
                 <div class="rules-category-header">
                     <h3>Imports &amp; exports</h3>
-                    <span class="rule-count">4 rules</span>
+                    <span class="rule-count">7 rules</span>
                 </div>
                 <div class="rule-list">
                     <div class="rule-item">
@@ -1141,13 +1149,25 @@
                         <div class="rule-name">no-useless-empty-export</div>
                         <div class="rule-desc">Empty <code>export {}</code> statements that serve no purpose are banned.</div>
                     </div>
+                    <div class="rule-item">
+                        <div class="rule-name">no-export-star</div>
+                        <div class="rule-desc"><code>export * from './x'</code> and <code>export * as ns from './x'</code> are banned; use named re-exports.</div>
+                    </div>
+                    <div class="rule-item">
+                        <div class="rule-name">no-side-effect-import</div>
+                        <div class="rule-desc">Bare side-effect imports (<code>import './setup'</code> with no bindings) are banned; name what you import.</div>
+                    </div>
+                    <div class="rule-item">
+                        <div class="rule-name">no-dynamic-import</div>
+                        <div class="rule-desc">Dynamic <code>import(...)</code> expressions are banned; use a static import.</div>
+                    </div>
                 </div>
             </div>
 
             <div class="rules-category" id="style--clarity">
                 <div class="rules-category-header">
                     <h3>Style &amp; clarity</h3>
-                    <span class="rule-count">20 rules</span>
+                    <span class="rule-count">25 rules</span>
                 </div>
                 <div class="rule-list">
                     <div class="rule-item">
@@ -1168,7 +1188,7 @@
                     </div>
                     <div class="rule-item">
                         <div class="rule-name">no-throwing-globals</div>
-                        <div class="rule-desc"><code>JSON.parse</code>, <code>JSON.stringify</code>, and bare <code>fetch</code> are banned. Use the safe wrappers from <code>shotscript/std</code>.</div>
+                        <div class="rule-desc"><code>JSON.parse</code>, <code>JSON.stringify</code>, <code>fetch</code>, <code>structuredClone</code>, <code>BigInt()</code>, <code>new RegExp()</code>, and <code>new Date()</code> are banned. Use the safe wrappers from <code>shotscript/std</code>.</div>
                     </div>
                     <div class="rule-item">
                         <div class="rule-name">no-metaprogramming-globals</div>
@@ -1241,6 +1261,26 @@
                     <div class="rule-item">
                         <div class="rule-name">no-useless-computed-key</div>
                         <div class="rule-desc">Computed property keys that are string literals (<code>{ ["x"]: 1 }</code>) are banned.</div>
+                    </div>
+                    <div class="rule-item">
+                        <div class="rule-name">no-mutating-array-methods</div>
+                        <div class="rule-desc"><code>.sort()</code>, <code>.reverse()</code>, <code>.splice()</code>, <code>.push()</code>, <code>.pop()</code>, <code>.shift()</code>, <code>.unshift()</code>, <code>.fill()</code>, <code>.copyWithin()</code> are banned. Use ES2023 immutable alternatives: <code>toSorted</code>, <code>toReversed</code>, <code>toSpliced</code>, <code>with</code>, or spread.</div>
+                    </div>
+                    <div class="rule-item">
+                        <div class="rule-name">no-object-assign</div>
+                        <div class="rule-desc"><code>Object.assign(...)</code> is banned; use object spread <code>{ ...a, ...b }</code> instead.</div>
+                    </div>
+                    <div class="rule-item">
+                        <div class="rule-name">no-object-literal-accessors</div>
+                        <div class="rule-desc"><code>get</code>/<code>set</code> accessors in object literals are banned; use plain properties or functions.</div>
+                    </div>
+                    <div class="rule-item">
+                        <div class="rule-name">no-restricted-globals</div>
+                        <div class="rule-desc">Legacy global functions <code>isNaN</code>, <code>isFinite</code>, and <code>hasOwnProperty</code> are banned. Use <code>Number.isNaN</code>, <code>Number.isFinite</code>, and <code>Object.hasOwn</code>.</div>
+                    </div>
+                    <div class="rule-item">
+                        <div class="rule-name">no-prototype-method-call</div>
+                        <div class="rule-desc"><code>.hasOwnProperty()</code>, <code>.isPrototypeOf()</code>, <code>.propertyIsEnumerable()</code> as method calls are banned. Use <code>Object.hasOwn</code> etc.</div>
                     </div>
                 </div>
             </div>

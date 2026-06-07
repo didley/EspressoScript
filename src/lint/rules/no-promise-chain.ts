@@ -13,6 +13,6 @@ export const noPromiseChain: Rule = {
         if (!ts.isPropertyAccessExpression(expr)) return
         if (!CHAIN_METHODS.has(expr.name.text)) return
         const pos = posOf(ctx.sourceFile, node)
-        ctx.push({ ...pos, rule: 'no-promise-chain', message: 'Promise chains are not allowed. Use `async`/`await`.' })
+        ctx.report({ ...pos, rule: 'no-promise-chain', message: 'Promise chains are not allowed. Use `async`/`await`.' })
     },
 }

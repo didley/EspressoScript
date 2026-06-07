@@ -11,7 +11,7 @@ export const noFunctionType: Rule = {
             ts.isIdentifier(node.typeName) &&
             node.typeName.text === 'Function'
         ) {
-            ctx.push({ ...posOf(ctx.sourceFile, node), rule: 'no-function-type', message: '`Function` is not allowed. Declare the specific function signature.' })
+            ctx.report({ ...posOf(ctx.sourceFile, node), rule: 'no-function-type', message: '`Function` is not allowed. Declare the specific function signature.' })
         }
     },
 }

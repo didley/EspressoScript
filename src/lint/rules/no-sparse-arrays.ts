@@ -9,7 +9,7 @@ export const noSparseArrays: Rule = {
         if (!ts.isArrayLiteralExpression(node)) return
         for (const element of node.elements) {
             if (element.kind === ts.SyntaxKind.OmittedExpression) {
-                ctx.push({ ...posOf(ctx.sourceFile, node), rule: 'no-sparse-arrays', message: 'Sparse arrays are not allowed. Use `null` for an explicit empty slot.' })
+                ctx.report({ ...posOf(ctx.sourceFile, node), rule: 'no-sparse-arrays', message: 'Sparse arrays are not allowed. Use `null` for an explicit empty slot.' })
                 return
             }
         }

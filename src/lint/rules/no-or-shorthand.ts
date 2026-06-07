@@ -10,6 +10,6 @@ export const noOrShorthand: Rule = {
         const expr = node.expression
         if (!ts.isBinaryExpression(expr)) return
         if (expr.operatorToken.kind !== ts.SyntaxKind.BarBarToken) return
-        ctx.push({ ...posOf(ctx.sourceFile, node), rule: 'no-or-shorthand', message: "Don't use `||` as conditional execution. Use an `if` block." })
+        ctx.report({ ...posOf(ctx.sourceFile, node), rule: 'no-or-shorthand', message: "Don't use `||` as conditional execution. Use an `if` block." })
     },
 }

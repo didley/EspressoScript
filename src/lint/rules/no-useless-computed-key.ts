@@ -12,7 +12,7 @@ export const noUselessComputedKey: Rule = {
         const expr = node.expression
         if (ts.isStringLiteral(expr) && IDENT_RE.test(expr.text)) {
             const pos = posOf(ctx.sourceFile, node)
-            ctx.push({ ...pos, rule: 'no-useless-computed-key', message: 'Computed key is unnecessary — use the identifier form.' })
+            ctx.report({ ...pos, rule: 'no-useless-computed-key', message: 'Computed key is unnecessary — use the identifier form.' })
         }
     },
 }

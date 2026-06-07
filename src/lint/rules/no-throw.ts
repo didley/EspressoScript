@@ -8,6 +8,6 @@ export const noThrow: Rule = {
     visit(node, ctx): void {
         if (!ts.isThrowStatement(node)) return
         const pos = posOf(ctx.sourceFile, node)
-        ctx.push({ ...pos, rule: 'no-throw', message: '`throw` is not allowed. Return `[T, Error | null]` tuples.' })
+        ctx.report({ ...pos, rule: 'no-throw', message: '`throw` is not allowed. Return `[T, Error | null]` tuples.' })
     },
 }

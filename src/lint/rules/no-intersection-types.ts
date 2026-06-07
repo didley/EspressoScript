@@ -7,7 +7,7 @@ export const noIntersectionTypes: Rule = {
     name: 'no-intersection-types',
     visit(node, ctx): void {
         if (ts.isIntersectionTypeNode(node)) {
-            ctx.push({ ...posOf(ctx.sourceFile, node), rule: 'no-intersection-types', message: 'Intersection types are not allowed. Spell out the combined shape.' })
+            ctx.report({ ...posOf(ctx.sourceFile, node), rule: 'no-intersection-types', message: 'Intersection types are not allowed. Spell out the combined shape.' })
         }
     },
 }

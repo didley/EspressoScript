@@ -23,7 +23,7 @@ function walk(node: ts.Node, inLoop: boolean, ctx: Context): void {
 
     if (isFn && inLoop) {
         const pos = posOf(ctx.sourceFile, node)
-        ctx.push({ ...pos, rule: 'no-loop-func', message: 'Declaring a function inside a loop closes over the loop variable — extract it.' })
+        ctx.report({ ...pos, rule: 'no-loop-func', message: 'Declaring a function inside a loop closes over the loop variable — extract it.' })
         ts.forEachChild(node, function walkChild(child: ts.Node): void { walk(child, false, ctx) })
         return
     }

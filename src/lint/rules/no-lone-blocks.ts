@@ -16,7 +16,7 @@ export const noLoneBlocks: Rule = {
             pk === ts.SyntaxKind.ModuleBlock
         ) {
             const pos = posOf(ctx.sourceFile, node)
-            ctx.push({ ...pos, rule: 'no-lone-blocks', message: 'Lone blocks are not allowed.' })
+            ctx.report({ ...pos, rule: 'no-lone-blocks', message: 'Lone blocks are not allowed.' })
         }
     },
 }

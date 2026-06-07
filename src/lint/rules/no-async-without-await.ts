@@ -29,7 +29,7 @@ export const noAsyncWithoutAwait: Rule = {
         if (!isAsync) return
         if (!node.body) return
         if (!hasDirectAwait(node.body)) {
-            ctx.push({
+            ctx.report({
                 ...posOf(ctx.sourceFile, node),
                 rule: 'no-async-without-await',
                 message: 'Async function has no `await` — remove `async` and return `Result<T>` instead of `PromiseResult<T>`.',

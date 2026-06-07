@@ -11,6 +11,6 @@ export const noRequire: Rule = {
         if (!ts.isIdentifier(expr)) return
         if (expr.text !== 'require') return
         const pos = posOf(ctx.sourceFile, node)
-        ctx.push({ ...pos, rule: 'no-require', message: '`require()` is not allowed. Use ESM `import`.' })
+        ctx.report({ ...pos, rule: 'no-require', message: '`require()` is not allowed. Use ESM `import`.' })
     },
 }

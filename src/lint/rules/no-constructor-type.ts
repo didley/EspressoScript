@@ -7,7 +7,7 @@ export const noConstructorType: Rule = {
     name: 'no-constructor-type',
     visit(node, ctx): void {
         if (ts.isConstructorTypeNode(node)) {
-            ctx.push({ ...posOf(ctx.sourceFile, node), rule: 'no-constructor-type', message: 'Constructor type signatures are not allowed (no classes).' })
+            ctx.report({ ...posOf(ctx.sourceFile, node), rule: 'no-constructor-type', message: 'Constructor type signatures are not allowed (no classes).' })
         }
     },
 }

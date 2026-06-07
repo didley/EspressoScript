@@ -11,6 +11,6 @@ export const noUselessConcat: Rule = {
         if (!ts.isStringLiteral(node.left)) return
         if (!ts.isStringLiteral(node.right)) return
         const pos = posOf(ctx.sourceFile, node)
-        ctx.push({ ...pos, rule: 'no-useless-concat', message: 'Concatenating string literals — write a single literal.' })
+        ctx.report({ ...pos, rule: 'no-useless-concat', message: 'Concatenating string literals — write a single literal.' })
     },
 }

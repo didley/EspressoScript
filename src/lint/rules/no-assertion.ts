@@ -15,10 +15,10 @@ export const noAssertion: Rule = {
     visit(node, ctx): void {
         if (ts.isAsExpression(node)) {
             if (!isAsConst(node)) {
-                ctx.push({ ...posOf(ctx.sourceFile, node), rule: 'no-assertion', message: 'Type assertions are not allowed. `as const` is the only exception.' })
+                ctx.report({ ...posOf(ctx.sourceFile, node), rule: 'no-assertion', message: 'Type assertions are not allowed. `as const` is the only exception.' })
             }
         } else if (ts.isTypeAssertionExpression(node)) {
-            ctx.push({ ...posOf(ctx.sourceFile, node), rule: 'no-assertion', message: 'Type assertions are not allowed. `as const` is the only exception.' })
+            ctx.report({ ...posOf(ctx.sourceFile, node), rule: 'no-assertion', message: 'Type assertions are not allowed. `as const` is the only exception.' })
         }
     },
 }

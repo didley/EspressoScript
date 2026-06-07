@@ -10,7 +10,7 @@ export const noUndefinedType: Rule = {
         // runtime `undefined` identifiers are Identifier nodes, not UndefinedKeyword.
         // Use `null` everywhere instead; use `void` for functions that return nothing.
         if (node.kind === ts.SyntaxKind.UndefinedKeyword) {
-            ctx.push({ ...posOf(ctx.sourceFile, node), rule: 'no-undefined-type', message: '`undefined` is not allowed in types. Use `null` for absent values; use `void` for functions that return nothing.' })
+            ctx.report({ ...posOf(ctx.sourceFile, node), rule: 'no-undefined-type', message: '`undefined` is not allowed in types. Use `null` for absent values; use `void` for functions that return nothing.' })
         }
     },
 }

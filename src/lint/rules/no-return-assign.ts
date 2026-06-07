@@ -21,6 +21,6 @@ export const noReturnAssign: Rule = {
         if (!ts.isBinaryExpression(expr)) return
         if (!ASSIGN_OPS.has(expr.operatorToken.kind)) return
         const pos = posOf(ctx.sourceFile, node)
-        ctx.push({ ...pos, rule: 'no-return-assign', message: 'Return value cannot be an assignment expression.' })
+        ctx.report({ ...pos, rule: 'no-return-assign', message: 'Return value cannot be an assignment expression.' })
     },
 }

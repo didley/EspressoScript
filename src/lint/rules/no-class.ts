@@ -21,7 +21,7 @@ export const noClass: Rule = {
         if (ts.isClassDeclaration(node) || ts.isClassExpression(node)) {
             // Defer abstract classes to no-abstract and decorated to no-decorators
             if (hasAbstract(node) || hasDecorator(node)) return
-            ctx.push({ ...posOf(ctx.sourceFile, node), rule: 'no-class', message: '`class` is not allowed. Use plain objects + functions.' })
+            ctx.report({ ...posOf(ctx.sourceFile, node), rule: 'no-class', message: '`class` is not allowed. Use plain objects + functions.' })
         }
     },
 }

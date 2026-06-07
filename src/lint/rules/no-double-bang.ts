@@ -12,6 +12,6 @@ export const noDoubleBang: Rule = {
         if (!ts.isPrefixUnaryExpression(operand)) return
         if (operand.operator !== ts.SyntaxKind.ExclamationToken) return
         const pos = posOf(ctx.sourceFile, node)
-        ctx.push({ ...pos, rule: 'no-double-bang', message: '`!!` is not allowed. Use `Boolean()`.' })
+        ctx.report({ ...pos, rule: 'no-double-bang', message: '`!!` is not allowed. Use `Boolean()`.' })
     },
 }

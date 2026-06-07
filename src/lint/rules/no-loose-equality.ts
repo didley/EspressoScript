@@ -10,6 +10,6 @@ export const noLooseEquality: Rule = {
         const op = node.operatorToken.kind
         if (op !== ts.SyntaxKind.EqualsEqualsToken && op !== ts.SyntaxKind.ExclamationEqualsToken) return
         const pos = posOf(ctx.sourceFile, node)
-        ctx.push({ ...pos, rule: 'no-loose-equality', message: 'Loose equality is not allowed. Use `===` / `!==`.' })
+        ctx.report({ ...pos, rule: 'no-loose-equality', message: 'Loose equality is not allowed. Use `===` / `!==`.' })
     },
 }

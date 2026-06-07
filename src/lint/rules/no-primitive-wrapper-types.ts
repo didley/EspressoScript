@@ -13,7 +13,7 @@ export const noPrimitiveWrapperTypes: Rule = {
             ts.isIdentifier(node.typeName) &&
             BANNED.has(node.typeName.text)
         ) {
-            ctx.push({ ...posOf(ctx.sourceFile, node), rule: 'no-primitive-wrapper-types', message: 'Use the lowercase primitive type.' })
+            ctx.report({ ...posOf(ctx.sourceFile, node), rule: 'no-primitive-wrapper-types', message: 'Use the lowercase primitive type.' })
         }
     },
 }

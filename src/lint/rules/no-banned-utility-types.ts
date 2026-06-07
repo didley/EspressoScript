@@ -18,7 +18,7 @@ export const noBannedUtilityTypes: Rule = {
             ts.isIdentifier(node.typeName) &&
             BANNED.has(node.typeName.text)
         ) {
-            ctx.push({ ...posOf(ctx.sourceFile, node), rule: 'no-banned-utility-types', message: 'This utility type is banned. See `shotscript.dev/lint/` for the canonical form.' })
+            ctx.report({ ...posOf(ctx.sourceFile, node), rule: 'no-banned-utility-types', message: 'This utility type is banned. See `shotscript.dev/lint/` for the canonical form.' })
         }
     },
 }

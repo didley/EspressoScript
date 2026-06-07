@@ -16,12 +16,12 @@ export const noAbstract: Rule = {
     name: 'no-abstract',
     visit(node, ctx): void {
         if (ts.isClassDeclaration(node) && hasAbstractModifier(node)) {
-            ctx.push({ ...posOf(ctx.sourceFile, node), rule: 'no-abstract', message: '`abstract` is not allowed.' })
+            ctx.report({ ...posOf(ctx.sourceFile, node), rule: 'no-abstract', message: '`abstract` is not allowed.' })
         } else if (
             (ts.isMethodDeclaration(node) || ts.isPropertyDeclaration(node) || ts.isGetAccessorDeclaration(node) || ts.isSetAccessorDeclaration(node)) &&
             hasAbstractModifier(node)
         ) {
-            ctx.push({ ...posOf(ctx.sourceFile, node), rule: 'no-abstract', message: '`abstract` is not allowed.' })
+            ctx.report({ ...posOf(ctx.sourceFile, node), rule: 'no-abstract', message: '`abstract` is not allowed.' })
         }
     },
 }

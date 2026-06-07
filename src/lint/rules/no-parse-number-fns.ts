@@ -24,6 +24,6 @@ export const noParseNumberFns: Rule = {
         if (!ts.isCallExpression(node)) return
         if (!isParseNumberCall(node)) return
         const pos = posOf(ctx.sourceFile, node)
-        ctx.push({ ...pos, rule: 'no-parse-number-fns', message: 'Use `Number()` instead of `parseInt` / `parseFloat`.' })
+        ctx.report({ ...pos, rule: 'no-parse-number-fns', message: 'Use `Number()` instead of `parseInt` / `parseFloat`.' })
     },
 }

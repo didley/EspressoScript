@@ -13,6 +13,13 @@ const BANNED_IDENTIFIERS: ReadonlySet<string> = new Set([
     'decodeURI',
     'atob',
     'btoa',
+    'structuredClone',
+])
+
+const BANNED_NEW: ReadonlySet<string> = new Set([
+    'URL',
+    'RegExp',
+    'Date',
 ])
 
 function isBannedPropertyAccess(node: ts.PropertyAccessExpression): boolean {
@@ -30,17 +37,17 @@ export const noThrowingGlobals: Rule = {
     visit(node, ctx): void {
         if (ts.isPropertyAccessExpression(node)) {
             if (isBannedPropertyAccess(node)) {
-                ctx.push({ ...posOf(ctx.sourceFile, node), rule: 'no-throwing-globals', message: MSG })
+                ctx.report({ ...posOf(ctx.sourceFile, node), rule: 'no-throwing-globals', message: MSG })
             }
         } else if (ts.isCallExpression(node)) {
             const expr = node.expression
-            if (ts.isIdentifier(expr) && BANNED_IDENTIFIERS.has(expr.text)) {
-                ctx.push({ ...posOf(ctx.sourceFile, node), rule: 'no-throwing-globals', message: MSG })
+            if (ts.isIdentifier(expr) && (BANNED_IDENTIFIERS.has(expr.text) || expr.text === 'BigInt')) {
+                ctx.report({ ...posOf(ctx.sourceFile, node), rule: 'no-throwing-globals', message: MSG })
             }
         } else if (ts.isNewExpression(node)) {
             const expr = node.expression
-            if (ts.isIdentifier(expr) && expr.text === 'URL' && node.arguments !== undefined && node.arguments.length > 0) {
-                ctx.push({ ...posOf(ctx.sourceFile, node), rule: 'no-throwing-globals', message: MSG })
+            if (ts.isIdentifier(expr) && BANNED_NEW.has(expr.text) && node.arguments !== undefined && node.arguments.length > 0) {
+                ctx.report({ ...posOf(ctx.sourceFile, node), rule: 'no-throwing-globals', message: MSG })
             }
         }
     },

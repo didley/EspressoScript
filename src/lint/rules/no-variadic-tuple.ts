@@ -11,7 +11,7 @@ export const noVariadicTuple: Rule = {
                 return ts.isRestTypeNode(el)
             })
             if (hasRest) {
-                ctx.push({ ...posOf(ctx.sourceFile, node), rule: 'no-variadic-tuple', message: 'Variadic tuples are not allowed. Give the rest a name in a struct type.' })
+                ctx.report({ ...posOf(ctx.sourceFile, node), rule: 'no-variadic-tuple', message: 'Variadic tuples are not allowed. Give the rest a name in a struct type.' })
             }
         }
     },

@@ -8,6 +8,6 @@ export const noArrowFunctions: Rule = {
     visit(node, ctx): void {
         if (!ts.isArrowFunction(node)) return
         const pos = posOf(ctx.sourceFile, node)
-        ctx.push({ ...pos, rule: 'no-arrow-functions', message: 'Arrow functions are not allowed. Use the `function` keyword.' })
+        ctx.report({ ...pos, rule: 'no-arrow-functions', message: 'Arrow functions are not allowed. Use the `function` keyword.' })
     },
 }

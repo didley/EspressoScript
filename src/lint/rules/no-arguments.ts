@@ -23,6 +23,6 @@ export const noArguments: Rule = {
         if (node.text !== 'arguments') return
         if (isBindingPosition(node)) return
         const pos = posOf(ctx.sourceFile, node)
-        ctx.push({ ...pos, rule: 'no-arguments', message: '`arguments` is not allowed. Use rest params `...args`.' })
+        ctx.report({ ...pos, rule: 'no-arguments', message: '`arguments` is not allowed. Use rest params `...args`.' })
     },
 }

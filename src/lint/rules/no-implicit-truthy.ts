@@ -18,7 +18,7 @@ const MSG = 'Condition must be a boolean expression. Use an explicit comparison 
 function checkCondition(checker: ts.TypeChecker, condition: ts.Expression, node: ts.Node, ctx: Context): void {
     const type = checker.getTypeAtLocation(condition)
     if (!isBooleanType(type)) {
-        ctx.push({ ...posOf(ctx.sourceFile, node), rule: 'no-implicit-truthy', message: MSG })
+        ctx.report({ ...posOf(ctx.sourceFile, node), rule: 'no-implicit-truthy', message: MSG })
     }
 }
 

@@ -11,7 +11,7 @@ function isIndexPath(spec: string): boolean {
 
 function check(spec: string, node: ts.Node, ctx: Parameters<Rule['visit']>[1]): void {
     if (!isIndexPath(spec)) return
-    ctx.push({ ...posOf(ctx.sourceFile, node), rule: 'no-index-import', message: `Importing index files is not allowed. Import the specific module file instead (e.g. './dir/module.ts').` })
+    ctx.report({ ...posOf(ctx.sourceFile, node), rule: 'no-index-import', message: `Importing index files is not allowed. Import the specific module file instead (e.g. './dir/module.ts').` })
 }
 
 /** Importing index files is not allowed. Import the specific module file instead (e.g. './dir/module.ts'). */

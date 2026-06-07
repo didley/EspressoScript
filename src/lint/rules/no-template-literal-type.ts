@@ -7,7 +7,7 @@ export const noTemplateLiteralType: Rule = {
     name: 'no-template-literal-type',
     visit(node, ctx): void {
         if (ts.isTemplateLiteralTypeNode(node)) {
-            ctx.push({ ...posOf(ctx.sourceFile, node), rule: 'no-template-literal-type', message: 'Template literal types are not allowed.' })
+            ctx.report({ ...posOf(ctx.sourceFile, node), rule: 'no-template-literal-type', message: 'Template literal types are not allowed.' })
         }
     },
 }

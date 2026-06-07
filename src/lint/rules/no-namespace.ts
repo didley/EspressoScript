@@ -13,6 +13,6 @@ export const noNamespace: Rule = {
     visit(node, ctx): void {
         if (!ts.isModuleDeclaration(node)) return
         const keyword = getKeyword(node.flags)
-        ctx.push({ ...posOf(ctx.sourceFile, node), rule: 'no-namespace', message: `\`${keyword}\` declarations are not allowed. Use ES modules instead.` })
+        ctx.report({ ...posOf(ctx.sourceFile, node), rule: 'no-namespace', message: `\`${keyword}\` declarations are not allowed. Use ES modules instead.` })
     },
 }

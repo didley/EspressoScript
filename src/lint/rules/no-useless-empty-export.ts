@@ -12,6 +12,6 @@ export const noUselessEmptyExport: Rule = {
         if (!ts.isNamedExports(clause)) return
         if (clause.elements.length !== 0) return
         const pos = posOf(ctx.sourceFile, node)
-        ctx.push({ ...pos, rule: 'no-useless-empty-export', message: '`export {}` is meaningless under `moduleDetection: force`.' })
+        ctx.report({ ...pos, rule: 'no-useless-empty-export', message: '`export {}` is meaningless under `moduleDetection: force`.' })
     },
 }

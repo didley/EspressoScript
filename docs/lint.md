@@ -1,7 +1,7 @@
 ---
 page: lint
 badge: ShotScriptLint
-title: "95+ rules enforcing one way of doing things."
+title: "110+ rules enforcing one way of doing things."
 title_em: "one way of doing things."
 sub: "A TypeScript language service plugin. Drop it into any project — no special runtime or file extension required. Violations surface as compiler errors in your editor and CI."
 ---
@@ -203,7 +203,7 @@ By syntax construct count, ShotScript removes approximately half of what TypeScr
 `no-return-assign` — Assignment inside a `return` statement is banned.
 :::
 
-### Control flow — 14 rules
+### Control flow — 15 rules
 
 :::rule
 `no-ternary` — Ternary expressions are banned. Use `if`/`else` or extract a named function.
@@ -261,7 +261,11 @@ By syntax construct count, ShotScript removes approximately half of what TypeScr
 `no-self-assign` — Assigning a variable to itself (`x = x`) is always a bug.
 :::
 
-### Types — 35 rules
+:::rule
+`no-return-await` — `return await x` is redundant; use `return x`. Since `no-try` bans try blocks, there is no case where `return await` changes behavior.
+:::
+
+### Types — 36 rules
 
 :::rule
 `no-interface` — Interfaces are banned. Use `type` exclusively — one way to define a shape.
@@ -399,7 +403,11 @@ By syntax construct count, ShotScript removes approximately half of what TypeScr
 `no-this` — `this` is banned in all forms — no method context, no `this` parameters.
 :::
 
-### Imports & exports — 4 rules
+:::rule
+`require-readonly-parameters` — Inline array and object-literal parameter types must be readonly — `xs: readonly number[]` and `{ readonly x: number }`.
+:::
+
+### Imports & exports — 7 rules
 
 :::rule
 `no-default-export` — Default exports are banned. Named exports only — every export is addressable and tree-shakeable.
@@ -417,7 +425,19 @@ By syntax construct count, ShotScript removes approximately half of what TypeScr
 `no-useless-empty-export` — Empty `export {}` statements that serve no purpose are banned.
 :::
 
-### Style & clarity — 20 rules
+:::rule
+`no-export-star` — `export * from './x'` and `export * as ns from './x'` are banned; use named re-exports.
+:::
+
+:::rule
+`no-side-effect-import` — Bare side-effect imports (`import './setup'` with no bindings) are banned; name what you import.
+:::
+
+:::rule
+`no-dynamic-import` — Dynamic `import(...)` expressions are banned; use a static import.
+:::
+
+### Style & clarity — 25 rules
 
 :::rule
 `prefer-template` — String concatenation with `+` is banned when a template literal would work. Use `` `hello ${name}` ``.
@@ -509,4 +529,24 @@ By syntax construct count, ShotScript removes approximately half of what TypeScr
 
 :::rule
 `no-useless-computed-key` — Computed property keys that are string literals (`{ ["x"]: 1 }`) are banned.
+:::
+
+:::rule
+`no-mutating-array-methods` — `.sort()`, `.reverse()`, `.splice()`, `.push()`, `.pop()`, `.shift()`, `.unshift()`, `.fill()`, `.copyWithin()` are banned; use ES2023 immutable alternatives (`toSorted`, `toReversed`, `toSpliced`, `with`, spread).
+:::
+
+:::rule
+`no-object-assign` — `Object.assign(...)` is banned; use object spread `{ ...a, ...b }` instead.
+:::
+
+:::rule
+`no-object-literal-accessors` — `get`/`set` accessors in object literals are banned; use plain properties or functions.
+:::
+
+:::rule
+`no-restricted-globals` — Legacy global functions `isNaN`, `isFinite`, and `hasOwnProperty` are banned; use `Number.isNaN`, `Number.isFinite`, and `Object.hasOwn`.
+:::
+
+:::rule
+`no-prototype-method-call` — `.hasOwnProperty()`, `.isPrototypeOf()`, `.propertyIsEnumerable()` as method calls are banned; use `Object.hasOwn` etc.
 :::

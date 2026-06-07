@@ -7,7 +7,7 @@ export const noInterface: Rule = {
     name: 'no-interface',
     visit(node, ctx): void {
         if (ts.isInterfaceDeclaration(node)) {
-            ctx.push({ ...posOf(ctx.sourceFile, node), rule: 'no-interface', message: '`interface` is not allowed. Use `type`.' })
+            ctx.report({ ...posOf(ctx.sourceFile, node), rule: 'no-interface', message: '`interface` is not allowed. Use `type`.' })
         }
     },
 }

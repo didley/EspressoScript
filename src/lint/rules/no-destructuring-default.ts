@@ -11,6 +11,6 @@ export const noDestructuringDefault: Rule = {
         const parent = node.parent
         if (!ts.isObjectBindingPattern(parent) && !ts.isArrayBindingPattern(parent)) return
         const pos = posOf(ctx.sourceFile, node)
-        ctx.push({ ...pos, rule: 'no-destructuring-default', message: 'Defaults in destructuring rely on `undefined` (banned sentinel).' })
+        ctx.report({ ...pos, rule: 'no-destructuring-default', message: 'Defaults in destructuring rely on `undefined` (banned sentinel).' })
     },
 }

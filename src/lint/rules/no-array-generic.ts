@@ -13,7 +13,7 @@ export const noArrayGeneric: Rule = {
             ts.isIdentifier(node.typeName) &&
             BANNED.has(node.typeName.text)
         ) {
-            ctx.push({ ...posOf(ctx.sourceFile, node), rule: 'no-array-generic', message: 'Use `readonly T[]` instead of `Array<T>` or `ReadonlyArray<T>`.' })
+            ctx.report({ ...posOf(ctx.sourceFile, node), rule: 'no-array-generic', message: 'Use `readonly T[]` instead of `Array<T>` or `ReadonlyArray<T>`.' })
         }
     },
 }

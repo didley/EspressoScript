@@ -18,7 +18,7 @@ Four tools. One way to write TypeScript.
 
 | | |
 |---|---|
-| **ShotScriptLint** | 95+ rules enforced as `tsc` errors. One way to write every construct — no ESLint, no config surface. |
+| **ShotScriptLint** | 110+ rules enforced as `tsc` errors. One way to write every construct — no ESLint, no config surface. |
 | **ShotScriptFmt** | Shareable Biome config. 80-char lines, no semicolons, 4-space indent — formatted for terminals and clean diffs. |
 | **ShotScriptTyping** | Strict tsconfig baseline. Full strict mode plus `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`, and more. |
 | **ShotScriptStd** | Safe, non-throwing replacements for every banned global — `jsonParse`, `safeFetch`, `toResult`, `wrapError`. |
@@ -136,7 +136,7 @@ const total = items.filter(isActive).reduce(sumScore, 0)
 
 ## Rules
 
-95+ rules across functions, types, error handling, control flow, and hygiene. Full reference: [shotscript.dev/lint](https://shotscript.dev/lint/)
+110+ rules across functions, types, error handling, control flow, and hygiene. Full reference: [shotscript.dev/lint](https://shotscript.dev/lint/)
 
 Key bans: `no-throw`, `no-try`, `no-arrow-functions`, `no-any`, `no-assertion`, `no-interface`, `no-class`, `no-ternary`, `no-optional-property`, `no-undefined-type`, `require-readonly-property`, `require-async-tuple-return`
 

@@ -23,7 +23,7 @@ export const noMetaprogrammingGlobals: Rule = {
                 if (ts.isPropertyAccessExpression(node.parent) && node.parent.name === node) return
                 // Skip import bindings
                 if (ts.isImportSpecifier(node.parent) || ts.isImportClause(node.parent)) return
-                ctx.push({ ...posOf(ctx.sourceFile, node), rule: 'no-metaprogramming-globals', message: 'Metaprogramming globals are banned.' })
+                ctx.report({ ...posOf(ctx.sourceFile, node), rule: 'no-metaprogramming-globals', message: 'Metaprogramming globals are banned.' })
             }
         } else if (ts.isPropertyAccessExpression(node)) {
             const expr = node.expression
@@ -32,7 +32,7 @@ export const noMetaprogrammingGlobals: Rule = {
                 expr.text === 'Object' &&
                 BANNED_OBJECT_METHODS.has(node.name.text)
             ) {
-                ctx.push({ ...posOf(ctx.sourceFile, node), rule: 'no-metaprogramming-globals', message: 'Metaprogramming globals are banned.' })
+                ctx.report({ ...posOf(ctx.sourceFile, node), rule: 'no-metaprogramming-globals', message: 'Metaprogramming globals are banned.' })
             }
         }
     },

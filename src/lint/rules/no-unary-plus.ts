@@ -9,6 +9,6 @@ export const noUnaryPlus: Rule = {
         if (!ts.isPrefixUnaryExpression(node)) return
         if (node.operator !== ts.SyntaxKind.PlusToken) return
         const pos = posOf(ctx.sourceFile, node)
-        ctx.push({ ...pos, rule: 'no-unary-plus', message: 'Unary `+` coercion is not allowed. Use `Number()`.' })
+        ctx.report({ ...pos, rule: 'no-unary-plus', message: 'Unary `+` coercion is not allowed. Use `Number()`.' })
     },
 }

@@ -53,7 +53,7 @@ export const requireAsyncTupleReturn: Rule = {
         if (!isAsync) return
         if (!node.type) return // require-explicit-return-type already catches the missing annotation
         if (!isValidAsyncReturn(node.type)) {
-            ctx.push({
+            ctx.report({
                 ...posOf(ctx.sourceFile, node),
                 rule: 'require-async-tuple-return',
                 message: 'Async functions must return PromiseResult<T> or Promise<[T | null, E | null]>. Use a tuple return type so callers can handle errors explicitly.',

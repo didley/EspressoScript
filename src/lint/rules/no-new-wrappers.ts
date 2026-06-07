@@ -13,6 +13,6 @@ export const noNewWrappers: Rule = {
         if (!ts.isIdentifier(expr)) return
         if (!WRAPPER_TYPES.has(expr.text)) return
         const pos = posOf(ctx.sourceFile, node)
-        ctx.push({ ...pos, rule: 'no-new-wrappers', message: '`new String/Number/Boolean/Symbol` creates wrapped primitives — use the function call form.' })
+        ctx.report({ ...pos, rule: 'no-new-wrappers', message: '`new String/Number/Boolean/Symbol` creates wrapped primitives — use the function call form.' })
     },
 }

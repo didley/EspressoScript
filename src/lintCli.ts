@@ -7,6 +7,7 @@ import path from 'node:path'
 import { glob } from 'glob'
 import ts from 'typescript'
 import { check } from './lint/check.js'
+import type { Diagnostic } from './lint/types.js'
 
 const patterns = process.argv.slice(2)
 
@@ -15,11 +16,12 @@ if (patterns.length === 0) {
     process.exit(1)
 }
 
-const files = []
+const fileGroups = []
 for (const pattern of patterns) {
     const matches = await glob(pattern, { absolute: true })
-    files.push(...matches)
+    fileGroups[fileGroups.length] = matches
 }
+const files = fileGroups.flat()
 
 const configPath = ts.findConfigFile(files[0] ?? process.cwd(), ts.sys.fileExists)
 
@@ -39,15 +41,17 @@ const compilerOptions = resolveCompilerOptions(configPath ?? null)
 const program = ts.createProgram(files, { ...compilerOptions, noEmit: true })
 const typeChecker = program.getTypeChecker()
 
-const lines = []
-for (const file of files) {
+function fmtDiag(d: Diagnostic): string {
+    return `${d.file}:${d.line}:${d.col} [${d.rule}] ${d.message}`
+}
+
+function lintFile(file: string): readonly string[] {
     const source = readFileSync(file, 'utf8')
     const programSourceFile = program.getSourceFile(file) ?? null
-    const diags = check(file, source, typeChecker, programSourceFile)
-    for (const d of diags) {
-        lines.push(`${d.file}:${d.line}:${d.col} [${d.rule}] ${d.message}`)
-    }
+    return check(file, source, typeChecker, programSourceFile).map(fmtDiag)
 }
+
+const lines = files.flatMap(lintFile)
 
 for (const line of lines) {
     process.stdout.write(`${line}\n`)

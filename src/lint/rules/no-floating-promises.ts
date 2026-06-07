@@ -23,7 +23,7 @@ export const noFloatingPromises: Rule = {
         if (ts.isAwaitExpression(expr)) return
         if (!ts.isCallExpression(expr)) return
         if (!isAwaitable(ctx.typeChecker, expr)) return
-        ctx.push({
+        ctx.report({
             ...posOf(ctx.sourceFile, node),
             rule: 'no-floating-promises',
             message: `Promise must be handled. Use \`await\` to wait for the result, or \`void fn()\` to explicitly discard it.`,

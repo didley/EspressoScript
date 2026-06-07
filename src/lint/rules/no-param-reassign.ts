@@ -53,7 +53,7 @@ function walk(node: ts.Node, frames: readonly Frame[], ctx: Context): void {
         const lhs = node.left
         if (ts.isIdentifier(lhs) && isParamInScope(frames, lhs.text)) {
             const pos = posOf(ctx.sourceFile, lhs)
-            ctx.push({ ...pos, rule: 'no-param-reassign', message: 'Function parameters cannot be reassigned. Use a new `const`.' })
+            ctx.report({ ...pos, rule: 'no-param-reassign', message: 'Function parameters cannot be reassigned. Use a new `const`.' })
         }
         walk(node.right, frames, ctx)
     } else {

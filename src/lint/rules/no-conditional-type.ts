@@ -14,7 +14,7 @@ export const noConditionalType: Rule = {
         if (ts.isConditionalTypeNode(node)) {
             // If the conditional type contains `infer`, defer to no-infer to avoid double-reporting
             if (containsInfer(node)) return
-            ctx.push({ ...posOf(ctx.sourceFile, node), rule: 'no-conditional-type', message: 'Conditional types are not allowed.' })
+            ctx.report({ ...posOf(ctx.sourceFile, node), rule: 'no-conditional-type', message: 'Conditional types are not allowed.' })
         }
     },
 }

@@ -7,7 +7,7 @@ export const noIndexSignature: Rule = {
     name: 'no-index-signature',
     visit(node, ctx): void {
         if (ts.isIndexSignatureDeclaration(node)) {
-            ctx.push({ ...posOf(ctx.sourceFile, node), rule: 'no-index-signature', message: 'Index signatures are not allowed. Use `Map<K, V>`.' })
+            ctx.report({ ...posOf(ctx.sourceFile, node), rule: 'no-index-signature', message: 'Index signatures are not allowed. Use `Map<K, V>`.' })
         }
     },
 }

@@ -633,7 +633,7 @@
             <div class="hero-content">
                 <div class="hero-brand">ShotScript</div>
                 <p class="hero-desc">
-                    TypeScript with ~70% fewer ways to write the same thing.
+                    TypeScript with ~75% fewer ways to write the same thing.
                     One way to handle errors, one way to express nothing, one
                     way to structure types.
                 </p>
@@ -761,7 +761,7 @@
             </div>
 
             <div class="callout">
-                <strong>ShotScript removes ~70% of TypeScript's ways to write
+                <strong>ShotScript removes ~75% of TypeScript's ways to write
                 the same thing</strong> and standardises the rest to one. Your
                 files are unchanged — it's a list of rules, not a compiler.
             </div>
@@ -995,13 +995,87 @@
             <h2>The three biggest simplifications.</h2>
             <p class="section-desc">
                 The left column is TypeScript as commonly written. The right
-                column is the ShotScript equivalent — the same logic, one way
-                to express it.
+                column is the same logic under every ShotScript rule at once —
+                flatter types, fewer states, no hidden control flow.
             </p>
 
-            <!-- 1: Error handling -->
+            <!-- 1: Type structure -->
             <p class="section-label" style="margin-bottom: 0.75rem">
-                Error handling
+                Type structure
+            </p>
+            <div class="comparison">
+                <div class="pane-before">
+                    <div class="pane-label">
+                        <span class="dot dot-red"></span>TypeScript
+                    </div>
+                    <pre><span class="kw">type</span> <span class="ty">Role</span> = <span class="st">'admin'</span> | <span class="st">'member'</span> | <span class="kw">undefined</span>
+
+<span class="kw">interface</span> <span class="ty">Timestamps</span> {
+  <span class="id">createdAt</span>: <span class="ty">Date</span>
+  <span class="id">updatedAt</span>?: <span class="ty">Date</span>
+}
+
+<span class="kw">interface</span> <span class="ty">BaseUser</span> {
+  <span class="id">id</span>: <span class="ty">number</span>
+  <span class="id">email</span>: <span class="ty">string</span>
+  <span class="id">avatar</span>?: <span class="ty">string</span> | <span class="kw">null</span>
+  <span class="id">metadata</span>?: <span class="ty">Record</span>&lt;<span class="ty">string</span>, <span class="ty">any</span>&gt;
+}
+
+<span class="kw">type</span> <span class="ty">User</span> = <span class="ty">BaseUser</span> &amp; <span class="ty">Timestamps</span> &amp; {
+  <span class="id">role</span>?: <span class="ty">Role</span>
+  <span class="id">deletedAt</span>?: <span class="ty">Date</span> | <span class="kw">null</span>
+}
+
+<span class="cm">// 4 ways to say "nothing" · 8 states for `role`</span>
+<span class="cm">// fields are merged invisibly across 3 decls</span></pre>
+                </div>
+                <div class="pane-after">
+                    <div class="pane-label">
+                        <span class="dot dot-green"></span>ShotScript
+                    </div>
+                    <pre><span class="kw">type</span> <span class="ty">Role</span> = <span class="st">'admin'</span> | <span class="st">'member'</span>
+
+<span class="kw">type</span> <span class="ty">Timestamps</span> = {
+  <span class="kw">readonly</span> <span class="id">createdAt</span>: <span class="ty">Date</span>
+  <span class="kw">readonly</span> <span class="id">updatedAt</span>: <span class="ty">Date</span> | <span class="kw">null</span>
+}
+
+<span class="kw">type</span> <span class="ty">BaseUser</span> = {
+  <span class="kw">readonly</span> <span class="id">id</span>: <span class="ty">number</span>
+  <span class="kw">readonly</span> <span class="id">email</span>: <span class="ty">string</span>
+  <span class="kw">readonly</span> <span class="id">avatar</span>: <span class="ty">string</span> | <span class="kw">null</span>
+  <span class="kw">readonly</span> <span class="id">metadata</span>: <span class="ty">Record</span>&lt;<span class="ty">string</span>, <span class="ty">unknown</span>&gt;
+}
+
+<span class="kw">type</span> <span class="ty">User</span> = {
+  <span class="kw">readonly</span> <span class="id">base</span>: <span class="ty">BaseUser</span>
+  <span class="kw">readonly</span> <span class="id">timestamps</span>: <span class="ty">Timestamps</span>
+  <span class="kw">readonly</span> <span class="id">role</span>: <span class="ty">Role</span> | <span class="kw">null</span>
+  <span class="kw">readonly</span> <span class="id">deletedAt</span>: <span class="ty">Date</span> | <span class="kw">null</span>
+}
+
+<span class="cm">// 1 way to say "nothing" · 3 states for `role`</span>
+<span class="cm">// reuse by nesting — every field has one home</span></pre>
+                </div>
+            </div>
+
+            <div class="callout">
+                <strong>Why it matters:</strong> intersection merges
+                <code>BaseUser</code> and <code>Timestamps</code> into
+                <code>User</code> invisibly — fields appear from nowhere, and
+                <code>role</code> alone can be <code>'admin'</code>,
+                <code>'member'</code>, <code>undefined</code>, or missing.
+                ShotScript keeps the reuse but as <em>nested properties</em>:
+                <code>user.base.email</code> and
+                <code>user.timestamps.createdAt</code> are explicit at the call
+                site, every absent value is <code>| null</code>, and
+                <code>any</code> is gone.
+            </div>
+
+            <!-- 2: Error handling + async -->
+            <p class="section-label" style="margin-bottom: 0.75rem">
+                Async + error handling
             </p>
             <div class="comparison">
                 <div class="pane-before">
@@ -1009,18 +1083,23 @@
                         <span class="dot dot-red"></span>TypeScript
                     </div>
                     <pre><span class="kw">async function</span> <span class="fn">getUser</span>(
-  <span class="id">id</span>: <span class="ty">number</span>
-): <span class="ty">Promise</span>&lt;<span class="ty">User</span>&gt; {
+  <span class="id">id</span>?: <span class="ty">number</span>
+): <span class="ty">Promise</span>&lt;<span class="ty">User</span> | <span class="kw">undefined</span>&gt; {
+  <span class="kw">if</span> (!<span class="id">id</span>) <span class="kw">return undefined</span>
   <span class="kw">try</span> {
     <span class="kw">const</span> <span class="id">res</span> = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="st">`/users/<span class="op">${</span><span class="id">id</span><span class="op">}</span>`</span>)
     <span class="kw">if</span> (!<span class="id">res</span>.<span class="id">ok</span>) <span class="kw">throw new</span> <span class="ty">Error</span>(
       <span class="st">`HTTP <span class="op">${</span><span class="id">res</span>.<span class="id">status</span><span class="op">}</span>`</span>
     )
-    <span class="kw">return</span> <span class="id">res</span>.<span class="fn">json</span>() <span class="kw">as</span> <span class="ty">User</span>
+    <span class="kw">const</span> <span class="id">data</span> = <span class="kw">await</span> <span class="id">res</span>.<span class="fn">json</span>() <span class="kw">as</span> <span class="ty">any</span>
+    <span class="kw">return</span> <span class="id">data</span> <span class="kw">as</span> <span class="ty">User</span>
   } <span class="kw">catch</span> (<span class="id">e</span>) {
-    <span class="kw">throw new</span> <span class="ty">Error</span>(<span class="st">`getUser failed: <span class="op">${</span><span class="id">e</span><span class="op">}</span>`</span>)
+    <span class="fn">console</span>.<span class="fn">error</span>(<span class="id">e</span>)
+    <span class="kw">return undefined</span>
   }
-}</pre>
+}
+
+<span class="cm">// failure is invisible to callers · `as` silences the checker</span></pre>
                 </div>
                 <div class="pane-after">
                     <div class="pane-label">
@@ -1032,25 +1111,28 @@
 <span class="kw">async function</span> <span class="fn">getUser</span>(
   <span class="id">id</span>: <span class="ty">number</span>
 ): <span class="ty">PromiseResult</span>&lt;<span class="ty">User</span>&gt; {
-  <span class="kw">const</span> [<span class="id">res</span>, <span class="id">err</span>] = <span class="kw">await</span> <span class="fn">safeFetch</span>(<span class="st">`/users/<span class="op">${</span><span class="id">id</span><span class="op">}</span>`</span>)
-  <span class="kw">if</span> (<span class="id">err</span> !== <span class="kw">null</span>) {
-    <span class="kw">return</span> [<span class="kw">null</span>, <span class="id">err</span>]
-  }
+  <span class="kw">const</span> [<span class="id">res</span>, <span class="id">fetchErr</span>] = <span class="kw">await</span> <span class="fn">safeFetch</span>(
+    <span class="st">`/users/<span class="op">${</span><span class="id">id</span><span class="op">}</span>`</span>
+  )
+  <span class="kw">if</span> (<span class="id">fetchErr</span> !== <span class="kw">null</span>) <span class="kw">return</span> [<span class="kw">null</span>, <span class="id">fetchErr</span>]
   <span class="kw">return</span> <span class="fn">jsonParse</span>&lt;<span class="ty">User</span>&gt;(<span class="kw">await</span> <span class="id">res</span>.<span class="fn">text</span>())
 }
 
-<span class="cm">// no throw · no try · no hidden control flow</span></pre>
+<span class="cm">// every failure is in the signature · no `as`, no `throw`</span></pre>
                 </div>
             </div>
 
             <div class="callout">
-                <strong>Why it matters:</strong> thrown exceptions don't appear
-                in function signatures — callers can't know a function can fail
-                without reading its source. <code>PromiseResult&lt;T&gt;</code>
-                puts every failure path in the type, enforced by the checker.
+                <strong>Why it matters:</strong> the left function can return
+                <code>undefined</code> for "no id," <code>undefined</code> for
+                "network failed," <code>undefined</code> for "bad JSON" — all
+                indistinguishable. <code>as User</code> hides shape mismatches.
+                The right version makes the input required, returns a
+                <code>PromiseResult</code> tuple so every error path is typed,
+                and uses <code>jsonParse&lt;User&gt;</code> instead of a cast.
             </div>
 
-            <!-- 2: Data + behaviour -->
+            <!-- 3: Data + behaviour -->
             <p class="section-label" style="margin-bottom: 0.75rem">
                 Data + behaviour
             </p>
@@ -1060,89 +1142,56 @@
                         <span class="dot dot-red"></span>TypeScript
                     </div>
                     <pre><span class="kw">class</span> <span class="ty">UserService</span> {
-  <span class="kw">private readonly</span> <span class="id">db</span>: <span class="ty">Database</span>
+  <span class="kw">private</span> <span class="id">cache</span>: <span class="ty">Map</span>&lt;<span class="ty">number</span>, <span class="ty">User</span>&gt; = <span class="kw">new</span> <span class="ty">Map</span>()
 
-  <span class="kw">constructor</span>(<span class="id">db</span>: <span class="ty">Database</span>) {
-    <span class="kw">this</span>.<span class="id">db</span> = <span class="id">db</span>
-  }
+  <span class="kw">constructor</span>(<span class="kw">private readonly</span> <span class="id">db</span>: <span class="ty">Database</span>) {}
 
-  <span class="kw">async</span> <span class="fn">findById</span>(
-    <span class="id">id</span>: <span class="ty">number</span>
-  ): <span class="ty">Promise</span>&lt;<span class="ty">User</span> | <span class="kw">null</span>&gt; {
-    <span class="cm">// ...</span>
+  <span class="kw">async</span> <span class="fn">findById</span>(<span class="id">id</span>: <span class="ty">number</span>) {
+    <span class="kw">const</span> <span class="id">hit</span> = <span class="kw">this</span>.<span class="id">cache</span>.<span class="fn">get</span>(<span class="id">id</span>)
+    <span class="kw">if</span> (<span class="id">hit</span>) <span class="kw">return</span> <span class="id">hit</span>
+    <span class="kw">const</span> <span class="id">user</span> = <span class="kw">await</span> <span class="kw">this</span>.<span class="id">db</span>.<span class="fn">find</span>(<span class="id">id</span>)!
+    <span class="kw">this</span>.<span class="id">cache</span>.<span class="fn">set</span>(<span class="id">id</span>, <span class="id">user</span>)
+    <span class="kw">return</span> <span class="id">user</span>
   }
 }
 
-<span class="kw">const</span> <span class="id">svc</span> = <span class="kw">new</span> <span class="ty">UserService</span>(<span class="id">db</span>)</pre>
+<span class="kw">const</span> <span class="id">svc</span> = <span class="kw">new</span> <span class="ty">UserService</span>(<span class="id">db</span>)
+<span class="kw">const</span> <span class="id">u</span> = <span class="kw">await</span> <span class="id">svc</span>.<span class="fn">findById</span>(<span class="nu">42</span>)</pre>
                 </div>
                 <div class="pane-after">
                     <div class="pane-label">
                         <span class="dot dot-green"></span>ShotScript
                     </div>
-                    <pre><span class="kw">type</span> <span class="ty">UserService</span> = { <span class="kw">readonly</span> <span class="id">db</span>: <span class="ty">Database</span> }
+                    <pre><span class="kw">type</span> <span class="ty">UserService</span> = {
+  <span class="kw">readonly</span> <span class="id">db</span>: <span class="ty">Database</span>
+  <span class="kw">readonly</span> <span class="id">cache</span>: <span class="ty">Map</span>&lt;<span class="ty">number</span>, <span class="ty">User</span>&gt;
+}
 
 <span class="kw">async function</span> <span class="fn">findUserById</span>(
   <span class="id">svc</span>: <span class="ty">UserService</span>,
   <span class="id">id</span>: <span class="ty">number</span>,
 ): <span class="ty">PromiseResult</span>&lt;<span class="ty">User</span>&gt; {
-  <span class="cm">// ...</span>
+  <span class="kw">const</span> <span class="id">hit</span> = <span class="id">svc</span>.<span class="id">cache</span>.<span class="fn">get</span>(<span class="id">id</span>)
+  <span class="kw">if</span> (<span class="id">hit</span> !== <span class="kw">undefined</span>) <span class="kw">return</span> [<span class="id">hit</span>, <span class="kw">null</span>]
+  <span class="kw">const</span> [<span class="id">user</span>, <span class="id">err</span>] = <span class="kw">await</span> <span class="id">svc</span>.<span class="id">db</span>.<span class="fn">find</span>(<span class="id">id</span>)
+  <span class="kw">if</span> (<span class="id">err</span> !== <span class="kw">null</span>) <span class="kw">return</span> [<span class="kw">null</span>, <span class="id">err</span>]
+  <span class="id">svc</span>.<span class="id">cache</span>.<span class="fn">set</span>(<span class="id">id</span>, <span class="id">user</span>)
+  <span class="kw">return</span> [<span class="id">user</span>, <span class="kw">null</span>]
 }
 
-<span class="kw">const</span> <span class="id">svc</span>: <span class="ty">UserService</span> = { <span class="id">db</span> }</pre>
+<span class="kw">const</span> <span class="id">svc</span>: <span class="ty">UserService</span> = { <span class="id">db</span>, <span class="id">cache</span>: <span class="kw">new</span> <span class="ty">Map</span>() }
+<span class="kw">const</span> [<span class="id">u</span>, <span class="id">err</span>] = <span class="kw">await</span> <span class="fn">findUserById</span>(<span class="id">svc</span>, <span class="nu">42</span>)</pre>
                 </div>
             </div>
 
             <div class="callout">
-                <strong>Why it matters:</strong> a <code>type</code> is data, a
-                function is behaviour — separate, independently testable. No
-                hidden state, no inheritance graph to trace, no
-                <code>this</code> context to reason about.
-            </div>
-
-            <!-- 3: Absent values -->
-            <p class="section-label" style="margin-bottom: 0.75rem">
-                Absent values
-            </p>
-            <div class="comparison">
-                <div class="pane-before">
-                    <div class="pane-label">
-                        <span class="dot dot-red"></span>TypeScript
-                    </div>
-                    <pre><span class="cm">// three ways to say "nothing"</span>
-<span class="kw">type</span> <span class="ty">User</span> = {
-  <span class="id">id</span>: <span class="ty">number</span>
-  <span class="id">avatar</span>?: <span class="ty">string</span>
-  <span class="id">deletedAt</span>?: <span class="ty">Date</span>
-}
-
-<span class="kw">function</span> <span class="fn">findUser</span>(
-  <span class="id">id</span>?: <span class="ty">number</span>
-): <span class="ty">User</span> | <span class="kw">undefined</span> { <span class="cm">/* ... */</span> }</pre>
-                </div>
-                <div class="pane-after">
-                    <div class="pane-label">
-                        <span class="dot dot-green"></span>ShotScript
-                    </div>
-                    <pre><span class="cm">// one way — null is the only absent value</span>
-<span class="kw">type</span> <span class="ty">User</span> = {
-  <span class="kw">readonly</span> <span class="id">id</span>: <span class="ty">number</span>
-  <span class="kw">readonly</span> <span class="id">avatar</span>: <span class="ty">string</span> | <span class="kw">null</span>
-  <span class="kw">readonly</span> <span class="id">deletedAt</span>: <span class="ty">Date</span> | <span class="kw">null</span>
-}
-
-<span class="kw">function</span> <span class="fn">findUser</span>(
-  <span class="id">id</span>: <span class="ty">number</span>
-): [<span class="ty">User</span> | <span class="kw">null</span>, <span class="ty">Error</span> | <span class="kw">null</span>] { <span class="cm">/* ... */</span> }</pre>
-                </div>
-            </div>
-
-            <div class="callout">
-                <strong>Why it matters:</strong> most codebases mix <code>?</code>,
-                <code>| undefined</code>, and <code>| null</code>. ShotScript
-                picks one: <code>null</code>. Every optional field is
-                <code>T | null</code>, every fallible return is
-                <code>[T | null, Error | null]</code>. One pattern to check for,
-                everywhere.
+                <strong>Why it matters:</strong> the class hides state behind
+                <code>private</code>, leans on <code>this</code>, and uses
+                <code>!</code> to silence the checker on <code>db.find</code>.
+                The ShotScript version makes the data shape explicit, the
+                function callable in isolation, and forces the caller to handle
+                the error tuple — no hidden control flow, no non-null
+                assertion, nothing to mock around.
             </div>
         </section>
 

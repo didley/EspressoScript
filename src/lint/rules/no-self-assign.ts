@@ -16,6 +16,6 @@ export const noSelfAssign: Rule = {
         const rText = nodeText(node.right, ctx.sourceFile)
         if (lText !== rText) return
         const pos = posOf(ctx.sourceFile, node)
-        ctx.push({ ...pos, rule: 'no-self-assign', message: 'Self-assignment has no effect.' })
+        ctx.report({ ...pos, rule: 'no-self-assign', message: 'Self-assignment has no effect.' })
     },
 }

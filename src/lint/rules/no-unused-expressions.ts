@@ -50,6 +50,6 @@ export const noUnusedExpressions: Rule = {
         if (!ts.isExpressionStatement(node)) return
         if (!hasNoSideEffect(node.expression)) return
         const pos = posOf(ctx.sourceFile, node)
-        ctx.push({ ...pos, rule: 'no-unused-expressions', message: 'Bare expression has no effect.' })
+        ctx.report({ ...pos, rule: 'no-unused-expressions', message: 'Bare expression has no effect.' })
     },
 }

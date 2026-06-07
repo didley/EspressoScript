@@ -16,7 +16,7 @@ export const requireReadonlyCollections: Rule = {
         if (!ts.isIdentifier(name)) return
         const readonly = MUTABLE_TO_READONLY.get(name.text)
         if (readonly === undefined) return
-        ctx.push({
+        ctx.report({
             ...posOf(ctx.sourceFile, node),
             rule: 'require-readonly-collections',
             message: `Use \`${readonly}\` instead of \`${name.text}\` in type positions — collection types must be readonly.`,

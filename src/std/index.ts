@@ -210,3 +210,97 @@ export function safeBtoa(data: string): Result<string> {
     }
 }
 
+/**
+ * Exhaustive-switch helper — call in the default branch to assert a value is never.
+ * The `never` type guarantees this is only reachable if the exhaustiveness check
+ * fails at runtime due to a bad cast.
+ *
+ *   switch (direction) {
+ *     case 'left': ...; break
+ *     case 'right': ...; break
+ *     default: assertNever(direction)
+ *   }
+ */
+export function assertNever(x: never): never {
+    throw new Error('unreachable: ' + JSON.stringify(x))
+}
+
+/**
+ * Safe RegExp constructor — replaces `new RegExp(...)` which throws on invalid patterns.
+ * Returns [RegExp, null] on success, [null, Error] on invalid pattern.
+ *
+ *   const [re, err] = safeRegex('^foo.*', 'i')
+ */
+export function safeRegex(pattern: string, flags: string | null = null): Result<RegExp> {
+    try {
+        return [new RegExp(pattern, flags ?? undefined), null]
+    } catch (e) {
+        if (e instanceof Error) {
+            return [null, e]
+        }
+        return [null, new Error(`Invalid regex: ${String(e)}`)]
+    }
+}
+
+/**
+ * Safe Date constructor — replaces `new Date(...)` which silently produces an invalid Date.
+ * Returns [Date, null] on success, [null, Error] if the input produces an invalid date.
+ *
+ *   const [d, err] = safeDate('2024-01-15')
+ */
+export function safeDate(input: string | number): Result<Date> {
+    const d = new Date(input)
+    if (Number.isNaN(d.getTime())) {
+        return [null, new Error(`Invalid date: ${String(input)}`)]
+    }
+    return [d, null]
+}
+
+/**
+ * Safe number parser — fails on NaN instead of returning it silently.
+ * Returns [number, null] on success, [null, Error] if the result is NaN.
+ *
+ *   const [n, err] = safeNumber('42')
+ */
+export function safeNumber(str: string): Result<number> {
+    const n = Number(str)
+    if (Number.isNaN(n)) {
+        return [null, new Error(`Cannot convert to number: ${JSON.stringify(str)}`)]
+    }
+    return [n, null]
+}
+
+/**
+ * Safe structuredClone — replaces the bare `structuredClone()` which throws on non-cloneable values.
+ * Returns [cloned, null] on success, [null, Error] if the value cannot be cloned.
+ *
+ *   const [copy, err] = safeStructuredClone(value)
+ */
+export function safeStructuredClone<T>(value: T): Result<T> {
+    try {
+        return [structuredClone(value), null]
+    } catch (e) {
+        if (e instanceof Error) {
+            return [null, e]
+        }
+        return [null, new Error(`structuredClone failed: ${String(e)}`)]
+    }
+}
+
+/**
+ * Safe BigInt constructor — replaces `BigInt(...)` which throws on invalid input.
+ * Returns [bigint, null] on success, [null, Error] on invalid input.
+ *
+ *   const [n, err] = safeBigInt('12345678901234567890')
+ */
+export function safeBigInt(str: string): Result<bigint> {
+    try {
+        return [BigInt(str), null]
+    } catch (e) {
+        if (e instanceof Error) {
+            return [null, e]
+        }
+        return [null, new Error(`Invalid BigInt: ${String(e)}`)]
+    }
+}
+

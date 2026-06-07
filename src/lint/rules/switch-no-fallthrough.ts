@@ -19,6 +19,6 @@ export const switchNoFallthrough: Rule = {
         if (last === undefined) return
         if (TERMINATORS.has(last.kind)) return
         const pos = posOf(ctx.sourceFile, node)
-        ctx.push({ ...pos, rule: 'switch-no-fallthrough', message: 'Switch case must end with `break` or `return`.' })
+        ctx.report({ ...pos, rule: 'switch-no-fallthrough', message: 'Switch case must end with `break` or `return`.' })
     },
 }

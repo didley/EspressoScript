@@ -100,6 +100,16 @@ import { noIntersectionTypes } from './no-intersection-types.js'
 import { requireTupleDestructure } from './require-tuple-destructure.js'
 import { requireAsyncTupleReturn } from './require-async-tuple-return.js'
 import { noFloatingPromises } from './no-floating-promises.js'
+import { noMutatingArrayMethods } from './no-mutating-array-methods.js'
+import { requireReadonlyParameters } from './require-readonly-parameters.js'
+import { noObjectAssign } from './no-object-assign.js'
+import { noObjectLiteralAccessors } from './no-object-literal-accessors.js'
+import { noExportStar } from './no-export-star.js'
+import { noSideEffectImport } from './no-side-effect-import.js'
+import { noDynamicImport } from './no-dynamic-import.js'
+import { noReturnAwait } from './no-return-await.js'
+import { noRestrictedGlobals } from './no-restricted-globals.js'
+import { noPrototypeMethodCall } from './no-prototype-method-call.js'
 
 export const rules: readonly Rule[] = [
     noArrowFunctions,
@@ -202,4 +212,14 @@ export const rules: readonly Rule[] = [
     requireReadonlyCollections,
     noImplicitTruthy,
     noUnnecessaryCondition,
+    noMutatingArrayMethods,
+    requireReadonlyParameters,
+    noObjectAssign,
+    noObjectLiteralAccessors,
+    noExportStar,
+    noSideEffectImport,
+    noDynamicImport,
+    noReturnAwait,
+    noRestrictedGlobals,
+    noPrototypeMethodCall,
 ]

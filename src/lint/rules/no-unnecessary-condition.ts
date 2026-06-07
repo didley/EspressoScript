@@ -34,7 +34,7 @@ export const noUnnecessaryCondition: Rule = {
         if (checked === null) return
         const type = ctx.typeChecker.getTypeAtLocation(checked)
         if (!typeCanBeNull(type)) {
-            ctx.push({
+            ctx.report({
                 ...posOf(ctx.sourceFile, node),
                 rule: 'no-unnecessary-condition',
                 message: 'Unnecessary null check — this expression can never be null.',

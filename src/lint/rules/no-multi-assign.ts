@@ -20,6 +20,6 @@ export const noMultiAssign: Rule = {
         if (!ts.isBinaryExpression(node.right)) return
         if (!ASSIGN_OPS.has(node.right.operatorToken.kind)) return
         const pos = posOf(ctx.sourceFile, node)
-        ctx.push({ ...pos, rule: 'no-multi-assign', message: 'Chained assignment (`a = b = c`) is not allowed.' })
+        ctx.report({ ...pos, rule: 'no-multi-assign', message: 'Chained assignment (`a = b = c`) is not allowed.' })
     },
 }

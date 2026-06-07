@@ -8,6 +8,6 @@ export const noDoWhile: Rule = {
     visit(node, ctx): void {
         if (!ts.isDoStatement(node)) return
         const pos = posOf(ctx.sourceFile, node)
-        ctx.push({ ...pos, rule: 'no-do-while', message: '`do...while` is not allowed. Use `while`.' })
+        ctx.report({ ...pos, rule: 'no-do-while', message: '`do...while` is not allowed. Use `while`.' })
     },
 }

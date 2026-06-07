@@ -15,6 +15,6 @@ export const noLogicalAssignment: Rule = {
         if (!ts.isBinaryExpression(node)) return
         if (!LOGICAL_ASSIGN_OPS.has(node.operatorToken.kind)) return
         const pos = posOf(ctx.sourceFile, node)
-        ctx.push({ ...pos, rule: 'no-logical-assignment', message: 'Logical assignment is not allowed. Spell it out.' })
+        ctx.report({ ...pos, rule: 'no-logical-assignment', message: 'Logical assignment is not allowed. Spell it out.' })
     },
 }

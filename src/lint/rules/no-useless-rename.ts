@@ -9,19 +9,19 @@ export const noUselessRename: Rule = {
         if (ts.isImportSpecifier(node)) {
             if (node.propertyName !== undefined && node.propertyName.text === node.name.text) {
                 const pos = posOf(ctx.sourceFile, node)
-                ctx.push({ ...pos, rule: 'no-useless-rename', message: 'Useless rename — drop the alias.' })
+                ctx.report({ ...pos, rule: 'no-useless-rename', message: 'Useless rename — drop the alias.' })
             }
         } else if (ts.isExportSpecifier(node)) {
             if (node.propertyName !== undefined && node.propertyName.text === node.name.text) {
                 const pos = posOf(ctx.sourceFile, node)
-                ctx.push({ ...pos, rule: 'no-useless-rename', message: 'Useless rename — drop the alias.' })
+                ctx.report({ ...pos, rule: 'no-useless-rename', message: 'Useless rename — drop the alias.' })
             }
         } else if (ts.isBindingElement(node)) {
             const propName = node.propertyName
             if (propName !== undefined && ts.isIdentifier(propName) && ts.isIdentifier(node.name)) {
                 if (propName.text === node.name.text) {
                     const pos = posOf(ctx.sourceFile, node)
-                    ctx.push({ ...pos, rule: 'no-useless-rename', message: 'Useless rename — drop the alias.' })
+                    ctx.report({ ...pos, rule: 'no-useless-rename', message: 'Useless rename — drop the alias.' })
                 }
             }
         }

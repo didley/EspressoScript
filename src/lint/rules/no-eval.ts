@@ -11,6 +11,6 @@ export const noEval: Rule = {
         if (!ts.isIdentifier(expr)) return
         if (expr.text !== 'eval') return
         const pos = posOf(ctx.sourceFile, node)
-        ctx.push({ ...pos, rule: 'no-eval', message: '`eval` is not allowed.' })
+        ctx.report({ ...pos, rule: 'no-eval', message: '`eval` is not allowed.' })
     },
 }

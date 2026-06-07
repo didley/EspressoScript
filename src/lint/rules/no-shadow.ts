@@ -37,7 +37,7 @@ function addBinding(
 ): void {
     if (isDefinedAbove(scopes, name)) {
         const pos = posOf(ctx.sourceFile, declNode)
-        ctx.push({ ...pos, rule: 'no-shadow', message: 'Variable shadowing is not allowed. Rename the inner binding.' })
+        ctx.report({ ...pos, rule: 'no-shadow', message: 'Variable shadowing is not allowed. Rename the inner binding.' })
     }
     scope.bindings.set(name, declNode)
 }

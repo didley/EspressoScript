@@ -37,10 +37,10 @@ export const noBitwise: Rule = {
         if (ts.isBinaryExpression(node) && BITWISE_BINARY.has(node.operatorToken.kind)) {
             if (isTsFlagsExpr(node.left) || isTsFlagsExpr(node.right)) return
             const pos = posOf(ctx.sourceFile, node)
-            ctx.push({ ...pos, rule: 'no-bitwise', message: 'Bitwise operators are not allowed.' })
+            ctx.report({ ...pos, rule: 'no-bitwise', message: 'Bitwise operators are not allowed.' })
         } else if (ts.isPrefixUnaryExpression(node) && node.operator === ts.SyntaxKind.TildeToken) {
             const pos = posOf(ctx.sourceFile, node)
-            ctx.push({ ...pos, rule: 'no-bitwise', message: 'Bitwise operators are not allowed.' })
+            ctx.report({ ...pos, rule: 'no-bitwise', message: 'Bitwise operators are not allowed.' })
         }
     },
 }

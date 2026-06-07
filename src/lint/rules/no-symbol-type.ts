@@ -10,9 +10,9 @@ export const noSymbolType: Rule = {
             // Skip the SymbolKeyword child of `unique symbol` — the TypeOperatorNode fires instead
             const parent = node.parent
             if (ts.isTypeOperatorNode(parent) && parent.operator === ts.SyntaxKind.UniqueKeyword) return
-            ctx.push({ ...posOf(ctx.sourceFile, node), rule: 'no-symbol-type', message: '`symbol` / `unique symbol` types are not allowed.' })
+            ctx.report({ ...posOf(ctx.sourceFile, node), rule: 'no-symbol-type', message: '`symbol` / `unique symbol` types are not allowed.' })
         } else if (ts.isTypeOperatorNode(node) && node.operator === ts.SyntaxKind.UniqueKeyword) {
-            ctx.push({ ...posOf(ctx.sourceFile, node), rule: 'no-symbol-type', message: '`symbol` / `unique symbol` types are not allowed.' })
+            ctx.report({ ...posOf(ctx.sourceFile, node), rule: 'no-symbol-type', message: '`symbol` / `unique symbol` types are not allowed.' })
         }
     },
 }

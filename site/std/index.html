@@ -482,7 +482,7 @@
 
         <div class="content">
 
-            <div class="callout"><strong>Import:</strong> <code>import { safeFetch, jsonParse, wrapError } from 'shotscript/std'</code> <code>import type { Result, PromiseResult } from 'shotscript/std'</code></div>
+            <div class="callout"><strong>Import:</strong> <code>import { safeFetch, jsonParse, wrapError, assertNever, safeRegex, safeDate, safeNumber, safeStructuredClone, safeBigInt } from 'shotscript/std'</code> <code>import type { Result, PromiseResult } from 'shotscript/std'</code></div>
 
             <hr />
 
@@ -652,6 +652,75 @@
                 <pre><span class="kw">function</span> <span class="fn">safeBtoa</span>(<span class="op">data</span>: <span class="ty">string</span>): <span class="ty">Result</span>&lt;<span class="ty">string</span>&gt;
 
 <span class="kw">const</span> [<span class="op">b64</span>, <span class="op">err</span>] = <span class="fn">safeBtoa</span>(<span class="op">binaryStr</span>)</pre>
+            </div>
+
+            <div class="fn-block" id="assertNever">
+                <div class="fn-header">
+                    <span class="fn-name">assertNever(x)</span>
+                    <span class="fn-kind">sync</span>
+                </div>
+                <p class="fn-desc">Exhaustive-switch helper — call in the <code>default</code> branch to assert a value is <code>never</code>. The type system guarantees this is only reachable if an exhaustiveness check fails at runtime due to a bad cast.</p>
+                <pre><span class="kw">function</span> <span class="fn">assertNever</span>(<span class="op">x</span>: <span class="ty">never</span>): <span class="ty">never</span>
+
+<span class="kw">switch</span> (<span class="op">direction</span>) {
+  <span class="kw">case</span> <span class="st">'left'</span>: ...; <span class="kw">break</span>
+  <span class="kw">default</span>: <span class="fn">assertNever</span>(<span class="op">direction</span>)
+}</pre>
+            </div>
+
+            <div class="fn-block" id="safeRegex">
+                <div class="fn-header">
+                    <span class="fn-name">safeRegex(pattern, flags?)</span>
+                    <span class="fn-kind">sync</span>
+                </div>
+                <p class="fn-desc">Safe <code>new RegExp()</code> — replaces the banned constructor which throws on invalid patterns. Returns <code>[RegExp, null]</code> on success, <code>[null, Error]</code> on invalid pattern.</p>
+                <pre><span class="kw">function</span> <span class="fn">safeRegex</span>(<span class="op">pattern</span>: <span class="ty">string</span>, <span class="op">flags</span>: <span class="ty">string</span> | <span class="kw">null</span>): <span class="ty">Result</span>&lt;<span class="ty">RegExp</span>&gt;
+
+<span class="kw">const</span> [<span class="op">re</span>, <span class="op">err</span>] = <span class="fn">safeRegex</span>(<span class="st">'^foo.*'</span>, <span class="st">'i'</span>)</pre>
+            </div>
+
+            <div class="fn-block" id="safeDate">
+                <div class="fn-header">
+                    <span class="fn-name">safeDate(input)</span>
+                    <span class="fn-kind">sync</span>
+                </div>
+                <p class="fn-desc">Safe <code>new Date()</code> — replaces the banned constructor which silently produces an invalid Date. Returns <code>[Date, null]</code> on success, <code>[null, Error]</code> if the input produces an invalid date.</p>
+                <pre><span class="kw">function</span> <span class="fn">safeDate</span>(<span class="op">input</span>: <span class="ty">string</span> | <span class="ty">number</span>): <span class="ty">Result</span>&lt;<span class="ty">Date</span>&gt;
+
+<span class="kw">const</span> [<span class="op">d</span>, <span class="op">err</span>] = <span class="fn">safeDate</span>(<span class="st">'2024-01-15'</span>)</pre>
+            </div>
+
+            <div class="fn-block" id="safeNumber">
+                <div class="fn-header">
+                    <span class="fn-name">safeNumber(str)</span>
+                    <span class="fn-kind">sync</span>
+                </div>
+                <p class="fn-desc">Safe number parser — fails on NaN instead of returning it silently. Returns <code>[number, null]</code> on success, <code>[null, Error]</code> if the result is NaN.</p>
+                <pre><span class="kw">function</span> <span class="fn">safeNumber</span>(<span class="op">str</span>: <span class="ty">string</span>): <span class="ty">Result</span>&lt;<span class="ty">number</span>&gt;
+
+<span class="kw">const</span> [<span class="op">n</span>, <span class="op">err</span>] = <span class="fn">safeNumber</span>(<span class="st">'42'</span>)</pre>
+            </div>
+
+            <div class="fn-block" id="safeStructuredClone">
+                <div class="fn-header">
+                    <span class="fn-name">safeStructuredClone&lt;T&gt;(value)</span>
+                    <span class="fn-kind">sync</span>
+                </div>
+                <p class="fn-desc">Safe <code>structuredClone</code> — replaces the banned global which throws on non-cloneable values. Returns <code>[cloned, null]</code> on success, <code>[null, Error]</code> if the value cannot be cloned.</p>
+                <pre><span class="kw">function</span> <span class="fn">safeStructuredClone</span>&lt;<span class="ty">T</span>&gt;(<span class="op">value</span>: <span class="ty">T</span>): <span class="ty">Result</span>&lt;<span class="ty">T</span>&gt;
+
+<span class="kw">const</span> [<span class="op">copy</span>, <span class="op">err</span>] = <span class="fn">safeStructuredClone</span>(<span class="op">value</span>)</pre>
+            </div>
+
+            <div class="fn-block" id="safeBigInt">
+                <div class="fn-header">
+                    <span class="fn-name">safeBigInt(str)</span>
+                    <span class="fn-kind">sync</span>
+                </div>
+                <p class="fn-desc">Safe <code>BigInt()</code> — replaces the banned global which throws on invalid input. Returns <code>[bigint, null]</code> on success, <code>[null, Error]</code> on invalid input.</p>
+                <pre><span class="kw">function</span> <span class="fn">safeBigInt</span>(<span class="op">str</span>: <span class="ty">string</span>): <span class="ty">Result</span>&lt;<span class="ty">bigint</span>&gt;
+
+<span class="kw">const</span> [<span class="op">n</span>, <span class="op">err</span>] = <span class="fn">safeBigInt</span>(<span class="st">'12345678901234567890'</span>)</pre>
             </div>
         </div>
 

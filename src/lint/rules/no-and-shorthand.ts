@@ -11,6 +11,6 @@ export const noAndShorthand: Rule = {
         if (!ts.isBinaryExpression(expr)) return
         if (expr.operatorToken.kind !== ts.SyntaxKind.AmpersandAmpersandToken) return
         const pos = posOf(ctx.sourceFile, node)
-        ctx.push({ ...pos, rule: 'no-and-shorthand', message: "Don't use `&&` as conditional execution. Use an `if` block." })
+        ctx.report({ ...pos, rule: 'no-and-shorthand', message: "Don't use `&&` as conditional execution. Use an `if` block." })
     },
 }

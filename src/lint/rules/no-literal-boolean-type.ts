@@ -14,7 +14,7 @@ export const noLiteralBooleanType: Rule = {
         if (ts.isUnionTypeNode(node) && node.types.length === 2) {
             const [a, b] = node.types
             if (a !== undefined && b !== undefined && isBooleanLiteral(a) && isBooleanLiteral(b)) {
-                ctx.push({ ...posOf(ctx.sourceFile, node), rule: 'no-literal-boolean-type', message: '`true | false` is just `boolean`.' })
+                ctx.report({ ...posOf(ctx.sourceFile, node), rule: 'no-literal-boolean-type', message: '`true | false` is just `boolean`.' })
             }
         }
     },

@@ -9,6 +9,6 @@ export const requireNamedFunctions: Rule = {
         if (!ts.isFunctionExpression(node)) return
         if (node.name !== undefined) return
         const pos = posOf(ctx.sourceFile, node)
-        ctx.push({ ...pos, rule: 'require-named-functions', message: 'Function expressions must be named.' })
+        ctx.report({ ...pos, rule: 'require-named-functions', message: 'Function expressions must be named.' })
     },
 }

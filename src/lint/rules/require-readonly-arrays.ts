@@ -12,7 +12,7 @@ export const requireReadonlyArrays: Rule = {
                 ts.isTypeOperatorNode(parent) &&
                 parent.operator === ts.SyntaxKind.ReadonlyKeyword
             if (!coveredByReadonly) {
-                ctx.push({ ...posOf(ctx.sourceFile, node), rule: 'require-readonly-arrays', message: 'Array types must be declared `readonly T[]`.' })
+                ctx.report({ ...posOf(ctx.sourceFile, node), rule: 'require-readonly-arrays', message: 'Array types must be declared `readonly T[]`.' })
             }
         }
     },

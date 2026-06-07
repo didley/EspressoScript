@@ -15,7 +15,7 @@ export type Context = {
     readonly source: string
     readonly sourceFile: ts.SourceFile
     readonly typeChecker: ts.TypeChecker | null
-    push(d: Omit<Diagnostic, 'file'>): void
+    report(d: Omit<Diagnostic, 'file'>): void
 }
 
 /** A single ShotScript lint rule. */

@@ -11,7 +11,7 @@ export const noReadonlyWrapper: Rule = {
             ts.isIdentifier(node.typeName) &&
             node.typeName.text === 'Readonly'
         ) {
-            ctx.push({ ...posOf(ctx.sourceFile, node), rule: 'no-readonly-wrapper', message: '`Readonly<T>` is redundant; declare each property `readonly`.' })
+            ctx.report({ ...posOf(ctx.sourceFile, node), rule: 'no-readonly-wrapper', message: '`Readonly<T>` is redundant; declare each property `readonly`.' })
         }
     },
 }

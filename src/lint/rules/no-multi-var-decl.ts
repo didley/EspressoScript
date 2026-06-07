@@ -9,6 +9,6 @@ export const noMultiVarDecl: Rule = {
         if (!ts.isVariableDeclarationList(node)) return
         if (node.declarations.length <= 1) return
         const pos = posOf(ctx.sourceFile, node)
-        ctx.push({ ...pos, rule: 'no-multi-var-decl', message: 'One variable declaration per statement.' })
+        ctx.report({ ...pos, rule: 'no-multi-var-decl', message: 'One variable declaration per statement.' })
     },
 }

@@ -11,7 +11,7 @@ export const requireReadonlyProperty: Rule = {
                 return m.kind === ts.SyntaxKind.ReadonlyKeyword
             }) ?? false
             if (!hasReadonly) {
-                ctx.push({ ...posOf(ctx.sourceFile, node), rule: 'require-readonly-property', message: 'Object type properties must be declared `readonly`.' })
+                ctx.report({ ...posOf(ctx.sourceFile, node), rule: 'require-readonly-property', message: 'Object type properties must be declared `readonly`.' })
             }
         }
     },

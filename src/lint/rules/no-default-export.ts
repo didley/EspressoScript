@@ -9,6 +9,6 @@ export const noDefaultExport: Rule = {
         if (!ts.isExportAssignment(node)) return
         if (node.isExportEquals === true) return
         const pos = posOf(ctx.sourceFile, node)
-        ctx.push({ ...pos, rule: 'no-default-export', message: 'Default exports are not allowed. Use named exports.' })
+        ctx.report({ ...pos, rule: 'no-default-export', message: 'Default exports are not allowed. Use named exports.' })
     },
 }

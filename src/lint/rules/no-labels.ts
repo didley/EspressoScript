@@ -8,13 +8,13 @@ export const noLabels: Rule = {
     visit(node, ctx): void {
         if (ts.isLabeledStatement(node)) {
             const pos = posOf(ctx.sourceFile, node)
-            ctx.push({ ...pos, rule: 'no-labels', message: 'Labels are not allowed. Extract a function and `return`.' })
+            ctx.report({ ...pos, rule: 'no-labels', message: 'Labels are not allowed. Extract a function and `return`.' })
         } else if (ts.isBreakStatement(node) && node.label !== undefined) {
             const pos = posOf(ctx.sourceFile, node)
-            ctx.push({ ...pos, rule: 'no-labels', message: 'Labels are not allowed. Extract a function and `return`.' })
+            ctx.report({ ...pos, rule: 'no-labels', message: 'Labels are not allowed. Extract a function and `return`.' })
         } else if (ts.isContinueStatement(node) && node.label !== undefined) {
             const pos = posOf(ctx.sourceFile, node)
-            ctx.push({ ...pos, rule: 'no-labels', message: 'Labels are not allowed. Extract a function and `return`.' })
+            ctx.report({ ...pos, rule: 'no-labels', message: 'Labels are not allowed. Extract a function and `return`.' })
         }
     },
 }

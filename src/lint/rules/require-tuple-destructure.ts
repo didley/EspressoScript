@@ -33,7 +33,7 @@ function walk(node: ts.Node, stdImports: ReadonlySet<string>, ctx: Parameters<Ru
             if (ts.isCallExpression(init)) {
                 const callee = init.expression
                 if (ts.isIdentifier(callee) && stdImports.has(callee.text)) {
-                    ctx.push({
+                    ctx.report({
                         ...posOf(ctx.sourceFile, node),
                         rule: 'require-tuple-destructure',
                         message: 'Tuple-returning calls must be destructured: use `const [result, err] = ...`.',

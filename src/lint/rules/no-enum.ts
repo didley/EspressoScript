@@ -7,7 +7,7 @@ export const noEnum: Rule = {
     name: 'no-enum',
     visit(node, ctx): void {
         if (ts.isEnumDeclaration(node)) {
-            ctx.push({ ...posOf(ctx.sourceFile, node), rule: 'no-enum', message: '`enum` is not allowed. Use an `as const` object.' })
+            ctx.report({ ...posOf(ctx.sourceFile, node), rule: 'no-enum', message: '`enum` is not allowed. Use an `as const` object.' })
         }
     },
 }

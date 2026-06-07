@@ -1,6 +1,13 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
+    "target": "ES2023",
+    "lib": ["ES2023"],
+    // "Preserve" is bundler-neutral (TS 5.4+); avoids forcing NodeNext on library consumers
+    "module": "Preserve",
+    "moduleResolution": "Bundler",
+    "skipLibCheck": true,
+    "useUnknownInCatchVariables": true,
     "strict": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,

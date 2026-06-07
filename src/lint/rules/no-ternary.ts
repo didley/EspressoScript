@@ -8,6 +8,6 @@ export const noTernary: Rule = {
     visit(node, ctx): void {
         if (!ts.isConditionalExpression(node)) return
         const pos = posOf(ctx.sourceFile, node)
-        ctx.push({ ...pos, rule: 'no-ternary', message: 'Ternary expressions are not allowed. Use a named function.' })
+        ctx.report({ ...pos, rule: 'no-ternary', message: 'Ternary expressions are not allowed. Use a named function.' })
     },
 }

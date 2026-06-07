@@ -23,7 +23,7 @@ function scanComments(source: string, pos: number, ctx: Parameters<Rule['visit']
             const line = (before.match(/\n/g) ?? []).length + 1
             const lastNl = before.lastIndexOf('\n')
             const col = computeCol(r.pos, lastNl)
-            ctx.push({ line, col, rule: 'no-ts-comment', message: 'TS escape-hatch comments are not allowed.' })
+            ctx.report({ line, col, rule: 'no-ts-comment', message: 'TS escape-hatch comments are not allowed.' })
         }
     }
 }

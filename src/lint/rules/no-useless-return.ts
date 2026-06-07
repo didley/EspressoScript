@@ -23,6 +23,6 @@ export const noUselessReturn: Rule = {
         const grandParent = parent.parent
         if (!grandParent || !FN_KINDS.has(grandParent.kind)) return
         const pos = posOf(ctx.sourceFile, node)
-        ctx.push({ ...pos, rule: 'no-useless-return', message: 'Trailing bare `return` is unnecessary.' })
+        ctx.report({ ...pos, rule: 'no-useless-return', message: 'Trailing bare `return` is unnecessary.' })
     },
 }

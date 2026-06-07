@@ -7,7 +7,7 @@ export const noInfer: Rule = {
     name: 'no-infer',
     visit(node, ctx): void {
         if (ts.isInferTypeNode(node)) {
-            ctx.push({ ...posOf(ctx.sourceFile, node), rule: 'no-infer', message: '`infer` is not allowed.' })
+            ctx.report({ ...posOf(ctx.sourceFile, node), rule: 'no-infer', message: '`infer` is not allowed.' })
         }
     },
 }

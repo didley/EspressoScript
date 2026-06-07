@@ -31,6 +31,6 @@ export const noNewUserTypes: Rule = {
         if (!ts.isIdentifier(expr)) return
         if (ALLOWED_CONSTRUCTORS.has(expr.text)) return
         const pos = posOf(ctx.sourceFile, node)
-        ctx.push({ ...pos, rule: 'no-new-user-types', message: '`new` is only allowed on built-in runtime constructors.' })
+        ctx.report({ ...pos, rule: 'no-new-user-types', message: '`new` is only allowed on built-in runtime constructors.' })
     },
 }

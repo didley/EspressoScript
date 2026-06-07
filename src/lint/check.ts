@@ -54,7 +54,7 @@ export function check(
         source,
         sourceFile,
         typeChecker: checker,
-        push(d: Omit<Diagnostic, 'file'>): void {
+        report(d: Omit<Diagnostic, 'file'>): void {
             diagMap.set(diagMap.size, { file, ...d })
         },
     }

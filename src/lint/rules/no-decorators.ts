@@ -9,7 +9,7 @@ export const noDecorators: Rule = {
         if (ts.canHaveDecorators(node)) {
             const decorators = ts.getDecorators(node)
             if (decorators !== undefined && decorators.length > 0) {
-                ctx.push({ ...posOf(ctx.sourceFile, node), rule: 'no-decorators', message: 'Decorators are not allowed.' })
+                ctx.report({ ...posOf(ctx.sourceFile, node), rule: 'no-decorators', message: 'Decorators are not allowed.' })
             }
         }
     },

@@ -21,7 +21,7 @@ export const noPromise: Rule = {
             ts.isIdentifier(node.expression) &&
             node.expression.text === 'Promise'
         ) {
-            ctx.push({
+            ctx.report({
                 ...posOf(ctx.sourceFile, node),
                 rule: 'no-promise',
                 message: `new Promise() is not allowed. Use toPromiseResult(() => externalFn()) to wrap external Promise-returning functions.`,
@@ -38,7 +38,7 @@ export const noPromise: Rule = {
             ts.isIdentifier(node.expression.name) &&
             PROMISE_STATIC_METHODS.has(node.expression.name.text)
         ) {
-            ctx.push({
+            ctx.report({
                 ...posOf(ctx.sourceFile, node),
                 rule: 'no-promise',
                 message: `Promise.${node.expression.name.text}() is not allowed. Use toPromiseResult(() => externalFn()) to wrap external Promise-returning functions.`,

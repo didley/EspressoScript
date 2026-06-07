@@ -9,6 +9,6 @@ export const noLetOutsideFor: Rule = {
         if (!ts.isVariableStatement(node)) return
         if ((node.declarationList.flags & ts.NodeFlags.Let) === 0) return
         const pos = posOf(ctx.sourceFile, node)
-        ctx.push({ ...pos, rule: 'no-let-outside-for', message: '`let` is only allowed in a `for` header. Use `const`.' })
+        ctx.report({ ...pos, rule: 'no-let-outside-for', message: '`let` is only allowed in a `for` header. Use `const`.' })
     },
 }

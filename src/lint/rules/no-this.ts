@@ -7,7 +7,7 @@ export const noThis: Rule = {
     name: 'no-this',
     visit(node, ctx): void {
         if (node.kind === ts.SyntaxKind.ThisKeyword) {
-            ctx.push({ ...posOf(ctx.sourceFile, node), rule: 'no-this', message: '`this` is not allowed.' })
+            ctx.report({ ...posOf(ctx.sourceFile, node), rule: 'no-this', message: '`this` is not allowed.' })
         }
     },
 }
