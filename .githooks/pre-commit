@@ -5,5 +5,5 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 
 echo "shotscript pre-commit: running tests..."
 node --import tsx/esm "$ROOT/tests/runner.ts"
-node --import tsx/esm --test "$ROOT/tests/utils.test.ts"
+node --import tsx/esm --test "$ROOT/tests/std.test.ts"
 echo "shotscript pre-commit: all checks passed."

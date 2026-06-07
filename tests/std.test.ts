@@ -1,6 +1,6 @@
 import { test } from "node:test"
 import assert from "node:assert/strict"
-import { toResult, toPromiseResult, jsonParse, jsonStringify, safeFetch } from "../src/utils/index.ts"
+import { toResult, toPromiseResult, jsonParse, jsonStringify, safeFetch } from "../src/std/index.ts"
 
 test("toResult: returns value on success", function runTest(): void {
     const [val, err] = toResult(function parse(): number { return JSON.parse("42") as number })

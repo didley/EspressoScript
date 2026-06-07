@@ -14,23 +14,23 @@
       "types": "./dist/checker/index.d.ts"
     },
     "./std": {
-      "import": "./dist/utils/index.js",
-      "types": "./dist/utils/index.d.ts"
+      "import": "./dist/std/index.js",
+      "types": "./dist/std/index.d.ts"
     },
     "./plugin": "./dist/plugin.cjs",
     "./tsconfig/shotscript.json": "./tsconfig/shotscript.json",
-    "./biome": "./biome/biome.json"
+    "./fmt": "./fmt/shotscript.json"
   },
   "main": "./dist/checker/index.js",
   "types": "./dist/checker/index.d.ts",
   "files": [
     "dist/",
     "tsconfig/",
-    "biome/"
+    "fmt/"
   ],
   "scripts": {
     "build": "tsc && esbuild src/plugin.ts --bundle --platform=node --format=cjs --external:typescript --outfile=dist/plugin.cjs --footer:js='module.exports=module.exports.default??module.exports;'",
-    "test": "node --import tsx/esm tests/runner.ts && node --import tsx/esm --test tests/utils.test.ts",
+    "test": "node --import tsx/esm tests/runner.ts && node --import tsx/esm --test tests/std.test.ts",
     "check": "tsc --noEmit",
     "prepare": "git config core.hooksPath .githooks || true"
   },
@@ -45,6 +45,6 @@
   },
   "engines": {
     "node": ">=18.0.0",
-    "bun": ">=1.0.0"
+    "pnpm": ">=9.0.0"
   }
 }
