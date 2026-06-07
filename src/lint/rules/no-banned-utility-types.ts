@@ -9,7 +9,7 @@ const BANNED = new Set([
     'PropertyDecorator', 'ParameterDecorator',
 ])
 
-/** This utility type is banned. See `docs/LANGUAGE.md` for the canonical form. */
+/** This utility type is banned. See `shotscript.dev/lint/` for the canonical form. */
 export const noBannedUtilityTypes: Rule = {
     name: 'no-banned-utility-types',
     visit(node, ctx): void {
@@ -18,7 +18,7 @@ export const noBannedUtilityTypes: Rule = {
             ts.isIdentifier(node.typeName) &&
             BANNED.has(node.typeName.text)
         ) {
-            ctx.push({ ...posOf(ctx.sourceFile, node), rule: 'no-banned-utility-types', message: 'This utility type is banned. See `docs/LANGUAGE.md` for the canonical form.' })
+            ctx.push({ ...posOf(ctx.sourceFile, node), rule: 'no-banned-utility-types', message: 'This utility type is banned. See `shotscript.dev/lint/` for the canonical form.' })
         }
     },
 }

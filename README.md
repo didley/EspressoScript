@@ -136,7 +136,7 @@ const total = items.filter(isActive).reduce(sumScore, 0)
 
 ## Rules
 
-95+ rules across functions, types, error handling, control flow, and hygiene. Full reference: [docs/LANGUAGE.md](./docs/LANGUAGE.md)
+95+ rules across functions, types, error handling, control flow, and hygiene. Full reference: [shotscript.dev/lint](https://shotscript.dev/lint/)
 
 Key bans: `no-throw`, `no-try`, `no-arrow-functions`, `no-any`, `no-assertion`, `no-interface`, `no-class`, `no-ternary`, `no-optional-property`, `no-undefined-type`, `require-readonly-property`, `require-async-tuple-return`
 

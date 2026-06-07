@@ -27,7 +27,7 @@ case "$OS" in
   Darwin) ;;
   MINGW*|MSYS*|CYGWIN*|Windows*)
     printf '\n' >&2
-    die "Windows is not yet supported. See docs/INSTALL.md for a manual workaround." 2
+    die "Windows is not yet supported. Install via npm: npm install --save-dev shotscript" 2
     ;;
   *)
     printf '\n' >&2
