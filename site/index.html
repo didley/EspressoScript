@@ -224,6 +224,7 @@
                 flex: 1;
                 display: flex;
                 flex-direction: column;
+                gap: 4px;
                 height: 240px;
             }
 
@@ -231,7 +232,6 @@
                 flex: 1;
                 background: var(--surface);
                 border: 1px solid var(--border);
-                border-right: none;
                 padding: 0 1rem;
                 text-decoration: none;
                 display: flex;
@@ -239,11 +239,7 @@
                 justify-content: center;
                 transition: border-color 0.15s, background 0.15s;
             }
-            .graph-item-inner + .graph-item-inner {
-                border-top: none;
-            }
-            .graph-item-inner:first-child { border-radius: 8px 0 0 0; }
-            .graph-item-inner:last-child  { border-radius: 0 0 0 8px; border-bottom: 1px solid var(--border); }
+            .graph-item-inner { border-radius: 8px; }
             .graph-item-inner:hover {
                 background: rgba(200, 112, 42, 0.05);
                 text-decoration: none;
@@ -415,6 +411,7 @@
                 display: flex;
                 gap: 0.25rem;
                 flex-wrap: wrap;
+                justify-content: center;
             }
 
             .page-toc a {
@@ -451,6 +448,9 @@
                 <li><a href="/fmt/">Fmt</a></li>
                 <li><a href="/typing/">Typing</a></li>
                 <li><a href="/std/">Std</a></li>
+                <li class="nav-divider" aria-hidden="true"></li>
+                <li><a href="https://github.com/didley/shotscript" class="nav-ext" target="_blank" rel="noopener">GitHub ↗</a></li>
+                <li><a href="https://www.npmjs.com/package/shotscript" class="nav-ext" target="_blank" rel="noopener">npm ↗</a></li>
             </ul>
         </nav>
 
@@ -465,8 +465,8 @@
         <div class="page-toc" style="padding-bottom: 2rem">
             <a href="#problem">The problem</a>
             <a href="#what">What is ShotScript</a>
-            <a href="#install">Install</a>
             <a href="#before-after">Before / after</a>
+            <a href="#install">Install</a>
         </div>
 
         <hr class="divider" />
@@ -571,102 +571,33 @@
                 tools that constrain TypeScript to a single canonical form.
             </p>
 
-            <div class="graph">
-                <div class="graph-items">
-                    <div class="graph-item">
-                        <a href="/lint/" class="graph-item-inner">
-                            <div class="graph-item-name">ShotScriptLint</div>
-                            <div class="graph-item-desc">
-                                95+ rules. One canonical form,
-                                compile-time enforced.
-                            </div>
-                        </a>
-                    </div>
-                    <div class="graph-item">
-                        <a href="/fmt/" class="graph-item-inner">
-                            <div class="graph-item-name">ShotScriptFmt</div>
-                            <div class="graph-item-desc">
-                                80-char, no semis, 4-space. Optimised for
-                                diffs.
-                            </div>
-                        </a>
-                    </div>
-                    <div class="graph-item">
-                        <a href="/typing/" class="graph-item-inner">
-                            <div class="graph-item-name">
-                                ShotScriptTyping
-                            </div>
-                            <div class="graph-item-desc">
-                                Full strict mode. Every invalid state,
-                                prevented.
-                            </div>
-                        </a>
-                    </div>
-                    <div class="graph-item">
-                        <a href="/std/" class="graph-item-inner">
-                            <div class="graph-item-name">ShotScriptStd</div>
-                            <div class="graph-item-desc">
-                                Safe, non-throwing utils. The primitives
-                                the rules require.
-                            </div>
-                        </a>
-                    </div>
+            <div class="graph-wrap">
+                <div class="graph-boxes">
+                    <a href="/lint/" class="graph-item-inner">
+                        <div class="graph-item-name">ShotScriptLint</div>
+                        <div class="graph-item-desc">95+ rules. One canonical form, compile-time enforced.</div>
+                    </a>
+                    <a href="/fmt/" class="graph-item-inner">
+                        <div class="graph-item-name">ShotScriptFmt</div>
+                        <div class="graph-item-desc">80-char, no semis, 4-space. Optimised for diffs.</div>
+                    </a>
+                    <a href="/typing/" class="graph-item-inner">
+                        <div class="graph-item-name">ShotScriptTyping</div>
+                        <div class="graph-item-desc">Full strict mode. Every invalid state, prevented.</div>
+                    </a>
+                    <a href="/std/" class="graph-item-inner">
+                        <div class="graph-item-name">ShotScriptStd</div>
+                        <div class="graph-item-desc">Safe, non-throwing utils. The primitives the rules require.</div>
+                    </a>
                 </div>
-                <div class="graph-connector" aria-hidden="true"></div>
+                <svg class="graph-svg" viewBox="0 0 80 240" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path class="ant-line" d="M0,30 C40,30 40,120 80,120" style="animation-delay:0s"/>
+                    <path class="ant-line" d="M0,90 C40,90 40,120 80,120" style="animation-delay:-0.2s"/>
+                    <path class="ant-line" d="M0,150 C40,150 40,120 80,120" style="animation-delay:-0.4s"/>
+                    <path class="ant-line" d="M0,210 C40,210 40,120 80,120" style="animation-delay:-0.6s"/>
+                </svg>
                 <div class="graph-node-wrap">
                     <div class="graph-node">ShotScript</div>
-                </div>
-            </div>
-        </section>
-
-        <hr class="divider" />
-
-        <!-- ── INSTALL ── -->
-        <section class="section" id="install">
-            <div class="section-label">Install</div>
-            <h2>One package. Four tools.</h2>
-
-            <div class="install-cmd">
-                <span class="prompt">$</span>
-                <span class="cmd">npm install --save-dev shotscript</span>
-            </div>
-
-            <div class="install-steps">
-                <div class="install-step">
-                    <div class="install-step-label">
-                        ShotScriptLint — tsconfig plugin
-                    </div>
-                    <pre><span class="cm">// tsconfig.json</span>
-{
-  <span class="st">"compilerOptions"</span>: {
-    <span class="st">"plugins"</span>: [{ <span class="st">"name"</span>: <span class="st">"shotscript/plugin"</span> }]
-  }
-}</pre>
-                </div>
-                <div class="install-step">
-                    <div class="install-step-label">
-                        ShotScriptFmt — biome config
-                    </div>
-                    <pre><span class="cm">// biome.json</span>
-{
-  <span class="st">"extends"</span>: [<span class="st">"shotscript/fmt"</span>]
-}</pre>
-                </div>
-                <div class="install-step">
-                    <div class="install-step-label">
-                        ShotScriptTyping — tsconfig strict mode
-                    </div>
-                    <pre><span class="cm">// tsconfig.json</span>
-{
-  <span class="st">"extends"</span>: <span class="st">"shotscript/tsconfig/shotscript.json"</span>
-}</pre>
-                </div>
-                <div class="install-step">
-                    <div class="install-step-label">
-                        ShotScriptStd — stdlib import
-                    </div>
-                    <pre><span class="kw">import</span> { <span class="fn">safeFetch</span>, <span class="fn">jsonParse</span> } <span class="kw">from</span> <span class="st">'shotscript/std'</span>
-<span class="kw">import type</span> { <span class="ty">Result</span>, <span class="ty">PromiseResult</span> } <span class="kw">from</span> <span class="st">'shotscript/std'</span></pre>
                 </div>
             </div>
         </section>
@@ -1010,12 +941,61 @@
             </div>
         </section>
 
+        <hr class="divider" />
+
+        <!-- ── INSTALL ── -->
+        <section class="section" id="install">
+            <div class="section-label">Install</div>
+            <h2>One package. Four tools.</h2>
+
+            <div class="install-cmd">
+                <span class="prompt">$</span>
+                <span class="cmd">npm install --save-dev shotscript</span>
+            </div>
+
+            <div class="install-steps">
+                <div class="install-step">
+                    <div class="install-step-label">
+                        ShotScriptLint — tsconfig plugin
+                    </div>
+                    <pre><span class="cm">// tsconfig.json</span>
+{
+  <span class="st">"compilerOptions"</span>: {
+    <span class="st">"plugins"</span>: [{ <span class="st">"name"</span>: <span class="st">"shotscript/plugin"</span> }]
+  }
+}</pre>
+                </div>
+                <div class="install-step">
+                    <div class="install-step-label">
+                        ShotScriptFmt — biome config
+                    </div>
+                    <pre><span class="cm">// biome.json</span>
+{
+  <span class="st">"extends"</span>: [<span class="st">"shotscript/fmt"</span>]
+}</pre>
+                </div>
+                <div class="install-step">
+                    <div class="install-step-label">
+                        ShotScriptTyping — tsconfig strict mode
+                    </div>
+                    <pre><span class="cm">// tsconfig.json</span>
+{
+  <span class="st">"extends"</span>: <span class="st">"shotscript/tsconfig/shotscript.json"</span>
+}</pre>
+                </div>
+                <div class="install-step">
+                    <div class="install-step-label">
+                        ShotScriptStd — stdlib import
+                    </div>
+                    <pre><span class="kw">import</span> { <span class="fn">safeFetch</span>, <span class="fn">jsonParse</span> } <span class="kw">from</span> <span class="st">'shotscript/std'</span>
+<span class="kw">import type</span> { <span class="ty">Result</span>, <span class="ty">PromiseResult</span> } <span class="kw">from</span> <span class="st">'shotscript/std'</span></pre>
+                </div>
+            </div>
+        </section>
+
         <footer>
             <p>
-                ShotScript is pre-v1 and open source. ·
-                <a href="https://github.com/didley/shotscript" class="ext"
-                    >shotscript on GitHub</a
-                >
+                By <a href="https://github.com/didley" target="_blank" rel="noopener">didley</a> in Melbourne (Naarm), Australia.
             </p>
         </footer>
     </body>

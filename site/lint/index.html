@@ -98,6 +98,19 @@
                 color: var(--text);
             }
 
+            .nav-divider {
+                width: 1px;
+                height: 1rem;
+                background: var(--border);
+                margin: 0 0.3rem;
+                align-self: center;
+                list-style: none;
+            }
+
+            .nav-ext {
+                font-size: 0.78rem !important;
+            }
+
             /* ── Page header ── */
             .page-header {
                 max-width: 860px;
@@ -435,6 +448,9 @@
                 <li><a href="/fmt/">Fmt</a></li>
                 <li><a href="/typing/">Typing</a></li>
                 <li><a href="/std/">Std</a></li>
+                <li class="nav-divider" aria-hidden="true"></li>
+                <li><a href="https://github.com/didley/shotscript" class="nav-ext" target="_blank" rel="noopener">GitHub ↗</a></li>
+                <li><a href="https://www.npmjs.com/package/shotscript" class="nav-ext" target="_blank" rel="noopener">npm ↗</a></li>
             </ul>
         </nav>
 
