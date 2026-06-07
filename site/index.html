@@ -633,8 +633,9 @@
             <div class="hero-content">
                 <div class="hero-brand">ShotScript</div>
                 <p class="hero-desc">
-                    ShotScript extracts features from TypeScript, applying Go's
-                    "one way of doing things" philosophy to the TS/JS ecosystem.
+                    TypeScript with ~70% fewer ways to write the same thing.
+                    One way to handle errors, one way to express nothing, one
+                    way to structure types.
                 </p>
             </div>
         </div>
@@ -760,10 +761,9 @@
             </div>
 
             <div class="callout">
-                <strong>ShotScript's answer:</strong> a strict lint pass, a
-                formatter, and a tsconfig that enforce one way of doing things. Your
-                TypeScript files are unchanged — we maintain a list of rules,
-                not a compiler.
+                <strong>ShotScript removes ~70% of TypeScript's ways to write
+                the same thing</strong> and standardises the rest to one. Your
+                files are unchanged — it's a list of rules, not a compiler.
             </div>
 
             <div class="rule-grid">
@@ -823,6 +823,14 @@
                     <div class="rule-desc">
                         One way to define a shape: <code>type</code>. No
                         parallel declaration syntax.
+                    </div>
+                </div>
+                <div class="rule-card">
+                    <div class="rule-name">no-intersection-types</div>
+                    <div class="rule-desc">
+                        <code>&amp;</code> is banned. Spell every field out
+                        directly — flat types are fully readable where they're
+                        defined, with no hidden merges to untangle.
                     </div>
                 </div>
                 <div class="rule-card">

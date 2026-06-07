@@ -637,3 +637,31 @@ import { add } from './math/add.js'
     ```
 
 20. **Not reading the rule source before fixing a violation** — when a lint fix requires introducing a new type annotation pattern (readonly collections, type queries, etc.), read the rule implementation in `src/lint/rules/` first to understand exactly what AST node shape it checks. For example, `require-readonly-collections` only fires on `TypeReferenceNode`s — a `typeof` type query (`TypeQueryNode`) is invisible to it, which is the correct escape hatch when you need a mutable Map type without writing `Map<K,V>` in an annotation position.
+
+---
+
+## Documentation and copy style
+
+ShotScript targets developers who know TypeScript but may not know language theory. All site copy, rule descriptions, and error messages should use plain language approachable to new developers.
+
+**Prefer outcome language over mechanism language:**
+- ✅ "~70% fewer ways to write the same thing" — developers immediately understand fewer choices
+- ❌ "~70% of valid TypeScript syntax forms removed" — "valid forms" is language-spec jargon
+
+**Explain constraints as simplifications, not restrictions:**
+- ✅ "one way to say nothing: `null`" — frames the rule as reducing cognitive load
+- ❌ "prohibits `undefined` in type annotation positions" — sounds punitive
+
+**Make the type system benefit concrete:**
+- ✅ "when absence is always `null`, you only ever need one check" — shows the payoff
+- ✅ "flat types — every field is readable where the type is defined, no hidden merges" — explains why no `&`
+- ❌ "eliminates intersection type indirection" — too abstract
+
+**Prefer concrete before abstract.** Show code first, explain why second. Never explain a rule without a before/after.
+
+**Key term preferences:**
+- "ways to write" not "syntax forms" or "valid constructs"
+- "fewer decisions" not "reduced configuration surface"
+- "simpler types" not "flatter type hierarchies"
+- "errors you can't forget to handle" not "exhaustive error propagation"
+- "one check" not "single branch condition"
