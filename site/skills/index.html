@@ -340,6 +340,32 @@
 
             hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
 
+            .page-toc-wrap {
+                padding: 0.75rem 2rem 1.75rem;
+                max-width: 860px;
+                margin: 0 auto;
+            }
+
+            .page-toc {
+                display: flex;
+                gap: 0.25rem;
+                flex-wrap: wrap;
+            }
+
+            .page-toc a {
+                font-size: 0.8rem;
+                color: var(--muted);
+                padding: 0.3rem 0.7rem;
+                border-radius: 5px;
+                border: 1px solid var(--border);
+                background: var(--surface);
+            }
+            .page-toc a:hover {
+                color: var(--text);
+                border-color: var(--accent);
+                text-decoration: none;
+            }
+
             footer {
                 text-align: center;
                 padding: 2.5rem 2rem;
@@ -378,7 +404,16 @@
             </p>
         </div>
 
-        <div class="install-block">
+        <div class="page-toc-wrap">
+            <div class="page-toc">
+                <a href="#install">Install</a>
+                <a href="#fix">/shotscript-fix</a>
+                <a href="#migrate">/shotscript-migrate</a>
+                <a href="#explain">/shotscript-explain</a>
+            </div>
+        </div>
+
+        <div id="install" class="install-block">
             <div class="install-label">Install</div>
             <div class="install-row">
                 <div class="install-cmd">

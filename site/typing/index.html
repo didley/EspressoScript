@@ -444,6 +444,32 @@
 
             hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
 
+            .page-toc-wrap {
+                padding: 0.75rem 2rem 1.75rem;
+                max-width: 860px;
+                margin: 0 auto;
+            }
+
+            .page-toc {
+                display: flex;
+                gap: 0.25rem;
+                flex-wrap: wrap;
+            }
+
+            .page-toc a {
+                font-size: 0.8rem;
+                color: var(--muted);
+                padding: 0.3rem 0.7rem;
+                border-radius: 5px;
+                border: 1px solid var(--border);
+                background: var(--surface);
+            }
+            .page-toc a:hover {
+                color: var(--text);
+                border-color: var(--accent);
+                text-decoration: none;
+            }
+
             footer {
                 text-align: center;
                 padding: 2.5rem 2rem;
@@ -477,9 +503,17 @@
             <p class="sub">The strict settings TypeScript recommends but can't enable by default.</p>
         </div>
 
+        <div class="page-toc-wrap">
+            <div class="page-toc">
+                <a href="#install">Install</a>
+                <a href="#what-it-enables">What it enables</a>
+                <a href="#before-after">Before / after</a>
+            </div>
+        </div>
+
         <div class="content">
 
-            <div class="section-label">Install</div>
+            <div id="install" class="section-label">Install</div>
 
             <div class="install-step">
                 <div class="install-step-label">tsconfig.json</div>
@@ -491,7 +525,7 @@
 
             <hr />
 
-            <div class="section-label">What it enables</div>
+            <div id="what-it-enables" class="section-label">What it enables</div>
 
             <div class="options-list">
                 <div class="option-item">
@@ -526,7 +560,7 @@
 
             <hr />
 
-            <div class="section-label">Before / after</div>
+            <div id="before-after" class="section-label">Before / after</div>
 
             <h2>What strict mode catches.</h2>
 

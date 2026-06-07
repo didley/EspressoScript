@@ -448,6 +448,32 @@
 
             hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
 
+            .page-toc-wrap {
+                padding: 0.75rem 2rem 1.75rem;
+                max-width: 860px;
+                margin: 0 auto;
+            }
+
+            .page-toc {
+                display: flex;
+                gap: 0.25rem;
+                flex-wrap: wrap;
+            }
+
+            .page-toc a {
+                font-size: 0.8rem;
+                color: var(--muted);
+                padding: 0.3rem 0.7rem;
+                border-radius: 5px;
+                border: 1px solid var(--border);
+                background: var(--surface);
+            }
+            .page-toc a:hover {
+                color: var(--text);
+                border-color: var(--accent);
+                text-decoration: none;
+            }
+
             footer {
                 text-align: center;
                 padding: 2.5rem 2rem;
@@ -481,13 +507,20 @@
             <p class="sub">The standard library. Every function returns a Result or PromiseResult tuple — no throws, no hidden control flow. The primitives the lint rules require.</p>
         </div>
 
+        <div class="page-toc-wrap">
+            <div class="page-toc">
+                <a href="#types">Types</a>
+                <a href="#functions">Functions</a>
+            </div>
+        </div>
+
         <div class="content">
 
             <div class="callout"><strong>Import:</strong> <code>import { safeFetch, jsonParse, wrapError, assertNever, safeRegex, safeDate, safeNumber, safeStructuredClone, safeBigInt } from 'shotscript/std'</code> <code>import type { Result, PromiseResult } from 'shotscript/std'</code></div>
 
             <hr />
 
-            <div class="section-label">Types</div>
+            <div id="types" class="section-label">Types</div>
 
             <div class="fn-block" id="Result">
                 <div class="fn-header">
@@ -520,7 +553,7 @@
 
             <hr />
 
-            <div class="section-label">Functions</div>
+            <div id="functions" class="section-label">Functions</div>
 
             <div class="fn-block" id="safeFetch">
                 <div class="fn-header">
