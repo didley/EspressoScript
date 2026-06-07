@@ -468,12 +468,16 @@
             /* ── Comparison ── */
             .comparison {
                 display: grid;
-                grid-template-columns: 1fr;
+                grid-template-columns: 1fr 1fr;
                 gap: 0;
                 border: 1px solid var(--border);
                 border-radius: 10px;
                 overflow: hidden;
                 margin-bottom: 2.5rem;
+            }
+
+            .comparison.stacked {
+                grid-template-columns: 1fr;
             }
 
             .pane-label {
@@ -495,14 +499,19 @@
             .pane-after .pane-label {
                 background: rgba(78, 201, 148, 0.08);
                 color: var(--green);
-                border-top: 1px solid var(--border);
             }
             .pane-before {
                 background: var(--surface);
+                min-width: 0;
             }
             .pane-after {
                 background: #131318;
                 border-top: 1px solid var(--border);
+                min-width: 0;
+            }
+            .comparison:not(.stacked) .pane-after {
+                border-top: none;
+                border-left: 1px solid var(--border);
             }
 
             pre {
@@ -1303,6 +1312,22 @@
                 that rewrite, including updating every call site.
             </div>
         </section>
+
+        <script>
+        (function () {
+            function checkComparisons() {
+                document.querySelectorAll('.comparison').forEach(function (comp) {
+                    comp.classList.remove('stacked');
+                    var overflows = Array.from(comp.querySelectorAll('pre')).some(function (pre) {
+                        return pre.scrollWidth > pre.clientWidth;
+                    });
+                    if (overflows) comp.classList.add('stacked');
+                });
+            }
+            document.addEventListener('DOMContentLoaded', checkComparisons);
+            window.addEventListener('resize', checkComparisons);
+        })();
+        </script>
 
         <footer>
             <p>
