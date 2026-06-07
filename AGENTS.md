@@ -288,6 +288,87 @@ type NullableUser = { readonly id: number | null; readonly name: string | null }
 
 ---
 
+## Async main
+
+**Async entry points must be `await`-ed, not called bare. `void fn()` is banned (`no-void`). Top-level `await` is valid in ESM modules.**
+
+```ts
+// ❌ — no-floating-promises; the Promise is unhandled
+main()
+
+// ❌ — no-void; void as a statement is banned
+void main()
+
+// ✅ — top-level await in an ESM module
+async function main(): Promise<void> { ... }
+await main()
+```
+
+---
+
+## Accumulation without `let`
+
+`let` is banned outside `for` headers. Two patterns work for building up state.
+
+**Pattern 1 — in-place mutation of a `const` Map/Set (scoped to one function):**
+
+```ts
+function buildCatalog(books: readonly Book[]): Map<string, Book> {
+    const catalog = new Map<string, Book>()   // const binding
+    for (const book of books) {
+        catalog.set(book.id, book)            // mutate the object, not the binding
+    }
+    return catalog
+}
+```
+
+**Pattern 2 — immutable update, different name each step:**
+
+```ts
+const [v1, err1] = addBook(empty, bookA, 'seed')
+if (err1 !== null) { return [null, err1] }
+const [v2, err2] = addBook(v1, bookB, 'seed')
+if (err2 !== null) { return [null, err2] }
+```
+
+**While loops without `let` — check external mutable state:**
+
+```ts
+// ❌ — needs a let counter
+let i = 0
+while (i < items.length) { i += 1 }
+
+// ✅ — const bindings inside the loop body; condition checks mutable Set.size
+const pending = new Set(items)
+while (pending.size > 0) {
+    const iter = pending.values()
+    const next = iter.next()
+    if (next.done !== true) {
+        process(next.value)
+        pending.delete(next.value)
+    }
+}
+```
+
+---
+
+## Array access under `noUncheckedIndexedAccess`
+
+`arr[i]` returns `T | undefined`. Always check before use.
+
+```ts
+// ❌ — TypeScript error: arr[i] is T | undefined
+const item = arr[i]
+doThing(item)
+
+// ✅
+const item = arr[i]
+if (item === undefined) { break }
+doThing(item)
+```
+
+---
+
 ## Control flow
 
 **No ternary. Use `if`/`else` or extract a named function.**
@@ -422,3 +503,13 @@ import { add } from './math/add.js'
 10. **Omitting return type** — every function declaration needs an explicit `: ReturnType` annotation.
 
 11. **Using type-level metaprogramming** — no conditional types, no mapped types, no `infer`. Write the concrete type you actually mean.
+
+12. **Calling `main()` bare** — this is a floating Promise. Top-level `await main()` is the correct form in ESM. The `void` operator is also banned (`no-void`).
+
+13. **Using `let` to accumulate in a loop** — `let catalog = empty; for (...) { catalog = addBook(catalog, ...) }` is banned. Use in-place mutation of a `const` Map/Set, or carry named versions (`v1`, `v2`) through a chain of Result checks.
+
+14. **Using `Promise.resolve()` / `Promise.all()` / `Promise.race()`** — these static methods are banned (`no-promise`). To wrap a known-good value as an async result, restructure the function to be synchronous, or use `toPromiseResult` wrapping a real async call.
+
+15. **Using `ReadonlyMap<K, V>` as a function parameter type for a dictionary** — `new Map(existingMap)` accepts `Map<K, V>` but TypeScript doesn't accept `ReadonlyMap<K, V>` there. Use `Map<K, V>` as the type; `const` binding prevents reassignment.
+
+16. **Forgetting `no-floating-promises` is active in v1** — the language docs mark it as a v2 rule, but the linter enforces it. Always `await` async calls or ensure they're within an `async` function that is itself awaited.
