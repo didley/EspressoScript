@@ -77,210 +77,6 @@
                 margin: 0 auto 2.5rem;
             }
 
-            .hero-github {
-                display: flex;
-                gap: 1.25rem;
-                justify-content: center;
-                align-items: center;
-                font-size: 0.85rem;
-            }
-
-            .hero-github a {
-                color: var(--muted);
-            }
-            .hero-github a:hover {
-                color: var(--text);
-                text-decoration: none;
-            }
-            .hero-github-sep {
-                color: var(--border);
-            }
-
-            /* ── Ecosystem nav ── */
-            .eco-section {
-                max-width: 960px;
-                margin: 0 auto;
-                padding: 0 2rem 4rem;
-            }
-
-            .eco-heading {
-                text-align: center;
-                margin-bottom: 1.75rem;
-            }
-
-            .eco-heading .section-label {
-                display: block;
-                margin-bottom: 0.4rem;
-            }
-
-            .eco-heading h2 {
-                font-size: 1.5rem;
-                font-weight: 700;
-                letter-spacing: -0.025em;
-                margin-bottom: 0.35rem;
-            }
-
-            .eco-heading p {
-                font-size: 0.9rem;
-                color: var(--muted);
-            }
-
-            .product-grid {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 0;
-                border: 1px solid var(--border);
-                border-radius: 10px 10px 0 0;
-                overflow: hidden;
-                background: var(--border);
-            }
-
-            .doc-grid {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 0;
-                border: 1px solid var(--border);
-                border-top: none;
-                border-radius: 0 0 10px 10px;
-                overflow: hidden;
-                background: var(--border);
-            }
-
-            @media (max-width: 680px) {
-                .product-grid,
-                .doc-grid {
-                    grid-template-columns: 1fr;
-                }
-            }
-
-            .product-card {
-                background: var(--surface);
-                padding: 1.75rem 2rem 2rem;
-            }
-
-            .product-card:nth-child(2) {
-                background: #131318;
-                border-left: 1px solid var(--border);
-            }
-
-            @media (max-width: 680px) {
-                .product-card:nth-child(2) {
-                    border-left: none;
-                    border-top: 1px solid var(--border);
-                }
-            }
-
-            .product-tag {
-                font-family: "SF Mono", "Fira Code", monospace;
-                font-size: 0.65rem;
-                letter-spacing: 0.1em;
-                text-transform: uppercase;
-                color: var(--accent);
-                margin-bottom: 0.6rem;
-            }
-
-            .product-name {
-                font-size: 1.3rem;
-                font-weight: 700;
-                letter-spacing: -0.02em;
-                margin-bottom: 0.5rem;
-            }
-
-            .product-desc {
-                font-size: 0.875rem;
-                color: var(--muted);
-                line-height: 1.6;
-                margin-bottom: 1.25rem;
-            }
-
-            .product-features {
-                list-style: none;
-                display: flex;
-                flex-direction: column;
-                gap: 0.3rem;
-                margin-bottom: 1.5rem;
-            }
-
-            .product-features li {
-                font-size: 0.82rem;
-                color: var(--muted);
-                display: flex;
-                align-items: baseline;
-                gap: 0.5rem;
-            }
-
-            .product-features li::before {
-                content: "·";
-                color: var(--accent);
-                flex-shrink: 0;
-            }
-
-            .product-features code {
-                font-family: "SF Mono", "Fira Code", monospace;
-                font-size: 0.78em;
-                color: var(--type);
-                background: rgba(130, 170, 255, 0.08);
-                padding: 0.05rem 0.3rem;
-                border-radius: 3px;
-            }
-
-            .product-link {
-                font-size: 0.875rem;
-                font-weight: 600;
-                color: var(--accent);
-            }
-
-            .doc-card {
-                background: #0f0f13;
-                padding: 1.25rem 2rem 1.5rem;
-                border-top: 1px solid var(--border);
-            }
-
-            .doc-card:nth-child(2) {
-                border-left: 1px solid var(--border);
-            }
-
-            @media (max-width: 680px) {
-                .doc-card:nth-child(2) {
-                    border-left: none;
-                }
-            }
-
-            .doc-tag {
-                font-family: "SF Mono", "Fira Code", monospace;
-                font-size: 0.65rem;
-                letter-spacing: 0.1em;
-                text-transform: uppercase;
-                color: var(--muted);
-                margin-bottom: 0.4rem;
-            }
-
-            .doc-name {
-                font-size: 1rem;
-                font-weight: 700;
-                letter-spacing: -0.015em;
-                margin-bottom: 0.4rem;
-            }
-
-            .doc-desc {
-                font-size: 0.845rem;
-                color: var(--muted);
-                line-height: 1.55;
-                margin-bottom: 0.9rem;
-            }
-
-            .doc-desc code {
-                font-family: "SF Mono", "Fira Code", monospace;
-                font-size: 0.82em;
-                color: var(--type);
-            }
-
-            .doc-link {
-                font-size: 0.845rem;
-                font-weight: 600;
-                color: var(--muted);
-            }
-
             /* ── Layout ── */
             .divider {
                 border: none;
@@ -371,6 +167,145 @@
                 line-height: 1.65;
             }
 
+            /* ── Install section ── */
+            .install-cmd {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.75rem;
+                background: var(--surface);
+                border: 1px solid var(--border);
+                border-radius: 8px;
+                padding: 0.75rem 1.25rem;
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.875rem;
+                margin-bottom: 2rem;
+            }
+            .install-cmd .prompt {
+                color: var(--accent);
+            }
+            .install-cmd .cmd {
+                color: var(--green);
+            }
+
+            .install-steps {
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .install-step {
+                border: 1px solid var(--border);
+                border-radius: 8px;
+                overflow: hidden;
+            }
+
+            .install-step-label {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.65rem;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+                color: var(--accent);
+                padding: 0.5rem 1.25rem;
+                border-bottom: 1px solid var(--border);
+                background: #0f0f13;
+            }
+
+            .install-step pre {
+                background: var(--surface);
+                margin: 0;
+            }
+
+            /* ── ShotScript graph ── */
+            .graph-diagram {
+                display: flex;
+                align-items: stretch;
+                max-width: 620px;
+                margin: 2rem auto;
+            }
+
+            .graph-items {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                border-right: 1px solid var(--border);
+            }
+
+            .graph-item {
+                flex: 1;
+                display: flex;
+                align-items: center;
+                padding: 0.875rem 1.5rem 0.875rem 0;
+            }
+
+            .graph-item + .graph-item {
+                border-top: 1px solid var(--border);
+            }
+
+            .graph-item-inner {
+                background: var(--surface);
+                border: 1px solid var(--border);
+                border-radius: 6px;
+                padding: 0.6rem 0.875rem;
+                width: 100%;
+            }
+
+            .graph-item-name {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.8rem;
+                color: var(--accent);
+                margin-bottom: 0.2rem;
+            }
+
+            .graph-item-desc {
+                font-size: 0.78rem;
+                color: var(--muted);
+                line-height: 1.4;
+            }
+
+            .graph-connector {
+                width: 2.5rem;
+                position: relative;
+                flex-shrink: 0;
+            }
+
+            .graph-connector::before {
+                content: '';
+                position: absolute;
+                top: 50%;
+                left: 0;
+                right: 7px;
+                height: 1px;
+                background: var(--border);
+            }
+
+            .graph-connector::after {
+                content: '';
+                position: absolute;
+                top: calc(50% - 4px);
+                right: 0;
+                border-top: 4px solid transparent;
+                border-bottom: 4px solid transparent;
+                border-left: 7px solid var(--border);
+            }
+
+            .graph-node-wrap {
+                display: flex;
+                align-items: center;
+                flex-shrink: 0;
+            }
+
+            .graph-node {
+                background: var(--surface);
+                border: 1px solid var(--accent);
+                border-radius: 8px;
+                padding: 1rem 1.25rem;
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.95rem;
+                font-weight: 700;
+                color: var(--accent);
+                white-space: nowrap;
+            }
+
             /* ── Comparison panes ── */
             .comparison {
                 display: grid;
@@ -385,9 +320,6 @@
             @media (max-width: 640px) {
                 .comparison {
                     grid-template-columns: 1fr;
-                }
-                .demo-grid {
-                    grid-template-columns: 1fr !important;
                 }
             }
 
@@ -532,61 +464,6 @@
                 border-radius: 3px;
             }
 
-            /* ── Example grid ── */
-            .example-grid {
-                display: grid;
-                grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-                gap: 1px;
-                border: 1px solid var(--border);
-                border-radius: 10px;
-                overflow: hidden;
-                background: var(--border);
-            }
-
-            .example-card {
-                background: var(--surface);
-                padding: 1.25rem 1.5rem;
-            }
-            .example-card.example-featured {
-                background: #131318;
-                border-left: 3px solid var(--accent);
-            }
-
-            .example-name {
-                font-family: "SF Mono", "Fira Code", monospace;
-                font-size: 0.82rem;
-                color: var(--green);
-                margin-bottom: 0.35rem;
-            }
-            .example-featured .example-name {
-                color: var(--accent);
-            }
-
-            .example-tag {
-                display: inline-block;
-                font-family: "SF Mono", "Fira Code", monospace;
-                font-size: 0.65rem;
-                letter-spacing: 0.08em;
-                text-transform: uppercase;
-                color: var(--accent);
-                background: rgba(200, 112, 42, 0.12);
-                border: 1px solid var(--accent-dim);
-                border-radius: 4px;
-                padding: 0.1em 0.45em;
-                margin-bottom: 0.5rem;
-            }
-
-            .example-desc {
-                font-size: 0.875rem;
-                color: var(--muted);
-                line-height: 1.5;
-            }
-            .example-desc code {
-                font-family: "SF Mono", "Fira Code", monospace;
-                font-size: 0.8em;
-                color: var(--type);
-            }
-
             footer {
                 text-align: center;
                 padding: 2.5rem 2rem;
@@ -600,87 +477,10 @@
         <section class="hero">
             <div class="hero-brand">Shot</div>
             <p class="hero-desc">
-                TypeScript, one way. Shot extracts features from TypeScript,
-                applying Go's "one canonical way" philosophy to the TS/JS
-                ecosystem. Making coding easier for humans and LLMs.
+                95+ lint rules. One formatter. One tsconfig. TypeScript with
+                one canonical form for every construct — enforced at compile
+                time.
             </p>
-        </section>
-
-        <section class="eco-section">
-            <div class="eco-heading">
-                <span class="section-label">Ecosystem</span>
-                <h2>Two tools, one philosophy.</h2>
-                <p>
-                    Start fresh or enforce discipline on an existing codebase.
-                </p>
-            </div>
-
-            <div class="product-grid">
-                <div class="product-card">
-                    <div class="product-tag">experimental · toolchain</div>
-                    <div class="product-name">ShotScript</div>
-                    <p class="product-desc">
-                        A fully locked-down TypeScript environment. TypeScript
-                        is never written or seen directly —
-                        <code>.shot</code> files enforce every rule at the
-                        toolchain level, not as an afterthought.
-                    </p>
-                    <ul class="product-features">
-                        <li>
-                            <code>shot run</code> — execute any
-                            <code>.shot</code> file directly
-                        </li>
-                        <li>
-                            <code>shot build</code> — compile to plain
-                            TypeScript
-                        </li>
-                        <li><code>shot test</code> — built-in test runner</li>
-                        <li>No config surface — the rules are the runtime</li>
-                    </ul>
-                    <a class="product-link" href="/script/">→ ShotScript</a>
-                </div>
-                <div class="product-card">
-                    <div class="product-tag">linter</div>
-                    <div class="product-name">ShotLint</div>
-                    <p class="product-desc">
-                        Shot's rules as a standalone linter for TypeScript
-                        projects. Write TypeScript, enforce the discipline — no
-                        compiler or toolchain swap required.
-                    </p>
-                    <ul class="product-features">
-                        <li>Standalone — no ESLint required</li>
-                        <li>React and TSX support</li>
-                        <li>Enable rules incrementally</li>
-                    </ul>
-                    <a class="product-link" href="/lint/">→ ShotLint</a>
-                </div>
-            </div>
-
-            <div class="doc-grid">
-                <div class="doc-card">
-                    <div class="doc-tag">Reference</div>
-                    <div class="doc-name">Language</div>
-                    <p class="doc-desc">
-                        The full rule set — what's banned, what's required, and
-                        why each constraint exists. Start here to understand
-                        shot's reasoning.
-                    </p>
-                    <a class="doc-link" href="/language/"
-                        >→ Language reference</a
-                    >
-                </div>
-                <div class="doc-card">
-                    <div class="doc-tag">Reference</div>
-                    <div class="doc-name">Standard library</div>
-                    <p class="doc-desc">
-                        Built-in utilities via <code>shot:std</code> —
-                        <code>safeFetch</code>, <code>jsonParse</code>,
-                        <code>PromiseResult</code>, and helpers for the
-                        result-tuple pattern.
-                    </p>
-                    <a class="doc-link" href="/stdlib/">→ Stdlib reference</a>
-                </div>
-            </div>
         </section>
 
         <hr class="divider" />
@@ -690,24 +490,96 @@
                 <div class="sidebar-section">
                     <div class="sidebar-label">On this page</div>
                     <ul>
+                        <li><a href="#install">Install</a></li>
                         <li><a href="#problem">The problem</a></li>
                         <li><a href="#before-after">Before / after</a></li>
-                        <li><a href="#demo">Live example</a></li>
-                        <li><a href="#examples">Examples</a></li>
                     </ul>
                 </div>
                 <div class="sidebar-section">
-                    <div class="sidebar-label">Explore</div>
+                    <div class="sidebar-label">Docs</div>
                     <ul>
-                        <li><a href="/script/">ShotScript</a></li>
-                        <li><a href="/lint/">ShotLint</a></li>
-                        <li><a href="/language/">Language</a></li>
+                        <li><a href="/language/">Language reference</a></li>
                         <li><a href="/stdlib/">Stdlib</a></li>
                     </ul>
                 </div>
             </aside>
 
             <main>
+                <!-- ── INSTALL ── -->
+                <section class="section" id="install">
+                    <div class="section-label">Install</div>
+                    <h2>One package. Three tools.</h2>
+
+                    <div class="install-cmd">
+                        <span class="prompt">$</span>
+                        <span class="cmd">npm install --save-dev shot-script</span>
+                    </div>
+
+                    <div class="install-steps">
+                        <div class="install-step">
+                            <div class="install-step-label">ShotScriptLint — tsconfig plugin</div>
+                            <pre><span class="cm">// tsconfig.json</span>
+{
+  <span class="st">"compilerOptions"</span>: {
+    <span class="st">"plugins"</span>: [{ <span class="st">"name"</span>: <span class="st">"shot-script/plugin"</span> }]
+  }
+}</pre>
+                        </div>
+                        <div class="install-step">
+                            <div class="install-step-label">ShotScriptFmt — biome formatter</div>
+                            <pre><span class="cm">// biome.json</span>
+{
+  <span class="st">"extends"</span>: [<span class="st">"shot-script/biome"</span>]
+}</pre>
+                        </div>
+                        <div class="install-step">
+                            <div class="install-step-label">ShotScriptTyping — tsconfig strict mode</div>
+                            <pre><span class="cm">// tsconfig.json</span>
+{
+  <span class="st">"extends"</span>: <span class="st">"shot-script/tsconfig/shot-script.json"</span>
+}</pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ── SHOTSCRIPT GRAPH ── -->
+                <section class="section">
+                    <div class="graph-diagram">
+                        <div class="graph-items">
+                            <div class="graph-item">
+                                <div class="graph-item-inner">
+                                    <div class="graph-item-name">ShotScriptLint</div>
+                                    <div class="graph-item-desc">95+ rules. One canonical form, compile-time enforced.</div>
+                                </div>
+                            </div>
+                            <div class="graph-item">
+                                <div class="graph-item-inner">
+                                    <div class="graph-item-name">ShotScriptFmt</div>
+                                    <div class="graph-item-desc">80-char, no semis, 4-space. Optimised for terminal views and clean diffs.</div>
+                                </div>
+                            </div>
+                            <div class="graph-item">
+                                <div class="graph-item-inner">
+                                    <div class="graph-item-name">ShotScriptTyping</div>
+                                    <div class="graph-item-desc">Full strict mode. Every state that shouldn't exist, prevented.</div>
+                                </div>
+                            </div>
+                            <div class="graph-item">
+                                <div class="graph-item-inner">
+                                    <div class="graph-item-name">stdlib</div>
+                                    <div class="graph-item-desc">Safe, non-throwing utils. The primitives the rules require.</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="graph-connector" aria-hidden="true"></div>
+                        <div class="graph-node-wrap">
+                            <div class="graph-node">ShotScript</div>
+                        </div>
+                    </div>
+                </section>
+
+                <hr class="divider" style="margin-bottom: 4.5rem" />
+
                 <!-- ── THE PROBLEM ── -->
                 <section class="section" id="problem">
                     <div class="section-label">The problem</div>
@@ -722,11 +594,10 @@
                     </p>
 
                     <div class="callout">
-                        <strong>shot's answer:</strong> a strict lint pass that
-                        enforces one canonical form. Every
-                        <code>.shot</code> file is valid TypeScript — so the
-                        full ecosystem, type system, and tooling work unchanged.
-                        We maintain a list of rules, not a compiler.
+                        <strong>ShotScript's answer:</strong> a strict lint
+                        pass, a formatter, and a tsconfig that enforce one
+                        canonical form. Your TypeScript files are unchanged —
+                        we maintain a list of rules, not a compiler.
                     </div>
 
                     <div class="rule-grid">
@@ -808,9 +679,10 @@
                     <h2>What the simplifications look like.</h2>
                     <p class="section-desc">
                         Real patterns. The left column is TypeScript as commonly
-                        written; the right column is the shot equivalent.
+                        written; the right column is the ShotScript equivalent.
                     </p>
 
+                    <!-- 1: Error handling — comparison then callout -->
                     <p class="section-label" style="margin-bottom: 0.75rem">
                         Error handling
                     </p>
@@ -835,7 +707,7 @@
                         </div>
                         <div class="pane-after">
                             <div class="pane-label">
-                                <span class="dot dot-green"></span>shot
+                                <span class="dot dot-green"></span>ShotScript
                             </div>
                             <pre><span class="kw">import</span> { <span class="fn">safeFetch</span>, <span class="fn">jsonParse</span> } <span class="kw">from</span> <span class="st">"shot:std"</span>
 <span class="kw">import type</span> { <span class="ty">PromiseResult</span> } <span class="kw">from</span> <span class="st">"shot:std"</span>
@@ -863,9 +735,22 @@
                         checker.
                     </div>
 
+                    <!-- 2: Absent values — callout then comparison -->
                     <p class="section-label" style="margin-bottom: 0.75rem">
                         Absent values
                     </p>
+
+                    <div class="callout">
+                        <strong>Why it matters:</strong> TypeScript has three
+                        ways to express "this might not exist" — <code>?</code>,
+                        <code>| undefined</code>, and <code>| null</code> — and
+                        most codebases mix all three. ShotScript picks one:
+                        <code>null</code>. Every optional field is
+                        <code>T | null</code>, every fallible return is
+                        <code>[T | null, Error | null]</code>. No more checking
+                        for both.
+                    </div>
+
                     <div class="comparison">
                         <div class="pane-before">
                             <div class="pane-label">
@@ -884,7 +769,7 @@
                         </div>
                         <div class="pane-after">
                             <div class="pane-label">
-                                <span class="dot dot-green"></span>shot
+                                <span class="dot dot-green"></span>ShotScript
                             </div>
                             <pre><span class="cm">// one way — null is the only absent value</span>
 <span class="kw">type</span> <span class="ty">User</span> = {
@@ -899,17 +784,7 @@
                         </div>
                     </div>
 
-                    <div class="callout">
-                        <strong>Why it matters:</strong> TypeScript has three
-                        ways to express "this might not exist" — <code>?</code>,
-                        <code>| undefined</code>, and <code>| null</code> — and
-                        most codebases mix all three. shot picks one:
-                        <code>null</code>. Every optional field is
-                        <code>T | null</code>, every fallible return is
-                        <code>[T | null, Error | null]</code>. No more checking
-                        for both.
-                    </div>
-
+                    <!-- 3: Type complexity — comparison then callout -->
                     <p class="section-label" style="margin-bottom: 0.75rem">
                         Type complexity
                     </p>
@@ -932,7 +807,7 @@
                         </div>
                         <div class="pane-after">
                             <div class="pane-label">
-                                <span class="dot dot-green"></span>shot
+                                <span class="dot dot-green"></span>ShotScript
                             </div>
                             <pre><span class="cm">// embed as a named field — Go/Rust-style</span>
 <span class="kw">type</span> <span class="ty">User</span> = {
@@ -951,16 +826,26 @@
 
                     <div class="callout">
                         <strong>Why it matters:</strong> intersection types hide
-                        fields behind indirection. shot bans <code>&amp;</code>,
-                        conditional types, mapped types, and <code>infer</code>.
-                        Instead of extending, embed: give the base type a named
-                        field. Every shape is self-contained and readable where
-                        it's defined.
+                        fields behind indirection. ShotScript bans
+                        <code>&amp;</code>, conditional types, mapped types, and
+                        <code>infer</code>. Instead of extending, embed: give
+                        the base type a named field. Every shape is
+                        self-contained and readable where it's defined.
                     </div>
 
+                    <!-- 4: Immutable by default — callout then comparison -->
                     <p class="section-label" style="margin-bottom: 0.75rem">
                         Immutable by default
                     </p>
+
+                    <div class="callout">
+                        <strong>Why it matters:</strong> mutable data structures
+                        mean any function, at any call site, can change state
+                        you didn't expect. <code>readonly</code> makes the
+                        compiler enforce immutability — mutation becomes opt-in,
+                        visible, and intentional.
+                    </div>
+
                     <div class="comparison">
                         <div class="pane-before">
                             <div class="pane-label">
@@ -978,7 +863,7 @@
                         </div>
                         <div class="pane-after">
                             <div class="pane-label">
-                                <span class="dot dot-green"></span>shot
+                                <span class="dot dot-green"></span>ShotScript
                             </div>
                             <pre><span class="kw">type</span> <span class="ty">Config</span> = {
   <span class="kw">readonly</span> <span class="id">host</span>: <span class="ty">string</span>
@@ -991,14 +876,7 @@
                         </div>
                     </div>
 
-                    <div class="callout">
-                        <strong>Why it matters:</strong> mutable data structures
-                        mean any function, at any call site, can change state
-                        you didn't expect. <code>readonly</code> makes the
-                        compiler enforce immutability — mutation becomes opt-in,
-                        visible, and intentional.
-                    </div>
-
+                    <!-- 5: Data + behaviour — comparison then callout -->
                     <p class="section-label" style="margin-bottom: 0.75rem">
                         Data + behaviour
                     </p>
@@ -1025,7 +903,7 @@
                         </div>
                         <div class="pane-after">
                             <div class="pane-label">
-                                <span class="dot dot-green"></span>shot
+                                <span class="dot dot-green"></span>ShotScript
                             </div>
                             <pre><span class="kw">type</span> <span class="ty">UserService</span> = { <span class="kw">readonly</span> <span class="id">db</span>: <span class="ty">Database</span> }
 
@@ -1048,9 +926,18 @@
                         independently testable.
                     </div>
 
+                    <!-- 6: Callbacks — callout then comparison -->
                     <p class="section-label" style="margin-bottom: 0.75rem">
                         Callbacks
                     </p>
+
+                    <div class="callout">
+                        <strong>Why it matters:</strong> named functions are
+                        testable in isolation, searchable with grep, and show up
+                        in stack traces. Anonymous arrow callbacks disappear the
+                        moment they fail.
+                    </div>
+
                     <div class="comparison">
                         <div class="pane-before">
                             <div class="pane-label">
@@ -1065,7 +952,7 @@
                         </div>
                         <div class="pane-after">
                             <div class="pane-label">
-                                <span class="dot dot-green"></span>shot
+                                <span class="dot dot-green"></span>ShotScript
                             </div>
                             <pre><span class="kw">function</span> <span class="fn">isActive</span>(<span class="id">item</span>: <span class="ty">Item</span>): <span class="ty">boolean</span> {
   <span class="kw">return</span> <span class="id">item</span>.<span class="id">active</span>
@@ -1084,13 +971,7 @@
                         </div>
                     </div>
 
-                    <div class="callout">
-                        <strong>Why it matters:</strong> named functions are
-                        testable in isolation, searchable with grep, and show up
-                        in stack traces. Anonymous arrow callbacks disappear the
-                        moment they fail.
-                    </div>
-
+                    <!-- 7: Conditionals — comparison then callout -->
                     <p class="section-label" style="margin-bottom: 0.75rem">
                         Conditionals
                     </p>
@@ -1107,7 +988,7 @@
                         </div>
                         <div class="pane-after">
                             <div class="pane-label">
-                                <span class="dot dot-green"></span>shot
+                                <span class="dot dot-green"></span>ShotScript
                             </div>
                             <pre><span class="kw">function</span> <span class="fn">roleLabel</span>(
   <span class="id">isAdmin</span>: <span class="ty">boolean</span>,
@@ -1130,233 +1011,14 @@
                         a nested expression. The complexity stays flat.
                     </div>
                 </section>
-
-                <hr class="divider" style="margin-bottom: 4.5rem" />
-
-                <!-- ── LIVE EXAMPLE ── -->
-                <section class="section" id="demo">
-                    <div class="section-label">Live example</div>
-                    <h2>A working todo app.</h2>
-                    <p class="section-desc">
-                        Full CRUD — add, complete, delete. The logic runs
-                        directly from the compiled
-                        <code
-                            style="
-                                font-family:
-                                    &quot;SF Mono&quot;, &quot;Fira Code&quot;,
-                                    monospace;
-                                font-size: 0.85em;
-                                color: var(--type);
-                            "
-                            >.shot</code
-                        >
-                        source on the left.
-                    </p>
-
-                    <div
-                        class="demo-grid"
-                        style="
-                            display: grid;
-                            grid-template-columns: 1fr 1fr;
-                            gap: 1.5rem;
-                            align-items: start;
-                        "
-                    >
-                        <div
-                            style="
-                                border: 1px solid var(--border);
-                                border-radius: 10px;
-                                overflow: hidden;
-                            "
-                        >
-                            <div
-                                style="
-                                    background: var(--surface);
-                                    border-bottom: 1px solid var(--border);
-                                    padding: 0.6rem 1rem;
-                                    font-size: 0.72rem;
-                                    color: var(--muted);
-                                    font-family:
-                                        &quot;SF Mono&quot;,
-                                        &quot;Fira Code&quot;, monospace;
-                                "
-                            >
-                                todo.shot
-                            </div>
-                            <pre
-                                style="
-                                    background: #0a0a0d;
-                                    padding: 1.25rem 1.5rem;
-                                    font-size: 0.78rem;
-                                    line-height: 1.75;
-                                    overflow-x: auto;
-                                "
-                            ><span style="color:var(--keyword)">import</span> <span style="color:var(--text)">{ wrapError }</span> <span style="color:var(--keyword)">from</span> <span style="color:var(--string)">"shot:std"</span>
-
-<span style="color:var(--keyword)">type</span> <span style="color:var(--type)">Todo</span> <span style="color:var(--text)">=</span> <span style="color:var(--text)">{</span>
-  <span style="color:var(--keyword)">readonly</span> <span style="color:var(--text)">id</span><span style="color:var(--text)">:</span> <span style="color:var(--type)">number</span>
-  <span style="color:var(--keyword)">readonly</span> <span style="color:var(--text)">title</span><span style="color:var(--text)">:</span> <span style="color:var(--type)">string</span>
-  <span style="color:var(--keyword)">readonly</span> <span style="color:var(--text)">done</span><span style="color:var(--text)">:</span> <span style="color:var(--type)">boolean</span>
-<span style="color:var(--text)">}</span>
-
-<span style="color:var(--keyword)">const</span> <span style="color:var(--text)">_todos</span><span style="color:var(--text)">:</span> <span style="color:var(--text)">{ value:</span> <span style="color:var(--keyword)">readonly</span> <span style="color:var(--type)">Todo</span><span style="color:var(--text)">[] } = { value: [] }</span>
-<span style="color:var(--keyword)">const</span> <span style="color:var(--text)">_nextId</span><span style="color:var(--text)">:</span> <span style="color:var(--text)">{ value:</span> <span style="color:var(--type)">number</span> <span style="color:var(--text)">} = { value:</span> <span style="color:var(--num)">1</span> <span style="color:var(--text)">}</span>
-
-<span style="color:var(--keyword)">export function</span> <span style="color:var(--fn)">addTodo</span><span style="color:var(--text)">(</span><span style="color:var(--text)">title</span><span style="color:var(--text)">:</span> <span style="color:var(--type)">string</span><span style="color:var(--text)">):</span> <span style="color:var(--text)">[</span><span style="color:var(--type)">Todo</span> <span style="color:var(--text)">|</span> <span style="color:var(--keyword)">null</span><span style="color:var(--text)">,</span> <span style="color:var(--type)">Error</span> <span style="color:var(--text)">|</span> <span style="color:var(--keyword)">null</span><span style="color:var(--text)">]</span> <span style="color:var(--text)">{</span>
-  <span style="color:var(--keyword)">const</span> <span style="color:var(--text)">trimmed</span> <span style="color:var(--text)">=</span> <span style="color:var(--text)">title.</span><span style="color:var(--fn)">trim</span><span style="color:var(--text)">()</span>
-  <span style="color:var(--keyword)">if</span> <span style="color:var(--text)">(trimmed.length</span> <span style="color:var(--text)">===</span> <span style="color:var(--num)">0</span><span style="color:var(--text)">)</span> <span style="color:var(--text)">{</span>
-    <span style="color:var(--keyword)">return</span> <span style="color:var(--text)">[</span><span style="color:var(--keyword)">null</span><span style="color:var(--text)">,</span> <span style="color:var(--keyword)">new</span> <span style="color:var(--type)">Error</span><span style="color:var(--text)">(</span><span style="color:var(--string)">"title must not be empty"</span><span style="color:var(--text)">)]</span>
-  <span style="color:var(--text)">}</span>
-  <span style="color:var(--keyword)">const</span> <span style="color:var(--text)">todo</span><span style="color:var(--text)">:</span> <span style="color:var(--type)">Todo</span> <span style="color:var(--text)">= {</span> <span style="color:var(--text)">id: _nextId.value, title: trimmed, done:</span> <span style="color:var(--keyword)">false</span> <span style="color:var(--text)">}</span>
-  <span style="color:var(--text)">_todos.value</span> <span style="color:var(--text)">= [..._todos.value, todo]</span>
-  <span style="color:var(--keyword)">return</span> <span style="color:var(--text)">[todo,</span> <span style="color:var(--keyword)">null</span><span style="color:var(--text)">]</span>
-<span style="color:var(--text)">}</span></pre>
-                        </div>
-
-                        <div
-                            style="
-                                border: 1px solid var(--border);
-                                border-radius: 10px;
-                                overflow: hidden;
-                                position: sticky;
-                                top: 2rem;
-                            "
-                        >
-                            <div
-                                style="
-                                    background: var(--surface);
-                                    border-bottom: 1px solid var(--border);
-                                    padding: 0.6rem 1rem;
-                                    font-size: 0.72rem;
-                                    color: var(--muted);
-                                    font-family:
-                                        &quot;SF Mono&quot;,
-                                        &quot;Fira Code&quot;, monospace;
-                                "
-                            >
-                                live demo — runs in your browser
-                            </div>
-                            <iframe
-                                src="/todo-demo.html"
-                                style="
-                                    width: 100%;
-                                    height: 420px;
-                                    border: none;
-                                    display: block;
-                                "
-                                title="ShotScript todo demo"
-                            ></iframe>
-                        </div>
-                    </div>
-
-                    <p
-                        style="
-                            margin-top: 1.25rem;
-                            font-size: 0.8rem;
-                            color: var(--muted);
-                        "
-                    >
-                        The demo JS mirrors the
-                        <code
-                            style="
-                                font-family:
-                                    &quot;SF Mono&quot;, &quot;Fira Code&quot;,
-                                    monospace;
-                                color: var(--type);
-                            "
-                            >.shot</code
-                        >
-                        source exactly — same named functions, same tuple
-                        returns, same no-throw contract. Types strip away; the
-                        patterns stay.
-                    </p>
-                </section>
-
-                <hr class="divider" style="margin-bottom: 4.5rem" />
-
-                <!-- ── EXAMPLES ── -->
-                <section class="section" id="examples">
-                    <div class="section-label">Examples</div>
-                    <h2>See it in practice.</h2>
-                    <p class="section-desc">
-                        All examples are in the repo under
-                        <code
-                            style="
-                                font-family:
-                                    &quot;SF Mono&quot;, &quot;Fira Code&quot;,
-                                    monospace;
-                                color: var(--type);
-                            "
-                            >examples/</code
-                        >. Each one is a self-contained project you can run with
-                        <code
-                            style="
-                                font-family:
-                                    &quot;SF Mono&quot;, &quot;Fira Code&quot;,
-                                    monospace;
-                                color: var(--type);
-                            "
-                            >shot run</code
-                        >. Browse them on
-                        <a
-                            href="https://github.com/didley/ShotScript/tree/main/examples"
-                            class="ext"
-                            >GitHub</a
-                        >.
-                    </p>
-                    <div class="example-grid">
-                        <div class="example-card">
-                            <div class="example-name">calculator</div>
-                            <p class="example-desc">
-                                Arithmetic with explicit error returns. Shows
-                                the
-                                <code
-                                    >[T&nbsp;|&nbsp;null,&nbsp;Error&nbsp;|&nbsp;null]</code
-                                >
-                                tuple pattern for fallible operations.
-                            </p>
-                        </div>
-                        <div class="example-card">
-                            <div class="example-name">fetchUser</div>
-                            <p class="example-desc">
-                                Async HTTP + JSON parsing via
-                                <code>shot:std</code>. Demonstrates chained
-                                tuple unwrapping without try/catch.
-                            </p>
-                        </div>
-                        <div class="example-card">
-                            <div class="example-name">notes</div>
-                            <p class="example-desc">
-                                A multi-file HTTP API with in-memory state.
-                                Store, handlers, and tests — the full backend
-                                pattern with <code>mutableRef</code> and error
-                                tuples.
-                            </p>
-                        </div>
-                        <div class="example-card example-featured">
-                            <div class="example-tag">Fullstack</div>
-                            <div class="example-name">fullstack</div>
-                            <p class="example-desc">
-                                ShotScript backend + TypeScript frontend linted
-                                with <code>shot-lint</code>. Both sides enforce
-                                the same discipline — named functions, result
-                                tuples, no throw.
-                            </p>
-                        </div>
-                    </div>
-                </section>
             </main>
         </div>
 
         <footer>
             <p>
-                Shot is pre-v1 and open source. ·
-                <a href="https://github.com/didley/ShotScript" class="ext"
-                    >ShotScript on GitHub</a
-                >
-                ·
-                <a href="https://github.com/didley/shot-lint" class="ext"
-                    >ShotLint on GitHub</a
+                ShotScript is pre-v1 and open source. ·
+                <a href="https://github.com/didley/shot-script" class="ext"
+                    >shot-script on GitHub</a
                 >
             </p>
         </footer>
