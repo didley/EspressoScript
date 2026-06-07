@@ -1,3 +1,0 @@
-import { readFile } from "shot:std"
-import { util } from "./util.shot"
-import { other } from "../shared/other.shot"

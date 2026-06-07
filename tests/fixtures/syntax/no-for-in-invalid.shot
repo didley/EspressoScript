@@ -1,4 +1,0 @@
-const obj = { a: 1 }
-for (const k in obj) {
-    const v: number = obj[k]
-}

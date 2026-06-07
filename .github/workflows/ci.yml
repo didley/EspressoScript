@@ -7,75 +7,51 @@ on:
     branches: [main]
 
 jobs:
-  verify:
-    name: Verify shot CLI
+  build-and-test:
+    name: Build and test
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
     steps:
       - uses: actions/checkout@v4
-        with:
-          submodules: recursive
-
-      - uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: latest
-
-      - name: Install dependencies
-        run: bun install
-
-      - name: Run fixture tests
-        run: |
-          bun run tests/run-syntax-fixtures.ts
-          bun run tests/run-types-fixtures.ts
-          bun run tests/run-imports-fixtures.ts
-
-      - name: Run integration tests
-        run: bash scripts/verify.sh
-
-  rules-submodule:
-    name: shot-lint submodule
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          submodules: recursive
-
-      - uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: latest
 
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
 
       - name: Install dependencies
-        run: bun install
+        run: npm ci
 
-      - name: Build shot-lint
-        working-directory: lint
-        run: bun run build
+      - name: Type check
+        run: npm run check
 
-      - name: Run shot-lint tests
-        working-directory: lint
+      - name: Build
+        run: npm run build
+
+      - name: Run rule fixture tests
         run: node --import tsx/esm tests/runner.ts
 
-      - name: Run shot-lint utils tests
-        working-directory: lint
+      - name: Run utils tests
         run: node --import tsx/esm --test tests/utils.test.ts
 
-      - name: Check shotLint and both examples (shot-lint)
-        working-directory: lint
+  lint-examples:
+    name: Lint examples
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: build-and-test
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Check examples
         run: node --import tsx/esm scripts/check-examples.mjs
-
-      - name: Check fullstack frontend (shot-lint)
-        run: node lint/dist/cli.js 'examples/fullstack/frontend/src/**/*.ts'
-
-      - name: Check fullstack frontend (tsc + biome)
-        working-directory: examples/fullstack/frontend
-        run: |
-          npm ci
-          npm run check
-          npx biome check src/

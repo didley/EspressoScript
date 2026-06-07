@@ -1,2 +1,0 @@
-const x: boolean = true
-const s: string = x === true ? "yes" : "no"

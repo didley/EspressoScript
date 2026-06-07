@@ -1,5 +1,0 @@
-try {
-    const x: number = 1
-} catch (e) {
-    const y: number = 2
-}

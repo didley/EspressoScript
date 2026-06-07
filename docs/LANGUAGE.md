@@ -1,6 +1,6 @@
 # Language Reference
 
-Every rule below is enforced by `shot check`. Violations exit non-zero with a diagnostic.
+Every rule below is enforced by ShotScriptLint. Violations surface as TypeScript compiler errors.
 
 ## Functions
 
@@ -31,14 +31,6 @@ const x = 1
 for (let i = 0; i < 10; i += 1) { /* ... */ }   // let in for header is OK
 ```
 Rules: `no-let-outside-for`, `no-var`
-
-When you need a mutable counter or accumulator outside a `for` header, use `mutableRef` from `shot:std`:
-```ts
-import { mutableRef } from "shot:std"
-
-const count = mutableRef(0)
-count.value += 1
-```
 
 ### No `++` / `--`
 ```ts
@@ -122,7 +114,7 @@ Rule: `no-promise`
 
 ### Async functions must return a tuple
 
-Every `async` function with a meaningful return must declare `Promise<[T | null, E | null]>` or the `ShotPromise<T, E>` alias from `shot:std`. `Promise<void>` is allowed for fire-and-forget side effects.
+Every `async` function with a meaningful return must declare `Promise<[T | null, E | null]>` or the `PromiseResult<T, E>` alias from `shotscript/utils`. `Promise<void>` is allowed for fire-and-forget side effects.
 
 ```ts
 // ❌
@@ -131,8 +123,9 @@ async function getUser(id: number): Promise<User> { ... }
 // ✅ — spelled out
 async function getUser(id: number): Promise<[User | null, Error | null]> { ... }
 
-// ✅ — canonical alias (import ShotPromise from "shot:std")
-async function getUser(id: number): ShotPromise<User> { ... }
+// ✅ — canonical alias
+import type { PromiseResult } from "shotscript/utils"
+async function getUser(id: number): PromiseResult<User> { ... }
 
 // ✅ — side-effect async with no meaningful return
 async function logEvent(event: string): Promise<void> { ... }
@@ -155,7 +148,7 @@ function newDbError(message: string, code: number, table: string): DbError {
     return { message, code, table }
 }
 
-async function queryUser(id: number): ShotPromise<User, DbError> {
+async function queryUser(id: number): PromiseResult<User, DbError> {
     return [null, newDbError("not found", 404, "users")]
 }
 ```
@@ -178,12 +171,12 @@ if (err !== null) {
 }
 ```
 
-To add context when propagating an error up the call stack, use `wrapError` from `shot:std` — the shot equivalent of Go's `fmt.Errorf("context: %w", err)`:
+To add context when propagating an error up the call stack, use `wrapError` from `shotscript/utils` — the ShotScript equivalent of Go's `fmt.Errorf("context: %w", err)`:
 
 ```ts
-import { readFile, wrapError } from "shot:std"
+import { wrapError } from "shotscript/utils"
 
-async function loadConfig(path: string): ShotPromise<Config> {
+async function loadConfig(path: string): PromiseResult<Config> {
     const [text, err] = await readFile(path)
     if (err !== null) {
         return [null, wrapError(`loadConfig: ${path}`, err)]
@@ -194,10 +187,10 @@ async function loadConfig(path: string): ShotPromise<Config> {
 
 ### Wrapping external throwing APIs
 
-When importing `bun:*` or `node:*` APIs that throw or reject instead of returning tuples, use `toResult` (sync) or `toPromiseResult` (async) from `shot:std`:
+When importing external APIs that throw or reject instead of returning tuples, use `toResult` (sync) or `toPromiseResult` (async) from `shotscript/utils`:
 
 ```ts
-import { toResult, toPromiseResult } from "shot:std"
+import { toResult, toPromiseResult } from "shotscript/utils"
 
 // synchronous third-party call that throws
 const [parsed, err] = toResult(() => someLib.parseSync(input))
@@ -208,7 +201,7 @@ const [rows, err] = await toPromiseResult(() => db.query(sql))
 
 ## Strict typing — the baseline
 
-`shot build` and `shot run` apply a strict `compilerOptions` via the TypeScript compiler API for every invocation. You don't configure it; it's part of the language.
+ShotScriptTyping (`shotscript/tsconfig/shotscript.json`) applies a strict `compilerOptions` baseline. Extend it in your project's `tsconfig.json`.
 
 ```json
 "compilerOptions": {
@@ -235,15 +228,15 @@ const [rows, err] = await toPromiseResult(() => db.query(sql))
 `strict: true` is the floor. Everything above goes beyond TS strict mode:
 
 - `noUncheckedIndexedAccess` — `arr[i]` is `T | undefined`; you must check.
-- `exactOptionalPropertyTypes` — distinguishes "missing" from "present-but-undefined" (mostly moot since shot bans optionals, but enabled as belt-and-suspenders).
+- `exactOptionalPropertyTypes` — distinguishes "missing" from "present-but-undefined" (mostly moot since ShotScript bans optionals, but enabled as belt-and-suspenders).
 - `allowUnreachableCode: false` / `allowUnusedLabels: false` — promote dead-code warnings to errors.
 - `noErrorTruncation` — full error messages, no `…`.
-- `noUncheckedSideEffectImports` — `import "./side-effect.shot"` must be intentional (TS 5.6+).
+- `noUncheckedSideEffectImports` — `import "./side-effect.ts"` must be intentional (TS 5.6+).
 - `strictBuiltinIteratorReturn` — tighter iterator return types (TS 5.6+).
 - `moduleDetection: "force"` — every file is a module; no auto-detection ambiguity.
 - `verbatimModuleSyntax` — type-only imports must say `import type`.
 
-The shot rules below extend this with additional bans the type checker can't express alone.
+The ShotScript rules below extend this with additional bans the type checker can't express alone.
 
 ## Types — no escape hatches
 
@@ -474,7 +467,7 @@ function f(): void {}                    // empty function body
 { doThing() }                            // lone block
 const {} = obj                           // empty destructure
 const [] = arr                           // empty array destructure
-import { foo as foo } from "shot:std"    // useless rename
+import { foo as foo } from "shotscript/utils"    // useless rename
 function f(): void { doThing(); return } // useless trailing return
 const s = "hello" + " world"             // useless literal concat
 const obj = { ["foo"]: 1 }               // useless computed key
@@ -654,26 +647,23 @@ const f = Function("return 1")
 
 Rule: `no-metaprogramming-globals`
 
-## Throwing globals → `shot:std` wrappers
+## Throwing globals → `shotscript/utils` wrappers
 
-Functions that throw at the API boundary break the no-throw philosophy at every call site. Force the tuple-returning wrappers from `shot:std`.
+Functions that throw at the API boundary break the no-throw philosophy at every call site. Use the tuple-returning wrappers from `shotscript/utils`.
 
 ```ts
 // ❌
 const data = JSON.parse(text)
 const json = JSON.stringify(value)
 const res = await fetch(url)
-const content = await Bun.file(path).text()
-await Bun.write(path, data)
 
 // ✅
-import { jsonParse, jsonStringify, fetch, readFile, writeFile } from "shot:std"
+import { jsonParse, jsonStringify, safeFetch } from "shotscript/utils"
 const [data, parseErr] = jsonParse<T>(text)
-const [res, fetchErr] = await fetch(url)
-// etc.
+const [res, fetchErr] = await safeFetch(url)
 ```
 
-Banned identifiers: `JSON.parse`, `JSON.stringify`, bare `fetch` (and `globalThis.fetch`), `Bun.file`, `Bun.write`.
+Banned identifiers: `JSON.parse`, `JSON.stringify`, bare `fetch` (and `globalThis.fetch`).
 
 Rule: `no-throwing-globals`
 
@@ -970,7 +960,7 @@ type Y<T> = { [K in keyof T]: T[K] }                  // mapped
 type Z = `prefix-${string}`                           // template literal type
 type W<T> = T extends Array<infer U> ? U : never      // infer
 ```
-Rules: `no-conditional-type`, `no-mapped-type`, `no-template-literal-type`, `no-infer`. Bans apply to user-authored `.shot` only.
+Rules: `no-conditional-type`, `no-mapped-type`, `no-template-literal-type`, `no-infer`.
 
 ## Banned OOP / metaprogramming
 
@@ -985,38 +975,30 @@ Rules: `no-class`, `no-abstract`, `no-decorators`, `no-this`
 
 ## Imports / exports
 
-### ESM only, named only, allowlist enforced
+### ESM only, named exports only
 ```ts
 // ❌
 const x = require("foo")
 export default thing
-import x from "npm:lodash"
-import y from "https://cdn.example.com/lib.js"
 
 // ✅
-import { thing } from "shot:std"
-import { helper } from "./helpers.shot"
+import { helper } from "./helpers.js"
 export { thing }
 ```
 
-v1 import allowlist:
-- `shot:*` (resolved to `npm:@shotscript/*` via import map)
-- `bun:*`
-- Relative paths ending in `.shot` (`./util.shot`, `../shared/helpers.shot`)
-
-Rules: `no-require`, `no-default-export`, `imports-allowlist`, `no-index-import`
+Rules: `no-require`, `no-default-export`, `no-index-import`
 
 ### No barrel files or index imports
 
-Index files (`index.shot`) and barrel re-exports are not allowed. Every import must point to the specific file that contains the implementation.
+Index files and barrel re-exports are not allowed. Every import must point to the specific file that contains the implementation.
 
 ```ts
 // ❌
-import { add } from "./math/index.shot"   // index import
-import { add } from "./math"              // extensionless (caught by imports-allowlist)
+import { add } from "./math/index.js"   // index import
+import { add } from "./math"            // extensionless index import
 
 // ✅
-import { add } from "./math/add.shot"
+import { add } from "./math/add.js"
 ```
 
 ### File naming convention
@@ -1025,19 +1007,19 @@ Name each file after the directory it lives in. This mirrors Go's package conven
 
 ```
 calculator/
-  calculator.shot   ✅  (matches directory name)
-  index.shot        ❌  (do not use)
+  calculator.ts   ✅  (matches directory name)
+  index.ts        ❌  (do not use)
 
 fetchUser/
-  fetchUser.shot    ✅
+  fetchUser.ts    ✅
 ```
 
-For multi-file modules, name each file after what it exports — no generic names like `utils.shot` or `helpers.shot`.
+For multi-file modules, name each file after what it exports — no generic names like `utils.ts` or `helpers.ts`.
 
 ```
 math/
-  add.shot
-  divide.shot
+  add.ts
+  divide.ts
 ```
 
 ## Equality

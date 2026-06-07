@@ -1,3 +1,0 @@
-function* gen(): number {
-    const x: number = 1
-}

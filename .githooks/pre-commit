@@ -3,8 +3,7 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 
-echo "shot pre-commit: running fixture tests..."
-bun run "$ROOT/tests/run-syntax-fixtures.ts"
-bun run "$ROOT/tests/run-types-fixtures.ts"
-bun run "$ROOT/tests/run-imports-fixtures.ts"
-echo "shot pre-commit: all checks passed."
+echo "shotscript pre-commit: running tests..."
+node --import tsx/esm "$ROOT/tests/runner.ts"
+node --import tsx/esm --test "$ROOT/tests/utils.test.ts"
+echo "shotscript pre-commit: all checks passed."

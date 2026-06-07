@@ -7,192 +7,125 @@
  ╚══════╝╚═╝  ╚═╝ ╚═════╝    ╚═╝   
  TypeScript, one way.
 ```
-Shot extracts features from TypeScript, applying Go's "one canonical way" philosophy to the TS/JS ecosystem.
-Making coding easier for humans and LLMs.
 
---
+TypeScript has too many ways to write the same thing. ShotScript picks one — and enforces it.
 
-Echosystem:
+---
 
-**[ShotScript](https://github.com/didley/ShotScript)** — Full opinionated toolchain: `.shot` file extension, `shot` CLI, Bun runtime, `shot:std` stdlib, and import allowlist. Start new projects with `shot init` — no config, no overrides.
+## What it is
 
-**[ShotLint](https://github.com/didley/ShotLint)** — Bring Shot principles to existing TypeScript projects: 90+ lint rules as `tsc` errors via TypeScript plugin, shareable Biome config, and safe util wrappers. No new extension or runtime required.
-
-# ShotScript
-
-This Package:
+Four tools. One way to write TypeScript.
 
 | | |
 |---|---|
-| **No config** | TypeScript with strict enforcement of Shot principles — no user overrides |
-| **`.shot` files** | TypeScript source files enforced by Shot's rules — valid TS, Shot-compliant |
-| **`shot` cli** | `init` · `check` · `fmt` · `build` · `run` · `test` |
-| **`shot:std`** | Standard library — `fetch`, `jsonParse`, `wrapError`, and other safe wrappers |
-| **Import allowlist** | Only `shot:` and `bun:` namespaces — no arbitrary third-party imports |
-| **Bun runtime** | Validates and type-checks before running — no execution without a clean check |
+| **ShotScriptLint** | 95+ rules enforced as `tsc` errors. One canonical form for every construct — no ESLint, no config surface. |
+| **ShotScriptFmt** | Shareable Biome config. 80-char lines, no semicolons, 4-space indent — formatted for terminals and clean diffs. |
+| **ShotScriptTyping** | Strict tsconfig baseline. Full strict mode plus `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`, and more. |
+| **Utils** | Safe, non-throwing replacements for every banned global — `jsonParse`, `safeFetch`, `toResult`, `wrapError`. |
 
-
-## Quick taste
-
-```ts
-// foo.shot
-import { fetch, jsonParse } from "shot:std"
-
-type User = { id: number; name: string }
-
-async function getUser(id: number): Promise<[User | null, Error | null]> {
-    const [res, fetchErr] = await fetch(`https://api.example.com/users/${id}`)
-    if (fetchErr !== null) {
-        return [null, fetchErr]
-    }
-    const text = await res.text()
-    return jsonParse<User>(text)
-}
-```
-
-No arrow functions. No `throw`. No `interface`. No `class`. No `any`. No `as`. No ternaries. No third-party imports outside the `shot:` and `bun:` namespaces (relative `.shot` imports allowed). The list of what's banned is the language.
+---
 
 ## Install
 
-```
-curl -fsSL https://shot.didley.dev/install.sh | sh
-```
-
-Verify:
-```
-shot --version
+```sh
+npm install --save-dev shotscript
 ```
 
-The installer is a small script that handles everything needed to run Shot on your machine. Read it first if you prefer — it's published alongside every release.
+### ShotScriptLint
 
-Windows installer and prebuilt binaries are on the roadmap.
+Add the plugin to `tsconfig.json`:
 
-## CLI
-
-```
-shot init <name>         Scaffold a new project directory.
-shot check [files...]    Validate .shot files.
-shot fmt [files...]      Format in-place via shot fmt.
-shot build [files...]    Validate → type-check.
-shot run <file>          Validate → type-check → run via Bun.
-shot test [files...]     Validate → type-check → run *.test.shot files.
-```
-
-## What the simplifications look like
-
-**Error handling — tuples instead of exceptions**
-
-```ts
-// TypeScript
-async function getUser(id: number): Promise<User> {
-    try {
-        const res = await fetch(`/users/${id}`)
-        if (!res.ok) throw new Error(`HTTP ${res.status}`)
-        return res.json() as User
-    } catch (e) {
-        throw new Error(`getUser failed: ${e}`)
+```json
+{
+    "extends": "shotscript/tsconfig/shotscript.json",
+    "compilerOptions": {
+        "plugins": [{ "name": "shotscript/plugin" }]
     }
 }
+```
 
-// ShotScript — failure is in the return type; the compiler tracks it
-async function getUser(id: number): Promise<[User | null, Error | null]> {
-    const [res, fetchErr] = await fetch(`/users/${id}`)
-    if (fetchErr !== null) {
-        return [null, fetchErr]
-    }
+Violations surface as `tsc` errors — red squiggles in your editor, non-zero exit in CI. No extra tooling required.
+
+### ShotScriptFmt
+
+Extend in `biome.json`:
+
+```json
+{ "extends": ["shotscript/biome"] }
+```
+
+### ShotScriptTyping
+
+Extend in `tsconfig.json` (shown above with the plugin). The config alone, without the plugin:
+
+```json
+{ "extends": "shotscript/tsconfig/shotscript.json" }
+```
+
+### Utils
+
+```ts
+import { jsonParse, safeFetch, wrapError, toResult, toPromiseResult } from "shotscript/utils"
+import type { Result, PromiseResult } from "shotscript/utils"
+```
+
+---
+
+## What changes
+
+**Errors as values — failure is in the return type**
+```ts
+// ❌ caller can't see this throws; nothing in the type says so
+async function getUser(id: number): Promise<User> {
+    const res = await fetch(`/users/${id}`)
+    return res.json() as User
+}
+
+// ✅ every failure path is explicit in the type
+import { safeFetch, jsonParse } from "shotscript/utils"
+import type { PromiseResult } from "shotscript/utils"
+
+async function getUser(id: number): PromiseResult<User> {
+    const [res, fetchErr] = await safeFetch(`/users/${id.toString()}`)
+    if (fetchErr !== null) { return [null, fetchErr] }
     return jsonParse<User>(await res.text())
 }
 ```
 
-**`null` only — no `undefined`**
-
+**One absent value — `null`, not `undefined | null | ?`**
 ```ts
-// TypeScript — three ways to say "nothing": undefined, ?, | undefined
+// ❌ three ways to say nothing
 type User = { id: number; avatar?: string; deletedAt?: Date }
-function getUser(id?: number): User | undefined { ... }
 
-// ShotScript — one absence value, used consistently everywhere
-type User = { readonly id: number; readonly avatar: string | null; readonly deletedAt: Date | null }
-function getUser(id: number): [User | null, Error | null] { ... }
-```
-
-**No complex types — compose, don't extend**
-
-```ts
-// TypeScript — intersection to "extend" a base type
-type User = { readonly id: number; readonly name: string }
-type AdminUser = User & { readonly role: 'admin' }
-
-// ShotScript — embed as a named field
-type User = { readonly id: number; readonly name: string }
-type AdminUser = { readonly user: User; readonly role: 'admin' }
-
-// access: admin.user.id  not  admin.id
-```
-
-**Immutable by default**
-
-```ts
-// TypeScript — any function can mutate these; nothing in the type stops it
-type Config = { host: string; port: number }
-const ids: number[] = []
-
-// ShotScript — readonly at the type level; the compiler enforces it
-type Config = { readonly host: string; readonly port: number }
-const ids: ReadonlyArray<number> = []
-```
-
-**No classes — plain data and functions**
-
-```ts
-// TypeScript
-class UserService {
-    private readonly db: Database
-    constructor(db: Database) { this.db = db }
-    async findById(id: number): Promise<User | null> { ... }
-}
-
-// ShotScript — a type and a function, nothing hidden
-type UserService = { readonly db: Database }
-
-async function findUserById(svc: UserService, id: number): Promise<[User | null, Error | null]> {
-    return svc.db.query<User>(`SELECT * FROM users WHERE id = $1`, [id])
+// ✅ one way
+type User = {
+    readonly id: number
+    readonly avatar: string | null
+    readonly deletedAt: Date | null
 }
 ```
 
-**Named functions only — every callback is findable**
-
+**Named functions — no anonymous callbacks**
 ```ts
-// TypeScript
-const results = items
-    .filter(x => x.active)
-    .map(x => ({ ...x, score: x.score * 2 }))
-    .reduce((acc, x) => acc + x.score, 0)
+// ❌ untestable, ungrepable
+const total = items.filter(x => x.active).reduce((acc, x) => acc + x.score, 0)
 
-// ShotScript — every step is named, testable, and grep-able
+// ✅ named, testable, findable in stack traces
 function isActive(item: Item): boolean { return item.active }
-function doubleScore(item: Item): Item { return { ...item, score: item.score * 2 } }
 function sumScore(acc: number, item: Item): number { return acc + item.score }
-
-const results = items.filter(isActive).map(doubleScore).reduce(sumScore, 0)
+const total = items.filter(isActive).reduce(sumScore, 0)
 ```
 
-**No ternaries — if/else forces names on branches**
+---
 
-```ts
-// TypeScript
-const label = isAdmin ? (isSuperAdmin ? "Super Admin" : "Admin") : "User"
+## Rules
 
-// ShotScript — nesting is gone, each case is readable
-function roleLabel(isAdmin: boolean, isSuperAdmin: boolean): string {
-    if (isSuperAdmin) { return "Super Admin" }
-    if (isAdmin) { return "Admin" }
-    return "User"
-}
-```
+95+ rules across functions, types, error handling, control flow, and hygiene. Full reference: [docs/LANGUAGE.md](./docs/LANGUAGE.md)
 
-## Documentation
+Key bans: `no-throw`, `no-try`, `no-arrow-functions`, `no-any`, `no-assertion`, `no-interface`, `no-class`, `no-ternary`, `no-optional-property`, `no-undefined-type`, `require-readonly-property`, `require-async-tuple-return`
 
-- [`docs/LANGUAGE.md`](docs/LANGUAGE.md) — full rule list with examples
-- [`docs/STDLIB.md`](docs/STDLIB.md) — the `shot:std` v1 surface
-- [`docs/CLI.md`](docs/CLI.md) — command reference
+---
+
+## AGENTS.md
+
+Drop the [AGENTS.md](./AGENTS.md) into any project. AI coding assistants will generate ShotScript-compliant code from the first message — no rule-by-rule prompting.

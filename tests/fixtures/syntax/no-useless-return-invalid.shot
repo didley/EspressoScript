@@ -1,5 +1,0 @@
-const x: number = 1
-function f(): void {
-    const y: number = x
-    return
-}

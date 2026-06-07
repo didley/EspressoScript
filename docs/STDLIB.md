@@ -1,139 +1,97 @@
-# `shot:std`
+# Utils
 
-The standard library. Ships as `@shotscript/std` on npm; imported via the branded `shot:std` specifier in `.shot` source.
-
-Every function in `shot:std` returns a tuple — never throws. Internal `try`/`catch` is hidden inside the wrappers; users never see it.
-
-## v1 surface
+Safe, non-throwing wrappers for the globals ShotScript bans. Every function returns a tuple — never throws. Import from `shotscript/utils`.
 
 ```ts
-import { fetch, jsonParse, jsonStringify, readFile, writeFile, wrapError, mutableRef, toResult, toPromiseResult } from "shot:std"
-import type { ShotPromise } from "shot:std"
+import { jsonParse, jsonStringify, safeFetch, wrapError, toResult, toPromiseResult } from "shotscript/utils"
+import type { Result, PromiseResult } from "shotscript/utils"
 ```
 
-### `fetch(url, opts?)`
-Wraps `globalThis.fetch`.
+## Types
+
+### `Result<T, E>`
 ```ts
-function fetch(
-    input: string | URL,
-    init?: RequestInit,
-): Promise<[Response | null, Error | null]>
+type Result<T, E extends Error = Error> = [T, null] | [null, E]
 ```
+The sync result tuple. Return type of all fallible synchronous functions.
+
+### `PromiseResult<T, E>`
+```ts
+type PromiseResult<T, E extends Error = Error> = Promise<Result<T, E>>
+```
+The async result tuple. Return type of all fallible async functions.
+
+## Functions
 
 ### `jsonParse<T>(str)`
-Wraps `JSON.parse` with a caller-supplied type.
+Wraps `JSON.parse`.
 ```ts
-function jsonParse<T>(str: string): [T | null, Error | null]
+function jsonParse<T>(str: string): Result<T>
+```
+```ts
+const [data, err] = jsonParse<User>(text)
 ```
 
-### `jsonStringify(val)`
+### `jsonStringify(val, indent?)`
 Wraps `JSON.stringify`.
 ```ts
-function jsonStringify(value: unknown, indent?: number): [string | null, Error | null]
+function jsonStringify(value: unknown, indent?: number | null): Result<string>
+```
+```ts
+const [json, err] = jsonStringify(user, 2)
 ```
 
-### `readFile(path)`
-Wraps `node:fs/promises` `readFile`.
+### `safeFetch(url, init?)`
+Wraps `globalThis.fetch`. Network errors surface as `Error`; HTTP status codes are not errors — check `res.ok`.
 ```ts
-function readFile(path: string): Promise<[string | null, Error | null]>
+function safeFetch(url: string | URL, init?: RequestInit | null): PromiseResult<Response>
 ```
-
-### `writeFile(path, data)`
-Wraps `node:fs/promises` `writeFile`.
 ```ts
-function writeFile(path: string, data: string): Promise<[null, Error | null]>
+const [res, fetchErr] = await safeFetch(`/users/${id.toString()}`)
+if (fetchErr !== null) { return [null, fetchErr] }
+if (!res.ok) { return [null, new Error(`HTTP ${res.status.toString()}`)] }
 ```
-The first tuple element is always `null` for void-returning operations — the destructure pattern stays uniform.
 
 ### `wrapError(message, cause)`
-Adds context to a propagated error. The shot equivalent of Go's `fmt.Errorf("context: %w", err)`.
+Adds context to a propagated error — the ShotScript equivalent of Go's `fmt.Errorf("context: %w", err)`. Sets `err.cause` (ES2022) so the original error stays inspectable.
 ```ts
 function wrapError(message: string, cause: Error): Error
 ```
-Sets `err.cause` (standard `Error.cause` from ES2022) so the original error is inspectable. Use this when re-returning an error from a lower layer with added context:
 ```ts
-const [data, err] = await readFile(path)
-if (err !== null) {
-    return [null, wrapError(`loadConfig: ${path}`, err)]
-}
-```
-
-### `mutableRef<T>(initial)`
-Returns a single-slot mutable cell — the canonical way to hold mutable state when `no-let-outside-for` bans `let` in function bodies and module scope.
-```ts
-function mutableRef<T>(initial: T): { value: T }
-```
-```ts
-const count = mutableRef(0)
-count.value += 1
+const [data, err] = jsonParse<Config>(text)
+if (err !== null) { return [null, wrapError(`loadConfig: ${path}`, err)] }
 ```
 
 ### `toResult<T>(fn)`
-Wraps any synchronous third-party call that might throw. Use when importing `bun:*` or `node:*` APIs that don't return tuples.
+Wraps any synchronous call that might throw.
 ```ts
-function toResult<T>(fn: () => T): [T | null, Error | null]
+function toResult<T>(fn: () => T): Result<T>
 ```
 ```ts
 const [parsed, err] = toResult(() => someLib.parseSync(input))
 ```
 
 ### `toPromiseResult<T>(fn)`
-Wraps any async third-party call that might reject. Use when importing `bun:*` or `node:*` APIs that return plain Promises.
+Wraps any async call that might reject.
 ```ts
-function toPromiseResult<T>(fn: () => Promise<T>): Promise<[T | null, Error | null]>
+function toPromiseResult<T>(fn: () => Promise<T>): PromiseResult<T>
 ```
 ```ts
 const [result, err] = await toPromiseResult(() => db.query(sql))
 ```
 
-### `ShotPromise<T, E>` _(type)_
-The canonical return type for async fallible functions.
-```ts
-type ShotPromise<T, E = Error> = Promise<[T | null, E | null]>
-```
-Use it to type async functions that return errors as values:
-```ts
-async function queryUser(id: number): ShotPromise<User> {
-    const [res, err] = await fetch(`/users/${id.toString()}`)
-    if (err !== null) { return [null, err] }
-    return jsonParse<User>(await res.text())
-}
-```
-
 ## Usage example
 
 ```ts
-import { fetch, jsonParse, writeFile } from "shot:std"
+import { safeFetch, jsonParse } from "shotscript/utils"
+import type { PromiseResult } from "shotscript/utils"
 
-type User = { id: number; name: string }
+type User = { readonly id: number; readonly name: string }
 
-async function downloadUser(id: number, outPath: string): Promise<[null, Error | null]> {
-    const [res, fetchErr] = await fetch(`https://api.example.com/users/${id}`)
+async function getUser(id: number): PromiseResult<User> {
+    const [res, fetchErr] = await safeFetch(`/users/${id.toString()}`)
     if (fetchErr !== null) { return [null, fetchErr] }
-
-    const text = await res.text()
-    const [user, parseErr] = jsonParse<User>(text)
-    if (parseErr !== null) { return [null, parseErr] }
-
-    const [stringified, stringifyErr] = jsonStringify(user, 2)
-    if (stringifyErr !== null) { return [null, stringifyErr] }
-
-    return await writeFile(outPath, stringified)
+    if (!res.ok) { return [null, new Error(`HTTP ${res.status.toString()}`)] }
+    return jsonParse<User>(await res.text())
 }
 ```
-
-## Implementation conventions
-
-- All wrappers internally use `try`/`catch` to convert thrown errors into the second tuple slot. The ban on `try`/`catch` applies to `.shot` user code; stdlib is `.ts` and exempt.
-- Errors from stdlib wrappers are returned as `Error` instances.
-- Async functions return `ShotPromise<T>`. Sync functions return `[T | null, Error | null]`.
-
-## Out of scope for v1
-
-- Streams, sockets, child processes
-- Cryptography helpers
-- Path manipulation utilities
-- HTTP server (`serve` is deferred — needs a cross-runtime API)
-- Anything beyond the functions listed above
-
-Future stdlib additions should follow the same tuple convention and be added to this document.

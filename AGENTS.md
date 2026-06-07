@@ -1,208 +1,424 @@
 # ShotScript — Agent Context
 
-This is the ShotScript toolchain repository. ShotScript is a TypeScript dialect that enforces lint constraints: one canonical way to write every construct. `.shot` files are valid TypeScript with a different extension — no new syntax, only stricter rules enforced at lint and build time.
+This file is the coding style guide for **ShotScript** (`shotscript` npm package). You are writing TypeScript that follows the ShotScript rules. This file is authoritative. Follow it exactly. When in doubt, the explicit, verbose, named form always wins.
+
+**One canonical way to write every construct.** The same philosophy as Go: remove choices, not features. Code that looks the same everywhere is easier to read, review, and generate correctly.
 
 ---
 
-## ShotScript vs ShotLint
+## Functions
 
-**ShotScript** (this repo) is the full opinionated toolchain. It requires Bun, uses `.shot` files instead of `.ts`, enforces Shot principles at the runtime level, and ships its own CLI (`shot init` · `check` · `fmt` · `build` · `run` · `test`) and stdlib (`shot:std`). Users adopt ShotScript by starting a new project with `shot init` — there is no config, no overrides.
+**Only `function` declarations. No arrow functions, ever.**
 
-**ShotLint** (`lint/` submodule, published as `shot-lint` on npm) is the package for existing TypeScript projects. It brings Shot principles via a TypeScript language-server plugin (rules surface as `tsc` errors in CI and editor squiggles), a shareable Biome config, and safe util wrappers. No `.shot` extension, no Bun, no CLI required — just `npm install shot-lint`.
+```ts
+// ❌
+const double = (n: number) => n * 2
+setTimeout(() => doThing(), 1000)
 
----
-
-## Repo layout
-
-```
-cli/                    Bun-based shot CLI
-  index.ts              Entry point — routes subcommands
-  check.ts              `shot check` — AST lint
-  build.ts              `shot build` — type-check only
-  run.ts                `shot run` — type-check + execute
-  test.ts               `shot test` — discover and run *.test.shot
-  fmt.ts                `shot fmt` — formats .shot files in place
-  init.ts               `shot init` — scaffold a new project
-  pipeline.ts           Shared: .shot→.ts rewriting, import map, temp dirs
-  checker/              AST rule checker (used by `shot check`)
-    index.ts            check(file, source) → Diagnostic[]
-    types.ts            Rule, Diagnostic, Context types
-    rules/              One file per rule (~94 rules)
-      index.ts          Registers all rules
-lint/                   shot-lint submodule (npm package for users)
-  src/checker/          Parallel copy of cli/checker/ for the npm package
-stdlib/                 shot standard library (published as @shotscript/std on npm)
-  index.ts              safeFetch, jsonParse, jsonStringify, wrapError, toResult, toPromiseResult
-tests/
-  fixtures/             .shot files for rule fixture tests (syntax/, types/, imports/)
-  run-syntax-fixtures.ts
-  run-types-fixtures.ts
-  run-imports-fixtures.ts
-scripts/
-  verify.sh             53 integration test cases against the real shot CLI
+// ✅
+function double(n: number): number { return n * 2 }
+setTimeout(function doThing(): void { doThing() }, 1000)
 ```
 
----
+**Every function must have an explicit return type annotation.**
 
-## The two checker copies
+```ts
+// ❌
+function double(n: number) { return n * 2 }
 
-**This is the most important architectural fact in this repo.**
-
-There are two parallel copies of the rule checker:
-
-| Location | Used by | Runtime |
-|---|---|---|
-| `cli/checker/` | `shot check` CLI command | Bun |
-| `lint/src/checker/` | `shot-lint` npm package | Node.js |
-
-Both have the same rule files, types, and structure. When you add or change a rule, **you must update both**. The `lint/` submodule is what users install via npm; `cli/checker/` is what the CLI uses directly.
-
-The `cli/checker/rules/index.ts` imports use `.ts` extensions (Bun style). The `lint/src/checker/rules/index.ts` imports use `.js` extensions (NodeNext/ESM style).
-
----
-
-## Running the CLI locally
-
-```bash
-bun run cli/index.ts --help
-bun run cli/index.ts check path/to/file.shot
-bun run cli/index.ts run path/to/file.shot
-bun run cli/index.ts test path/to/dir/
+// ✅
+function double(n: number): number { return n * 2 }
 ```
 
-To point the CLI at the local stdlib instead of the published npm version:
+**Every function expression must be named.**
 
-```bash
-SHOT_STDLIB_LOCAL=$(pwd)/stdlib/index.ts bun run cli/index.ts run file.shot
+```ts
+// ❌
+[1, 2, 3].map(function (n: number): number { return n * 2 })
+
+// ✅
+[1, 2, 3].map(function double(n: number): number { return n * 2 })
 ```
 
-To inspect the temp directory the CLI creates during `build`/`run`/`test`:
+**No default parameters. No optional parameters. Use `| null` explicitly.**
 
-```bash
-SHOT_KEEP_TEMP=1 bun run cli/index.ts run file.shot
+```ts
+// ❌
+function greet(name: string, greeting?: string): string { ... }
+function greet(name: string, greeting: string = "hello"): string { ... }
+
+// ✅
+function greet(name: string, greeting: string | null): string {
+    if (greeting === null) { return `hello, ${name}` }
+    return `${greeting}, ${name}`
+}
 ```
 
 ---
 
-## Running tests
+## Error handling
 
-**Integration tests (primary)** — runs 53 real CLI cases end-to-end:
+**The most important pattern. Never throw, never catch. Return a tuple.**
 
-```bash
-bash scripts/verify.sh
+```ts
+type Result<T> = [T, null] | [null, Error]
 ```
 
-**Rule fixture tests** — fast, no CLI needed, runs the checker directly:
+Every fallible function returns `[value, null]` on success or `[null, Error]` on failure. The caller always destructures and checks.
 
-```bash
-bun run tests/run-syntax-fixtures.ts
-bun run tests/run-types-fixtures.ts
-bun run tests/run-imports-fixtures.ts
+```ts
+// ❌ — throws, hides errors from the type system
+async function getUser(id: number): Promise<User> {
+    const res = await fetch(`/users/${id}`)
+    if (!res.ok) throw new Error(`HTTP ${res.status.toString()}`)
+    return res.json() as User
+}
+
+// ✅ — errors are in the type signature
+import { safeFetch, jsonParse } from "shotscript/utils"
+
+async function getUser(id: number): Promise<[User | null, Error | null]> {
+    const [res, fetchErr] = await safeFetch(`/users/${id.toString()}`)
+    if (fetchErr !== null) { return [null, fetchErr] }
+    if (!res.ok) { return [null, new Error(`HTTP ${res.status.toString()}`)] }
+    return jsonParse<User>(await res.text())
+}
 ```
 
-**shot-lint submodule tests** (from inside `lint/`):
+**Async functions must return `Promise<void>` or `Promise<[T | null, Error | null]>`. Nothing else.**
 
-```bash
-cd lint
-npm ci
-node --import tsx/esm tests/runner.ts
-node --import tsx/esm --test tests/utils.test.ts
+```ts
+// ❌
+async function loadConfig(): Promise<Config> { ... }
+
+// ✅
+async function loadConfig(): Promise<[Config | null, Error | null]> { ... }
 ```
 
-CI runs `bash scripts/verify.sh` for the root repo and all three npm commands for the submodule.
+**No `throw`. No `try`/`catch`. No `.then()`/`.catch()` chains.**
+
+```ts
+// ❌
+throw new Error("bad input")
+try { riskyOp() } catch (e) { handle(e) }
+fetch(url).then(function handleRes(r: Response): Promise<unknown> { return r.json() })
+
+// ✅
+return [null, new Error("bad input")]
+const [result, err] = toResult(function run(): unknown { return riskyOp() })
+const [res, err] = await safeFetch(url)
+```
+
+**Every call that returns a tuple must be destructured immediately.**
+
+```ts
+// ❌
+const result = divide(10, 2)
+
+// ✅
+const [quotient, divErr] = divide(10, 2)
+if (divErr !== null) { return [null, divErr] }
+```
+
+**Use utils from `shotscript/utils` for banned globals:**
+
+```ts
+import { toResult, toPromiseResult, jsonParse, jsonStringify, safeFetch, wrapError } from "shotscript/utils"
+import type { Result, PromiseResult } from "shotscript/utils"
+
+// third-party calls that throw
+const [val, err] = toResult(function parse(): unknown { return thirdParty.parse(input) })
+const [val, err] = await toPromiseResult(function query(): Promise<Row> { return db.find(id) })
+
+// banned globals
+const [data, err] = jsonParse<Config>(text)
+const [json, err] = jsonStringify(payload)
+const [res, err] = await safeFetch('https://api.example.com')
+```
 
 ---
 
-## How the pipeline works
+## Variables
 
-`shot build`, `shot run`, and `shot test` all follow the same flow:
+**`const` everywhere. `let` only inside `for` loop headers. `var` never.**
 
-1. Read the `.shot` source file(s)
-2. Rewrite relative `.shot` imports to `.ts` (e.g. `"./util.shot"` → `"./util.ts"`)
-3. Rewrite `shot:` specifiers to `@shotscript/` (or local override via `SHOT_STDLIB_LOCAL`)
-4. Copy transformed source into a temp directory
-5. Type-check in-process via the TypeScript compiler API (`cli/typecheck.ts`) with strict options
-6. Execute with `bun run` against the temp entry file
+```ts
+// ❌
+let count = 0
+var name = 'alice'
 
-`shot check` skips type-checking entirely — it runs the AST rule checker in `cli/checker/` directly.
+// ✅
+const count = 0
+for (let i = 0; i < 10; i += 1) { ... }
+```
+
+**One declaration per statement.**
+
+```ts
+// ❌
+const a = 1, b = 2
+
+// ✅
+const a = 1
+const b = 2
+```
+
+**No `++` / `--`. Use `+= 1` / `-= 1`.**
+
+**No variable shadowing.**
+
+```ts
+// ❌
+const x = 1
+function f(): void { const x = 2 }  // shadows outer x
+
+// ✅
+const x = 1
+function f(): void { const y = 2 }
+```
 
 ---
 
-## How to add a rule
+## Types
 
-1. **Add the rule file to `cli/checker/rules/`** — copy any existing rule as a template. Export a single `const` of type `Rule`. Use `.ts` import extensions.
+**`type` only. No `interface`.**
 
-2. **Register it in `cli/checker/rules/index.ts`** — import and add to the `rules` array.
+```ts
+// ❌
+interface User { id: number; name: string }
 
-3. **Add the same rule file to `lint/src/checker/rules/`** — identical logic but import extensions must be `.js` (NodeNext requirement).
+// ✅
+type User = { readonly id: number; readonly name: string }
+```
 
-4. **Register it in `lint/src/checker/rules/index.ts`**.
+**Every object type property must be `readonly`.**
 
-5. **Add fixture files** to `tests/fixtures/syntax/` or `tests/fixtures/types/`:
-   - `rule-name-invalid.shot` — code that should trigger the rule (exactly 1 diagnostic)
-   - `rule-name-valid.shot` — code that should pass clean
+```ts
+// ❌
+type Config = { host: string; port: number }
 
-6. **Add an integration case** to `scripts/verify.sh` using the `diagnostic_check` helper.
+// ✅
+type Config = { readonly host: string; readonly port: number }
+```
 
-7. **Add a pass/fail fixture** to `lint/tests/fixtures/` for the submodule's own test runner.
+**Arrays in type annotations must be `readonly T[]`. Not `T[]`, not `Array<T>`, not `ReadonlyArray<T>`.**
+
+```ts
+// ❌
+const xs: number[] = []
+const ys: Array<number> = []
+
+// ✅
+const xs: readonly number[] = []
+```
+
+**`null` only. No `undefined` in type annotations.**
+
+```ts
+// ❌
+type User = { name: string | undefined }
+function f(x?: string): void { ... }
+
+// ✅
+type User = { readonly name: string | null }
+function f(x: string | null): void { ... }
+```
+
+**No optional properties. Use `| null` per field.**
+
+```ts
+// ❌
+type Config = { readonly host: string; readonly port?: number }
+
+// ✅
+type Config = { readonly host: string; readonly port: number | null }
+```
+
+**No `any`, no type assertions, no non-null assertions, no `@ts-ignore`.**
+
+```ts
+// ❌
+const x: any = getValue()
+const y = getValue() as User
+const z = getValue()!
+
+// ✅
+const x: unknown = getValue()
+const [user, err] = parseUser(getValue())
+```
+
+**No `enum`. Use `as const` objects.**
+
+```ts
+// ❌
+enum Status { Active, Inactive }
+
+// ✅
+const Status = { Active: 'active', Inactive: 'inactive' } as const
+type Status = typeof Status[keyof typeof Status]
+```
+
+**No `class`, no `abstract`, no decorators, no `this`.**
+
+**No intersection types. Spell out the fields or use named composition.**
+
+```ts
+// ❌
+type Tagged = Base & { readonly tag: string }
+
+// ✅
+type Tagged = { readonly base: Base; readonly tag: string }
+```
+
+**No conditional types. No mapped types. No `infer`.**
+
+```ts
+// ❌
+type NonNullable<T> = T extends null ? never : T
+type Nullable<T> = { readonly [K in keyof T]: T[K] | null }
+
+// ✅ — write the concrete type directly
+type Name = string
+type NullableUser = { readonly id: number | null; readonly name: string | null }
+```
+
+**Banned utility types: `Partial`, `Required`, `Record`, `Readonly` (wrapper form), `InstanceType`, `ConstructorParameters`, `ThisType`.**
+
+**Use `Map<K, V>` for dictionaries. Not index signatures, not `Record`.**
 
 ---
 
-## Key env vars
+## Control flow
 
-| Variable | Effect |
+**No ternary. Use `if`/`else` or extract a named function.**
+
+```ts
+// ❌
+const label = isReady ? 'go' : 'wait'
+
+// ✅
+function labelFor(ready: boolean): string {
+    if (ready) { return 'go' }
+    return 'wait'
+}
+```
+
+**`===` / `!==` only. No `==` / `!=`.**
+
+**No `&&` shorthand for side effects. Use `if`.**
+
+```ts
+// ❌
+condition && doThing()
+
+// ✅
+if (condition === true) { doThing() }
+```
+
+**No `for...in`. Use `for...of` or `Object.keys()`.**
+
+**No `do...while`. Use `while`.**
+
+**No labels. Extract a function and `return` instead.**
+
+**`switch` requires `break` or `return` on every case — no fallthrough.**
+
+---
+
+## Imports / exports
+
+**Named exports only. No `export default`.**
+
+```ts
+// ❌
+export default function handler() { ... }
+
+// ✅
+export function handler(): void { ... }
+```
+
+**No `require()`. ESM only.**
+
+**No barrel/index imports. Import the specific file.**
+
+```ts
+// ❌
+import { add } from './math/index.js'
+import { add } from './math'
+
+// ✅
+import { add } from './math/add.js'
+```
+
+---
+
+## Banned constructs — quick reference
+
+| Banned | Use instead |
 |---|---|
-| `SHOT_STDLIB_LOCAL` | Path to local stdlib `index.ts` — bypasses npm for development |
-| `SHOT_KEEP_TEMP` | Set to `1` to leave the temp dir on disk after a command |
+| Arrow functions | Named `function` declaration/expression |
+| `throw` / `try` / `catch` | Return `[null, new Error(...)]` |
+| `.then()` / `.catch()` | `await` + tuple destructure |
+| `interface` | `type` |
+| `enum` | `as const` object + `typeof` type |
+| `class` | Plain types + functions |
+| `any` | `unknown` |
+| `as T` (cast) | Parse and validate, return Result |
+| `x!` | Explicit null check |
+| `// @ts-ignore` | Fix the type |
+| `T[]` in annotations | `readonly T[]` |
+| `Array<T>` / `ReadonlyArray<T>` | `readonly T[]` |
+| Optional property `prop?:` | `prop: T \| null` |
+| Optional parameter `x?:` | `x: T \| null` |
+| Default parameter `x = val` | Explicit check inside body |
+| `undefined` in types | `null` |
+| Ternary `? :` | `if`/`else` or named function |
+| `let` outside `for` header | `const` |
+| `var` | `const` |
+| `++` / `--` | `+= 1` / `-= 1` |
+| `JSON.parse` | `jsonParse<T>()` from `shotscript/utils` |
+| `JSON.stringify` | `jsonStringify()` from `shotscript/utils` |
+| `fetch(url)` | `safeFetch(url)` from `shotscript/utils` |
+| Third-party throws | `toResult(() => ...)` from `shotscript/utils` |
+| `Record<K, V>` | `Map<K, V>` |
+| Index signature `[k: string]: T` | `Map<string, T>` |
+| `Partial<T>` | Spell out optional fields with `\| null` |
+| Intersection `A & B` | Spell out fields or compose by value |
+| Conditional type `T extends U ? X : Y` | Write the concrete type directly |
+| Mapped type `{ [K in keyof T]: ... }` | Spell out the fields explicitly |
+| `infer` | Write the concrete type directly |
+| `Object.assign` / `Object.create` | Spread `{ ...a, ...b }` |
+| `Proxy` / `Reflect` | Direct access |
+| `eval` | Never |
+| `for...in` | `for...of Object.keys()` |
+| `do...while` | `while` |
+| `&&` for side effects | `if (condition === true)` |
+| `!!value` | `Boolean(value)` |
+| `typeof x !== 'undefined'` | `x !== null` |
+| `parseInt` / `parseFloat` | `Number(str)` |
 
 ---
 
-## Coding style in this repo
+## Common LLM mistakes to avoid
 
-The CLI itself (`cli/`, `stdlib/`) is written in idiomatic TypeScript for Bun — it does not follow shot lint (the CLI needs `try/catch`, classes, etc. to implement the toolchain). The `stdlib/index.ts` is the one place in the entire codebase where `try/catch` is intentionally used to wrap throwing APIs for shot users.
+1. **Writing arrow functions** — the most frequent mistake. Every function is a named `function` keyword declaration.
 
-The `lint/` submodule source should follow shot lint where possible, but the checker implementation necessarily uses TypeScript AST APIs that require patterns shot bans (indexing, casting, etc.) — use guarded patterns with `noUncheckedIndexedAccess` in mind.
+2. **Forgetting tuple destructure** — if a function returns `Result<T>`, the caller must `const [val, err] = fn()`. Never `const result = fn()`.
 
----
+3. **Using `interface`** — always `type`.
 
-## Releasing a new version of shot-lint
+4. **Using `async` without tuple return** — async functions return `Promise<void>` or `Promise<[T | null, Error | null]>`. A bare `Promise<User>` fails the `require-async-tuple-return` rule.
 
-The `lint/` directory is a separate git submodule with its own repo and npm publish pipeline. The root `package.json` does **not** manage versioning — all version bumps and publishing happen inside `lint/`.
+5. **Using `undefined`** — the only nullable value is `null`. Write `string | null`, never `string | undefined`.
 
-**To release a patch/minor/major version:**
+6. **Calling `JSON.parse` / `fetch` directly** — import `jsonParse` / `safeFetch` from `shotscript/utils` instead.
 
-```bash
-# 1. Enter the submodule
-cd lint
+7. **Writing optional properties** — `{ name?: string }` is banned. Write `{ readonly name: string | null }`.
 
-# 2. Bump the version in lint/package.json manually, or use npm:
-npm version patch   # 0.1.1 → 0.1.2
-npm version minor   # 0.1.1 → 0.2.0
-npm version major   # 0.1.1 → 1.0.0
+8. **Forgetting `readonly`** — every object type property and every array type annotation needs it.
 
-# npm version also creates a git commit and tag automatically.
+9. **Using ternary for conditional values** — extract a named function instead.
 
-# 3. Push the commit AND the tag to the submodule remote:
-git push && git push --tags
+10. **Omitting return type** — every function declaration needs an explicit `: ReturnType` annotation.
 
-# The publish.yml workflow fires on the pushed tag and runs:
-#   npm ci → npm run build → npm publish --provenance --access public
-```
-
-**Lint scripts** live in `lint/package.json` (not the root):
-
-```bash
-cd lint
-npm run build    # tsc + esbuild plugin bundle
-npm run test     # fixture runner + utils tests
-npm run check    # tsc --noEmit
-```
-
-After the submodule push, update the root repo's submodule pointer:
-
-```bash
-# Back in the repo root:
-git add lint
-git commit -m "Bump shot-lint to vX.Y.Z"
-git push
-```
+11. **Using type-level metaprogramming** — no conditional types, no mapped types, no `infer`. Write the concrete type you actually mean.

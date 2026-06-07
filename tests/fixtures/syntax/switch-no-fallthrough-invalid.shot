@@ -1,7 +1,0 @@
-const x: string = "a"
-switch (x) {
-    case "a":
-        const y: number = 1
-    case "b":
-        break
-}

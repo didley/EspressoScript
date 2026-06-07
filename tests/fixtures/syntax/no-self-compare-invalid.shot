@@ -1,2 +1,0 @@
-const x: number = 1
-const b: boolean = x === x

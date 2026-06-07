@@ -1,4 +1,0 @@
-const obj = { x: 0 }
-function f(): number {
-    return obj.x = 5
-}

@@ -1,1 +1,0 @@
-type T = Partial<{ readonly x: number }>
