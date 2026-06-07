@@ -63,14 +63,7 @@ export async function toPromiseResult<T>(fn: () => Promise<T>): PromiseResult<T>
  *   const [data, err] = jsonParse<User>(text)
  */
 export function jsonParse<T>(text: string): Result<T> {
-    try {
-        return [JSON.parse(text) as T, null]
-    } catch (e) {
-        if (e instanceof Error) {
-            return [null, e]
-        }
-        return [null, new Error(`JSON.parse failed: ${String(e)}`)]
-    }
+    return toResult(function p(): T { return JSON.parse(text) as T })
 }
 
 /**
@@ -80,14 +73,7 @@ export function jsonParse<T>(text: string): Result<T> {
  *   const [json, err] = jsonStringify(value)
  */
 export function jsonStringify(value: unknown, indent: number | null = null): Result<string> {
-    try {
-        return [JSON.stringify(value, null, indent ?? undefined), null]
-    } catch (e) {
-        if (e instanceof Error) {
-            return [null, e]
-        }
-        return [null, new Error(`JSON.stringify failed: ${String(e)}`)]
-    }
+    return toResult(function s(): string { return JSON.stringify(value, null, indent ?? undefined) })
 }
 
 /**
@@ -100,15 +86,7 @@ export function jsonStringify(value: unknown, indent: number | null = null): Res
  *   if (!res.ok) { return [null, new Error(`HTTP ${res.status.toString()}`)] }
  */
 export async function safeFetch(url: string | URL, init: RequestInit | null = null): PromiseResult<Response> {
-    try {
-        const res = await fetch(url, init ?? undefined)
-        return [res, null]
-    } catch (e) {
-        if (e instanceof Error) {
-            return [null, e]
-        }
-        return [null, new Error(`fetch failed: ${String(e)}`)]
-    }
+    return toPromiseResult(function f(): Promise<Response> { return fetch(url, init ?? undefined) })
 }
 
 /**
@@ -132,14 +110,7 @@ export function wrapError(message: string, cause: Error): Error {
  *   if (err !== null) { return [null, err] }
  */
 export function safeURL(url: string, base: string | null = null): Result<URL> {
-    try {
-        return [new URL(url, base ?? undefined), null]
-    } catch (e) {
-        if (e instanceof Error) {
-            return [null, e]
-        }
-        return [null, new Error(`Invalid URL: ${String(e)}`)]
-    }
+    return toResult(function u(): URL { return new URL(url, base ?? undefined) })
 }
 
 /**
@@ -149,14 +120,7 @@ export function safeURL(url: string, base: string | null = null): Result<URL> {
  *   const [decoded, err] = safeDecodeURIComponent(rawStr)
  */
 export function safeDecodeURIComponent(str: string): Result<string> {
-    try {
-        return [decodeURIComponent(str), null]
-    } catch (e) {
-        if (e instanceof Error) {
-            return [null, e]
-        }
-        return [null, new Error(`decodeURIComponent failed: ${String(e)}`)]
-    }
+    return toResult(function d(): string { return decodeURIComponent(str) })
 }
 
 /**
@@ -166,14 +130,7 @@ export function safeDecodeURIComponent(str: string): Result<string> {
  *   const [decoded, err] = safeDecodeURI(rawStr)
  */
 export function safeDecodeURI(str: string): Result<string> {
-    try {
-        return [decodeURI(str), null]
-    } catch (e) {
-        if (e instanceof Error) {
-            return [null, e]
-        }
-        return [null, new Error(`decodeURI failed: ${String(e)}`)]
-    }
+    return toResult(function d(): string { return decodeURI(str) })
 }
 
 /**
@@ -183,14 +140,7 @@ export function safeDecodeURI(str: string): Result<string> {
  *   const [bin, err] = safeAtob(base64Str)
  */
 export function safeAtob(data: string): Result<string> {
-    try {
-        return [atob(data), null]
-    } catch (e) {
-        if (e instanceof Error) {
-            return [null, e]
-        }
-        return [null, new Error(`atob failed: ${String(e)}`)]
-    }
+    return toResult(function a(): string { return atob(data) })
 }
 
 /**
@@ -200,14 +150,7 @@ export function safeAtob(data: string): Result<string> {
  *   const [b64, err] = safeBtoa(binaryStr)
  */
 export function safeBtoa(data: string): Result<string> {
-    try {
-        return [btoa(data), null]
-    } catch (e) {
-        if (e instanceof Error) {
-            return [null, e]
-        }
-        return [null, new Error(`btoa failed: ${String(e)}`)]
-    }
+    return toResult(function b(): string { return btoa(data) })
 }
 
 /**
@@ -232,14 +175,7 @@ export function assertNever(x: never): never {
  *   const [re, err] = safeRegex('^foo.*', 'i')
  */
 export function safeRegex(pattern: string, flags: string | null = null): Result<RegExp> {
-    try {
-        return [new RegExp(pattern, flags ?? undefined), null]
-    } catch (e) {
-        if (e instanceof Error) {
-            return [null, e]
-        }
-        return [null, new Error(`Invalid regex: ${String(e)}`)]
-    }
+    return toResult(function r(): RegExp { return new RegExp(pattern, flags ?? undefined) })
 }
 
 /**
@@ -277,14 +213,7 @@ export function safeNumber(str: string): Result<number> {
  *   const [copy, err] = safeStructuredClone(value)
  */
 export function safeStructuredClone<T>(value: T): Result<T> {
-    try {
-        return [structuredClone(value), null]
-    } catch (e) {
-        if (e instanceof Error) {
-            return [null, e]
-        }
-        return [null, new Error(`structuredClone failed: ${String(e)}`)]
-    }
+    return toResult(function c(): T { return structuredClone(value) })
 }
 
 /**
@@ -294,13 +223,5 @@ export function safeStructuredClone<T>(value: T): Result<T> {
  *   const [n, err] = safeBigInt('12345678901234567890')
  */
 export function safeBigInt(str: string): Result<bigint> {
-    try {
-        return [BigInt(str), null]
-    } catch (e) {
-        if (e instanceof Error) {
-            return [null, e]
-        }
-        return [null, new Error(`Invalid BigInt: ${String(e)}`)]
-    }
+    return toResult(function b(): bigint { return BigInt(str) })
 }
-
