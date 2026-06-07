@@ -120,7 +120,7 @@ const [quotient, divErr] = divide(10, 2)
 if (divErr !== null) { return [null, divErr] }
 ```
 
-**Use utils from `shotscript/utils` for banned globals:**
+**Use ShotScriptStd (`shotscript/utils`) for banned globals:**
 
 ```ts
 import { toResult, toPromiseResult, jsonParse, jsonStringify, safeFetch, wrapError } from "shotscript/utils"
@@ -376,10 +376,10 @@ import { add } from './math/add.js'
 | `let` outside `for` header | `const` |
 | `var` | `const` |
 | `++` / `--` | `+= 1` / `-= 1` |
-| `JSON.parse` | `jsonParse<T>()` from `shotscript/utils` |
-| `JSON.stringify` | `jsonStringify()` from `shotscript/utils` |
-| `fetch(url)` | `safeFetch(url)` from `shotscript/utils` |
-| Third-party throws | `toResult(() => ...)` from `shotscript/utils` |
+| `JSON.parse` | `jsonParse<T>()` from ShotScriptStd (`shotscript/utils`) |
+| `JSON.stringify` | `jsonStringify()` from ShotScriptStd (`shotscript/utils`) |
+| `fetch(url)` | `safeFetch(url)` from ShotScriptStd (`shotscript/utils`) |
+| Third-party throws | `toResult(() => ...)` from ShotScriptStd (`shotscript/utils`) |
 | `Record<K, V>` | `Map<K, V>` |
 | Index signature `[k: string]: T` | `Map<string, T>` |
 | `Partial<T>` | Spell out optional fields with `\| null` |
@@ -411,7 +411,7 @@ import { add } from './math/add.js'
 
 5. **Using `undefined`** — the only nullable value is `null`. Write `string | null`, never `string | undefined`.
 
-6. **Calling `JSON.parse` / `fetch` directly** — import `jsonParse` / `safeFetch` from `shotscript/utils` instead.
+6. **Calling `JSON.parse` / `fetch` directly** — import `jsonParse` / `safeFetch` from ShotScriptStd (`shotscript/utils`) instead.
 
 7. **Writing optional properties** — `{ name?: string }` is banned. Write `{ readonly name: string | null }`.
 

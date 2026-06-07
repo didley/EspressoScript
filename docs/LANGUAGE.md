@@ -114,7 +114,7 @@ Rule: `no-promise`
 
 ### Async functions must return a tuple
 
-Every `async` function with a meaningful return must declare `Promise<[T | null, E | null]>` or the `PromiseResult<T, E>` alias from `shotscript/utils`. `Promise<void>` is allowed for fire-and-forget side effects.
+Every `async` function with a meaningful return must declare `Promise<[T | null, E | null]>` or the `PromiseResult<T, E>` alias from ShotScriptStd (`shotscript/utils`). `Promise<void>` is allowed for fire-and-forget side effects.
 
 ```ts
 // ❌
@@ -171,7 +171,7 @@ if (err !== null) {
 }
 ```
 
-To add context when propagating an error up the call stack, use `wrapError` from `shotscript/utils` — the ShotScript equivalent of Go's `fmt.Errorf("context: %w", err)`:
+To add context when propagating an error up the call stack, use `wrapError` from ShotScriptStd — the ShotScript equivalent of Go's `fmt.Errorf("context: %w", err)`:
 
 ```ts
 import { wrapError } from "shotscript/utils"
@@ -187,7 +187,7 @@ async function loadConfig(path: string): PromiseResult<Config> {
 
 ### Wrapping external throwing APIs
 
-When importing external APIs that throw or reject instead of returning tuples, use `toResult` (sync) or `toPromiseResult` (async) from `shotscript/utils`:
+When importing external APIs that throw or reject instead of returning tuples, use `toResult` (sync) or `toPromiseResult` (async) from ShotScriptStd (`shotscript/utils`):
 
 ```ts
 import { toResult, toPromiseResult } from "shotscript/utils"
@@ -647,9 +647,9 @@ const f = Function("return 1")
 
 Rule: `no-metaprogramming-globals`
 
-## Throwing globals → `shotscript/utils` wrappers
+## Throwing globals → ShotScriptStd wrappers
 
-Functions that throw at the API boundary break the no-throw philosophy at every call site. Use the tuple-returning wrappers from `shotscript/utils`.
+Functions that throw at the API boundary break the no-throw philosophy at every call site. Use the tuple-returning wrappers from ShotScriptStd (`shotscript/utils`).
 
 ```ts
 // ❌

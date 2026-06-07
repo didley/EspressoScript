@@ -1,4 +1,4 @@
-# Utils
+# ShotScriptStd
 
 Safe, non-throwing wrappers for the globals ShotScript bans. Every function returns a tuple — never throws. Import from `shotscript/utils`.
 
