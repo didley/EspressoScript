@@ -3,6 +3,7 @@
 // Usage: shotscript 'src/**/*.ts'
 import { readFileSync } from 'node:fs'
 import { glob } from 'glob'
+import ts from 'typescript'
 import { check } from './lint/check.js'
 
 const patterns = process.argv.slice(2)
@@ -18,10 +19,18 @@ for (const pattern of patterns) {
     files.push(...matches)
 }
 
+const program = ts.createProgram(files, {
+    target: ts.ScriptTarget.ES2022,
+    noEmit: true,
+    skipLibCheck: true,
+})
+const typeChecker = program.getTypeChecker()
+
 const lines = []
 for (const file of files) {
     const source = readFileSync(file, 'utf8')
-    for (const d of check(file, source, null, null)) {
+    const programSourceFile = program.getSourceFile(file) ?? null
+    for (const d of check(file, source, typeChecker, programSourceFile)) {
         lines.push(`${d.file}:${d.line}:${d.col} [${d.rule}] ${d.message}`)
     }
 }
