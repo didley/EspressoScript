@@ -47,7 +47,7 @@ export function check(
     programSourceFile: ts.SourceFile | null,
 ): readonly Diagnostic[] {
     const { sourceFile, checker } = resolveCheckProgram(file, source, typeChecker, programSourceFile)
-    const diagMap = new Map<number, Diagnostic>()
+    const diags = Array.from<Diagnostic>([])
 
     const ctx: Context = {
         file,
@@ -55,7 +55,7 @@ export function check(
         sourceFile,
         typeChecker: checker,
         report(d: Omit<Diagnostic, 'file'>): void {
-            diagMap.set(diagMap.size, { file, ...d })
+            diags[diags.length] = { file, ...d }
         },
     }
 
@@ -67,5 +67,5 @@ export function check(
     }
     walk(sourceFile)
 
-    return [...diagMap.values()]
+    return diags
 }
