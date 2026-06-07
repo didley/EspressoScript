@@ -975,9 +975,13 @@
                         Rules like <code>no-class</code>,
                         <code>no-promise</code>, and
                         <code>no-arrow-functions</code> require architectural
-                        rewrites, not search-and-replace. There is no gradual
-                        migration path — but <a href="/skills/#migrate"><code>/shotscript-migrate</code></a>
-                        handles the rewrite end-to-end, including every call site.
+                        rewrites, not search-and-replace.
+                        <a href="/skills/#migrate"><code>/shotscript-migrate</code></a>
+                        handles the rewrite end-to-end — but on a brownfield
+                        project this is a large, high-stakes operation. Treat it
+                        like a major refactor: solid test coverage before you
+                        start, review the changes carefully, and expect surprises
+                        in complex call graphs.
                     </div>
                 </div>
                 <div class="rule-card">
