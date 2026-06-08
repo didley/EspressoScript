@@ -597,6 +597,10 @@
                 padding: 0.05rem 0.3rem;
                 border-radius: 3px;
             }
+            .ai-prompt-text strong {
+                color: var(--text);
+                font-weight: 600;
+            }
 
             /* ── Comparison ── */
             .comparison {
@@ -1194,22 +1198,41 @@
             <div class="section-label">Install</div>
             <h2>One package. Five tools.</h2>
 
-            <!-- AI-first install -->
-            <div class="ai-install" data-prompt="Install and configure ShotScript in this project: run `npm install --save-dev shotscript`, add {&quot;name&quot;: &quot;shotscript/plugin&quot;} to the plugins array in compilerOptions in tsconfig.json, add &quot;shotscript/fmt&quot; to the extends array in biome.json, and set the extends field in tsconfig.json to &quot;shotscript/tsconfig/shotscript.json&quot;.">
+            <!-- Unified AI install prompt -->
+            <div class="ai-install" data-prompt="Help me set up ShotScript. Walk me through this step by step:
+
+STEP 1 — DETECT CONTEXT. Check whether the current directory contains a package.json.
+
+STEP 2A — IF NO package.json (new project): Ask me &quot;What would you like to build? (e.g. a CLI tool, a web API, a React app, a script — anything you have in mind)&quot;. Based on my answer, pick the most appropriate minimal TypeScript starter (Node + tsx for scripts and CLIs, Hono or Express for APIs, Vite + React for web apps, etc.), scaffold it, then continue to STEP 3.
+
+STEP 2B — IF package.json EXISTS (existing project): Continue to STEP 3.
+
+STEP 3 — INSTALL SHOTSCRIPT. Run `npm install --save-dev shotscript`. Then:
+- Add `{ &quot;name&quot;: &quot;shotscript/plugin&quot; }` to the `plugins` array inside `compilerOptions` in tsconfig.json
+- Set the `extends` field in tsconfig.json to `&quot;shotscript/tsconfig/shotscript.json&quot;`
+- Add `&quot;shotscript/fmt&quot;` to the `extends` array in biome.json (create biome.json if it doesn't exist)
+- Run `npx shotscript commands` to install the /shotscript-fix, /shotscript-migrate, and /shotscript-explain slash commands
+
+STEP 4 — OFFER MIGRATION. Only if existing TypeScript source files are present in the project (not just config), ask me: &quot;You have existing TypeScript code. Would you like me to migrate it to ShotScript style using /shotscript-migrate? This will rewrite arrow functions to named functions, replace try/catch with PromiseResult tuples, remove classes in favour of plain types and functions, and apply all other ShotScript rules.&quot; If I say yes, run /shotscript-migrate. If there is no existing TypeScript code, skip this step.
+
+STEP 5 — CONFIRM. Show me the final state of tsconfig.json and biome.json so I can verify.">
                 <div class="ai-install-header">
                     <span class="ai-install-label">Install with AI — paste into Claude Code, Cursor, or any AI assistant</span>
                     <button class="ai-copy-btn" onclick="copyPrompt(this)">Copy</button>
                 </div>
-                <div class="ai-prompt-text">Install and configure ShotScript in this project: run <code>npm install --save-dev shotscript</code>, add <code>{"name": "shotscript/plugin"}</code> to the plugins array in compilerOptions in tsconfig.json, add <code>"shotscript/fmt"</code> to the extends array in biome.json, and set the extends field in tsconfig.json to <code>"shotscript/tsconfig/shotscript.json"</code>.</div>
-            </div>
+                <div class="ai-prompt-text">Help me set up ShotScript. Walk me through this step by step:
 
-            <!-- Migrate existing code prompt -->
-            <div class="ai-install" style="margin-top: 0.75rem;" data-prompt="Migrate this existing TypeScript codebase to ShotScript style using the /shotscript-migrate slash command. This will rewrite arrow functions to named functions, replace try/catch with PromiseResult tuples, remove classes in favour of plain types and functions, and apply all other ShotScript rules. Run /shotscript-migrate to begin.">
-                <div class="ai-install-header">
-                    <span class="ai-install-label">Already have code? Migrate it — paste into Claude Code</span>
-                    <button class="ai-copy-btn" onclick="copyPrompt(this)">Copy</button>
-                </div>
-                <div class="ai-prompt-text">Migrate this existing TypeScript codebase to ShotScript style using the <code>/shotscript-migrate</code> slash command. This will rewrite arrow functions to named functions, replace try/catch with PromiseResult tuples, remove classes in favour of plain types and functions, and apply all other ShotScript rules. Run <code>/shotscript-migrate</code> to begin. <a href="/skills/#migrate" style="color: var(--accent); font-size: 0.85em;">About /shotscript-migrate →</a></div>
+<strong>Step 1 — Detect context.</strong> Check whether the current directory contains a <code>package.json</code>.
+
+<strong>Step 2a — New project (no package.json):</strong> Ask me <em>"What would you like to build?"</em> Based on my answer, pick the most appropriate minimal TypeScript starter (Node + tsx for scripts, Hono/Express for APIs, Vite + React for web apps, etc.), scaffold it, then continue.
+
+<strong>Step 2b — Existing project:</strong> Continue.
+
+<strong>Step 3 — Install ShotScript.</strong> Run <code>npm install --save-dev shotscript</code>. Then add <code>{ "name": "shotscript/plugin" }</code> to the <code>plugins</code> array in <code>compilerOptions</code> in tsconfig.json, set <code>extends</code> in tsconfig.json to <code>"shotscript/tsconfig/shotscript.json"</code>, add <code>"shotscript/fmt"</code> to <code>extends</code> in biome.json (create it if missing), and run <code>npx shotscript commands</code> to install the slash commands.
+
+<strong>Step 4 — Offer migration.</strong> If existing TypeScript source files are present, ask me whether to migrate them with <code>/shotscript-migrate</code>. Skip otherwise.
+
+<strong>Step 5 — Confirm.</strong> Show me the final tsconfig.json and biome.json so I can verify. <a href="/skills/#migrate" style="color: var(--accent); font-size: 0.85em;">About /shotscript-migrate →</a></div>
             </div>
 
             <!-- Manual steps, collapsed -->
