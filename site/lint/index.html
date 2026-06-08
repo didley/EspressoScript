@@ -260,6 +260,60 @@
                 margin: 0;
             }
 
+            .ai-install {
+                margin-top: 1.5rem;
+                border: 1px solid var(--border);
+                border-radius: 10px;
+                overflow: hidden;
+            }
+            .ai-install-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 0.6rem 1.25rem;
+                background: rgba(200, 112, 42, 0.05);
+                border-bottom: 1px solid var(--border);
+            }
+            .ai-install-label {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.65rem;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+                color: var(--accent);
+            }
+            .ai-copy-btn {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.68rem;
+                color: var(--muted);
+                background: transparent;
+                border: 1px solid var(--border);
+                border-radius: 4px;
+                padding: 0.2rem 0.6rem;
+                cursor: pointer;
+                transition: color 0.15s, border-color 0.15s;
+            }
+            .ai-copy-btn:hover { color: var(--text); border-color: var(--accent); }
+            .ai-copy-btn.copied { color: var(--green); border-color: var(--green); }
+            .ai-prompt-text {
+                background: var(--surface);
+                margin: 0;
+                padding: 1.1rem 1.25rem;
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+                font-size: 0.85rem;
+                color: var(--muted);
+                line-height: 1.65;
+                white-space: pre-wrap;
+                word-break: break-word;
+            }
+            .ai-prompt-text code {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.8em;
+                color: var(--green);
+                background: rgba(78, 201, 148, 0.08);
+                padding: 0.05rem 0.3rem;
+                border-radius: 3px;
+            }
+
             .comparison {
                 display: grid;
                 grid-template-columns: 1fr;
@@ -1872,7 +1926,30 @@
                     output.
                 </p>
             </div>
+            <div class="ai-install" data-prompt="Add ShotScriptLint to this project: run `npm install --save-dev shotscript`, then add {&quot;name&quot;: &quot;shotscript/plugin&quot;} to the plugins array in compilerOptions in tsconfig.json.">
+                <div class="ai-install-header">
+                    <span class="ai-install-label">Install with AI — paste into Claude Code, Cursor, or any AI assistant</span>
+                    <button class="ai-copy-btn" onclick="copyPrompt(this)">Copy</button>
+                </div>
+                <div class="ai-prompt-text">Add ShotScriptLint to this project: run <code>npm install --save-dev shotscript</code>, then add <code>{"name": "shotscript/plugin"}</code> to the plugins array in compilerOptions in tsconfig.json.</div>
+            </div>
         </div>
+
+        <script>
+        function copyPrompt(btn) {
+            var block = btn.closest('.ai-install');
+            var text = block.getAttribute('data-prompt')
+                .replace(/&quot;/g, '"').replace(/&amp;/g, '&');
+            navigator.clipboard.writeText(text).then(function () {
+                btn.textContent = 'Copied';
+                btn.classList.add('copied');
+                setTimeout(function () {
+                    btn.textContent = 'Copy';
+                    btn.classList.remove('copied');
+                }, 1800);
+            });
+        }
+        </script>
 
         <footer>
             <p>
