@@ -13,37 +13,39 @@ import type { Diagnostic } from './lint/types.js'
 const patterns = process.argv.slice(2)
 
 if (patterns.length === 0) {
-    process.stderr.write('Usage: shotscript <glob> [...glob]\n       shotscript commands -- install Claude Code skills\n')
+    process.stderr.write('Usage: shotscript <glob> [...glob]\n       shotscript init     -- write AGENTS.md and install Claude Code skills\n       shotscript commands -- install Claude Code skills\n')
     process.exit(1)
 }
 
-if (patterns[0] === 'commands') {
+if (patterns[0] === 'init' || patterns[0] === 'commands') {
     const pkgRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 
     const src = path.join(pkgRoot, 'commands')
     const dest = path.join(process.cwd(), '.claude', 'commands')
     mkdirSync(dest, { recursive: true })
-    const files = readdirSync(src)
-    for (const file of files) {
+    const commandFiles = readdirSync(src)
+    for (const file of commandFiles) {
         copyFileSync(path.join(src, file), path.join(dest, file))
     }
     process.stdout.write('ShotScript Claude skills installed to .claude/commands/\n')
     process.stdout.write('Available in Claude Code: /shotscript-fix  /shotscript-migrate  /shotscript-explain\n')
 
-    const agentsSrc = path.join(pkgRoot, 'AGENTS.md')
-    const agentsDest = path.join(process.cwd(), 'AGENTS.md')
-    const agentsContent = readFileSync(agentsSrc, 'utf8')
-    if (existsSync(agentsDest)) {
-        const existing = readFileSync(agentsDest, 'utf8')
-        if (!existing.includes('shotscript')) {
-            writeFileSync(agentsDest, `${existing.trimEnd()}\n\n${agentsContent}`)
-            process.stdout.write('ShotScript coding guide merged into existing AGENTS.md\n')
+    if (patterns[0] === 'init') {
+        const agentsSrc = path.join(pkgRoot, 'AGENTS.md')
+        const agentsDest = path.join(process.cwd(), 'AGENTS.md')
+        const agentsContent = readFileSync(agentsSrc, 'utf8')
+        if (existsSync(agentsDest)) {
+            const existing = readFileSync(agentsDest, 'utf8')
+            if (!existing.includes('shotscript')) {
+                writeFileSync(agentsDest, `${existing.trimEnd()}\n\n${agentsContent}`)
+                process.stdout.write('ShotScript coding guide merged into existing AGENTS.md\n')
+            } else {
+                process.stdout.write('AGENTS.md already contains ShotScript content — skipped\n')
+            }
         } else {
-            process.stdout.write('AGENTS.md already contains ShotScript content — skipped\n')
+            writeFileSync(agentsDest, agentsContent)
+            process.stdout.write('ShotScript coding guide written to AGENTS.md\n')
         }
-    } else {
-        writeFileSync(agentsDest, agentsContent)
-        process.stdout.write('ShotScript coding guide written to AGENTS.md\n')
     }
 
     process.exit(0)

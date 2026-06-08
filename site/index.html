@@ -1218,7 +1218,7 @@ STEP 3 — INSTALL SHOTSCRIPT. Run `npm install --save-dev shotscript`. Then:
 - Set the `extends` field in tsconfig.json to `&quot;shotscript/tsconfig/shotscript.json&quot;`
 - Add `&quot;shotscript/fmt&quot;` to the `extends` array in biome.json (create biome.json if it doesn't exist)
 - In package.json, prepend `shotscript 'src/**/*.{ts,tsx}'` to the `build` script so lint runs at build time (e.g. `&quot;build&quot;: &quot;shotscript 'src/**/*.{ts,tsx}' &amp;&amp; tsc ...&quot;`)
-- Run `npx shotscript commands` to install the /shotscript-fix, /shotscript-migrate, and /shotscript-explain slash commands and write the ShotScript coding guide to AGENTS.md in the project root (merging into an existing AGENTS.md if one is present)
+- Run `npx shotscript init` to write the ShotScript coding guide to AGENTS.md in the project root (merging into an existing AGENTS.md if one is present) and install the /shotscript-fix, /shotscript-migrate, and /shotscript-explain slash commands
 
 STEP 4 — OFFER MIGRATION. Only if existing TypeScript source files are present in the project (not just config), ask me: &quot;You have existing TypeScript code. Would you like me to migrate it to ShotScript style using /shotscript-migrate? This will rewrite arrow functions to named functions, replace try/catch with PromiseResult tuples, remove classes in favour of plain types and functions, and apply all other ShotScript rules.&quot; If I say yes, run /shotscript-migrate. If there is no existing TypeScript code, skip this step.
 
@@ -1235,7 +1235,7 @@ STEP 5 — CONFIRM. Show me the final state of tsconfig.json and biome.json so I
 
 <strong>Step 2b — Existing project:</strong> Continue.
 
-<strong>Step 3 — Install ShotScript.</strong> Run <code>npm install --save-dev shotscript</code>. Then add <code>{ "name": "shotscript/plugin" }</code> to the <code>plugins</code> array in <code>compilerOptions</code> in tsconfig.json, set <code>extends</code> in tsconfig.json to <code>"shotscript/tsconfig/shotscript.json"</code>, add <code>"shotscript/fmt"</code> to <code>extends</code> in biome.json (create it if missing), prepend <code>shotscript 'src/**/*.{ts,tsx}'</code> to the <code>build</code> script in package.json so lint runs at build time, and run <code>npx shotscript commands</code> to install the slash commands and write the ShotScript coding guide to <code>AGENTS.md</code> (merged into any existing file).
+<strong>Step 3 — Install ShotScript.</strong> Run <code>npm install --save-dev shotscript</code>. Then add <code>{ "name": "shotscript/plugin" }</code> to the <code>plugins</code> array in <code>compilerOptions</code> in tsconfig.json, set <code>extends</code> in tsconfig.json to <code>"shotscript/tsconfig/shotscript.json"</code>, add <code>"shotscript/fmt"</code> to <code>extends</code> in biome.json (create it if missing), prepend <code>shotscript 'src/**/*.{ts,tsx}'</code> to the <code>build</code> script in package.json so lint runs at build time, and run <code>npx shotscript init</code> to write the ShotScript coding guide to <code>AGENTS.md</code> (merged into any existing file) and install the slash commands.
 
 <strong>Step 4 — Offer migration.</strong> If existing TypeScript source files are present, ask me whether to migrate them with <code>/shotscript-migrate</code>. Skip otherwise.
 
@@ -1267,7 +1267,7 @@ STEP 5 — CONFIRM. Show me the final state of tsconfig.json and biome.json so I
                                 AGENTS.md — AI coding guide
                             </div>
                             <p class="install-step-note">Copies the ShotScript coding rules into your project so every AI assistant codes in ShotScript style automatically. Merge into an existing AGENTS.md if you already have one.</p>
-                            <pre><span class="prompt">$</span> npx shotscript commands</pre>
+                            <pre><span class="prompt">$</span> npx shotscript init</pre>
                         </div>
                         <div class="install-step">
                             <div class="install-step-label">

@@ -730,12 +730,12 @@
 
         <div id="install" class="install-block">
             <div class="install-label">Install</div>
-            <div class="ai-install" data-prompt="Add ShotScriptSkills to this project: run `npm install --save-dev shotscript`, then run `npx shotscript commands` to install the /shotscript-fix, /shotscript-migrate, and /shotscript-explain slash commands into .claude/commands/ and write the ShotScript coding guide to AGENTS.md in the project root (merge into existing AGENTS.md if one is present) for use with Claude Code.">
+            <div class="ai-install" data-prompt="Add ShotScriptSkills to this project: run `npm install --save-dev shotscript`, then run `npx shotscript init` to write the ShotScript coding guide to AGENTS.md in the project root (merge into existing AGENTS.md if one is present) and install the /shotscript-fix, /shotscript-migrate, and /shotscript-explain slash commands into .claude/commands/ for use with Claude Code.">
                 <div class="ai-install-header">
                     <span class="ai-install-label">Install with AI — paste into Claude Code, Cursor, or any AI assistant</span>
                     <button class="ai-copy-btn" onclick="copyPrompt(this)">Copy</button>
                 </div>
-                <div class="ai-prompt-text">Add ShotScriptSkills to this project: run <code>npm install --save-dev shotscript</code>, then run <code>npx shotscript commands</code> to install the <code>/shotscript-fix</code>, <code>/shotscript-migrate</code>, and <code>/shotscript-explain</code> slash commands into <code>.claude/commands/</code> and write the ShotScript coding guide to <code>AGENTS.md</code> in the project root (merge into existing AGENTS.md if one is present). <a href="/#install" style="color: var(--accent); font-size: 0.85em;">Full ShotScript setup →</a></div>
+                <div class="ai-prompt-text">Add ShotScriptSkills to this project: run <code>npm install --save-dev shotscript</code>, then run <code>npx shotscript init</code> to write the ShotScript coding guide to <code>AGENTS.md</code> in the project root (merge into existing AGENTS.md if one is present) and install the <code>/shotscript-fix</code>, <code>/shotscript-migrate</code>, and <code>/shotscript-explain</code> slash commands. <a href="/#install" style="color: var(--accent); font-size: 0.85em;">Full ShotScript setup →</a></div>
             </div>
 
             <details class="manual-accordion">
@@ -748,12 +748,9 @@
                         </div>
                     </div>
                     <p class="install-note">
-                        Copies <code>/shotscript-fix</code>,
-                        <code>/shotscript-migrate</code>, and
-                        <code>/shotscript-explain</code> into
-                        <code>.claude/commands/</code>, and writes the ShotScript
-                        coding guide to <code>AGENTS.md</code> in your project root
-                        (merged into an existing <code>AGENTS.md</code> if one is present).
+                        Use <code>npx shotscript init</code> on first setup — writes <code>AGENTS.md</code>
+                        and installs the slash commands. Use <code>npx shotscript commands</code> to
+                        update just the slash commands after a package upgrade.
                         Requires <a href="https://claude.ai/code" target="_blank" rel="noopener" class="ext">Claude Code</a>.
                     </p>
                 </div>
