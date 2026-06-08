@@ -10,9 +10,11 @@
         <meta property="og:title" content="ShotScript — TypeScript, one way." />
         <meta property="og:description" content="One way to write JavaScript and TypeScript. ~79% less syntax, fewer decisions, less to learn, less to argue about — and less for AI to get wrong." />
         <meta property="og:url" content="https://shotscript.dev/" />
-        <meta name="twitter:card" content="summary" />
+        <meta property="og:image" content="https://shotscript.dev/og.svg" />
+        <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="ShotScript — TypeScript, one way." />
         <meta name="twitter:description" content="One way to write JavaScript and TypeScript. ~79% less syntax, fewer decisions, less to learn, less to argue about — and less for AI to get wrong." />
+        <meta name="twitter:image" content="https://shotscript.dev/og.svg" />
         <style>
             @font-face {
                 font-family: 'Monument Extended';
@@ -163,7 +165,8 @@
                 letter-spacing: 0.02em;
                 text-indent: 0.02em;
                 line-height: 1;
-                margin-bottom: 1.5rem;
+                margin-top: 2rem;
+                margin-bottom: 2.25rem;
                 color: var(--text);
                 -webkit-font-smoothing: antialiased;
                 text-rendering: optimizeLegibility;
@@ -172,7 +175,7 @@
                 font-size: 1.05rem;
                 color: var(--muted);
                 line-height: 1.8;
-                max-width: 460px;
+                max-width: 480px;
                 margin: 0 auto;
             }
 
@@ -482,6 +485,51 @@
             .install-step pre {
                 background: var(--surface);
                 margin: 0;
+            }
+
+            /* ── Manual install accordion ── */
+            .manual-accordion {
+                margin-top: 0.75rem;
+                border: 1px solid var(--border);
+                border-radius: 8px;
+                overflow: hidden;
+            }
+
+            .manual-accordion summary {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                padding: 0.7rem 1.25rem;
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.7rem;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+                color: var(--muted);
+                cursor: pointer;
+                user-select: none;
+                list-style: none;
+                background: var(--surface);
+            }
+            .manual-accordion summary::-webkit-details-marker { display: none; }
+            .manual-accordion summary::before {
+                content: '▶';
+                font-size: 0.55rem;
+                transition: transform 0.15s;
+            }
+            .manual-accordion[open] summary::before {
+                transform: rotate(90deg);
+            }
+            .manual-accordion summary:hover {
+                color: var(--text);
+            }
+
+            .manual-accordion-body {
+                border-top: 1px solid var(--border);
+                padding: 1.25rem;
+                display: flex;
+                flex-direction: column;
+                gap: 0.75rem;
+                background: var(--surface);
             }
 
             /* ── AI prompt install ── */
@@ -1146,50 +1194,7 @@
             <div class="section-label">Install</div>
             <h2>One package. Five tools.</h2>
 
-            <div class="install-cmd">
-                <span class="prompt">$</span>
-                <span class="cmd">npm install --save-dev shotscript</span>
-            </div>
-
-            <div class="install-steps">
-                <div class="install-step">
-                    <div class="install-step-label">
-                        ShotScriptLint — tsconfig plugin
-                    </div>
-                    <pre><span class="cm">// tsconfig.json</span>
-{
-  <span class="st">"compilerOptions"</span>: {
-    <span class="st">"plugins"</span>: [{ <span class="st">"name"</span>: <span class="st">"shotscript/plugin"</span> }]
-  }
-}</pre>
-                </div>
-                <div class="install-step">
-                    <div class="install-step-label">
-                        ShotScriptFmt — biome config
-                    </div>
-                    <pre><span class="cm">// biome.json</span>
-{
-  <span class="st">"extends"</span>: [<span class="st">"shotscript/fmt"</span>]
-}</pre>
-                </div>
-                <div class="install-step">
-                    <div class="install-step-label">
-                        ShotScriptTyping — tsconfig strict mode
-                    </div>
-                    <pre><span class="cm">// tsconfig.json</span>
-{
-  <span class="st">"extends"</span>: <span class="st">"shotscript/tsconfig/shotscript.json"</span>
-}</pre>
-                </div>
-                <div class="install-step">
-                    <div class="install-step-label">
-                        ShotScriptStd — stdlib import
-                    </div>
-                    <pre><span class="kw">import</span> { <span class="fn">safeFetch</span>, <span class="fn">jsonParse</span> } <span class="kw">from</span> <span class="st">'shotscript/std'</span>
-<span class="kw">import type</span> { <span class="ty">Result</span>, <span class="ty">PromiseResult</span> } <span class="kw">from</span> <span class="st">'shotscript/std'</span></pre>
-                </div>
-            </div>
-
+            <!-- AI-first install -->
             <div class="ai-install" data-prompt="Install and configure ShotScript in this project: run `npm install --save-dev shotscript`, add {&quot;name&quot;: &quot;shotscript/plugin&quot;} to the plugins array in compilerOptions in tsconfig.json, add &quot;shotscript/fmt&quot; to the extends array in biome.json, and set the extends field in tsconfig.json to &quot;shotscript/tsconfig/shotscript.json&quot;.">
                 <div class="ai-install-header">
                     <span class="ai-install-label">Install with AI — paste into Claude Code, Cursor, or any AI assistant</span>
@@ -1197,6 +1202,64 @@
                 </div>
                 <div class="ai-prompt-text">Install and configure ShotScript in this project: run <code>npm install --save-dev shotscript</code>, add <code>{"name": "shotscript/plugin"}</code> to the plugins array in compilerOptions in tsconfig.json, add <code>"shotscript/fmt"</code> to the extends array in biome.json, and set the extends field in tsconfig.json to <code>"shotscript/tsconfig/shotscript.json"</code>.</div>
             </div>
+
+            <!-- Migrate existing code prompt -->
+            <div class="ai-install" style="margin-top: 0.75rem;" data-prompt="Migrate this existing TypeScript codebase to ShotScript style using the /shotscript-migrate slash command. This will rewrite arrow functions to named functions, replace try/catch with PromiseResult tuples, remove classes in favour of plain types and functions, and apply all other ShotScript rules. Run /shotscript-migrate to begin.">
+                <div class="ai-install-header">
+                    <span class="ai-install-label">Already have code? Migrate it — paste into Claude Code</span>
+                    <button class="ai-copy-btn" onclick="copyPrompt(this)">Copy</button>
+                </div>
+                <div class="ai-prompt-text">Migrate this existing TypeScript codebase to ShotScript style using the <code>/shotscript-migrate</code> slash command. This will rewrite arrow functions to named functions, replace try/catch with PromiseResult tuples, remove classes in favour of plain types and functions, and apply all other ShotScript rules. Run <code>/shotscript-migrate</code> to begin. <a href="/skills/#migrate" style="color: var(--accent); font-size: 0.85em;">About /shotscript-migrate →</a></div>
+            </div>
+
+            <!-- Manual steps, collapsed -->
+            <details class="manual-accordion">
+                <summary>Manual setup</summary>
+                <div class="manual-accordion-body">
+                    <div class="install-cmd" style="margin-bottom: 0;">
+                        <span class="prompt">$</span>
+                        <span class="cmd">npm install --save-dev shotscript</span>
+                    </div>
+                    <div class="install-steps">
+                        <div class="install-step">
+                            <div class="install-step-label">
+                                ShotScriptLint — tsconfig plugin
+                            </div>
+                            <pre><span class="cm">// tsconfig.json</span>
+{
+  <span class="st">"compilerOptions"</span>: {
+    <span class="st">"plugins"</span>: [{ <span class="st">"name"</span>: <span class="st">"shotscript/plugin"</span> }]
+  }
+}</pre>
+                        </div>
+                        <div class="install-step">
+                            <div class="install-step-label">
+                                ShotScriptFmt — biome config
+                            </div>
+                            <pre><span class="cm">// biome.json</span>
+{
+  <span class="st">"extends"</span>: [<span class="st">"shotscript/fmt"</span>]
+}</pre>
+                        </div>
+                        <div class="install-step">
+                            <div class="install-step-label">
+                                ShotScriptTyping — tsconfig strict mode
+                            </div>
+                            <pre><span class="cm">// tsconfig.json</span>
+{
+  <span class="st">"extends"</span>: <span class="st">"shotscript/tsconfig/shotscript.json"</span>
+}</pre>
+                        </div>
+                        <div class="install-step">
+                            <div class="install-step-label">
+                                ShotScriptStd — stdlib import
+                            </div>
+                            <pre><span class="kw">import</span> { <span class="fn">safeFetch</span>, <span class="fn">jsonParse</span> } <span class="kw">from</span> <span class="st">'shotscript/std'</span>
+<span class="kw">import type</span> { <span class="ty">Result</span>, <span class="ty">PromiseResult</span> } <span class="kw">from</span> <span class="st">'shotscript/std'</span></pre>
+                        </div>
+                    </div>
+                </div>
+            </details>
         </section>
 
         <hr class="divider" />

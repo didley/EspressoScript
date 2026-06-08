@@ -10,7 +10,8 @@
         <meta property="og:title" content="ShotScriptLint — 110+ rules enforcing one way of doing things." />
         <meta property="og:description" content="A TypeScript language service plugin with 110+ rules. One way to write everything — variables, functions, errors, types. Drop into any project, no special runtime needed." />
         <meta property="og:url" content="https://shotscript.dev/lint/" />
-        <meta name="twitter:card" content="summary" />
+        <meta property="og:image" content="https://shotscript.dev/og.svg" />
+        <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="ShotScriptLint — 110+ rules enforcing one way of doing things." />
         <meta name="twitter:description" content="A TypeScript language service plugin with 110+ rules. One way to write everything — variables, functions, errors, types. Drop into any project, no special runtime needed." />
         <style>
@@ -301,6 +302,39 @@
             }
             .ai-copy-btn:hover { color: var(--text); border-color: var(--accent); }
             .ai-copy-btn.copied { color: var(--green); border-color: var(--green); }
+            .manual-accordion {
+                margin-top: 0.75rem;
+                border: 1px solid var(--border);
+                border-radius: 8px;
+                overflow: hidden;
+            }
+            .manual-accordion summary {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                padding: 0.7rem 1.25rem;
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.7rem;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+                color: var(--muted);
+                cursor: pointer;
+                user-select: none;
+                list-style: none;
+                background: var(--surface);
+            }
+            .manual-accordion summary::-webkit-details-marker { display: none; }
+            .manual-accordion summary::before { content: '▶'; font-size: 0.55rem; transition: transform 0.15s; }
+            .manual-accordion[open] summary::before { transform: rotate(90deg); }
+            .manual-accordion summary:hover { color: var(--text); }
+            .manual-accordion-body {
+                border-top: 1px solid var(--border);
+                padding: 1.25rem;
+                display: flex;
+                flex-direction: column;
+                gap: 0.75rem;
+                background: var(--surface);
+            }
             .ai-prompt-text {
                 background: var(--surface);
                 margin: 0;
@@ -1911,28 +1945,6 @@
 
         <div id="install" class="install-block">
             <div class="install-label">Install</div>
-            <div class="install-step">
-                <div class="install-step-label">tsconfig.json</div>
-                <pre><span class="cm">// tsconfig.json</span>
-{
-  <span class="st">&quot;compilerOptions&quot;</span>: {
-    <span class="st">&quot;plugins&quot;</span>: [{ <span class="st">&quot;name&quot;</span>: <span class="st">&quot;shotscript/plugin&quot;</span> }]
-  }
-}</pre>
-            </div>
-
-            <div style="margin-top: 1rem">
-                <div class="install-label">Run</div>
-                <div class="install-cmd">
-                    <span class="prompt">$</span>
-                    <span class="cmd">npx shotscript 'src/**/*.ts'</span>
-                </div>
-                <p class="install-note" style="margin-top: 0.4rem">
-                    Exits <code>0</code> when clean, <code>1</code> on
-                    violations. Add <code>--json</code> for machine-readable
-                    output.
-                </p>
-            </div>
             <div class="ai-install" data-prompt="Add ShotScriptLint to this project: run `npm install --save-dev shotscript`, then add {&quot;name&quot;: &quot;shotscript/plugin&quot;} to the plugins array in compilerOptions in tsconfig.json.">
                 <div class="ai-install-header">
                     <span class="ai-install-label">Install with AI — paste into Claude Code, Cursor, or any AI assistant</span>
@@ -1940,6 +1952,31 @@
                 </div>
                 <div class="ai-prompt-text">Add ShotScriptLint to this project: run <code>npm install --save-dev shotscript</code>, then add <code>{"name": "shotscript/plugin"}</code> to the plugins array in compilerOptions in tsconfig.json.</div>
             </div>
+
+            <details class="manual-accordion">
+                <summary>Manual setup</summary>
+                <div class="manual-accordion-body">
+                    <div class="install-step">
+                        <div class="install-step-label">tsconfig.json</div>
+                        <pre><span class="cm">// tsconfig.json</span>
+{
+  <span class="st">&quot;compilerOptions&quot;</span>: {
+    <span class="st">&quot;plugins&quot;</span>: [{ <span class="st">&quot;name&quot;</span>: <span class="st">&quot;shotscript/plugin&quot;</span> }]
+  }
+}</pre>
+                    </div>
+                    <div class="install-label" style="margin-top: 0.5rem;">Run</div>
+                    <div class="install-cmd">
+                        <span class="prompt">$</span>
+                        <span class="cmd">npx shotscript 'src/**/*.ts'</span>
+                    </div>
+                    <p class="install-note">
+                        Exits <code>0</code> when clean, <code>1</code> on
+                        violations. Add <code>--json</code> for machine-readable
+                        output.
+                    </p>
+                </div>
+            </details>
         </div>
 
         <script>

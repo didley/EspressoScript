@@ -10,7 +10,8 @@
         <meta property="og:title" content="ShotScriptSkills — Three Claude Code commands." />
         <meta property="og:description" content="Three Claude Code slash commands for ShotScript. Fix violations in-place, migrate entire codebases end-to-end, and explain any rule on demand." />
         <meta property="og:url" content="https://shotscript.dev/skills/" />
-        <meta name="twitter:card" content="summary" />
+        <meta property="og:image" content="https://shotscript.dev/og.svg" />
+        <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="ShotScriptSkills — Three Claude Code commands." />
         <meta name="twitter:description" content="Three Claude Code slash commands for ShotScript. Fix violations in-place, migrate entire codebases end-to-end, and explain any rule on demand." />
         <style>
@@ -472,6 +473,13 @@
             }
             .ai-copy-btn:hover { color: var(--text); border-color: var(--accent); }
             .ai-copy-btn.copied { color: var(--green); border-color: var(--green); }
+            .manual-accordion { margin-top: 0.75rem; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+            .manual-accordion summary { display: flex; align-items: center; gap: 0.5rem; padding: 0.7rem 1.25rem; font-family: "SF Mono","Fira Code",monospace; font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); cursor: pointer; user-select: none; list-style: none; background: var(--surface); }
+            .manual-accordion summary::-webkit-details-marker { display: none; }
+            .manual-accordion summary::before { content: '▶'; font-size: 0.55rem; transition: transform 0.15s; }
+            .manual-accordion[open] summary::before { transform: rotate(90deg); }
+            .manual-accordion summary:hover { color: var(--text); }
+            .manual-accordion-body { border-top: 1px solid var(--border); padding: 1.25rem; display: flex; flex-direction: column; gap: 0.75rem; background: var(--surface); }
             .ai-prompt-text {
                 background: var(--surface);
                 margin: 0;
@@ -722,26 +730,6 @@
 
         <div id="install" class="install-block">
             <div class="install-label">Install</div>
-            <div class="install-row">
-                <div class="install-cmd">
-                    <span class="prompt">$</span>
-                    <span class="cmd">npx shotscript commands</span>
-                </div>
-            </div>
-            <p class="install-note">
-                Copies <code>/shotscript-fix</code>,
-                <code>/shotscript-migrate</code>, and
-                <code>/shotscript-explain</code> into
-                <code>.claude/commands/</code> in your project. Requires
-                <a
-                    href="https://claude.ai/code"
-                    target="_blank"
-                    rel="noopener"
-                    class="ext"
-                    >Claude Code</a
-                >.
-            </p>
-
             <div class="ai-install" data-prompt="Add ShotScriptSkills to this project: run `npm install --save-dev shotscript`, then run `npx shotscript commands` to install the /shotscript-fix, /shotscript-migrate, and /shotscript-explain slash commands into .claude/commands/ for use with Claude Code.">
                 <div class="ai-install-header">
                     <span class="ai-install-label">Install with AI — paste into Claude Code, Cursor, or any AI assistant</span>
@@ -749,6 +737,25 @@
                 </div>
                 <div class="ai-prompt-text">Add ShotScriptSkills to this project: run <code>npm install --save-dev shotscript</code>, then run <code>npx shotscript commands</code> to install the <code>/shotscript-fix</code>, <code>/shotscript-migrate</code>, and <code>/shotscript-explain</code> slash commands into <code>.claude/commands/</code> for use with Claude Code.</div>
             </div>
+
+            <details class="manual-accordion">
+                <summary>Manual setup</summary>
+                <div class="manual-accordion-body">
+                    <div class="install-row">
+                        <div class="install-cmd">
+                            <span class="prompt">$</span>
+                            <span class="cmd">npx shotscript commands</span>
+                        </div>
+                    </div>
+                    <p class="install-note">
+                        Copies <code>/shotscript-fix</code>,
+                        <code>/shotscript-migrate</code>, and
+                        <code>/shotscript-explain</code> into
+                        <code>.claude/commands/</code> in your project. Requires
+                        <a href="https://claude.ai/code" target="_blank" rel="noopener" class="ext">Claude Code</a>.
+                    </p>
+                </div>
+            </details>
         </div>
 
         <script>
