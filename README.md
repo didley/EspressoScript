@@ -8,7 +8,7 @@
  ShotScript — TypeScript, one way.
 ```
 
-TypeScript has too many ways to write the same thing. ShotScript picks one — and enforces it.
+JavaScript & TypeScript, without different ways of doing the same thing. Fewer decisions, less to learn, faster to review, and less for AI to get wrong.
 
 ---
 
