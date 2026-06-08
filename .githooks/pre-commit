@@ -1,6 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# GUI git clients don't source shell profiles, so node may not be on PATH.
+# Extend PATH to cover common Node.js install locations (nvm, fnm, system).
+_nvm_latest=$(ls "$HOME/.nvm/versions/node" 2>/dev/null | sort -V | tail -1)
+[ -n "$_nvm_latest" ] && export PATH="$HOME/.nvm/versions/node/$_nvm_latest/bin:$PATH"
+export PATH="$HOME/.fnm/aliases/default/bin:/usr/local/bin:/usr/bin:$PATH"
+
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 
 echo "shotscript pre-commit: running lint..."
