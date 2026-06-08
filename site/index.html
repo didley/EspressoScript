@@ -607,6 +607,30 @@
                 border-top: 1px solid var(--border);
             }
 
+            /* ── Hero chip ── */
+            .hero-chip {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.4rem;
+                font-size: 0.72rem;
+                font-family: "SF Mono", "Fira Code", monospace;
+                letter-spacing: 0.06em;
+                color: var(--muted);
+                border: 1px solid var(--border);
+                background: rgba(200, 112, 42, 0.06);
+                border-color: rgba(200, 112, 42, 0.2);
+                border-radius: 100px;
+                padding: 0.3rem 0.85rem;
+                margin-bottom: 1.25rem;
+            }
+            .hero-chip-dot {
+                width: 5px;
+                height: 5px;
+                border-radius: 50%;
+                background: var(--accent);
+                flex-shrink: 0;
+            }
+
             /* ── Syntax-reduction visual ── */
             .syntax-bars {
                 max-width: 400px;
@@ -685,9 +709,13 @@
         <div class="hero">
             <canvas id="hero-canvas" aria-hidden="true"></canvas>
             <div class="hero-content">
+                <div class="hero-chip">
+                    <span class="hero-chip-dot"></span>
+                    Open source &middot; Early access
+                </div>
                 <div class="hero-brand">ShotScript</div>
                 <p class="hero-desc">
-                    Applies Go's "one way of doing things" philosophy to the TS/JS ecosystem.
+                    One way to write JavaScript and TypeScript. ~<span class="reduction-pct">79%</span> less syntax, fewer decisions to make, less to learn, less to argue about — and far less for AI tools to get wrong.
                 </p>
                 <div class="syntax-bars">
                     <div class="syntax-bar-row">
