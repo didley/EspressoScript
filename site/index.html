@@ -4,21 +4,33 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>ShotScript — TypeScript, one way.</title>
-        <meta name="description" content="JavaScript & TypeScript, without different ways of doing the same thing. Fewer decisions, less to learn, faster to review, and less for AI to get wrong." />
+        <meta
+            name="description"
+            content="JavaScript & TypeScript, without different ways of doing the same thing. Fewer decisions, less to learn, faster to review, and less for AI to get wrong."
+        />
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <meta property="og:type" content="website" />
         <meta property="og:title" content="ShotScript — TypeScript, one way." />
-        <meta property="og:description" content="JavaScript & TypeScript, without different ways of doing the same thing. Fewer decisions, less to learn, faster to review, and less for AI to get wrong." />
+        <meta
+            property="og:description"
+            content="JavaScript & TypeScript, without different ways of doing the same thing. Fewer decisions, less to learn, faster to review, and less for AI to get wrong."
+        />
         <meta property="og:url" content="https://shotscript.dev/" />
         <meta property="og:image" content="https://shotscript.dev/og.svg" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="ShotScript — TypeScript, one way." />
-        <meta name="twitter:description" content="JavaScript & TypeScript, without different ways of doing the same thing. Fewer decisions, less to learn, faster to review, and less for AI to get wrong." />
+        <meta
+            name="twitter:title"
+            content="ShotScript — TypeScript, one way."
+        />
+        <meta
+            name="twitter:description"
+            content="JavaScript & TypeScript, without different ways of doing the same thing. Fewer decisions, less to learn, faster to review, and less for AI to get wrong."
+        />
         <meta name="twitter:image" content="https://shotscript.dev/og.svg" />
         <style>
             @font-face {
-                font-family: 'Monument Extended';
-                src: url('fonts/MonumentExtended-Regular.woff2') format('woff2');
+                font-family: "Monument Extended";
+                src: url("fonts/MonumentExtended-Regular.woff2") format("woff2");
                 font-weight: 400;
             }
         </style>
@@ -137,7 +149,7 @@
                 justify-content: center;
                 min-height: 60vh;
                 padding: 6rem 2rem 5rem;
-                margin-top: -57px;   /* pull up behind sticky nav */
+                margin-top: -57px; /* pull up behind sticky nav */
                 padding-top: calc(6rem + 57px);
             }
 
@@ -159,7 +171,7 @@
             }
 
             .hero-brand {
-                font-family: 'Monument Extended', sans-serif;
+                font-family: "Monument Extended", sans-serif;
                 font-size: clamp(3rem, 9vw, 5.5rem);
                 font-weight: 400;
                 letter-spacing: 0.02em;
@@ -516,9 +528,11 @@
                 list-style: none;
                 background: var(--surface);
             }
-            .manual-accordion summary::-webkit-details-marker { display: none; }
+            .manual-accordion summary::-webkit-details-marker {
+                display: none;
+            }
             .manual-accordion summary::before {
-                content: '▶';
+                content: "▶";
                 font-size: 0.55rem;
                 transition: transform 0.15s;
             }
@@ -572,7 +586,9 @@
                 border-radius: 4px;
                 padding: 0.2rem 0.6rem;
                 cursor: pointer;
-                transition: color 0.15s, border-color 0.15s;
+                transition:
+                    color 0.15s,
+                    border-color 0.15s;
             }
             .ai-copy-btn:hover {
                 color: var(--text);
@@ -587,7 +603,8 @@
                 background: var(--surface);
                 margin: 0;
                 padding: 1.1rem 1.25rem;
-                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+                font-family:
+                    -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
                 font-size: 0.85rem;
                 color: var(--muted);
                 line-height: 1.65;
@@ -848,7 +865,9 @@
                 </div>
                 <div class="hero-brand">ShotScript</div>
                 <p class="hero-desc">
-                    JavaScript &amp; TypeScript, without different ways of doing the same thing. Fewer decisions, less to learn, faster to review, and less for AI to get wrong.
+                    JavaScript &amp; TypeScript, without different ways of doing
+                    the same thing. Fewer decisions, less to learn, faster to
+                    review, and less for AI to get wrong.
                 </p>
                 <div class="syntax-bars">
                     <div class="syntax-bar-row">
@@ -859,7 +878,10 @@
                         <span class="syntax-bar-label">ShotScript</span>
                         <div class="syntax-bar ss-bar"></div>
                     </div>
-                    <a href="/lint/#syntax-reduction" class="syntax-bar-link"><span class="reduction-pct">~79%</span> of syntax removed — how we count →</a>
+                    <a href="/lint/#syntax-reduction" class="syntax-bar-link"
+                        ><span class="reduction-pct">~79%</span> of syntax
+                        yeeted — how we count →</a
+                    >
                 </div>
             </div>
         </div>
@@ -874,73 +896,81 @@
         </div>
 
         <script>
-        (function () {
-            const canvas = document.getElementById('hero-canvas');
-            const ctx = canvas.getContext('2d');
-            let W, H, cols, rows;
+            (function () {
+                const canvas = document.getElementById("hero-canvas");
+                const ctx = canvas.getContext("2d");
+                let W, H, cols, rows;
 
-            const SPACING = 28;
-            const DOT_R   = 1.1;
-            const RADIUS  = 260; /* spotlight radius */
+                const SPACING = 28;
+                const DOT_R = 1.1;
+                const RADIUS = 260; /* spotlight radius */
 
-            /* spotlight drifts slowly in a figure-8 */
-            function spotlight(t) {
-                const lx = Math.sin(t * 0.00028) * 0.18;
-                const ly = Math.sin(t * 0.00019) * 0.10;
-                return { x: W * (0.5 + lx), y: H * (0.42 + ly) };
-            }
-
-            function resize() {
-                W = canvas.offsetWidth;
-                H = canvas.offsetHeight;
-                canvas.width  = W * devicePixelRatio;
-                canvas.height = H * devicePixelRatio;
-                ctx.scale(devicePixelRatio, devicePixelRatio);
-                cols = Math.ceil(W / SPACING) + 1;
-                rows = Math.ceil(H / SPACING) + 1;
-            }
-
-            function draw(t) {
-                ctx.clearRect(0, 0, W, H);
-                const sp = spotlight(t);
-
-                /* dot grid */
-                for (let r = 0; r < rows; r++) {
-                    for (let c = 0; c < cols; c++) {
-                        const x = c * SPACING;
-                        const y = r * SPACING;
-                        const dx = x - sp.x, dy = y - sp.y;
-                        const dist = Math.sqrt(dx * dx + dy * dy);
-                        const falloff = Math.max(0, 1 - dist / RADIUS);
-                        const alpha = 0.06 + falloff * falloff * 0.7;
-
-                        /* dots in spotlight pick up amber tint */
-                        const rr = Math.round(80  + falloff * 120);
-                        const gg = Math.round(80  + falloff *  32);
-                        const bb = Math.round(90  + falloff *   0);
-
-                        ctx.beginPath();
-                        ctx.arc(x, y, DOT_R, 0, Math.PI * 2);
-                        ctx.fillStyle = `rgba(${rr},${gg},${bb},${alpha})`;
-                        ctx.fill();
-                    }
+                /* spotlight drifts slowly in a figure-8 */
+                function spotlight(t) {
+                    const lx = Math.sin(t * 0.00028) * 0.18;
+                    const ly = Math.sin(t * 0.00019) * 0.1;
+                    return { x: W * (0.5 + lx), y: H * (0.42 + ly) };
                 }
 
-                /* soft ambient glow under spotlight */
-                const grd = ctx.createRadialGradient(sp.x, sp.y, 0, sp.x, sp.y, RADIUS * 1.4);
-                grd.addColorStop(0,   'rgba(200,112,42,0.10)');
-                grd.addColorStop(0.4, 'rgba(200,112,42,0.04)');
-                grd.addColorStop(1,   'rgba(200,112,42,0)');
-                ctx.fillStyle = grd;
-                ctx.fillRect(0, 0, W, H);
+                function resize() {
+                    W = canvas.offsetWidth;
+                    H = canvas.offsetHeight;
+                    canvas.width = W * devicePixelRatio;
+                    canvas.height = H * devicePixelRatio;
+                    ctx.scale(devicePixelRatio, devicePixelRatio);
+                    cols = Math.ceil(W / SPACING) + 1;
+                    rows = Math.ceil(H / SPACING) + 1;
+                }
 
+                function draw(t) {
+                    ctx.clearRect(0, 0, W, H);
+                    const sp = spotlight(t);
+
+                    /* dot grid */
+                    for (let r = 0; r < rows; r++) {
+                        for (let c = 0; c < cols; c++) {
+                            const x = c * SPACING;
+                            const y = r * SPACING;
+                            const dx = x - sp.x,
+                                dy = y - sp.y;
+                            const dist = Math.sqrt(dx * dx + dy * dy);
+                            const falloff = Math.max(0, 1 - dist / RADIUS);
+                            const alpha = 0.06 + falloff * falloff * 0.7;
+
+                            /* dots in spotlight pick up amber tint */
+                            const rr = Math.round(80 + falloff * 120);
+                            const gg = Math.round(80 + falloff * 32);
+                            const bb = Math.round(90 + falloff * 0);
+
+                            ctx.beginPath();
+                            ctx.arc(x, y, DOT_R, 0, Math.PI * 2);
+                            ctx.fillStyle = `rgba(${rr},${gg},${bb},${alpha})`;
+                            ctx.fill();
+                        }
+                    }
+
+                    /* soft ambient glow under spotlight */
+                    const grd = ctx.createRadialGradient(
+                        sp.x,
+                        sp.y,
+                        0,
+                        sp.x,
+                        sp.y,
+                        RADIUS * 1.4,
+                    );
+                    grd.addColorStop(0, "rgba(200,112,42,0.10)");
+                    grd.addColorStop(0.4, "rgba(200,112,42,0.04)");
+                    grd.addColorStop(1, "rgba(200,112,42,0)");
+                    ctx.fillStyle = grd;
+                    ctx.fillRect(0, 0, W, H);
+
+                    requestAnimationFrame(draw);
+                }
+
+                resize();
+                window.addEventListener("resize", resize);
                 requestAnimationFrame(draw);
-            }
-
-            resize();
-            window.addEventListener('resize', resize);
-            requestAnimationFrame(draw);
-        })();
+            })();
         </script>
 
         <hr class="divider" />
@@ -959,58 +989,94 @@
             <div class="reduction-list">
                 <div class="reduction-item">
                     <span class="reduction-count">5</span>
-                    <span class="reduction-label">error patterns — <code>throw</code>, <code>try/catch</code>, rejected Promise, error-first callback, return tuple</span>
+                    <span class="reduction-label"
+                        >error patterns — <code>throw</code>,
+                        <code>try/catch</code>, rejected Promise, error-first
+                        callback, return tuple</span
+                    >
                     <span class="reduction-arrow">→</span>
                     <code class="reduction-result">PromiseResult&lt;T&gt;</code>
                 </div>
                 <div class="reduction-item">
                     <span class="reduction-count">3</span>
-                    <span class="reduction-label">absent-value forms — <code>?</code>, <code>| undefined</code>, <code>| null</code></span>
+                    <span class="reduction-label"
+                        >absent-value forms — <code>?</code>,
+                        <code>| undefined</code>, <code>| null</code></span
+                    >
                     <span class="reduction-arrow">→</span>
                     <code class="reduction-result">| null</code>
                 </div>
                 <div class="reduction-item">
                     <span class="reduction-count">4</span>
-                    <span class="reduction-label">function forms — arrow, declaration, expression, method</span>
+                    <span class="reduction-label"
+                        >function forms — arrow, declaration, expression,
+                        method</span
+                    >
                     <span class="reduction-arrow">→</span>
                     <code class="reduction-result">function f() {}</code>
                 </div>
                 <div class="reduction-item">
                     <span class="reduction-count">3</span>
-                    <span class="reduction-label">type-shape constructs — <code>type</code>, <code>interface</code>, <code>class</code></span>
+                    <span class="reduction-label"
+                        >type-shape constructs — <code>type</code>,
+                        <code>interface</code>, <code>class</code></span
+                    >
                     <span class="reduction-arrow">→</span>
                     <code class="reduction-result">type T = {}</code>
                 </div>
                 <div class="reduction-item">
                     <span class="reduction-count">3</span>
-                    <span class="reduction-label">variable declaration forms — <code>var</code>, <code>let</code>, <code>const</code></span>
+                    <span class="reduction-label"
+                        >variable declaration forms — <code>var</code>,
+                        <code>let</code>, <code>const</code></span
+                    >
                     <span class="reduction-arrow">→</span>
                     <code class="reduction-result">const</code>
                 </div>
                 <div class="reduction-item">
                     <span class="reduction-count">6</span>
-                    <span class="reduction-label">conditional forms — ternary, <code>&amp;&amp;</code>, <code>||</code>, <code>??</code>, <code>?.</code>, switch expression</span>
+                    <span class="reduction-label"
+                        >conditional forms — ternary, <code>&amp;&amp;</code>,
+                        <code>||</code>, <code>??</code>, <code>?.</code>,
+                        switch expression</span
+                    >
                     <span class="reduction-arrow">→</span>
                     <code class="reduction-result">if / else</code>
                 </div>
                 <div class="reduction-item">
                     <span class="reduction-count">7</span>
-                    <span class="reduction-label">OOP constructs — <code>class</code>, <code>extends</code>, <code>implements</code>, <code>abstract</code>, <code>private</code>, <code>protected</code>, <code>new</code></span>
+                    <span class="reduction-label"
+                        >OOP constructs — <code>class</code>,
+                        <code>extends</code>, <code>implements</code>,
+                        <code>abstract</code>, <code>private</code>,
+                        <code>protected</code>, <code>new</code></span
+                    >
                     <span class="reduction-arrow">→</span>
                     <code class="reduction-result">banned</code>
                 </div>
                 <div class="reduction-item">
                     <span class="reduction-count">6</span>
-                    <span class="reduction-label">type escape hatches — <code>as</code>, <code>any</code>, <code>!</code>, <code>@ts-ignore</code>, <code>@ts-expect-error</code>, <code>satisfies</code></span>
+                    <span class="reduction-label"
+                        >type escape hatches — <code>as</code>,
+                        <code>any</code>, <code>!</code>,
+                        <code>@ts-ignore</code>, <code>@ts-expect-error</code>,
+                        <code>satisfies</code></span
+                    >
                     <span class="reduction-arrow">→</span>
                     <code class="reduction-result">banned</code>
                 </div>
             </div>
 
             <div class="callout">
-                <strong>ShotScript removes <a href="/lint/#syntax-reduction"><span class="reduction-pct">~79%</span></a> of TypeScript's ways to write
-                the same thing</strong> and standardises the rest to one. Your
-                files are unchanged — it's a list of rules, not a compiler.
+                <strong
+                    >ShotScript removes
+                    <a href="/lint/#syntax-reduction"
+                        ><span class="reduction-pct">~79%</span></a
+                    >
+                    of TypeScript's ways to write the same thing</strong
+                >
+                and standardises the rest to one. Your files are unchanged —
+                it's a list of rules, not a compiler.
             </div>
         </section>
 
@@ -1107,7 +1173,9 @@
             <div class="section-label">Before / after</div>
             <h2>One codebase, rewritten.</h2>
             <p class="section-desc">
-                Interface, class, <code>try/catch</code>, arrow functions, ternaries, <code>any</code> — common TypeScript, with every ShotScript rule applied.
+                Interface, class, <code>try/catch</code>, arrow functions,
+                ternaries, <code>any</code> — common TypeScript, with every
+                ShotScript rule applied.
             </p>
 
             <!-- kitchen sink -->
@@ -1205,50 +1273,91 @@
             <h2>One package. Five tools.</h2>
 
             <!-- Unified AI install prompt -->
-            <div class="ai-install" data-prompt="Help me set up ShotScript. Walk me through this step by step:
+            <div
+                class="ai-install"
+                data-prompt='Help me set up ShotScript. Walk me through this step by step:
 
 STEP 1 — DETECT CONTEXT. Check whether the current directory contains a package.json.
 
-STEP 2A — IF NO package.json (new project): Ask me &quot;What would you like to build? (e.g. a CLI tool, a web API, a React app, a script — anything you have in mind)&quot;. Based on my answer, pick the most appropriate minimal TypeScript starter (Node + tsx for scripts and CLIs, Hono or Express for APIs, Vite + React for web apps, etc.), scaffold it, then continue to STEP 3.
+STEP 2A — IF NO package.json (new project): Ask me "What would you like to build? (e.g. a CLI tool, a web API, a React app, a script — anything you have in mind)". Based on my answer, pick the most appropriate minimal TypeScript starter (Node + tsx for scripts and CLIs, Hono or Express for APIs, Vite + React for web apps, etc.), scaffold it, then continue to STEP 3.
 
 STEP 2B — IF package.json EXISTS (existing project): Continue to STEP 3.
 
 STEP 3 — INSTALL SHOTSCRIPT. Run `npm install --save-dev shotscript`. Then:
-- Add `{ &quot;name&quot;: &quot;shotscript/plugin&quot; }` to the `plugins` array inside `compilerOptions` in tsconfig.json
-- Set the `extends` field in tsconfig.json to `&quot;shotscript/tsconfig/shotscript.json&quot;`
-- Add `&quot;shotscript/fmt&quot;` to the `extends` array in biome.json (create biome.json if it doesn't exist)
-- In package.json, prepend `shotscript 'src/**/*.{ts,tsx}'` to the `build` script so lint runs at build time (e.g. `&quot;build&quot;: &quot;shotscript 'src/**/*.{ts,tsx}' &amp;&amp; tsc ...&quot;`)
+- Add `{ "name": "shotscript/plugin" }` to the `plugins` array inside `compilerOptions` in tsconfig.json
+- Set the `extends` field in tsconfig.json to `"shotscript/tsconfig/shotscript.json"`
+- Add `"shotscript/fmt"` to the `extends` array in biome.json (create biome.json if it doesn&apos;t exist)
+- In package.json, prepend `shotscript &apos;src/**/*.{ts,tsx}&apos;` to the `build` script so lint runs at build time (e.g. `"build": "shotscript &apos;src/**/*.{ts,tsx}&apos; &amp;&amp; tsc ..."`)
 - Run `npx shotscript init` to write the ShotScript coding guide to AGENTS.md in the project root (merging into an existing AGENTS.md if one is present) and install the /shotscript-fix, /shotscript-migrate, and /shotscript-explain slash commands
 
-STEP 4 — OFFER MIGRATION. Only if existing TypeScript source files are present in the project (not just config), ask me: &quot;You have existing TypeScript code. Would you like me to migrate it to ShotScript style using /shotscript-migrate? This will rewrite arrow functions to named functions, replace try/catch with PromiseResult tuples, remove classes in favour of plain types and functions, and apply all other ShotScript rules.&quot; If I say yes, run /shotscript-migrate. If there is no existing TypeScript code, skip this step.
+STEP 4 — OFFER MIGRATION. Only if existing TypeScript source files are present in the project (not just config), ask me: "You have existing TypeScript code. Would you like me to migrate it to ShotScript style using /shotscript-migrate? This will rewrite arrow functions to named functions, replace try/catch with PromiseResult tuples, remove classes in favour of plain types and functions, and apply all other ShotScript rules." If I say yes, run /shotscript-migrate. If there is no existing TypeScript code, skip this step.
 
-STEP 5 — CONFIRM. Show me the final state of tsconfig.json and biome.json so I can verify.">
+STEP 5 — CONFIRM. Show me the final state of tsconfig.json and biome.json so I can verify.'
+            >
                 <div class="ai-install-header">
-                    <span class="ai-install-label">Install with AI — paste into Claude Code, Cursor, or any AI assistant</span>
-                    <button class="ai-copy-btn" onclick="copyPrompt(this)">Copy</button>
+                    <span class="ai-install-label"
+                        >Install with AI — paste into Claude Code, Cursor, or
+                        any AI assistant</span
+                    >
+                    <button class="ai-copy-btn" onclick="copyPrompt(this)">
+                        Copy
+                    </button>
                 </div>
-                <div class="ai-prompt-text">Help me set up ShotScript. Walk me through this step by step:
+                <div class="ai-prompt-text">
+                    Help me set up ShotScript. Walk me through this step by
+                    step:
 
-<strong>Step 1 — Detect context.</strong> Check whether the current directory contains a <code>package.json</code>.
+                    <strong>Step 1 — Detect context.</strong> Check whether the
+                    current directory contains a <code>package.json</code>.
 
-<strong>Step 2a — New project (no package.json):</strong> Ask me <em>"What would you like to build?"</em> Based on my answer, pick the most appropriate minimal TypeScript starter (Node + tsx for scripts, Hono/Express for APIs, Vite + React for web apps, etc.), scaffold it, then continue.
+                    <strong>Step 2a — New project (no package.json):</strong>
+                    Ask me <em>"What would you like to build?"</em> Based on my
+                    answer, pick the most appropriate minimal TypeScript starter
+                    (Node + tsx for scripts, Hono/Express for APIs, Vite + React
+                    for web apps, etc.), scaffold it, then continue.
 
-<strong>Step 2b — Existing project:</strong> Continue.
+                    <strong>Step 2b — Existing project:</strong> Continue.
 
-<strong>Step 3 — Install ShotScript.</strong> Run <code>npm install --save-dev shotscript</code>. Then add <code>{ "name": "shotscript/plugin" }</code> to the <code>plugins</code> array in <code>compilerOptions</code> in tsconfig.json, set <code>extends</code> in tsconfig.json to <code>"shotscript/tsconfig/shotscript.json"</code>, add <code>"shotscript/fmt"</code> to <code>extends</code> in biome.json (create it if missing), prepend <code>shotscript 'src/**/*.{ts,tsx}'</code> to the <code>build</code> script in package.json so lint runs at build time, and run <code>npx shotscript init</code> to write the ShotScript coding guide to <code>AGENTS.md</code> (merged into any existing file) and install the slash commands.
+                    <strong>Step 3 — Install ShotScript.</strong> Run
+                    <code>npm install --save-dev shotscript</code>. Then add
+                    <code>{ "name": "shotscript/plugin" }</code> to the
+                    <code>plugins</code> array in
+                    <code>compilerOptions</code> in tsconfig.json, set
+                    <code>extends</code> in tsconfig.json to
+                    <code>"shotscript/tsconfig/shotscript.json"</code>, add
+                    <code>"shotscript/fmt"</code> to <code>extends</code> in
+                    biome.json (create it if missing), prepend
+                    <code>shotscript 'src/**/*.{ts,tsx}'</code> to the
+                    <code>build</code> script in package.json so lint runs at
+                    build time, and run <code>npx shotscript init</code> to
+                    write the ShotScript coding guide to
+                    <code>AGENTS.md</code> (merged into any existing file) and
+                    install the slash commands.
 
-<strong>Step 4 — Offer migration.</strong> If existing TypeScript source files are present, ask me whether to migrate them with <code>/shotscript-migrate</code>. Skip otherwise.
+                    <strong>Step 4 — Offer migration.</strong> If existing
+                    TypeScript source files are present, ask me whether to
+                    migrate them with <code>/shotscript-migrate</code>. Skip
+                    otherwise.
 
-<strong>Step 5 — Confirm.</strong> Show me the final tsconfig.json and biome.json so I can verify. <a href="/skills/#migrate" style="color: var(--accent); font-size: 0.85em;">About /shotscript-migrate →</a></div>
+                    <strong>Step 5 — Confirm.</strong> Show me the final
+                    tsconfig.json and biome.json so I can verify.
+                    <a
+                        href="/skills/#migrate"
+                        style="color: var(--accent); font-size: 0.85em"
+                        >About /shotscript-migrate →</a
+                    >
+                </div>
             </div>
 
             <!-- Manual steps, collapsed -->
             <details class="manual-accordion">
                 <summary>Manual setup</summary>
                 <div class="manual-accordion-body">
-                    <div class="install-cmd" style="margin-bottom: 0;">
+                    <div class="install-cmd" style="margin-bottom: 0">
                         <span class="prompt">$</span>
-                        <span class="cmd">npm install --save-dev shotscript</span>
+                        <span class="cmd"
+                            >npm install --save-dev shotscript</span
+                        >
                     </div>
                     <div class="install-steps">
                         <div class="install-step">
@@ -1266,14 +1375,26 @@ STEP 5 — CONFIRM. Show me the final state of tsconfig.json and biome.json so I
                             <div class="install-step-label">
                                 AGENTS.md — AI coding guide
                             </div>
-                            <p class="install-step-note">Copies the ShotScript coding rules into your project so every AI assistant codes in ShotScript style automatically. Merge into an existing AGENTS.md if you already have one.</p>
+                            <p class="install-step-note">
+                                Copies the ShotScript coding rules into your
+                                project so every AI assistant codes in
+                                ShotScript style automatically. Merge into an
+                                existing AGENTS.md if you already have one.
+                            </p>
                             <pre><span class="prompt">$</span> npx shotscript init</pre>
                         </div>
                         <div class="install-step">
                             <div class="install-step-label">
                                 ShotScriptLint — editor plugin (VS Code)
                             </div>
-                            <p class="install-step-note">Surfaces lint errors inline in VS Code via the TypeScript language server. Other editors (Zed, Neovim, etc.) may not fully support tsserver plugins even when using the TS language server — the build step above is the reliable enforcement for all environments.</p>
+                            <p class="install-step-note">
+                                Surfaces lint errors inline in VS Code via the
+                                TypeScript language server. Other editors (Zed,
+                                Neovim, etc.) may not fully support tsserver
+                                plugins even when using the TS language server —
+                                the build step above is the reliable enforcement
+                                for all environments.
+                            </p>
                             <pre><span class="cm">// tsconfig.json</span>
 {
   <span class="st">"compilerOptions"</span>: {
@@ -1322,77 +1443,98 @@ STEP 5 — CONFIRM. Show me the final state of tsconfig.json and biome.json so I
                 migrate existing codebases end-to-end, and explain any rule on
                 demand. One install command, no manual rewrites.
             </p>
-            <a href="/skills/" style="font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.82rem; color: var(--accent)">ShotScriptSkills →</a>
+            <a
+                href="/skills/"
+                style="
+                    font-family:
+                        &quot;SF Mono&quot;, &quot;Fira Code&quot;, monospace;
+                    font-size: 0.82rem;
+                    color: var(--accent);
+                "
+                >ShotScriptSkills →</a
+            >
         </section>
 
         <!-- ── Reduction percentage — computed from data, not hardcoded ── -->
         <!-- Mirror of scripts/reduction.mjs. Update both when rules change.  -->
         <!-- Formula: (Σts − Σss) / Σts  where ts = TypeScript forms, ss = ShotScript permitted forms -->
         <script>
-        (function () {
-            var REDUCTION_DATA = [
-                { ts: 3,  ss: 1 }, // variable declaration
-                { ts: 5,  ss: 1 }, // function syntax
-                { ts: 5,  ss: 1 }, // error-handling patterns
-                { ts: 4,  ss: 1 }, // expressing absence / nothing
-                { ts: 3,  ss: 1 }, // type shape definition
-                { ts: 5,  ss: 1 }, // type composition
-                { ts: 3,  ss: 1 }, // async sequencing
-                { ts: 6,  ss: 1 }, // conditional / branching expression
-                { ts: 6,  ss: 3 }, // loop constructs
-                { ts: 3,  ss: 1 }, // boolean coercion
-                { ts: 4,  ss: 1 }, // number coercion / parsing
-                { ts: 2,  ss: 1 }, // string concatenation
-                { ts: 3,  ss: 1 }, // object merging / update
-                { ts: 6,  ss: 0 }, // type-safety escape hatches
-                { ts: 3,  ss: 1 }, // export style
-                { ts: 3,  ss: 1 }, // module syntax
-                { ts: 4,  ss: 2 }, // increment / decrement
-                { ts: 9,  ss: 0 }, // in-place array mutation methods
-                { ts: 7,  ss: 0 }, // OOP constructs
-                { ts: 6,  ss: 0 }, // advanced type-system features
-                { ts: 4,  ss: 2 }, // equality operators
-                { ts: 5,  ss: 0 }, // legacy / unsafe globals
-            ];
-            var tsTotal = REDUCTION_DATA.reduce(function (n, c) { return n + c.ts; }, 0);
-            var ssTotal = REDUCTION_DATA.reduce(function (n, c) { return n + c.ss; }, 0);
-            var pct = Math.round((tsTotal - ssTotal) / tsTotal * 100);
-            document.querySelectorAll('.reduction-pct').forEach(function (el) {
-                el.textContent = '~' + pct + '%';
-            });
-        })();
+            (function () {
+                var REDUCTION_DATA = [
+                    { ts: 3, ss: 1 }, // variable declaration
+                    { ts: 5, ss: 1 }, // function syntax
+                    { ts: 5, ss: 1 }, // error-handling patterns
+                    { ts: 4, ss: 1 }, // expressing absence / nothing
+                    { ts: 3, ss: 1 }, // type shape definition
+                    { ts: 5, ss: 1 }, // type composition
+                    { ts: 3, ss: 1 }, // async sequencing
+                    { ts: 6, ss: 1 }, // conditional / branching expression
+                    { ts: 6, ss: 3 }, // loop constructs
+                    { ts: 3, ss: 1 }, // boolean coercion
+                    { ts: 4, ss: 1 }, // number coercion / parsing
+                    { ts: 2, ss: 1 }, // string concatenation
+                    { ts: 3, ss: 1 }, // object merging / update
+                    { ts: 6, ss: 0 }, // type-safety escape hatches
+                    { ts: 3, ss: 1 }, // export style
+                    { ts: 3, ss: 1 }, // module syntax
+                    { ts: 4, ss: 2 }, // increment / decrement
+                    { ts: 9, ss: 0 }, // in-place array mutation methods
+                    { ts: 7, ss: 0 }, // OOP constructs
+                    { ts: 6, ss: 0 }, // advanced type-system features
+                    { ts: 4, ss: 2 }, // equality operators
+                    { ts: 5, ss: 0 }, // legacy / unsafe globals
+                ];
+                var tsTotal = REDUCTION_DATA.reduce(function (n, c) {
+                    return n + c.ts;
+                }, 0);
+                var ssTotal = REDUCTION_DATA.reduce(function (n, c) {
+                    return n + c.ss;
+                }, 0);
+                var pct = Math.round(((tsTotal - ssTotal) / tsTotal) * 100);
+                document
+                    .querySelectorAll(".reduction-pct")
+                    .forEach(function (el) {
+                        el.textContent = "~" + pct + "%";
+                    });
+            })();
         </script>
 
         <script>
-        (function () {
-            function checkComparisons() {
-                document.querySelectorAll('.comparison').forEach(function (comp) {
-                    comp.classList.remove('stacked');
-                    var overflows = Array.from(comp.querySelectorAll('pre')).some(function (pre) {
-                        return pre.scrollWidth > pre.clientWidth;
-                    });
-                    if (overflows) comp.classList.add('stacked');
+            (function () {
+                function checkComparisons() {
+                    document
+                        .querySelectorAll(".comparison")
+                        .forEach(function (comp) {
+                            comp.classList.remove("stacked");
+                            var overflows = Array.from(
+                                comp.querySelectorAll("pre"),
+                            ).some(function (pre) {
+                                return pre.scrollWidth > pre.clientWidth;
+                            });
+                            if (overflows) comp.classList.add("stacked");
+                        });
+                }
+                document.addEventListener("DOMContentLoaded", checkComparisons);
+                window.addEventListener("resize", checkComparisons);
+            })();
+        </script>
+
+        <script>
+            function copyPrompt(btn) {
+                var block = btn.closest(".ai-install");
+                var text = block
+                    .getAttribute("data-prompt")
+                    .replace(/&quot;/g, '"')
+                    .replace(/&amp;/g, "&");
+                navigator.clipboard.writeText(text).then(function () {
+                    btn.textContent = "Copied";
+                    btn.classList.add("copied");
+                    setTimeout(function () {
+                        btn.textContent = "Copy";
+                        btn.classList.remove("copied");
+                    }, 1800);
                 });
             }
-            document.addEventListener('DOMContentLoaded', checkComparisons);
-            window.addEventListener('resize', checkComparisons);
-        })();
-        </script>
-
-        <script>
-        function copyPrompt(btn) {
-            var block = btn.closest('.ai-install');
-            var text = block.getAttribute('data-prompt')
-                .replace(/&quot;/g, '"').replace(/&amp;/g, '&');
-            navigator.clipboard.writeText(text).then(function () {
-                btn.textContent = 'Copied';
-                btn.classList.add('copied');
-                setTimeout(function () {
-                    btn.textContent = 'Copy';
-                    btn.classList.remove('copied');
-                }, 1800);
-            });
-        }
         </script>
 
         <footer>

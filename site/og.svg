@@ -79,7 +79,7 @@
   <rect x="82" y="504" width="122" height="8" rx="3" fill="#c8702a"/>
 
   <!-- Reduction label -->
-  <text x="82" y="540" font-family="'SF Mono', 'Fira Code', ui-monospace, monospace" font-size="13" fill="#c8702a">~79% of syntax removed</text>
+  <text x="82" y="540" font-family="'SF Mono', 'Fira Code', ui-monospace, monospace" font-size="13" fill="#c8702a">~79% of syntax yeeted</text>
 
   <!-- Right side — reduction numbers -->
   <rect x="820" y="260" width="300" height="310" rx="12" fill="#16161a" stroke="#2a2a32" stroke-width="1"/>
