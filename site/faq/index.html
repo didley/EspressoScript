@@ -1,0 +1,457 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>ShotScript FAQ — Common questions answered.</title>
+        <style>
+            :root {
+                --bg: #0d0d10;
+                --surface: #16161a;
+                --border: #2a2a32;
+                --text: #e8e8f0;
+                --muted: #7a7a90;
+                --accent: #c8702a;
+                --green: #4ec994;
+                --red: #e05c5c;
+                --keyword: #c792ea;
+                --string: #c3e88d;
+                --type: #82aaff;
+                --comment: #546e7a;
+                --fn: #82aaff;
+                --num: #f78c6c;
+            }
+
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+
+            body {
+                background: var(--bg);
+                color: var(--text);
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+                font-size: 16px;
+                line-height: 1.6;
+            }
+
+            a { color: var(--accent); text-decoration: none; }
+            a:hover { text-decoration: underline; }
+            a.ext::after { content: " ↗"; font-size: 0.75em; opacity: 0.5; }
+
+            nav {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 1.25rem 2rem;
+                border-bottom: 1px solid var(--border);
+                position: sticky;
+                top: 0;
+                background: rgba(13, 13, 16, 0.92);
+                backdrop-filter: blur(8px);
+                z-index: 10;
+            }
+
+            .nav-logo {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 1.05rem;
+                font-weight: 700;
+                letter-spacing: -0.02em;
+                text-decoration: none;
+            }
+            .nav-logo .brand { color: var(--accent); }
+            .nav-logo .route { color: var(--text); }
+
+            .nav-links {
+                display: flex;
+                gap: 0.2rem;
+                list-style: none;
+            }
+            .nav-links a {
+                font-size: 0.82rem;
+                color: var(--muted);
+                padding: 0.3rem 0.7rem;
+                border-radius: 5px;
+            }
+            .nav-links a:hover {
+                color: var(--text);
+                background: rgba(255, 255, 255, 0.05);
+                text-decoration: none;
+            }
+            .nav-links a[aria-current="page"] { color: var(--text); }
+
+            .nav-divider {
+                width: 1px;
+                height: 1rem;
+                background: var(--border);
+                margin: 0 0.3rem;
+                align-self: center;
+                list-style: none;
+            }
+
+            .nav-ext { font-size: 0.78rem !important; }
+
+            .page-header {
+                max-width: 860px;
+                margin: 0 auto;
+                padding: 4rem 2rem 3rem;
+            }
+
+            .page-badge {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.68rem;
+                letter-spacing: 0.14em;
+                color: var(--accent);
+                text-transform: uppercase;
+                margin-bottom: 0.6rem;
+            }
+
+            .page-header h1 {
+                font-size: clamp(1.8rem, 4vw, 2.4rem);
+                font-weight: 800;
+                letter-spacing: -0.035em;
+                line-height: 1.2;
+                margin-bottom: 0.75rem;
+            }
+
+            .page-header h1 em {
+                font-style: normal;
+                color: var(--accent);
+            }
+
+            .page-header .sub {
+                font-size: 1rem;
+                color: var(--muted);
+                max-width: 540px;
+                line-height: 1.7;
+                margin-bottom: 2rem;
+            }
+
+            .page-toc-wrap {
+                border-top: 1px solid var(--border);
+                border-bottom: 1px solid var(--border);
+                padding: 0.75rem 2rem;
+            }
+
+            .page-toc {
+                max-width: 860px;
+                margin: 0 auto;
+                display: flex;
+                gap: 0.25rem;
+                flex-wrap: wrap;
+            }
+
+            .page-toc a {
+                font-size: 0.8rem;
+                color: var(--muted);
+                padding: 0.3rem 0.7rem;
+                border-radius: 5px;
+                border: 1px solid var(--border);
+                background: var(--surface);
+            }
+            .page-toc a:hover {
+                color: var(--text);
+                border-color: var(--accent);
+                text-decoration: none;
+            }
+
+            .content {
+                max-width: 860px;
+                margin: 0 auto;
+                padding: 0 2rem 4rem;
+            }
+
+            hr {
+                border: none;
+                border-top: 1px solid var(--border);
+                margin: 0;
+            }
+
+            .faq-block {
+                padding: 3.5rem 0;
+            }
+
+            .faq-block + hr + .faq-block {
+                padding-top: 3.5rem;
+            }
+
+            .section-label {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.68rem;
+                letter-spacing: 0.14em;
+                color: var(--accent);
+                text-transform: uppercase;
+                margin-bottom: 0.6rem;
+            }
+
+            h2 {
+                font-size: 1.35rem;
+                font-weight: 700;
+                letter-spacing: -0.025em;
+                margin-bottom: 0.75rem;
+            }
+
+            .section-desc {
+                color: var(--muted);
+                font-size: 0.92rem;
+                line-height: 1.7;
+                margin-bottom: 1.75rem;
+            }
+
+            .section-desc code {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.85em;
+                color: var(--type);
+                background: rgba(130, 170, 255, 0.08);
+                padding: 0.05rem 0.3rem;
+                border-radius: 3px;
+            }
+
+            .callout {
+                background: var(--surface);
+                border: 1px solid var(--border);
+                border-left: 3px solid var(--accent);
+                border-radius: 8px;
+                padding: 1rem 1.25rem;
+                font-size: 0.875rem;
+                color: var(--muted);
+                margin-bottom: 1.5rem;
+            }
+            .callout strong { color: var(--text); }
+            .callout code {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.8em;
+                color: var(--type);
+                background: rgba(130, 170, 255, 0.08);
+                padding: 0.05rem 0.3rem;
+                border-radius: 3px;
+            }
+
+            .card-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+                gap: 1px;
+                border: 1px solid var(--border);
+                border-radius: 10px;
+                overflow: hidden;
+                background: var(--border);
+                margin-bottom: 1.5rem;
+            }
+
+            .card {
+                background: var(--surface);
+                padding: 1.1rem 1.35rem;
+            }
+
+            .card-name {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.78rem;
+                margin-bottom: 0.3rem;
+            }
+
+            .card-desc {
+                font-size: 0.85rem;
+                color: var(--muted);
+                line-height: 1.5;
+            }
+
+            .card-desc code {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.8em;
+                color: var(--type);
+                background: rgba(130, 170, 255, 0.08);
+                padding: 0.05rem 0.3rem;
+                border-radius: 3px;
+            }
+
+            .origin-block {
+                background: var(--surface);
+                border: 1px solid var(--border);
+                border-radius: 10px;
+                padding: 1.5rem 1.75rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .origin-step {
+                display: flex;
+                gap: 1rem;
+                align-items: flex-start;
+                margin-bottom: 1rem;
+            }
+
+            .origin-step:last-child { margin-bottom: 0; }
+
+            .origin-step-num {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.68rem;
+                color: var(--accent);
+                background: rgba(200, 112, 42, 0.1);
+                border: 1px solid rgba(200, 112, 42, 0.25);
+                border-radius: 4px;
+                padding: 0.1rem 0.45rem;
+                flex-shrink: 0;
+                margin-top: 0.2rem;
+            }
+
+            .origin-step-text {
+                font-size: 0.9rem;
+                color: var(--muted);
+                line-height: 1.6;
+            }
+
+            .origin-step-text strong { color: var(--text); }
+
+            footer {
+                text-align: center;
+                padding: 2.5rem 2rem;
+                font-size: 0.825rem;
+                color: var(--muted);
+                border-top: 1px solid var(--border);
+            }
+        </style>
+    </head>
+    <body>
+        <nav>
+            <a href="/" class="nav-logo">
+                <span class="brand">ShotScript</span><span class="route">FAQ</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="/">ShotScript</a></li>
+                <li><a href="/lint/">Lint</a></li>
+                <li><a href="/fmt/">Fmt</a></li>
+                <li><a href="/typing/">Typing</a></li>
+                <li><a href="/std/">Std</a></li>
+                <li><a href="/skills/">Skills</a></li>
+                <li><a href="/faq/" aria-current="page">FAQ</a></li>
+                <li class="nav-divider" aria-hidden="true"></li>
+                <li><a href="https://github.com/didley/shotscript" class="nav-ext" target="_blank" rel="noopener">GitHub ↗</a></li>
+                <li><a href="https://www.npmjs.com/package/shotscript" class="nav-ext" target="_blank" rel="noopener">npm ↗</a></li>
+            </ul>
+        </nav>
+
+        <div class="page-header">
+            <div class="page-badge">FAQ</div>
+            <h1>Common questions, <em>answered.</em></h1>
+            <p class="sub">Everything you wanted to know about ShotScript but weren't sure where to ask.</p>
+        </div>
+
+        <div class="page-toc-wrap">
+            <div class="page-toc">
+                <a href="#right-for-you">Is this right for you?</a>
+                <a href="#name">Why is it called ShotScript?</a>
+            </div>
+        </div>
+
+        <div class="content">
+
+            <div class="faq-block" id="right-for-you">
+                <div class="section-label">Is this right for you?</div>
+                <h2>Not just stricter TypeScript. More like a dialect.</h2>
+                <p class="section-desc">
+                    ShotScript's rules are comprehensive enough that valid code
+                    looks nothing like typical TypeScript. No classes, no arrow
+                    callbacks, no ternaries, no <code>throw</code>, no raw Promises
+                    — not because these things are bad, but because having
+                    <em>one</em> way of doing things is the whole point. Think of it
+                    less as "stricter TypeScript" and more as a distinct style within
+                    it: TypeScript provides the type system and toolchain, ShotScript
+                    defines a narrower syntax on top.
+                </p>
+
+                <div class="callout">
+                    <strong>Built for greenfield.</strong> ShotScript works best
+                    when you set it up from day one — a single, non-negotiable way
+                    to write typed JavaScript for your whole team. Retrofitting an
+                    existing codebase is possible (the <a href="/skills/#migrate"><code>/shotscript-migrate</code></a>
+                    command handles the heavy lifting) but it's a significant
+                    operation, not a quick toggle.
+                </div>
+
+                <div class="card-grid">
+                    <div class="card">
+                        <div class="card-name" style="color: var(--green)">Existing codebases</div>
+                        <div class="card-desc">
+                            Rules like <code>no-class</code> and
+                            <code>no-arrow-functions</code> require architectural
+                            rewrites, not search-and-replace.
+                            <a href="/skills/#migrate"><code>/shotscript-migrate</code></a>
+                            handles the rewrite end-to-end — but treat it like a
+                            major refactor: good test coverage before you start,
+                            and expect surprises in complex call graphs.
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-name" style="color: var(--muted)">Class-based frameworks</div>
+                        <div class="card-desc">
+                            Angular, NestJS, and similar frameworks are built
+                            around classes, constructors, and decorators —
+                            constructs ShotScript bans outright. These frameworks
+                            aren't a good fit.
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-name" style="color: var(--muted)">Rule-by-rule opt-in</div>
+                        <div class="card-desc">
+                            There is no config surface. The rules are
+                            interdependent: <code>no-throw</code> only makes sense
+                            once you have <code>PromiseResult</code>, and
+                            <code>require-async-tuple-return</code> only makes
+                            sense once raw Promises are gone. It's all or nothing.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <hr />
+
+            <div class="faq-block" id="name">
+                <div class="section-label">Why is it called ShotScript?</div>
+                <h2>It started as EspressoScript.</h2>
+                <p class="section-desc">
+                    The name has a short history — and a happy accident at the end of it.
+                </p>
+
+                <div class="origin-block">
+                    <div class="origin-step">
+                        <span class="origin-step-num">1</span>
+                        <div class="origin-step-text">
+                            The project started as <strong>EspressoScript</strong>
+                            — the idea being an extracted, concentrated form of
+                            TypeScript. Like an espresso: same beans, much less
+                            water.
+                        </div>
+                    </div>
+                    <div class="origin-step">
+                        <span class="origin-step-num">2</span>
+                        <div class="origin-step-text">
+                            In conversation, "EspressoScript" is a mouthful, so it
+                            quickly became <strong>"Expresso Shot"</strong> as a
+                            shorthand. That stuck faster than the full name ever did.
+                        </div>
+                    </div>
+                    <div class="origin-step">
+                        <span class="origin-step-num">3</span>
+                        <div class="origin-step-text">
+                            <strong>Shot</strong> ended up being the right word
+                            anyway — short, punchy, one thing done well.
+                            <strong>ShotScript</strong> kept the spirit of the
+                            original name while being something you can actually
+                            say out loud.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <footer>
+            <p>
+                By
+                <a
+                    href="https://github.com/didley"
+                    target="_blank"
+                    rel="noopener"
+                    >didley</a
+                >
+                in Melbourne (Naarm), Australia.
+            </p>
+        </footer>
+    </body>
+</html>
