@@ -511,6 +511,7 @@
             <div class="page-toc">
                 <a href="#types">Types</a>
                 <a href="#functions">Functions</a>
+                <a href="#patterns">Patterns</a>
             </div>
         </div>
 
@@ -755,6 +756,33 @@
                 <pre><span class="kw">function</span> <span class="fn">safeBigInt</span>(<span class="op">str</span>: <span class="ty">string</span>): <span class="ty">Result</span>&lt;<span class="ty">bigint</span>&gt;
 
 <span class="kw">const</span> [<span class="op">n</span>, <span class="op">err</span>] = <span class="fn">safeBigInt</span>(<span class="st">'12345678901234567890'</span>)</pre>
+            </div>
+
+            <hr />
+
+            <div id="patterns" class="section-label">Patterns</div>
+
+            <div class="fn-block" id="external-facade">
+                <div class="fn-header">
+                    <span class="fn-name">External library facade</span>
+                </div>
+                <p class="fn-desc">When a library used in multiple places doesn't return <code>Result</code>/<code>PromiseResult</code> tuples, create a dedicated facade module. Wrap all its calls there, export <code>Result</code>/<code>PromiseResult</code>-returning functions, and have consumers import only from the facade. <code>toResult</code>/<code>toPromiseResult</code> stays confined to that one file.</p>
+                <pre><span class="cm">// lib/db.ts — facade for the db library</span>
+<span class="kw">import</span> { <span class="op">db</span> } <span class="kw">from</span> <span class="st">'some-db'</span>
+<span class="kw">import</span> { <span class="fn">toPromiseResult</span> } <span class="kw">from</span> <span class="st">'shotscript/std'</span>
+<span class="kw">import type</span> { <span class="ty">PromiseResult</span> } <span class="kw">from</span> <span class="st">'shotscript/std'</span>
+
+<span class="kw">export function</span> <span class="fn">dbFind</span>(<span class="op">id</span>: <span class="ty">string</span>): <span class="ty">PromiseResult</span>&lt;<span class="ty">Row</span>&gt; {
+    <span class="kw">return</span> <span class="fn">toPromiseResult</span>(<span class="kw">function</span> <span class="fn">find</span>(): <span class="ty">Promise</span>&lt;<span class="ty">Row</span>&gt; { <span class="kw">return</span> <span class="op">db</span>.<span class="fn">find</span>(<span class="op">id</span>) })
+}
+
+<span class="kw">export function</span> <span class="fn">dbInsert</span>(<span class="op">row</span>: <span class="ty">Row</span>): <span class="ty">PromiseResult</span>&lt;<span class="ty">void</span>&gt; {
+    <span class="kw">return</span> <span class="fn">toPromiseResult</span>(<span class="kw">function</span> <span class="fn">insert</span>(): <span class="ty">Promise</span>&lt;<span class="ty">void</span>&gt; { <span class="kw">return</span> <span class="op">db</span>.<span class="fn">insert</span>(<span class="op">row</span>) })
+}
+
+<span class="cm">// consumers import from the facade — never from the library directly</span>
+<span class="kw">import</span> { <span class="fn">dbFind</span> } <span class="kw">from</span> <span class="st">'./lib/db'</span>
+<span class="kw">const</span> [<span class="op">row</span>, <span class="op">err</span>] = <span class="kw">await</span> <span class="fn">dbFind</span>(<span class="op">userId</span>)</pre>
             </div>
         </div>
 

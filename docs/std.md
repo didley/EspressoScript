@@ -165,3 +165,26 @@ function safeBtoa(data: string): Result<string>
 const [b64, err] = safeBtoa(binaryStr)
 ```
 :::
+
+{label} Patterns
+
+**External library facade** — when a library used in multiple places doesn't return `Result`/`PromiseResult` tuples, create a dedicated facade module. Wrap all its calls there, export `Result`/`PromiseResult`-returning functions, and have consumers import only from the facade. `toResult`/`toPromiseResult` stays confined to that one file.
+
+```ts
+// lib/db.ts — facade for the db library
+import { db } from 'some-db'
+import { toPromiseResult } from 'shotscript/std'
+import type { PromiseResult } from 'shotscript/std'
+
+export function dbFind(id: string): PromiseResult<Row> {
+    return toPromiseResult(function find(): Promise<Row> { return db.find(id) })
+}
+
+export function dbInsert(row: Row): PromiseResult<void> {
+    return toPromiseResult(function insert(): Promise<void> { return db.insert(row) })
+}
+
+// consumers import from the facade — never from the library directly
+import { dbFind } from './lib/db'
+const [row, err] = await dbFind(userId)
+```

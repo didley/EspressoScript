@@ -205,6 +205,30 @@ const [cfg, cfgErr] = jsonParse<Config>(text)
 if (cfgErr !== null) { return [null, wrapError('loadConfig: parse failed', cfgErr)] }
 ```
 
+**When a third-party library is used in multiple places, isolate it behind a facade module — one file that imports the library and exports `Result`/`PromiseResult`-returning wrappers. Consumers import only from the facade, never directly from the library.**
+
+```ts
+// lib/db.ts — facade; toResult/toPromiseResult are confined here
+import { db } from 'some-db'
+import { toPromiseResult } from 'shotscript/std'
+import type { PromiseResult } from 'shotscript/std'
+
+export function dbFind(id: string): PromiseResult<Row> {
+    return toPromiseResult(function find(): Promise<Row> { return db.find(id) })
+}
+
+export function dbInsert(row: Row): PromiseResult<void> {
+    return toPromiseResult(function insert(): Promise<void> { return db.insert(row) })
+}
+
+// ✅ consumers import from the facade
+import { dbFind } from './lib/db'
+const [row, err] = await dbFind(id)
+
+// ❌ never import the raw library outside the facade
+import { db } from 'some-db'
+```
+
 ---
 
 ## Variables
