@@ -2,7 +2,7 @@
 // CLI entry point — runs the ShotScript linter over glob patterns from argv
 // and exits with code 1 if any diagnostics are found.
 // Usage: shotscript 'src/**/*.ts'
-import { readFileSync, mkdirSync, readdirSync, copyFileSync } from 'node:fs'
+import { readFileSync, mkdirSync, readdirSync, copyFileSync, existsSync, writeFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 import { glob } from 'glob'
@@ -19,6 +19,7 @@ if (patterns.length === 0) {
 
 if (patterns[0] === 'commands') {
     const pkgRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
+
     const src = path.join(pkgRoot, 'commands')
     const dest = path.join(process.cwd(), '.claude', 'commands')
     mkdirSync(dest, { recursive: true })
@@ -28,6 +29,23 @@ if (patterns[0] === 'commands') {
     }
     process.stdout.write('ShotScript Claude skills installed to .claude/commands/\n')
     process.stdout.write('Available in Claude Code: /shotscript-fix  /shotscript-migrate  /shotscript-explain\n')
+
+    const agentsSrc = path.join(pkgRoot, 'AGENTS.md')
+    const agentsDest = path.join(process.cwd(), 'AGENTS.md')
+    const agentsContent = readFileSync(agentsSrc, 'utf8')
+    if (existsSync(agentsDest)) {
+        const existing = readFileSync(agentsDest, 'utf8')
+        if (!existing.includes('shotscript')) {
+            writeFileSync(agentsDest, `${existing.trimEnd()}\n\n${agentsContent}`)
+            process.stdout.write('ShotScript coding guide merged into existing AGENTS.md\n')
+        } else {
+            process.stdout.write('AGENTS.md already contains ShotScript content — skipped\n')
+        }
+    } else {
+        writeFileSync(agentsDest, agentsContent)
+        process.stdout.write('ShotScript coding guide written to AGENTS.md\n')
+    }
+
     process.exit(0)
 }
 

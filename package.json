@@ -1,6 +1,6 @@
 {
   "name": "shotscript",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "ShotScript — TypeScript, one way. Linting, formatting, standard library, and strict type config.",
   "type": "module",
   "license": "MIT",
