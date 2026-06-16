@@ -813,6 +813,190 @@
                 letter-spacing: -0.025em;
                 margin-bottom: 0.5rem;
             }
+
+            /* ── Feature grid ── */
+            .feat-grid-heading {
+                font-size: 1rem;
+                font-weight: 700;
+                letter-spacing: -0.02em;
+                margin: 2.5rem 0 0.35rem;
+            }
+            .feat-grid-legend {
+                font-size: 0.8rem;
+                color: var(--muted);
+                margin-bottom: 1.25rem;
+                display: flex;
+                gap: 1.25rem;
+                flex-wrap: wrap;
+            }
+            .feat-legend-allowed {
+                display: flex;
+                align-items: center;
+                gap: 0.35rem;
+                color: var(--green);
+            }
+            .feat-legend-banned {
+                display: flex;
+                align-items: center;
+                gap: 0.35rem;
+                color: var(--muted);
+                opacity: 0.65;
+            }
+            .feat-legend-dot {
+                width: 7px;
+                height: 7px;
+                border-radius: 50%;
+                flex-shrink: 0;
+            }
+            .feat-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(118px, 1fr));
+                gap: 1px;
+                border: 1px solid var(--border);
+                border-radius: 10px;
+                overflow: hidden;
+                background: var(--border);
+                margin-bottom: 1.5rem;
+            }
+            .feat-card {
+                background: var(--surface);
+                padding: 0.7rem 0.85rem 0.65rem;
+                cursor: pointer;
+                border: none;
+                text-align: center;
+                display: flex;
+                flex-direction: column;
+                gap: 0.2rem;
+                transition: background 0.12s;
+                min-width: 0;
+                align-items: center;
+            }
+            .feat-card:hover {
+                background: rgba(200, 112, 42, 0.08);
+            }
+            .feat-card.feat-banned {
+                opacity: 0.38;
+            }
+            .feat-card.feat-banned:hover {
+                opacity: 0.65;
+                background: rgba(224, 92, 92, 0.06);
+            }
+            .feat-syntax {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.73rem;
+                font-weight: 600;
+                color: var(--green);
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                display: block;
+            }
+            .feat-card.feat-banned .feat-syntax {
+                color: var(--muted);
+                text-decoration: line-through;
+                text-decoration-color: rgba(224, 92, 92, 0.6);
+                text-decoration-thickness: 1px;
+            }
+            .feat-name {
+                font-size: 0.62rem;
+                color: var(--muted);
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                opacity: 0.75;
+            }
+
+            /* ── Feature dialog ── */
+            dialog.feat-dialog {
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                margin: 0;
+                background: var(--surface);
+                border: 1px solid var(--border);
+                border-radius: 12px;
+                padding: 0;
+                max-width: 420px;
+                width: calc(100vw - 3rem);
+                color: var(--text);
+                box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
+            }
+            dialog.feat-dialog::backdrop {
+                background: rgba(0, 0, 0, 0.65);
+                backdrop-filter: blur(3px);
+            }
+            .feat-dialog-head {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 1rem 1.25rem 0.9rem;
+                border-bottom: 1px solid var(--border);
+                gap: 0.75rem;
+            }
+            .feat-dialog-syntax {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.95rem;
+                font-weight: 700;
+                color: var(--text);
+                min-width: 0;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+            .feat-dialog-close {
+                background: none;
+                border: 1px solid var(--border);
+                color: var(--muted);
+                font-size: 1rem;
+                line-height: 1;
+                cursor: pointer;
+                padding: 0.2rem 0.45rem;
+                border-radius: 5px;
+                flex-shrink: 0;
+                transition: color 0.12s, border-color 0.12s;
+            }
+            .feat-dialog-close:hover {
+                color: var(--text);
+                border-color: var(--accent);
+            }
+            .feat-dialog-body {
+                padding: 1rem 1.25rem 1.25rem;
+                display: flex;
+                flex-direction: column;
+                gap: 0.55rem;
+            }
+            .feat-dialog-row {
+                display: flex;
+                gap: 0.75rem;
+                align-items: baseline;
+                font-size: 0.85rem;
+            }
+            .feat-dialog-key {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.62rem;
+                color: var(--muted);
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+                width: 76px;
+                flex-shrink: 0;
+                padding-top: 0.1rem;
+            }
+            .feat-dialog-val {
+                color: var(--text);
+                font-size: 0.85rem;
+                line-height: 1.45;
+            }
+            .feat-dialog-val.status-allowed { color: var(--green); }
+            .feat-dialog-val.status-banned { color: var(--red); }
+            .feat-dialog-val code {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.85em;
+                color: var(--type);
+                background: rgba(130, 170, 255, 0.08);
+                padding: 0.05rem 0.3rem;
+                border-radius: 3px;
+            }
         </style>
     </head>
     <body>
@@ -945,7 +1129,28 @@
                     <div class="pct-value">~40%</div>
                 </div>
             </div>
+
+            <h3 class="feat-grid-heading">Every TypeScript form, mapped</h3>
+            <div class="feat-grid-legend">
+                <span class="feat-legend-allowed">
+                    <span class="feat-legend-dot" style="background:var(--green)"></span>
+                    kept in ShotScript
+                </span>
+                <span class="feat-legend-banned">
+                    <span class="feat-legend-dot" style="background:var(--muted)"></span>
+                    removed — click to see replacement
+                </span>
+            </div>
+            <div class="feat-grid" id="feat-grid"></div>
         </div>
+
+        <dialog class="feat-dialog" id="feat-dialog">
+            <div class="feat-dialog-head">
+                <code class="feat-dialog-syntax" id="feat-dialog-syntax"></code>
+                <button class="feat-dialog-close" id="feat-dialog-close">&times;</button>
+            </div>
+            <div class="feat-dialog-body" id="feat-dialog-body"></div>
+        </dialog>
 
         <hr />
 
@@ -1993,6 +2198,182 @@
                 }, 1800);
             });
         }
+        </script>
+
+        <!-- Feature grid — mirrors SYNTAX_FEATURES in scripts/syntax-reduction-data.mjs -->
+        <script>
+        (function () {
+            function esc(s) {
+                return String(s)
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;');
+            }
+
+            var FEATURES = [
+                // Variable declaration
+                { syntax: 'var', name: 'var', category: 'Variable declaration', allowed: false, replacedBy: 'const' },
+                { syntax: 'let', name: 'let', category: 'Variable declaration', allowed: false, replacedBy: 'const (or let inside for headers)' },
+                { syntax: 'const', name: 'const', category: 'Variable declaration', allowed: true, replacedBy: null },
+                // Function syntax
+                { syntax: '() => {}', name: 'arrow function', category: 'Function syntax', allowed: false, replacedBy: 'function f() {}' },
+                { syntax: 'function f()', name: 'named declaration', category: 'Function syntax', allowed: true, replacedBy: null },
+                { syntax: 'const f = function()', name: 'anonymous expression', category: 'Function syntax', allowed: false, replacedBy: 'function f() {}' },
+                { syntax: '{ f() {} }', name: 'method shorthand', category: 'Function syntax', allowed: false, replacedBy: 'function f() {}' },
+                { syntax: 'function*()', name: 'generator', category: 'Function syntax', allowed: false, replacedBy: null },
+                // Error handling
+                { syntax: 'throw', name: 'throw', category: 'Error handling', allowed: false, replacedBy: 'PromiseResult<T>' },
+                { syntax: 'try / catch', name: 'try/catch', category: 'Error handling', allowed: false, replacedBy: 'PromiseResult<T>' },
+                { syntax: 'Promise.reject()', name: 'rejected Promise', category: 'Error handling', allowed: false, replacedBy: 'PromiseResult<T>' },
+                { syntax: 'cb(err, val)', name: 'error-first callback', category: 'Error handling', allowed: false, replacedBy: 'PromiseResult<T>' },
+                { syntax: '[val, err]', name: 'return tuple', category: 'Error handling', allowed: true, replacedBy: null },
+                // Expressing nothing
+                { syntax: 'prop?: T', name: 'optional property', category: 'Expressing nothing', allowed: false, replacedBy: 'T | null' },
+                { syntax: 'T | undefined', name: '| undefined', category: 'Expressing nothing', allowed: false, replacedBy: 'T | null' },
+                { syntax: 'T | null', name: '| null', category: 'Expressing nothing', allowed: true, replacedBy: null },
+                { syntax: 'f(x = val)', name: 'default parameter', category: 'Expressing nothing', allowed: false, replacedBy: 'T | null' },
+                // Type shape definition
+                { syntax: 'interface T {}', name: 'interface', category: 'Type shape definition', allowed: false, replacedBy: 'type T = {}' },
+                { syntax: 'type T = {}', name: 'type alias', category: 'Type shape definition', allowed: true, replacedBy: null },
+                { syntax: 'class C {}', name: 'class (type shape)', category: 'Type shape definition', allowed: false, replacedBy: 'type T = {}' },
+                // Type composition
+                { syntax: '{ ...A, b: B }', name: 'flat inline', category: 'Type composition', allowed: false, replacedBy: '{ base: A }' },
+                { syntax: 'A & B', name: 'intersection &', category: 'Type composition', allowed: false, replacedBy: '{ base: A, ext: B }' },
+                { syntax: 'interface A extends B', name: 'interface extends', category: 'Type composition', allowed: false, replacedBy: '{ base: B }' },
+                { syntax: 'class A extends B', name: 'class extends', category: 'Type composition', allowed: false, replacedBy: '{ base: B }' },
+                { syntax: '{ base: A }', name: 'embed by value', category: 'Type composition', allowed: true, replacedBy: null },
+                // Async sequencing
+                { syntax: '.then().catch()', name: '.then/.catch chain', category: 'Async sequencing', allowed: false, replacedBy: 'async/await + [v, e] = await f()' },
+                { syntax: 'await + try/catch', name: 'async/await + try/catch', category: 'Async sequencing', allowed: false, replacedBy: '[v, e] = await f()' },
+                { syntax: '[v, e] = await f()', name: 'async/await + tuple', category: 'Async sequencing', allowed: true, replacedBy: null },
+                // Conditional branching
+                { syntax: 'if / else', name: 'if/else', category: 'Conditional branching', allowed: true, replacedBy: null },
+                { syntax: 'x ? a : b', name: 'ternary', category: 'Conditional branching', allowed: false, replacedBy: 'if / else' },
+                { syntax: 'x && y', name: '&& short-circuit', category: 'Conditional branching', allowed: false, replacedBy: 'if / else' },
+                { syntax: 'x || y', name: '|| default', category: 'Conditional branching', allowed: false, replacedBy: 'if / else' },
+                { syntax: 'x ?? y', name: '?? nullish', category: 'Conditional branching', allowed: false, replacedBy: 'if / else' },
+                { syntax: 'x ??= y', name: '??= logical assign', category: 'Conditional branching', allowed: false, replacedBy: 'if / else' },
+                // Loop constructs
+                { syntax: 'for (;;)', name: 'for', category: 'Loop constructs', allowed: true, replacedBy: null },
+                { syntax: 'for (k in obj)', name: 'for-in', category: 'Loop constructs', allowed: false, replacedBy: 'for (x of xs)' },
+                { syntax: 'for (x of xs)', name: 'for-of', category: 'Loop constructs', allowed: true, replacedBy: null },
+                { syntax: 'while (cond)', name: 'while', category: 'Loop constructs', allowed: true, replacedBy: null },
+                { syntax: 'do {} while', name: 'do-while', category: 'Loop constructs', allowed: false, replacedBy: 'while (cond)' },
+                { syntax: 'label: for', name: 'labelled break/continue', category: 'Loop constructs', allowed: false, replacedBy: null },
+                // Boolean coercion
+                { syntax: '!!x', name: 'double negation', category: 'Boolean coercion', allowed: false, replacedBy: 'Boolean(x)' },
+                { syntax: 'Boolean(x)', name: 'Boolean()', category: 'Boolean coercion', allowed: true, replacedBy: null },
+                { syntax: 'x ? true : false', name: 'ternary coerce', category: 'Boolean coercion', allowed: false, replacedBy: 'Boolean(x)' },
+                // Number coercion
+                { syntax: 'parseInt(s)', name: 'parseInt', category: 'Number coercion', allowed: false, replacedBy: 'Number(s)' },
+                { syntax: 'parseFloat(s)', name: 'parseFloat', category: 'Number coercion', allowed: false, replacedBy: 'Number(s)' },
+                { syntax: 'Number(s)', name: 'Number()', category: 'Number coercion', allowed: true, replacedBy: null },
+                { syntax: '+s', name: 'unary +', category: 'Number coercion', allowed: false, replacedBy: 'Number(s)' },
+                // String concatenation
+                { syntax: '"a" + "b"', name: '+ operator', category: 'String concatenation', allowed: false, replacedBy: '`${a}${b}`' },
+                { syntax: '`${a}${b}`', name: 'template literal', category: 'String concatenation', allowed: true, replacedBy: null },
+                // Object merging
+                { syntax: 'Object.assign()', name: 'Object.assign', category: 'Object merging', allowed: false, replacedBy: '{ ...a, ...b }' },
+                { syntax: '{ ...a, ...b }', name: 'spread', category: 'Object merging', allowed: true, replacedBy: null },
+                { syntax: 'obj.x = y', name: 'mutation + delete', category: 'Object merging', allowed: false, replacedBy: '{ ...obj, x: y }' },
+                // Type-safety escapes
+                { syntax: 'x as T', name: 'type assertion', category: 'Type-safety escapes', allowed: false, replacedBy: null },
+                { syntax: '<T>x', name: 'angle bracket cast', category: 'Type-safety escapes', allowed: false, replacedBy: null },
+                { syntax: 'x!', name: 'non-null assertion', category: 'Type-safety escapes', allowed: false, replacedBy: null },
+                { syntax: '// @ts-ignore', name: '@ts-ignore', category: 'Type-safety escapes', allowed: false, replacedBy: null },
+                { syntax: '// @ts-expect-error', name: '@ts-expect-error', category: 'Type-safety escapes', allowed: false, replacedBy: null },
+                { syntax: '// @ts-nocheck', name: '@ts-nocheck', category: 'Type-safety escapes', allowed: false, replacedBy: null },
+                // Export style
+                { syntax: 'export default', name: 'default export', category: 'Export style', allowed: false, replacedBy: 'export { name }' },
+                { syntax: 'export { name }', name: 'named export', category: 'Export style', allowed: true, replacedBy: null },
+                { syntax: 'export * from', name: 're-export *', category: 'Export style', allowed: false, replacedBy: 'export { name }' },
+                // Module syntax
+                { syntax: 'require()', name: 'require', category: 'Module syntax', allowed: false, replacedBy: 'import x from' },
+                { syntax: 'import x from', name: 'static import', category: 'Module syntax', allowed: true, replacedBy: null },
+                { syntax: 'import()', name: 'dynamic import', category: 'Module syntax', allowed: false, replacedBy: 'import x from' },
+                // Increment / decrement
+                { syntax: 'x++', name: 'increment ++', category: 'Increment / decrement', allowed: false, replacedBy: 'x += 1' },
+                { syntax: 'x--', name: 'decrement --', category: 'Increment / decrement', allowed: false, replacedBy: 'x -= 1' },
+                { syntax: 'x += n', name: '+= n', category: 'Increment / decrement', allowed: true, replacedBy: null },
+                { syntax: 'x -= n', name: '-= n', category: 'Increment / decrement', allowed: true, replacedBy: null },
+                // Array mutation
+                { syntax: 'arr.sort()', name: '.sort()', category: 'Array mutation', allowed: false, replacedBy: 'arr.toSorted()' },
+                { syntax: 'arr.reverse()', name: '.reverse()', category: 'Array mutation', allowed: false, replacedBy: 'arr.toReversed()' },
+                { syntax: 'arr.splice()', name: '.splice()', category: 'Array mutation', allowed: false, replacedBy: 'arr.toSpliced()' },
+                { syntax: 'arr.push(x)', name: '.push()', category: 'Array mutation', allowed: false, replacedBy: '[...arr, x]' },
+                { syntax: 'arr.pop()', name: '.pop()', category: 'Array mutation', allowed: false, replacedBy: 'arr.slice(0, -1)' },
+                { syntax: 'arr.shift()', name: '.shift()', category: 'Array mutation', allowed: false, replacedBy: 'arr.slice(1)' },
+                { syntax: 'arr.unshift(x)', name: '.unshift()', category: 'Array mutation', allowed: false, replacedBy: '[x, ...arr]' },
+                { syntax: 'arr.fill(x)', name: '.fill()', category: 'Array mutation', allowed: false, replacedBy: 'Array.from()' },
+                { syntax: 'arr.copyWithin()', name: '.copyWithin()', category: 'Array mutation', allowed: false, replacedBy: null },
+                // OOP constructs
+                { syntax: 'class C {}', name: 'class', category: 'OOP constructs', allowed: false, replacedBy: 'type T = {}' },
+                { syntax: 'constructor()', name: 'constructor', category: 'OOP constructs', allowed: false, replacedBy: 'factory function' },
+                { syntax: 'this.x', name: 'this', category: 'OOP constructs', allowed: false, replacedBy: 'explicit parameters' },
+                { syntax: 'extends', name: 'extends', category: 'OOP constructs', allowed: false, replacedBy: '{ base: Parent }' },
+                { syntax: 'abstract class', name: 'abstract', category: 'OOP constructs', allowed: false, replacedBy: 'type + function' },
+                { syntax: '@Decorator', name: 'decorators', category: 'OOP constructs', allowed: false, replacedBy: null },
+                { syntax: 'new MyClass()', name: 'new (user types)', category: 'OOP constructs', allowed: false, replacedBy: 'factory function' },
+                // Advanced types
+                { syntax: 'T extends U ? A : B', name: 'conditional type', category: 'Advanced types', allowed: false, replacedBy: null },
+                { syntax: '{ [K in T]: V }', name: 'mapped type', category: 'Advanced types', allowed: false, replacedBy: null },
+                { syntax: '`${T}Suffix`', name: 'template literal type', category: 'Advanced types', allowed: false, replacedBy: 'union type' },
+                { syntax: 'infer T', name: 'infer', category: 'Advanced types', allowed: false, replacedBy: null },
+                { syntax: '[...T, U]', name: 'variadic tuple', category: 'Advanced types', allowed: false, replacedBy: 'explicit tuple' },
+                { syntax: '{ [key: string]: T }', name: 'index signature', category: 'Advanced types', allowed: false, replacedBy: 'Map<string, T>' },
+                // Equality operators
+                { syntax: 'x == y', name: 'loose ==', category: 'Equality operators', allowed: false, replacedBy: 'x === y' },
+                { syntax: 'x != y', name: 'loose !=', category: 'Equality operators', allowed: false, replacedBy: 'x !== y' },
+                { syntax: 'x === y', name: 'strict ===', category: 'Equality operators', allowed: true, replacedBy: null },
+                { syntax: 'x !== y', name: 'strict !==', category: 'Equality operators', allowed: true, replacedBy: null },
+                // Legacy globals
+                { syntax: 'eval()', name: 'eval', category: 'Legacy globals', allowed: false, replacedBy: null },
+                { syntax: 'arguments', name: 'arguments object', category: 'Legacy globals', allowed: false, replacedBy: 'named parameters' },
+                { syntax: 'isNaN(x)', name: 'global isNaN', category: 'Legacy globals', allowed: false, replacedBy: 'Number.isNaN(x)' },
+                { syntax: 'isFinite(x)', name: 'global isFinite', category: 'Legacy globals', allowed: false, replacedBy: 'Number.isFinite(x)' },
+                { syntax: '.hasOwnProperty()', name: 'hasOwnProperty', category: 'Legacy globals', allowed: false, replacedBy: 'Object.hasOwn()' },
+            ];
+
+            var grid = document.getElementById('feat-grid');
+            FEATURES.forEach(function (f) {
+                var btn = document.createElement('button');
+                btn.className = 'feat-card ' + (f.allowed ? 'feat-allowed' : 'feat-banned');
+                btn.innerHTML =
+                    '<code class="feat-syntax">' + esc(f.syntax) + '</code>' +
+                    '<span class="feat-name">' + esc(f.name) + '</span>';
+                btn.addEventListener('click', function () { openFeature(f); });
+                grid.appendChild(btn);
+            });
+
+            var dialog = document.getElementById('feat-dialog');
+            var dlgSyntax = document.getElementById('feat-dialog-syntax');
+            var dlgBody = document.getElementById('feat-dialog-body');
+            document.getElementById('feat-dialog-close').addEventListener('click', function () { dialog.close(); });
+            dialog.addEventListener('click', function (e) { if (e.target === dialog) dialog.close(); });
+
+            function openFeature(f) {
+                dlgSyntax.textContent = f.syntax;
+                var rows = [
+                    { key: 'Form', val: f.name, code: false },
+                    { key: 'Category', val: f.category, code: false },
+                    { key: 'Status', val: f.allowed ? '✓ Kept' : '✗ Removed', cls: f.allowed ? 'status-allowed' : 'status-banned', code: false },
+                ];
+                if (!f.allowed && f.replacedBy) {
+                    rows.push({ key: 'Use instead', val: f.replacedBy, code: true });
+                } else if (!f.allowed && !f.replacedBy) {
+                    rows.push({ key: 'Use instead', val: 'no direct replacement — construct is not needed', code: false });
+                }
+                dlgBody.innerHTML = rows.map(function (r) {
+                    var v = r.code ? '<code>' + esc(r.val) + '</code>' : esc(r.val);
+                    return '<div class="feat-dialog-row">' +
+                        '<span class="feat-dialog-key">' + esc(r.key) + '</span>' +
+                        '<span class="feat-dialog-val' + (r.cls ? ' ' + r.cls : '') + '">' + v + '</span>' +
+                        '</div>';
+                }).join('');
+                dialog.showModal();
+            }
+        })();
         </script>
 
         <footer>
