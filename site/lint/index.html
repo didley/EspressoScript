@@ -2333,6 +2333,104 @@
                 { syntax: 'isNaN(x)', name: 'global isNaN', category: 'Legacy globals', allowed: false, replacedBy: 'Number.isNaN(x)' },
                 { syntax: 'isFinite(x)', name: 'global isFinite', category: 'Legacy globals', allowed: false, replacedBy: 'Number.isFinite(x)' },
                 { syntax: '.hasOwnProperty()', name: 'hasOwnProperty', category: 'Legacy globals', allowed: false, replacedBy: 'Object.hasOwn()' },
+                // Optional chaining
+                { syntax: 'obj?.prop', name: 'optional property', category: 'Optional chaining', allowed: false, replacedBy: 'explicit null check' },
+                { syntax: 'obj?.()', name: 'optional call', category: 'Optional chaining', allowed: false, replacedBy: 'explicit null check' },
+                { syntax: 'arr?.[0]', name: 'optional index', category: 'Optional chaining', allowed: false, replacedBy: 'explicit null check' },
+                // Destructuring
+                { syntax: 'const { a } = obj', name: 'object destructure', category: 'Destructuring', allowed: true, replacedBy: null },
+                { syntax: 'const [a] = arr', name: 'array destructure', category: 'Destructuring', allowed: true, replacedBy: null },
+                { syntax: 'const { a: b } = obj', name: 'rename destructure', category: 'Destructuring', allowed: true, replacedBy: null },
+                { syntax: 'const { a, ...r } = obj', name: 'rest destructure', category: 'Destructuring', allowed: true, replacedBy: null },
+                { syntax: 'const { a = x } = obj', name: 'default destructure', category: 'Destructuring', allowed: false, replacedBy: 'explicit null check after destructure' },
+                // Spread & rest
+                { syntax: '...args', name: 'rest parameter', category: 'Spread & rest', allowed: true, replacedBy: null },
+                { syntax: 'f(...arr)', name: 'spread in call', category: 'Spread & rest', allowed: true, replacedBy: null },
+                { syntax: '[...a, ...b]', name: 'array spread', category: 'Spread & rest', allowed: true, replacedBy: null },
+                // Object literal forms
+                { syntax: '{ x }', name: 'shorthand property', category: 'Object literals', allowed: true, replacedBy: null },
+                { syntax: '{ [key]: val }', name: 'computed property', category: 'Object literals', allowed: false, replacedBy: '{ key: val } with explicit key' },
+                // Switch
+                { syntax: 'switch (x) {}', name: 'switch', category: 'Conditional branching', allowed: true, replacedBy: null },
+                // Logical assignment additions
+                { syntax: 'x &&= y', name: '&&= assign', category: 'Conditional branching', allowed: false, replacedBy: 'if / else' },
+                { syntax: 'x ||= y', name: '||= assign', category: 'Conditional branching', allowed: false, replacedBy: 'if / else' },
+                // Loop control
+                { syntax: 'break', name: 'break', category: 'Loop constructs', allowed: true, replacedBy: null },
+                { syntax: 'continue', name: 'continue', category: 'Loop constructs', allowed: true, replacedBy: null },
+                { syntax: 'for await (x of xs)', name: 'for await...of', category: 'Loop constructs', allowed: true, replacedBy: null },
+                // Runtime operators
+                { syntax: 'typeof x', name: 'typeof', category: 'Runtime operators', allowed: true, replacedBy: null },
+                { syntax: 'x instanceof C', name: 'instanceof', category: 'Runtime operators', allowed: false, replacedBy: 'explicit type check' },
+                { syntax: 'k in obj', name: 'in operator', category: 'Runtime operators', allowed: false, replacedBy: 'Object.hasOwn()' },
+                { syntax: 'void x', name: 'void operator', category: 'Runtime operators', allowed: false, replacedBy: null },
+                // Bitwise operators
+                { syntax: 'a & b', name: 'bitwise AND', category: 'Bitwise operators', allowed: false, replacedBy: null },
+                { syntax: 'a | b', name: 'bitwise OR', category: 'Bitwise operators', allowed: false, replacedBy: null },
+                { syntax: 'a ^ b', name: 'bitwise XOR', category: 'Bitwise operators', allowed: false, replacedBy: null },
+                { syntax: '~a', name: 'bitwise NOT', category: 'Bitwise operators', allowed: false, replacedBy: null },
+                { syntax: 'a << b', name: 'left shift', category: 'Bitwise operators', allowed: false, replacedBy: null },
+                { syntax: 'a >> b', name: 'right shift', category: 'Bitwise operators', allowed: false, replacedBy: null },
+                { syntax: 'a >>> b', name: 'unsigned right shift', category: 'Bitwise operators', allowed: false, replacedBy: null },
+                // Enum
+                { syntax: 'enum E {}', name: 'enum', category: 'Enum', allowed: false, replacedBy: 'union type' },
+                { syntax: 'const enum E {}', name: 'const enum', category: 'Enum', allowed: false, replacedBy: 'union type' },
+                // Namespace
+                { syntax: 'namespace Foo {}', name: 'namespace', category: 'Namespace', allowed: false, replacedBy: 'ES modules' },
+                { syntax: 'module Foo {}', name: 'internal module', category: 'Namespace', allowed: false, replacedBy: 'ES modules' },
+                // Type modifiers
+                { syntax: 'readonly prop', name: 'readonly', category: 'Type modifiers', allowed: true, replacedBy: null },
+                { syntax: 'x satisfies T', name: 'satisfies', category: 'Type modifiers', allowed: false, replacedBy: null },
+                { syntax: 'x as const', name: 'as const', category: 'Type modifiers', allowed: false, replacedBy: 'explicit typed const' },
+                // Primitive types
+                { syntax: 'any', name: 'any', category: 'Primitive types', allowed: false, replacedBy: 'unknown' },
+                { syntax: 'unknown', name: 'unknown', category: 'Primitive types', allowed: true, replacedBy: null },
+                { syntax: 'never', name: 'never', category: 'Primitive types', allowed: true, replacedBy: null },
+                { syntax: 'void', name: 'void (type)', category: 'Primitive types', allowed: false, replacedBy: null },
+                { syntax: 'null', name: 'null (type)', category: 'Primitive types', allowed: true, replacedBy: null },
+                { syntax: 'undefined', name: 'undefined (type)', category: 'Primitive types', allowed: false, replacedBy: 'T | null' },
+                // Array types
+                { syntax: 'T[]', name: 'array type', category: 'Array types', allowed: true, replacedBy: null },
+                { syntax: 'Array<T>', name: 'Array<T> generic', category: 'Array types', allowed: false, replacedBy: 'T[]' },
+                { syntax: 'readonly T[]', name: 'readonly array', category: 'Array types', allowed: true, replacedBy: null },
+                { syntax: 'ReadonlyArray<T>', name: 'ReadonlyArray<T>', category: 'Array types', allowed: false, replacedBy: 'readonly T[]' },
+                // Type-only imports / exports
+                { syntax: 'import type { T }', name: 'type import', category: 'Module syntax', allowed: true, replacedBy: null },
+                { syntax: 'export type { T }', name: 'type export', category: 'Module syntax', allowed: true, replacedBy: null },
+                { syntax: 'import * as ns', name: 'namespace import', category: 'Module syntax', allowed: false, replacedBy: 'named imports' },
+                // OOP additions
+                { syntax: 'get prop()', name: 'getter', category: 'OOP constructs', allowed: false, replacedBy: 'plain function' },
+                { syntax: 'set prop(v)', name: 'setter', category: 'OOP constructs', allowed: false, replacedBy: 'plain function' },
+                { syntax: '#field', name: 'private field', category: 'OOP constructs', allowed: false, replacedBy: null },
+                { syntax: 'static member', name: 'static', category: 'OOP constructs', allowed: false, replacedBy: 'module-level const' },
+                { syntax: 'override', name: 'override', category: 'OOP constructs', allowed: false, replacedBy: null },
+                // Tagged templates
+                { syntax: 'tag`str`', name: 'tagged template', category: 'Tagged templates', allowed: false, replacedBy: null },
+                // Generators & async generators
+                { syntax: 'yield', name: 'yield', category: 'Generators', allowed: false, replacedBy: null },
+                { syntax: 'async function*()', name: 'async generator', category: 'Generators', allowed: false, replacedBy: null },
+                // Tuple types
+                { syntax: '[A, B]', name: 'tuple type', category: 'Tuple types', allowed: true, replacedBy: null },
+                { syntax: '[name: A, age: B]', name: 'named tuple', category: 'Tuple types', allowed: true, replacedBy: null },
+                // Type predicate
+                { syntax: 'x is T', name: 'type predicate', category: 'Type predicate', allowed: true, replacedBy: null },
+                { syntax: 'asserts x is T', name: 'assertion predicate', category: 'Type predicate', allowed: false, replacedBy: null },
+                // Advanced type additions
+                { syntax: 'keyof T', name: 'keyof', category: 'Advanced types', allowed: false, replacedBy: null },
+                { syntax: 'typeof x (type)', name: 'typeof (type)', category: 'Advanced types', allowed: false, replacedBy: null },
+                { syntax: 'T[K]', name: 'indexed access', category: 'Advanced types', allowed: false, replacedBy: null },
+                // Utility types
+                { syntax: 'Partial<T>', name: 'Partial<T>', category: 'Utility types', allowed: false, replacedBy: 'explicit type with | null' },
+                { syntax: 'Required<T>', name: 'Required<T>', category: 'Utility types', allowed: false, replacedBy: 'explicit type' },
+                { syntax: 'Readonly<T>', name: 'Readonly<T>', category: 'Utility types', allowed: false, replacedBy: 'readonly on each field' },
+                { syntax: 'Record<K, V>', name: 'Record<K,V>', category: 'Utility types', allowed: true, replacedBy: null },
+                { syntax: 'Pick<T, K>', name: 'Pick<T,K>', category: 'Utility types', allowed: false, replacedBy: 'explicit type' },
+                { syntax: 'Omit<T, K>', name: 'Omit<T,K>', category: 'Utility types', allowed: false, replacedBy: 'explicit type' },
+                // Misc operators
+                { syntax: '(a, b)', name: 'comma operator', category: 'Misc operators', allowed: false, replacedBy: null },
+                { syntax: '[1,,3]', name: 'sparse array', category: 'Misc operators', allowed: false, replacedBy: '[1, undefined, 3]' },
+                { syntax: '{}', name: 'empty object type', category: 'Misc operators', allowed: false, replacedBy: 'Record<string, unknown>' },
+                { syntax: '{ /* lone */ }', name: 'lone block', category: 'Misc operators', allowed: false, replacedBy: null },
             ];
 
             var grid = document.getElementById('feat-grid');
