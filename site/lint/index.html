@@ -966,7 +966,7 @@
                 border: 1px solid var(--border);
                 border-radius: 12px;
                 padding: 0;
-                max-width: 420px;
+                max-width: 540px;
                 width: calc(100vw - 3rem);
                 color: var(--text);
                 box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
@@ -1045,6 +1045,35 @@
                 background: rgba(130, 170, 255, 0.08);
                 padding: 0.05rem 0.3rem;
                 border-radius: 3px;
+            }
+            .feat-dialog-examples {
+                border-top: 1px solid var(--border);
+                margin-top: 0.4rem;
+                padding-top: 0.75rem;
+                display: flex;
+                flex-direction: column;
+                gap: 0.65rem;
+            }
+            .feat-dialog-example-label {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.6rem;
+                text-transform: uppercase;
+                letter-spacing: 0.08em;
+                color: var(--muted);
+                margin-bottom: 0.3rem;
+            }
+            .feat-dialog-example pre {
+                background: rgba(0, 0, 0, 0.25);
+                border: 1px solid var(--border);
+                border-radius: 6px;
+                padding: 0.6rem 0.75rem;
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.75rem;
+                line-height: 1.55;
+                color: var(--text);
+                overflow-x: auto;
+                margin: 0;
+                white-space: pre;
             }
         </style>
     </head>
@@ -2274,225 +2303,457 @@
 
             var FEATURES = [
                 // Variable declaration
-                { syntax: 'var', name: 'var', category: 'Variable declaration', allowed: false, replacedBy: 'const' },
-                { syntax: 'let', name: 'let', category: 'Variable declaration', allowed: false, replacedBy: 'const (or let inside for headers)' },
+                { syntax: 'var', name: 'var', category: 'Variable declaration', allowed: false, replacedBy: 'const',
+                  example: "var name = 'Alice';\nvar count = 0;",
+                  fix: "const name = 'Alice';\nconst count = 0;" },
+                { syntax: 'let', name: 'let', category: 'Variable declaration', allowed: false, replacedBy: 'const (or let inside for headers)',
+                  example: "let total = 0;\ntotal = total + price;",
+                  fix: "const total = 0 + price;\n// let is only allowed in for headers:\nfor (let i = 0; i < n; i++) { ... }" },
                 { syntax: 'const', name: 'const', category: 'Variable declaration', allowed: true, replacedBy: null },
                 // Function syntax
-                { syntax: '() => {}', name: 'arrow function', category: 'Function syntax', allowed: false, replacedBy: 'function f() {}' },
+                { syntax: '() => {}', name: 'arrow function', category: 'Function syntax', allowed: false, replacedBy: 'function f() {}',
+                  example: "const double = (x: number) => x * 2;\nconst greet = (name: string) => `Hi ${name}`;",
+                  fix: "function double(x: number) { return x * 2; }\nfunction greet(name: string) { return `Hi ${name}`; }" },
                 { syntax: 'function f()', name: 'named declaration', category: 'Function syntax', allowed: true, replacedBy: null },
-                { syntax: 'const f = function()', name: 'anonymous expression', category: 'Function syntax', allowed: false, replacedBy: 'function f() {}' },
-                { syntax: '{ f() {} }', name: 'method shorthand', category: 'Function syntax', allowed: false, replacedBy: 'function f() {}' },
-                { syntax: 'function*()', name: 'generator', category: 'Function syntax', allowed: false, replacedBy: null },
+                { syntax: 'const f = function()', name: 'anonymous expression', category: 'Function syntax', allowed: false, replacedBy: 'function f() {}',
+                  example: "const greet = function(name: string) {\n  return `Hi ${name}`;\n};",
+                  fix: "function greet(name: string) {\n  return `Hi ${name}`;\n}" },
+                { syntax: '{ f() {} }', name: 'method shorthand', category: 'Function syntax', allowed: false, replacedBy: 'function f() {}',
+                  example: "const api = {\n  fetchUser() { return fetch('/user'); },\n  parseUser() { ... },\n};",
+                  fix: "function fetchUser() { return fetch('/user'); }\nfunction parseUser() { ... }" },
+                { syntax: 'function*()', name: 'generator', category: 'Function syntax', allowed: false, replacedBy: null,
+                  example: "function* range(n: number) {\n  for (let i = 0; i < n; i++) { yield i; }\n}" },
                 // Error handling
-                { syntax: 'throw', name: 'throw', category: 'Error handling', allowed: false, replacedBy: 'PromiseResult<T>' },
-                { syntax: 'try / catch', name: 'try/catch', category: 'Error handling', allowed: false, replacedBy: 'PromiseResult<T>' },
-                { syntax: 'Promise.reject()', name: 'rejected Promise', category: 'Error handling', allowed: false, replacedBy: 'PromiseResult<T>' },
-                { syntax: 'cb(err, val)', name: 'error-first callback', category: 'Error handling', allowed: false, replacedBy: 'PromiseResult<T>' },
+                { syntax: 'throw', name: 'throw', category: 'Error handling', allowed: false, replacedBy: 'PromiseResult<T>',
+                  example: "function divide(a: number, b: number) {\n  if (b === 0) { throw new Error('divide by zero'); }\n  return a / b;\n}",
+                  fix: "function divide(a: number, b: number): [number, null] | [null, Error] {\n  if (b === 0) { return [null, new Error('divide by zero')]; }\n  return [a / b, null];\n}" },
+                { syntax: 'try / catch', name: 'try/catch', category: 'Error handling', allowed: false, replacedBy: 'PromiseResult<T>',
+                  example: "try {\n  const data = JSON.parse(raw);\n  process(data);\n} catch (e) {\n  console.error(e);\n}",
+                  fix: "const [data, err] = jsonParse(raw);\nif (err) { return [null, err]; }\nprocess(data);" },
+                { syntax: 'Promise.reject()', name: 'rejected Promise', category: 'Error handling', allowed: false, replacedBy: 'PromiseResult<T>',
+                  example: "async function load(id: string) {\n  if (!id) { return Promise.reject(new Error('no id')); }\n}",
+                  fix: "async function load(id: string): Promise<[Data, null] | [null, Error]> {\n  if (!id) { return [null, new Error('no id')]; }\n}" },
+                { syntax: 'cb(err, val)', name: 'error-first callback', category: 'Error handling', allowed: false, replacedBy: 'PromiseResult<T>',
+                  example: "fs.readFile(path, (err, data) => {\n  if (err) { handleError(err); return; }\n  process(data);\n});",
+                  fix: "const [data, err] = await readFile(path);\nif (err) { return [null, err]; }\nprocess(data);" },
                 { syntax: '[val, err]', name: 'return tuple', category: 'Error handling', allowed: true, replacedBy: null },
                 // Expressing nothing
-                { syntax: 'prop?: T', name: 'optional property', category: 'Expressing nothing', allowed: false, replacedBy: 'T | null' },
-                { syntax: 'T | undefined', name: '| undefined', category: 'Expressing nothing', allowed: false, replacedBy: 'T | null' },
+                { syntax: 'prop?: T', name: 'optional property', category: 'Expressing nothing', allowed: false, replacedBy: 'T | null',
+                  example: "type User = {\n  name: string;\n  avatar?: string;\n};",
+                  fix: "type User = {\n  readonly name: string;\n  readonly avatar: string | null;\n};" },
+                { syntax: 'T | undefined', name: '| undefined', category: 'Expressing nothing', allowed: false, replacedBy: 'T | null',
+                  example: "function findUser(id: string): User | undefined {\n  return db.get(id);\n}",
+                  fix: "function findUser(id: string): User | null {\n  return db.get(id) ?? null;\n}" },
                 { syntax: 'T | null', name: '| null', category: 'Expressing nothing', allowed: true, replacedBy: null },
-                { syntax: 'f(x = val)', name: 'default parameter', category: 'Expressing nothing', allowed: false, replacedBy: 'T | null' },
+                { syntax: 'f(x = val)', name: 'default parameter', category: 'Expressing nothing', allowed: false, replacedBy: 'T | null',
+                  example: "function greet(name = 'World') {\n  return `Hello, ${name}`;\n}",
+                  fix: "function greet(name: string | null) {\n  const n = name !== null ? name : 'World';\n  return `Hello, ${n}`;\n}" },
                 // Type shape definition
-                { syntax: 'interface T {}', name: 'interface', category: 'Type shape definition', allowed: false, replacedBy: 'type T = {}' },
+                { syntax: 'interface T {}', name: 'interface', category: 'Type shape definition', allowed: false, replacedBy: 'type T = {}',
+                  example: "interface User {\n  name: string;\n  age: number;\n}",
+                  fix: "type User = {\n  readonly name: string;\n  readonly age: number;\n};" },
                 { syntax: 'type T = {}', name: 'type alias', category: 'Type shape definition', allowed: true, replacedBy: null },
-                { syntax: 'class C {}', name: 'class (type shape)', category: 'Type shape definition', allowed: false, replacedBy: 'type T = {}' },
+                { syntax: 'class C {}', name: 'class (type shape)', category: 'Type shape definition', allowed: false, replacedBy: 'type T = {}',
+                  example: "class Point {\n  x: number;\n  y: number;\n  constructor(x: number, y: number) {\n    this.x = x; this.y = y;\n  }\n}",
+                  fix: "type Point = { readonly x: number; readonly y: number; };\nfunction makePoint(x: number, y: number): Point {\n  return { x, y };\n}" },
                 // Type composition
-                { syntax: '{ ...A, b: B }', name: 'flat inline', category: 'Type composition', allowed: false, replacedBy: '{ base: A }' },
-                { syntax: 'A & B', name: 'intersection &', category: 'Type composition', allowed: false, replacedBy: '{ base: A, ext: B }' },
-                { syntax: 'interface A extends B', name: 'interface extends', category: 'Type composition', allowed: false, replacedBy: '{ base: B }' },
-                { syntax: 'class A extends B', name: 'class extends', category: 'Type composition', allowed: false, replacedBy: '{ base: B }' },
+                { syntax: '{ ...A, b: B }', name: 'flat inline', category: 'Type composition', allowed: false, replacedBy: '{ base: A }',
+                  example: "type Admin = { name: string } & { role: string; perms: string[] };",
+                  fix: "type Admin = {\n  readonly base: User;\n  readonly role: string;\n  readonly perms: string[];\n};" },
+                { syntax: 'A & B', name: 'intersection &', category: 'Type composition', allowed: false, replacedBy: '{ base: A, ext: B }',
+                  example: "type Timestamped = User & { createdAt: Date; updatedAt: Date };",
+                  fix: "type Timestamped = {\n  readonly base: User;\n  readonly createdAt: Date;\n  readonly updatedAt: Date;\n};" },
+                { syntax: 'interface A extends B', name: 'interface extends', category: 'Type composition', allowed: false, replacedBy: '{ base: B }',
+                  example: "interface AdminUser extends User {\n  role: string;\n}",
+                  fix: "type AdminUser = {\n  readonly base: User;\n  readonly role: string;\n};" },
+                { syntax: 'class A extends B', name: 'class extends', category: 'Type composition', allowed: false, replacedBy: '{ base: B }',
+                  example: "class Dog extends Animal {\n  breed: string;\n  bark() { return 'woof'; }\n}",
+                  fix: "type Dog = { readonly base: Animal; readonly breed: string; };\nfunction bark(dog: Dog) { return 'woof'; }" },
                 { syntax: '{ base: A }', name: 'embed by value', category: 'Type composition', allowed: true, replacedBy: null },
                 // Async sequencing
-                { syntax: '.then().catch()', name: '.then/.catch chain', category: 'Async sequencing', allowed: false, replacedBy: 'async/await + [v, e] = await f()' },
-                { syntax: 'await + try/catch', name: 'async/await + try/catch', category: 'Async sequencing', allowed: false, replacedBy: '[v, e] = await f()' },
+                { syntax: '.then().catch()', name: '.then/.catch chain', category: 'Async sequencing', allowed: false, replacedBy: 'async/await + [v, e] = await f()',
+                  example: "fetchUser(id)\n  .then(user => saveUser(user))\n  .catch(err => logError(err));",
+                  fix: "const [user, fetchErr] = await fetchUser(id);\nif (fetchErr) { return [null, fetchErr]; }\nconst [, saveErr] = await saveUser(user);\nif (saveErr) { return [null, saveErr]; }" },
+                { syntax: 'await + try/catch', name: 'async/await + try/catch', category: 'Async sequencing', allowed: false, replacedBy: '[v, e] = await f()',
+                  example: "try {\n  const user = await fetchUser(id);\n  return user;\n} catch (e) {\n  handleError(e);\n}",
+                  fix: "const [user, err] = await fetchUser(id);\nif (err) { return [null, err]; }\nreturn [user, null];" },
                 { syntax: '[v, e] = await f()', name: 'async/await + tuple', category: 'Async sequencing', allowed: true, replacedBy: null },
                 // Conditional branching
                 { syntax: 'if / else', name: 'if/else', category: 'Conditional branching', allowed: true, replacedBy: null },
-                { syntax: 'x ? a : b', name: 'ternary', category: 'Conditional branching', allowed: false, replacedBy: 'if / else' },
-                { syntax: 'x && y', name: '&& short-circuit', category: 'Conditional branching', allowed: false, replacedBy: 'if / else' },
-                { syntax: 'x || y', name: '|| default', category: 'Conditional branching', allowed: false, replacedBy: 'if / else' },
-                { syntax: 'x ?? y', name: '?? nullish', category: 'Conditional branching', allowed: false, replacedBy: 'if / else' },
-                { syntax: 'x ??= y', name: '??= logical assign', category: 'Conditional branching', allowed: false, replacedBy: 'if / else' },
+                { syntax: 'x ? a : b', name: 'ternary', category: 'Conditional branching', allowed: false, replacedBy: 'if / else',
+                  example: "const label = isAdmin ? 'Admin' : 'User';\nreturn loading ? <Spinner /> : <Content />;",
+                  fix: "if (isAdmin) { return renderAdmin(); }\nreturn renderUser();" },
+                { syntax: 'x && y', name: '&& short-circuit', category: 'Conditional branching', allowed: false, replacedBy: 'if / else',
+                  example: "isLoggedIn && sendAnalyticsEvent();\nuser.isAdmin && showAdminPanel();",
+                  fix: "if (isLoggedIn) { sendAnalyticsEvent(); }\nif (user.isAdmin) { showAdminPanel(); }" },
+                { syntax: 'x || y', name: '|| default', category: 'Conditional branching', allowed: false, replacedBy: 'if / else',
+                  example: "const name = user.name || 'Anonymous';\nconst port = config.port || 3000;",
+                  fix: "if (user.name === null) { return 'Anonymous'; }\nconst name = user.name;" },
+                { syntax: 'x ?? y', name: '?? nullish', category: 'Conditional branching', allowed: false, replacedBy: 'if / else',
+                  example: "const val = maybeNull ?? 'default';\nconst timeout = options.timeout ?? 5000;",
+                  fix: "if (maybeNull === null) { return 'default'; }\nconst val = maybeNull;" },
+                { syntax: 'x ??= y', name: '??= logical assign', category: 'Conditional branching', allowed: false, replacedBy: 'if / else',
+                  example: "obj.config ??= {};\nuser.cache ??= loadCache();",
+                  fix: "if (obj.config === null) { obj.config = {}; }" },
                 // Loop constructs
                 { syntax: 'for (i=0; i<n; i++)', name: 'for (counted)', category: 'Loop constructs', allowed: true, replacedBy: null },
-                { syntax: 'for (;;)', name: 'for (infinite)', category: 'Loop constructs', allowed: false, replacedBy: 'while (true)' },
-                { syntax: 'for (k in obj)', name: 'for-in', category: 'Loop constructs', allowed: false, replacedBy: 'for (x of xs)' },
+                { syntax: 'for (;;)', name: 'for (infinite)', category: 'Loop constructs', allowed: false, replacedBy: 'while (true)',
+                  example: "for (;;) {\n  const event = queue.dequeue();\n  if (event === null) { break; }\n  process(event);\n}",
+                  fix: "while (true) {\n  const event = queue.dequeue();\n  if (event === null) { break; }\n  process(event);\n}" },
+                { syntax: 'for (k in obj)', name: 'for-in', category: 'Loop constructs', allowed: false, replacedBy: 'for (x of xs)',
+                  example: "for (const key in obj) {\n  console.log(key, obj[key]);\n}",
+                  fix: "for (const [key, val] of Object.entries(obj)) {\n  console.log(key, val);\n}" },
                 { syntax: 'for (x of xs)', name: 'for-of', category: 'Loop constructs', allowed: true, replacedBy: null },
                 { syntax: 'while (cond)', name: 'while', category: 'Loop constructs', allowed: true, replacedBy: null },
-                { syntax: 'do {} while', name: 'do-while', category: 'Loop constructs', allowed: false, replacedBy: 'while (cond)' },
-                { syntax: 'label: for', name: 'labelled break/continue', category: 'Loop constructs', allowed: false, replacedBy: null },
+                { syntax: 'do {} while', name: 'do-while', category: 'Loop constructs', allowed: false, replacedBy: 'while (cond)',
+                  example: "do {\n  line = readLine();\n} while (line !== '');",
+                  fix: "while (true) {\n  line = readLine();\n  if (line === '') { break; }\n}" },
+                { syntax: 'label: for', name: 'labelled break/continue', category: 'Loop constructs', allowed: false, replacedBy: null,
+                  example: "outer: for (const row of rows) {\n  for (const cell of row) {\n    if (done(cell)) { break outer; }\n  }\n}",
+                  fix: "// extract the inner loop to a function and use early return" },
                 // Boolean coercion
-                { syntax: '!!x', name: 'double negation', category: 'Boolean coercion', allowed: false, replacedBy: 'Boolean(x)' },
+                { syntax: '!!x', name: 'double negation', category: 'Boolean coercion', allowed: false, replacedBy: 'Boolean(x)',
+                  example: "const isValid = !!value;\nconst hasItems = !!arr.length;",
+                  fix: "const isValid = Boolean(value);\nconst hasItems = Boolean(arr.length);" },
                 { syntax: 'Boolean(x)', name: 'Boolean()', category: 'Boolean coercion', allowed: true, replacedBy: null },
-                { syntax: 'x ? true : false', name: 'ternary coerce', category: 'Boolean coercion', allowed: false, replacedBy: 'Boolean(x)' },
+                { syntax: 'x ? true : false', name: 'ternary coerce', category: 'Boolean coercion', allowed: false, replacedBy: 'Boolean(x)',
+                  example: "const flag = someValue ? true : false;",
+                  fix: "const flag = Boolean(someValue);" },
                 // Number coercion
-                { syntax: 'parseInt(s)', name: 'parseInt', category: 'Number coercion', allowed: false, replacedBy: 'Number(s)' },
-                { syntax: 'parseFloat(s)', name: 'parseFloat', category: 'Number coercion', allowed: false, replacedBy: 'Number(s)' },
+                { syntax: 'parseInt(s)', name: 'parseInt', category: 'Number coercion', allowed: false, replacedBy: 'Number(s)',
+                  example: "const n = parseInt(str, 10);\nconst port = parseInt(process.env.PORT, 10);",
+                  fix: "const n = Number(str);\nconst port = Number(process.env.PORT);" },
+                { syntax: 'parseFloat(s)', name: 'parseFloat', category: 'Number coercion', allowed: false, replacedBy: 'Number(s)',
+                  example: "const price = parseFloat(input);",
+                  fix: "const price = Number(input);" },
                 { syntax: 'Number(s)', name: 'Number()', category: 'Number coercion', allowed: true, replacedBy: null },
-                { syntax: '+s', name: 'unary +', category: 'Number coercion', allowed: false, replacedBy: 'Number(s)' },
+                { syntax: '+s', name: 'unary +', category: 'Number coercion', allowed: false, replacedBy: 'Number(s)',
+                  example: "const n = +str;\nconst ms = +new Date();",
+                  fix: "const n = Number(str);\nconst ms = Number(new Date());" },
                 // String concatenation
-                { syntax: '"a" + "b"', name: '+ operator', category: 'String concatenation', allowed: false, replacedBy: '`${a}${b}`' },
+                { syntax: '"a" + "b"', name: '+ operator', category: 'String concatenation', allowed: false, replacedBy: '`${a}${b}`',
+                  example: "const msg = 'Hello, ' + name + '!';\nconst url = base + '/api/' + path;",
+                  fix: "const msg = `Hello, ${name}!`;\nconst url = `${base}/api/${path}`;" },
                 { syntax: '`${a}${b}`', name: 'template literal', category: 'String concatenation', allowed: true, replacedBy: null },
                 // Object merging
-                { syntax: 'Object.assign()', name: 'Object.assign', category: 'Object merging', allowed: false, replacedBy: '{ ...a, ...b }' },
+                { syntax: 'Object.assign()', name: 'Object.assign', category: 'Object merging', allowed: false, replacedBy: '{ ...a, ...b }',
+                  example: "const merged = Object.assign({}, defaults, overrides);\nObject.assign(target, { x: 1, y: 2 });",
+                  fix: "const merged = { ...defaults, ...overrides };\nconst updated = { ...target, x: 1, y: 2 };" },
                 { syntax: '{ ...a, ...b }', name: 'spread', category: 'Object merging', allowed: true, replacedBy: null },
-                { syntax: 'obj.x = y', name: 'mutation + delete', category: 'Object merging', allowed: false, replacedBy: '{ ...obj, x: y }' },
+                { syntax: 'obj.x = y', name: 'mutation + delete', category: 'Object merging', allowed: false, replacedBy: '{ ...obj, x: y }',
+                  example: "obj.name = 'new name';\ndelete obj.tempField;",
+                  fix: "const { tempField, ...rest } = obj;\nconst updated = { ...rest, name: 'new name' };" },
                 // Type-safety escapes
-                { syntax: 'x as T', name: 'type assertion', category: 'Type-safety escapes', allowed: false, replacedBy: null },
-                { syntax: '<T>x', name: 'angle bracket cast', category: 'Type-safety escapes', allowed: false, replacedBy: null },
-                { syntax: 'x!', name: 'non-null assertion', category: 'Type-safety escapes', allowed: false, replacedBy: null },
-                { syntax: '// @ts-ignore', name: '@ts-ignore', category: 'Type-safety escapes', allowed: false, replacedBy: null },
-                { syntax: '// @ts-expect-error', name: '@ts-expect-error', category: 'Type-safety escapes', allowed: false, replacedBy: null },
-                { syntax: '// @ts-nocheck', name: '@ts-nocheck', category: 'Type-safety escapes', allowed: false, replacedBy: null },
+                { syntax: 'x as T', name: 'type assertion', category: 'Type-safety escapes', allowed: false, replacedBy: null,
+                  example: "const el = document.getElementById('app') as HTMLDivElement;\nconst data = response as ApiResponse;" },
+                { syntax: '<T>x', name: 'angle bracket cast', category: 'Type-safety escapes', allowed: false, replacedBy: null,
+                  example: "const el = <HTMLDivElement>document.getElementById('app');" },
+                { syntax: 'x!', name: 'non-null assertion', category: 'Type-safety escapes', allowed: false, replacedBy: null,
+                  example: "const el = document.getElementById('app')!;\nconst name = user.profile!.name;",
+                  fix: "const el = document.getElementById('app');\nif (el === null) { return; }\n// now el is HTMLElement" },
+                { syntax: '// @ts-ignore', name: '@ts-ignore', category: 'Type-safety escapes', allowed: false, replacedBy: null,
+                  example: "// @ts-ignore\ncallWithWrongType(badArg);" },
+                { syntax: '// @ts-expect-error', name: '@ts-expect-error', category: 'Type-safety escapes', allowed: false, replacedBy: null,
+                  example: "// @ts-expect-error\ncallWithWrongType(badArg);" },
+                { syntax: '// @ts-nocheck', name: '@ts-nocheck', category: 'Type-safety escapes', allowed: false, replacedBy: null,
+                  example: "// @ts-nocheck\n// entire file bypasses type checking" },
                 // Export style
-                { syntax: 'export default', name: 'default export', category: 'Export style', allowed: false, replacedBy: 'export { name }' },
+                { syntax: 'export default', name: 'default export', category: 'Export style', allowed: false, replacedBy: 'export { name }',
+                  example: "export default function handler(req, res) { ... }\nexport default class UserService { ... }",
+                  fix: "export function handler(req, res) { ... }\n// or at the bottom:\nexport { handler };" },
                 { syntax: 'export { name }', name: 'named export', category: 'Export style', allowed: true, replacedBy: null },
-                { syntax: 'export * from', name: 're-export *', category: 'Export style', allowed: false, replacedBy: 'export { name }' },
+                { syntax: 'export * from', name: 're-export *', category: 'Export style', allowed: false, replacedBy: 'export { name }',
+                  example: "export * from './utils';\nexport * from './helpers';",
+                  fix: "export { parseDate, formatDate } from './utils';\nexport { slugify, truncate } from './helpers';" },
                 // Module syntax
-                { syntax: 'require()', name: 'require', category: 'Module syntax', allowed: false, replacedBy: 'import x from' },
+                { syntax: 'require()', name: 'require', category: 'Module syntax', allowed: false, replacedBy: 'import x from',
+                  example: "const fs = require('fs');\nconst { join } = require('path');",
+                  fix: "import fs from 'fs';\nimport { join } from 'path';" },
                 { syntax: 'import x from', name: 'static import', category: 'Module syntax', allowed: true, replacedBy: null },
-                { syntax: 'import()', name: 'dynamic import', category: 'Module syntax', allowed: false, replacedBy: 'import x from' },
+                { syntax: 'import()', name: 'dynamic import', category: 'Module syntax', allowed: false, replacedBy: 'import x from',
+                  example: "const mod = await import('./heavy-module');\nconst { parse } = await import('./parser');",
+                  fix: "import { parse } from './parser';\n// load order is managed at the module level" },
                 // Increment / decrement
-                { syntax: 'x++', name: 'increment ++', category: 'Increment / decrement', allowed: false, replacedBy: 'x += 1' },
-                { syntax: 'x--', name: 'decrement --', category: 'Increment / decrement', allowed: false, replacedBy: 'x -= 1' },
+                { syntax: 'x++', name: 'increment ++', category: 'Increment / decrement', allowed: false, replacedBy: 'x += 1',
+                  example: "let i = 0;\ni++;\ncount++;",
+                  fix: "let i = 0;\ni += 1;\ncount += 1;" },
+                { syntax: 'x--', name: 'decrement --', category: 'Increment / decrement', allowed: false, replacedBy: 'x -= 1',
+                  example: "remaining--;\nretries--;",
+                  fix: "remaining -= 1;\nretries -= 1;" },
                 { syntax: 'x += n', name: '+= n', category: 'Increment / decrement', allowed: true, replacedBy: null },
                 { syntax: 'x -= n', name: '-= n', category: 'Increment / decrement', allowed: true, replacedBy: null },
                 // Array mutation
-                { syntax: 'arr.sort()', name: '.sort()', category: 'Array mutation', allowed: false, replacedBy: 'arr.toSorted()' },
-                { syntax: 'arr.reverse()', name: '.reverse()', category: 'Array mutation', allowed: false, replacedBy: 'arr.toReversed()' },
-                { syntax: 'arr.splice()', name: '.splice()', category: 'Array mutation', allowed: false, replacedBy: 'arr.toSpliced()' },
-                { syntax: 'arr.push(x)', name: '.push()', category: 'Array mutation', allowed: false, replacedBy: '[...arr, x]' },
-                { syntax: 'arr.pop()', name: '.pop()', category: 'Array mutation', allowed: false, replacedBy: 'arr.slice(0, -1)' },
-                { syntax: 'arr.shift()', name: '.shift()', category: 'Array mutation', allowed: false, replacedBy: 'arr.slice(1)' },
-                { syntax: 'arr.unshift(x)', name: '.unshift()', category: 'Array mutation', allowed: false, replacedBy: '[x, ...arr]' },
-                { syntax: 'arr.fill(x)', name: '.fill()', category: 'Array mutation', allowed: false, replacedBy: 'Array.from()' },
-                { syntax: 'arr.copyWithin()', name: '.copyWithin()', category: 'Array mutation', allowed: false, replacedBy: null },
+                { syntax: 'arr.sort()', name: '.sort()', category: 'Array mutation', allowed: false, replacedBy: 'arr.toSorted()',
+                  example: "arr.sort((a, b) => a.name.localeCompare(b.name));",
+                  fix: "const sorted = arr.toSorted((a, b) => a.name.localeCompare(b.name));" },
+                { syntax: 'arr.reverse()', name: '.reverse()', category: 'Array mutation', allowed: false, replacedBy: 'arr.toReversed()',
+                  example: "arr.reverse();",
+                  fix: "const reversed = arr.toReversed();" },
+                { syntax: 'arr.splice()', name: '.splice()', category: 'Array mutation', allowed: false, replacedBy: 'arr.toSpliced()',
+                  example: "arr.splice(2, 1, newItem);",
+                  fix: "const updated = arr.toSpliced(2, 1, newItem);" },
+                { syntax: 'arr.push(x)', name: '.push()', category: 'Array mutation', allowed: false, replacedBy: '[...arr, x]',
+                  example: "arr.push(newItem);\nitems.push(...batch);",
+                  fix: "const next = [...arr, newItem];\nconst withBatch = [...items, ...batch];" },
+                { syntax: 'arr.pop()', name: '.pop()', category: 'Array mutation', allowed: false, replacedBy: 'arr.slice(0, -1)',
+                  example: "const last = arr.pop();",
+                  fix: "const last = arr.at(-1);\nconst rest = arr.slice(0, -1);" },
+                { syntax: 'arr.shift()', name: '.shift()', category: 'Array mutation', allowed: false, replacedBy: 'arr.slice(1)',
+                  example: "const first = arr.shift();",
+                  fix: "const first = arr[0];\nconst rest = arr.slice(1);" },
+                { syntax: 'arr.unshift(x)', name: '.unshift()', category: 'Array mutation', allowed: false, replacedBy: '[x, ...arr]',
+                  example: "arr.unshift(newItem);",
+                  fix: "const next = [newItem, ...arr];" },
+                { syntax: 'arr.fill(x)', name: '.fill()', category: 'Array mutation', allowed: false, replacedBy: 'Array.from()',
+                  example: "const zeros = new Array(10).fill(0);",
+                  fix: "const zeros = Array.from({ length: 10 }, () => 0);" },
+                { syntax: 'arr.copyWithin()', name: '.copyWithin()', category: 'Array mutation', allowed: false, replacedBy: null,
+                  example: "arr.copyWithin(0, 3, 6);" },
                 // OOP constructs
-                { syntax: 'class C {}', name: 'class', category: 'OOP constructs', allowed: false, replacedBy: 'type T = {}' },
-                { syntax: 'constructor()', name: 'constructor', category: 'OOP constructs', allowed: false, replacedBy: 'factory function' },
-                { syntax: 'this.x', name: 'this', category: 'OOP constructs', allowed: false, replacedBy: 'explicit parameters' },
-                { syntax: 'extends', name: 'extends', category: 'OOP constructs', allowed: false, replacedBy: '{ base: Parent }' },
-                { syntax: 'abstract class', name: 'abstract', category: 'OOP constructs', allowed: false, replacedBy: 'type + function' },
-                { syntax: '@Decorator', name: 'decorators', category: 'OOP constructs', allowed: false, replacedBy: null },
-                { syntax: 'new MyClass()', name: 'new (user types)', category: 'OOP constructs', allowed: false, replacedBy: 'factory function' },
+                { syntax: 'class C {}', name: 'class', category: 'OOP constructs', allowed: false, replacedBy: 'type T = {}',
+                  example: "class UserService {\n  private users: User[] = [];\n  add(user: User) { this.users.push(user); }\n}",
+                  fix: "type UserService = { readonly users: User[] };\nfunction addUser(svc: UserService, user: User): UserService {\n  return { users: [...svc.users, user] };\n}" },
+                { syntax: 'constructor()', name: 'constructor', category: 'OOP constructs', allowed: false, replacedBy: 'factory function',
+                  example: "class Db {\n  constructor(private url: string, private pool: number) {}\n}",
+                  fix: "type Db = { readonly url: string; readonly pool: number; };\nfunction makeDb(url: string, pool: number): Db {\n  return { url, pool };\n}" },
+                { syntax: 'this.x', name: 'this', category: 'OOP constructs', allowed: false, replacedBy: 'explicit parameters',
+                  example: "class Counter {\n  count = 0;\n  increment() { this.count += 1; }\n}",
+                  fix: "type Counter = { readonly count: number };\nfunction increment(c: Counter): Counter {\n  return { count: c.count + 1 };\n}" },
+                { syntax: 'extends', name: 'extends', category: 'OOP constructs', allowed: false, replacedBy: '{ base: Parent }',
+                  example: "class AdminUser extends User {\n  role: string;\n  permissions: string[];\n}",
+                  fix: "type AdminUser = {\n  readonly base: User;\n  readonly role: string;\n  readonly permissions: string[];\n};" },
+                { syntax: 'abstract class', name: 'abstract', category: 'OOP constructs', allowed: false, replacedBy: 'type + function',
+                  example: "abstract class Shape {\n  abstract area(): number;\n  describe() { return `area: ${this.area()}`; }\n}",
+                  fix: "type Shape = { readonly area: () => number; };\nfunction describe(s: Shape) { return `area: ${s.area()}`; }" },
+                { syntax: '@Decorator', name: 'decorators', category: 'OOP constructs', allowed: false, replacedBy: null,
+                  example: "@Injectable()\n@Controller('/users')\nclass UserController {\n  @Get('/:id')\n  getUser() { ... }\n}" },
+                { syntax: 'new MyClass()', name: 'new (user types)', category: 'OOP constructs', allowed: false, replacedBy: 'factory function',
+                  example: "const svc = new UserService(db, logger);\nconst point = new Point(0, 0);",
+                  fix: "const svc = makeUserService(db, logger);\nconst point = makePoint(0, 0);" },
                 // Advanced types
-                { syntax: 'T extends U ? A : B', name: 'conditional type', category: 'Advanced types', allowed: false, replacedBy: null },
-                { syntax: '{ [K in T]: V }', name: 'mapped type', category: 'Advanced types', allowed: false, replacedBy: null },
-                { syntax: '`${T}Suffix`', name: 'template literal type', category: 'Advanced types', allowed: false, replacedBy: 'union type' },
-                { syntax: 'infer T', name: 'infer', category: 'Advanced types', allowed: false, replacedBy: null },
-                { syntax: '[...T, U]', name: 'variadic tuple', category: 'Advanced types', allowed: false, replacedBy: 'explicit tuple' },
-                { syntax: '{ [key: string]: T }', name: 'index signature', category: 'Advanced types', allowed: false, replacedBy: 'Map<string, T>' },
+                { syntax: 'T extends U ? A : B', name: 'conditional type', category: 'Advanced types', allowed: false, replacedBy: null,
+                  example: "type IsArray<T> = T extends any[] ? true : false;\ntype Unwrap<T> = T extends Promise<infer U> ? U : T;" },
+                { syntax: '{ [K in T]: V }', name: 'mapped type', category: 'Advanced types', allowed: false, replacedBy: null,
+                  example: "type Flags<T> = { [K in keyof T]: boolean };\ntype Optional<T> = { [K in keyof T]?: T[K] };" },
+                { syntax: '`${T}Suffix`', name: 'template literal type', category: 'Advanced types', allowed: false, replacedBy: 'union type',
+                  example: "type EventName = `on${string}`;\ntype CSSProperty = `${string}-${string}`;",
+                  fix: "type EventName = 'onClick' | 'onChange' | 'onSubmit';" },
+                { syntax: 'infer T', name: 'infer', category: 'Advanced types', allowed: false, replacedBy: null,
+                  example: "type ReturnType<T> = T extends (...a: any[]) => infer R ? R : never;\ntype Awaited<T> = T extends Promise<infer U> ? U : T;" },
+                { syntax: '[...T, U]', name: 'variadic tuple', category: 'Advanced types', allowed: false, replacedBy: 'explicit tuple',
+                  example: "type Concat<A extends unknown[], B extends unknown[]> = [...A, ...B];",
+                  fix: "type StringNumberBool = [string, number, boolean];" },
+                { syntax: '{ [key: string]: T }', name: 'index signature', category: 'Advanced types', allowed: false, replacedBy: 'Map<string, T>',
+                  example: "type Dict = { [key: string]: number };\ntype Cache = { [id: string]: User };",
+                  fix: "const dict: Map<string, number> = new Map();\nconst cache: Map<string, User> = new Map();" },
                 // Equality operators
-                { syntax: 'x == y', name: 'loose ==', category: 'Equality operators', allowed: false, replacedBy: 'x === y' },
-                { syntax: 'x != y', name: 'loose !=', category: 'Equality operators', allowed: false, replacedBy: 'x !== y' },
+                { syntax: 'x == y', name: 'loose ==', category: 'Equality operators', allowed: false, replacedBy: 'x === y',
+                  example: "if (x == null) { ... }\nif (count == '0') { ... }",
+                  fix: "if (x === null) { ... }\nif (count === 0) { ... }" },
+                { syntax: 'x != y', name: 'loose !=', category: 'Equality operators', allowed: false, replacedBy: 'x !== y',
+                  example: "if (val != undefined) { ... }\nif (status != 'ok') { ... }",
+                  fix: "if (val !== null) { ... }\nif (status !== 'ok') { ... }" },
                 { syntax: 'x === y', name: 'strict ===', category: 'Equality operators', allowed: true, replacedBy: null },
                 { syntax: 'x !== y', name: 'strict !==', category: 'Equality operators', allowed: true, replacedBy: null },
                 // Legacy globals
-                { syntax: 'eval()', name: 'eval', category: 'Legacy globals', allowed: false, replacedBy: null },
-                { syntax: 'arguments', name: 'arguments object', category: 'Legacy globals', allowed: false, replacedBy: 'named parameters' },
-                { syntax: 'isNaN(x)', name: 'global isNaN', category: 'Legacy globals', allowed: false, replacedBy: 'Number.isNaN(x)' },
-                { syntax: 'isFinite(x)', name: 'global isFinite', category: 'Legacy globals', allowed: false, replacedBy: 'Number.isFinite(x)' },
-                { syntax: '.hasOwnProperty()', name: 'hasOwnProperty', category: 'Legacy globals', allowed: false, replacedBy: 'Object.hasOwn()' },
+                { syntax: 'eval()', name: 'eval', category: 'Legacy globals', allowed: false, replacedBy: null,
+                  example: "const result = eval('1 + 1');\neval(userInput);" },
+                { syntax: 'arguments', name: 'arguments object', category: 'Legacy globals', allowed: false, replacedBy: 'named parameters',
+                  example: "function sum() {\n  return Array.from(arguments).reduce((a, b) => a + b, 0);\n}",
+                  fix: "function sum(...nums: number[]) {\n  return nums.reduce((a, b) => a + b, 0);\n}" },
+                { syntax: 'isNaN(x)', name: 'global isNaN', category: 'Legacy globals', allowed: false, replacedBy: 'Number.isNaN(x)',
+                  example: "if (isNaN(value)) { ... }",
+                  fix: "if (Number.isNaN(value)) { ... }" },
+                { syntax: 'isFinite(x)', name: 'global isFinite', category: 'Legacy globals', allowed: false, replacedBy: 'Number.isFinite(x)',
+                  example: "if (isFinite(value)) { ... }",
+                  fix: "if (Number.isFinite(value)) { ... }" },
+                { syntax: '.hasOwnProperty()', name: 'hasOwnProperty', category: 'Legacy globals', allowed: false, replacedBy: 'Object.hasOwn()',
+                  example: "if (obj.hasOwnProperty('key')) { ... }",
+                  fix: "if (Object.hasOwn(obj, 'key')) { ... }" },
                 // Optional chaining
-                { syntax: 'obj?.prop', name: 'optional property', category: 'Optional chaining', allowed: false, replacedBy: 'explicit null check' },
-                { syntax: 'obj?.()', name: 'optional call', category: 'Optional chaining', allowed: false, replacedBy: 'explicit null check' },
-                { syntax: 'arr?.[0]', name: 'optional index', category: 'Optional chaining', allowed: false, replacedBy: 'explicit null check' },
+                { syntax: 'obj?.prop', name: 'optional property', category: 'Optional chaining', allowed: false, replacedBy: 'explicit null check',
+                  example: "const name = user?.profile?.name;\nconst city = order?.shipping?.address?.city;",
+                  fix: "if (user === null) { return null; }\nif (user.profile === null) { return null; }\nconst name = user.profile.name;" },
+                { syntax: 'obj?.()', name: 'optional call', category: 'Optional chaining', allowed: false, replacedBy: 'explicit null check',
+                  example: "callback?.();\nonSuccess?.('done');",
+                  fix: "if (callback !== null) { callback(); }" },
+                { syntax: 'arr?.[0]', name: 'optional index', category: 'Optional chaining', allowed: false, replacedBy: 'explicit null check',
+                  example: "const first = arr?.[0];\nconst val = map?.[key];",
+                  fix: "if (arr === null) { return null; }\nconst first = arr[0];" },
                 // Destructuring
                 { syntax: 'const { a } = obj', name: 'object destructure', category: 'Destructuring', allowed: true, replacedBy: null },
                 { syntax: 'const [a] = arr', name: 'array destructure', category: 'Destructuring', allowed: true, replacedBy: null },
                 { syntax: 'const { a: b } = obj', name: 'rename destructure', category: 'Destructuring', allowed: true, replacedBy: null },
                 { syntax: 'const { a, ...r } = obj', name: 'rest destructure', category: 'Destructuring', allowed: true, replacedBy: null },
-                { syntax: 'const { a = x } = obj', name: 'default destructure', category: 'Destructuring', allowed: false, replacedBy: 'explicit null check after destructure' },
+                { syntax: 'const { a = x } = obj', name: 'default destructure', category: 'Destructuring', allowed: false, replacedBy: 'explicit null check after destructure',
+                  example: "const { name = 'Guest', role = 'user' } = profile;",
+                  fix: "const { name, role } = profile;\nconst actualName = name !== null ? name : 'Guest';\nconst actualRole = role !== null ? role : 'user';" },
                 // Spread & rest
                 { syntax: '...args', name: 'rest parameter', category: 'Spread & rest', allowed: true, replacedBy: null },
                 { syntax: 'f(...arr)', name: 'spread in call', category: 'Spread & rest', allowed: true, replacedBy: null },
                 { syntax: '[...a, ...b]', name: 'array spread', category: 'Spread & rest', allowed: true, replacedBy: null },
                 // Object literal forms
                 { syntax: '{ x }', name: 'shorthand property', category: 'Object literals', allowed: true, replacedBy: null },
-                { syntax: '{ [key]: val }', name: 'computed property', category: 'Object literals', allowed: false, replacedBy: '{ key: val } with explicit key' },
+                { syntax: '{ [key]: val }', name: 'computed property', category: 'Object literals', allowed: false, replacedBy: '{ key: val } with explicit key',
+                  example: "const field = 'name';\nconst obj = { [field]: 'Alice' };",
+                  fix: "const obj = { name: 'Alice' };\n// if key is truly dynamic, use a Map instead:\nconst map = new Map([[field, 'Alice']]);" },
                 // Switch
                 { syntax: 'switch (x) {}', name: 'switch', category: 'Conditional branching', allowed: true, replacedBy: null },
                 // Logical assignment additions
-                { syntax: 'x &&= y', name: '&&= assign', category: 'Conditional branching', allowed: false, replacedBy: 'if / else' },
-                { syntax: 'x ||= y', name: '||= assign', category: 'Conditional branching', allowed: false, replacedBy: 'if / else' },
+                { syntax: 'x &&= y', name: '&&= assign', category: 'Conditional branching', allowed: false, replacedBy: 'if / else',
+                  example: "obj.handler &&= wrapHandler(obj.handler);",
+                  fix: "if (obj.handler !== null) { obj.handler = wrapHandler(obj.handler); }" },
+                { syntax: 'x ||= y', name: '||= assign', category: 'Conditional branching', allowed: false, replacedBy: 'if / else',
+                  example: "config.timeout ||= 5000;",
+                  fix: "if (config.timeout === null) { config.timeout = 5000; }" },
                 // Loop control
                 { syntax: 'break', name: 'break', category: 'Loop constructs', allowed: true, replacedBy: null },
                 { syntax: 'continue', name: 'continue', category: 'Loop constructs', allowed: true, replacedBy: null },
                 { syntax: 'for await (x of xs)', name: 'for await...of', category: 'Loop constructs', allowed: true, replacedBy: null },
                 // Runtime operators
                 { syntax: 'typeof x', name: 'typeof', category: 'Runtime operators', allowed: true, replacedBy: null },
-                { syntax: 'x instanceof C', name: 'instanceof', category: 'Runtime operators', allowed: false, replacedBy: 'explicit type check' },
-                { syntax: 'k in obj', name: 'in operator', category: 'Runtime operators', allowed: false, replacedBy: 'Object.hasOwn()' },
-                { syntax: 'void x', name: 'void operator', category: 'Runtime operators', allowed: false, replacedBy: null },
+                { syntax: 'x instanceof C', name: 'instanceof', category: 'Runtime operators', allowed: false, replacedBy: 'explicit type check',
+                  example: "if (err instanceof NetworkError) { retry(); }\nif (value instanceof Date) { format(value); }",
+                  fix: "if (err.type === 'NetworkError') { retry(); }\n// use a type discriminant field instead of instanceof" },
+                { syntax: 'k in obj', name: 'in operator', category: 'Runtime operators', allowed: false, replacedBy: 'Object.hasOwn()',
+                  example: "if ('name' in user) { ... }\nif (key in config) { ... }",
+                  fix: "if (Object.hasOwn(user, 'name')) { ... }\nif (Object.hasOwn(config, key)) { ... }" },
+                { syntax: 'void x', name: 'void operator', category: 'Runtime operators', allowed: false, replacedBy: null,
+                  example: "void doSideEffect();\nvoid (async () => { await init(); })();" },
                 // Bitwise operators
-                { syntax: 'a & b', name: 'bitwise AND', category: 'Bitwise operators', allowed: false, replacedBy: null },
-                { syntax: 'a | b', name: 'bitwise OR', category: 'Bitwise operators', allowed: false, replacedBy: null },
-                { syntax: 'a ^ b', name: 'bitwise XOR', category: 'Bitwise operators', allowed: false, replacedBy: null },
-                { syntax: '~a', name: 'bitwise NOT', category: 'Bitwise operators', allowed: false, replacedBy: null },
-                { syntax: 'a << b', name: 'left shift', category: 'Bitwise operators', allowed: false, replacedBy: null },
-                { syntax: 'a >> b', name: 'right shift', category: 'Bitwise operators', allowed: false, replacedBy: null },
-                { syntax: 'a >>> b', name: 'unsigned right shift', category: 'Bitwise operators', allowed: false, replacedBy: null },
+                { syntax: 'a & b', name: 'bitwise AND', category: 'Bitwise operators', allowed: false, replacedBy: null,
+                  example: "const masked = flags & 0xFF;" },
+                { syntax: 'a | b', name: 'bitwise OR', category: 'Bitwise operators', allowed: false, replacedBy: null,
+                  example: "const combined = READ_FLAG | WRITE_FLAG;" },
+                { syntax: 'a ^ b', name: 'bitwise XOR', category: 'Bitwise operators', allowed: false, replacedBy: null,
+                  example: "const toggled = state ^ MASK;" },
+                { syntax: '~a', name: 'bitwise NOT', category: 'Bitwise operators', allowed: false, replacedBy: null,
+                  example: "const inverted = ~bits;" },
+                { syntax: 'a << b', name: 'left shift', category: 'Bitwise operators', allowed: false, replacedBy: null,
+                  example: "const shifted = value << 2;" },
+                { syntax: 'a >> b', name: 'right shift', category: 'Bitwise operators', allowed: false, replacedBy: null,
+                  example: "const halved = value >> 1;" },
+                { syntax: 'a >>> b', name: 'unsigned right shift', category: 'Bitwise operators', allowed: false, replacedBy: null,
+                  example: "const unsigned = value >>> 0;" },
                 // Enum
-                { syntax: 'enum E {}', name: 'enum', category: 'Enum', allowed: false, replacedBy: 'union type' },
-                { syntax: 'const enum E {}', name: 'const enum', category: 'Enum', allowed: false, replacedBy: 'union type' },
+                { syntax: 'enum E {}', name: 'enum', category: 'Enum', allowed: false, replacedBy: 'union type',
+                  example: "enum Direction { Up, Down, Left, Right }\nenum Status { Active = 'ACTIVE', Inactive = 'INACTIVE' }",
+                  fix: "type Direction = 'Up' | 'Down' | 'Left' | 'Right';\ntype Status = 'Active' | 'Inactive';" },
+                { syntax: 'const enum E {}', name: 'const enum', category: 'Enum', allowed: false, replacedBy: 'union type',
+                  example: "const enum HttpStatus { Ok = 200, NotFound = 404 }",
+                  fix: "type HttpStatus = 200 | 404;\nconst HTTP_OK = 200 as const;\nconst HTTP_NOT_FOUND = 404 as const;" },
                 // Namespace
-                { syntax: 'namespace Foo {}', name: 'namespace', category: 'Namespace', allowed: false, replacedBy: 'ES modules' },
-                { syntax: 'module Foo {}', name: 'internal module', category: 'Namespace', allowed: false, replacedBy: 'ES modules' },
+                { syntax: 'namespace Foo {}', name: 'namespace', category: 'Namespace', allowed: false, replacedBy: 'ES modules',
+                  example: "namespace Utils {\n  export function parse(s: string) { ... }\n  export function format(n: number) { ... }\n}",
+                  fix: "// utils.ts\nexport function parse(s: string) { ... }\nexport function format(n: number) { ... }" },
+                { syntax: 'module Foo {}', name: 'internal module', category: 'Namespace', allowed: false, replacedBy: 'ES modules',
+                  example: "module Validation {\n  export interface Validator { isValid(s: string): boolean; }\n}",
+                  fix: "// validation.ts\nexport type Validator = { isValid: (s: string) => boolean; };" },
                 // Type modifiers
                 { syntax: 'readonly prop', name: 'readonly', category: 'Type modifiers', allowed: true, replacedBy: null },
-                { syntax: 'x satisfies T', name: 'satisfies', category: 'Type modifiers', allowed: false, replacedBy: null },
-                { syntax: 'x as const', name: 'as const', category: 'Type modifiers', allowed: false, replacedBy: 'explicit typed const' },
+                { syntax: 'x satisfies T', name: 'satisfies', category: 'Type modifiers', allowed: false, replacedBy: null,
+                  example: "const config = {\n  port: 3000,\n  host: 'localhost',\n} satisfies ServerConfig;",
+                  fix: "const config: ServerConfig = {\n  port: 3000,\n  host: 'localhost',\n};" },
+                { syntax: 'x as const', name: 'as const', category: 'Type modifiers', allowed: false, replacedBy: 'explicit typed const',
+                  example: "const dirs = ['Up', 'Down', 'Left', 'Right'] as const;\nconst config = { env: 'prod', port: 443 } as const;",
+                  fix: "const dirs: readonly ['Up', 'Down', 'Left', 'Right'] = ['Up', 'Down', 'Left', 'Right'];\ntype Direction = 'Up' | 'Down' | 'Left' | 'Right';" },
                 // Primitive types
-                { syntax: 'any', name: 'any', category: 'Primitive types', allowed: false, replacedBy: 'unknown' },
+                { syntax: 'any', name: 'any', category: 'Primitive types', allowed: false, replacedBy: 'unknown',
+                  example: "function process(data: any) { return data.value; }\nconst cache: Record<string, any> = {};",
+                  fix: "function process(data: unknown) {\n  if (typeof data !== 'object' || data === null) { return null; }\n  return (data as Record<string, unknown>).value;\n}" },
                 { syntax: 'unknown', name: 'unknown', category: 'Primitive types', allowed: true, replacedBy: null },
                 { syntax: 'never', name: 'never', category: 'Primitive types', allowed: true, replacedBy: null },
-                { syntax: 'void', name: 'void (type)', category: 'Primitive types', allowed: false, replacedBy: null },
+                { syntax: 'void', name: 'void (type)', category: 'Primitive types', allowed: false, replacedBy: null,
+                  example: "function log(msg: string): void {\n  console.log(msg);\n}",
+                  fix: "function log(msg: string) {\n  console.log(msg);\n}\n// omit the return type — TypeScript infers it" },
                 { syntax: 'null', name: 'null (type)', category: 'Primitive types', allowed: true, replacedBy: null },
-                { syntax: 'undefined', name: 'undefined (type)', category: 'Primitive types', allowed: false, replacedBy: 'T | null' },
+                { syntax: 'undefined', name: 'undefined (type)', category: 'Primitive types', allowed: false, replacedBy: 'T | null',
+                  example: "function find(): User | undefined { ... }\nconst maybeId: string | undefined = getId();",
+                  fix: "function find(): User | null { ... }\nconst maybeId: string | null = getId();" },
                 // Array types
                 { syntax: 'T[]', name: 'array type', category: 'Array types', allowed: true, replacedBy: null },
-                { syntax: 'Array<T>', name: 'Array<T> generic', category: 'Array types', allowed: false, replacedBy: 'T[]' },
+                { syntax: 'Array<T>', name: 'Array<T> generic', category: 'Array types', allowed: false, replacedBy: 'T[]',
+                  example: "const items: Array<string> = [];\nfunction process(list: Array<User>): Array<Result> { ... }",
+                  fix: "const items: string[] = [];\nfunction process(list: User[]): Result[] { ... }" },
                 { syntax: 'readonly T[]', name: 'readonly array', category: 'Array types', allowed: true, replacedBy: null },
-                { syntax: 'ReadonlyArray<T>', name: 'ReadonlyArray<T>', category: 'Array types', allowed: false, replacedBy: 'readonly T[]' },
+                { syntax: 'ReadonlyArray<T>', name: 'ReadonlyArray<T>', category: 'Array types', allowed: false, replacedBy: 'readonly T[]',
+                  example: "function process(items: ReadonlyArray<string>): ReadonlyArray<number> { ... }",
+                  fix: "function process(items: readonly string[]): readonly number[] { ... }" },
                 // Type-only imports / exports
                 { syntax: 'import type { T }', name: 'type import', category: 'Module syntax', allowed: true, replacedBy: null },
                 { syntax: 'export type { T }', name: 'type export', category: 'Module syntax', allowed: true, replacedBy: null },
-                { syntax: 'import * as ns', name: 'namespace import', category: 'Module syntax', allowed: false, replacedBy: 'named imports' },
+                { syntax: 'import * as ns', name: 'namespace import', category: 'Module syntax', allowed: false, replacedBy: 'named imports',
+                  example: "import * as utils from './utils';\nimport * as fs from 'fs/promises';",
+                  fix: "import { parseDate, formatDate } from './utils';\nimport { readFile, writeFile } from 'fs/promises';" },
                 // OOP additions
-                { syntax: 'get prop()', name: 'getter', category: 'OOP constructs', allowed: false, replacedBy: 'plain function' },
-                { syntax: 'set prop(v)', name: 'setter', category: 'OOP constructs', allowed: false, replacedBy: 'plain function' },
-                { syntax: '#field', name: 'private field', category: 'OOP constructs', allowed: false, replacedBy: null },
-                { syntax: 'static member', name: 'static', category: 'OOP constructs', allowed: false, replacedBy: 'module-level const' },
-                { syntax: 'override', name: 'override', category: 'OOP constructs', allowed: false, replacedBy: null },
+                { syntax: 'get prop()', name: 'getter', category: 'OOP constructs', allowed: false, replacedBy: 'plain function',
+                  example: "class Person {\n  get fullName() {\n    return `${this.first} ${this.last}`;\n  }\n}",
+                  fix: "function getFullName(p: Person): string {\n  return `${p.first} ${p.last}`;\n}" },
+                { syntax: 'set prop(v)', name: 'setter', category: 'OOP constructs', allowed: false, replacedBy: 'plain function',
+                  example: "class User {\n  set name(val: string) { this._name = val.trim(); }\n}",
+                  fix: "function setName(user: User, val: string): User {\n  return { ...user, name: val.trim() };\n}" },
+                { syntax: '#field', name: 'private field', category: 'OOP constructs', allowed: false, replacedBy: null,
+                  example: "class Counter {\n  #count = 0;\n  increment() { this.#count += 1; }\n}" },
+                { syntax: 'static member', name: 'static', category: 'OOP constructs', allowed: false, replacedBy: 'module-level const',
+                  example: "class Config {\n  static readonly DEFAULT_TIMEOUT = 5000;\n  static create() { return new Config(); }\n}",
+                  fix: "const DEFAULT_TIMEOUT = 5000;\nfunction createConfig() { return makeConfig(); }" },
+                { syntax: 'override', name: 'override', category: 'OOP constructs', allowed: false, replacedBy: null,
+                  example: "class Dog extends Animal {\n  override speak() { return 'woof'; }\n}" },
                 // Tagged templates
-                { syntax: 'tag`str`', name: 'tagged template', category: 'Tagged templates', allowed: false, replacedBy: null },
+                { syntax: 'tag`str`', name: 'tagged template', category: 'Tagged templates', allowed: false, replacedBy: null,
+                  example: "const query = gql`query { user { name } }`;\nconst html = htm`<div>${content}</div>`;",
+                  fix: "const query = 'query { user { name } }';\n// or: const query = buildQuery({ user: ['name'] });" },
                 // Generators & async generators
-                { syntax: 'yield', name: 'yield', category: 'Generators', allowed: false, replacedBy: null },
-                { syntax: 'async function*()', name: 'async generator', category: 'Generators', allowed: false, replacedBy: null },
+                { syntax: 'yield', name: 'yield', category: 'Generators', allowed: false, replacedBy: null,
+                  example: "function* range(start: number, end: number) {\n  for (let i = start; i < end; i++) { yield i; }\n}",
+                  fix: "function range(start: number, end: number): number[] {\n  return Array.from({ length: end - start }, (_, i) => start + i);\n}" },
+                { syntax: 'async function*()', name: 'async generator', category: 'Generators', allowed: false, replacedBy: null,
+                  example: "async function* streamLines(path: string) {\n  for await (const chunk of readStream(path)) { yield chunk; }\n}" },
                 // Tuple types
                 { syntax: '[A, B]', name: 'tuple type', category: 'Tuple types', allowed: true, replacedBy: null },
                 { syntax: '[name: A, age: B]', name: 'named tuple', category: 'Tuple types', allowed: true, replacedBy: null },
                 // Type predicate
                 { syntax: 'x is T', name: 'type predicate', category: 'Type predicate', allowed: true, replacedBy: null },
-                { syntax: 'asserts x is T', name: 'assertion predicate', category: 'Type predicate', allowed: false, replacedBy: null },
+                { syntax: 'asserts x is T', name: 'assertion predicate', category: 'Type predicate', allowed: false, replacedBy: null,
+                  example: "function assertString(val: unknown): asserts val is string {\n  if (typeof val !== 'string') { throw new Error('not a string'); }\n}" },
                 // Advanced type additions
-                { syntax: 'keyof T', name: 'keyof', category: 'Advanced types', allowed: false, replacedBy: null },
-                { syntax: 'typeof x (type)', name: 'typeof (type)', category: 'Advanced types', allowed: false, replacedBy: null },
-                { syntax: 'T[K]', name: 'indexed access', category: 'Advanced types', allowed: false, replacedBy: null },
+                { syntax: 'keyof T', name: 'keyof', category: 'Advanced types', allowed: false, replacedBy: null,
+                  example: "type UserKeys = keyof User;\nfunction get<T, K extends keyof T>(obj: T, key: K): T[K] { ... }" },
+                { syntax: 'typeof x (type)', name: 'typeof (type)', category: 'Advanced types', allowed: false, replacedBy: null,
+                  example: "const config = { port: 3000, host: 'localhost' };\ntype Config = typeof config;",
+                  fix: "type Config = { readonly port: number; readonly host: string; };\nconst config: Config = { port: 3000, host: 'localhost' };" },
+                { syntax: 'T[K]', name: 'indexed access', category: 'Advanced types', allowed: false, replacedBy: null,
+                  example: "type Name = User['name'];\ntype Values<T> = T[keyof T];" },
                 // Utility types
-                { syntax: 'Partial<T>', name: 'Partial<T>', category: 'Utility types', allowed: false, replacedBy: 'explicit type with | null' },
-                { syntax: 'Required<T>', name: 'Required<T>', category: 'Utility types', allowed: false, replacedBy: 'explicit type' },
-                { syntax: 'Readonly<T>', name: 'Readonly<T>', category: 'Utility types', allowed: false, replacedBy: 'readonly on each field' },
+                { syntax: 'Partial<T>', name: 'Partial<T>', category: 'Utility types', allowed: false, replacedBy: 'explicit type with | null',
+                  example: "function updateUser(id: string, patch: Partial<User>) { ... }",
+                  fix: "type UserPatch = { readonly name: string | null; readonly email: string | null; };\nfunction updateUser(id: string, patch: UserPatch) { ... }" },
+                { syntax: 'Required<T>', name: 'Required<T>', category: 'Utility types', allowed: false, replacedBy: 'explicit type',
+                  example: "type FullConfig = Required<PartialConfig>;",
+                  fix: "type FullConfig = { readonly host: string; readonly port: number; readonly timeout: number; };" },
+                { syntax: 'Readonly<T>', name: 'Readonly<T>', category: 'Utility types', allowed: false, replacedBy: 'readonly on each field',
+                  example: "type ReadonlyUser = Readonly<User>;",
+                  fix: "type ReadonlyUser = { readonly name: string; readonly email: string; };" },
                 { syntax: 'Record<K, V>', name: 'Record<K,V>', category: 'Utility types', allowed: true, replacedBy: null },
-                { syntax: 'Pick<T, K>', name: 'Pick<T,K>', category: 'Utility types', allowed: false, replacedBy: 'explicit type' },
-                { syntax: 'Omit<T, K>', name: 'Omit<T,K>', category: 'Utility types', allowed: false, replacedBy: 'explicit type' },
+                { syntax: 'Pick<T, K>', name: 'Pick<T,K>', category: 'Utility types', allowed: false, replacedBy: 'explicit type',
+                  example: "type UserPreview = Pick<User, 'name' | 'avatar'>;",
+                  fix: "type UserPreview = { readonly name: string; readonly avatar: string | null; };" },
+                { syntax: 'Omit<T, K>', name: 'Omit<T,K>', category: 'Utility types', allowed: false, replacedBy: 'explicit type',
+                  example: "type PublicUser = Omit<User, 'password' | 'token'>;",
+                  fix: "type PublicUser = { readonly name: string; readonly email: string; readonly avatar: string | null; };" },
                 // Misc operators
-                { syntax: '(a, b)', name: 'comma operator', category: 'Misc operators', allowed: false, replacedBy: null },
-                { syntax: '[1,,3]', name: 'sparse array', category: 'Misc operators', allowed: false, replacedBy: '[1, undefined, 3]' },
-                { syntax: '{}', name: 'empty object type', category: 'Misc operators', allowed: false, replacedBy: 'Record<string, unknown>' },
-                { syntax: '{ /* lone */ }', name: 'lone block', category: 'Misc operators', allowed: false, replacedBy: null },
+                { syntax: '(a, b)', name: 'comma operator', category: 'Misc operators', allowed: false, replacedBy: null,
+                  example: "for (let i = 0, j = 10; i < j; i++, j--) { ... }\nconst x = (doA(), doB());",
+                  fix: "// separate into statements:\ndoA();\nconst x = doB();" },
+                { syntax: '[1,,3]', name: 'sparse array', category: 'Misc operators', allowed: false, replacedBy: '[1, undefined, 3]',
+                  example: "const arr = [1,,3];\n// arr[1] is undefined, arr.length is 3",
+                  fix: "const arr = [1, undefined, 3];" },
+                { syntax: '{}', name: 'empty object type', category: 'Misc operators', allowed: false, replacedBy: 'Record<string, unknown>',
+                  example: "function accepts(val: {}) { ... }\nconst cache: {} = {};",
+                  fix: "function accepts(val: Record<string, unknown>) { ... }\nconst cache: Record<string, unknown> = {};" },
+                { syntax: '{ /* lone */ }', name: 'lone block', category: 'Misc operators', allowed: false, replacedBy: null,
+                  example: "{\n  const temp = heavyCompute();\n  sendResult(temp);\n}\n// temp not accessible here",
+                  fix: "// extract to a named function:\nfunction computeAndSend() {\n  const temp = heavyCompute();\n  sendResult(temp);\n}" },
             ];
 
             var GROUP = {
@@ -2574,10 +2835,31 @@
             var dialog = document.getElementById('feat-dialog');
             var dlgSyntax = document.getElementById('feat-dialog-syntax');
             var dlgBody = document.getElementById('feat-dialog-body');
-            document.getElementById('feat-dialog-close').addEventListener('click', function () { dialog.close(); });
-            dialog.addEventListener('click', function (e) { if (e.target === dialog) dialog.close(); });
+            function closeDialog() {
+                dialog.close();
+                var params = new URLSearchParams(window.location.search);
+                params.delete('item');
+                var qs = params.toString();
+                history.replaceState(null, '', qs ? '?' + qs : window.location.pathname);
+            }
+
+            document.getElementById('feat-dialog-close').addEventListener('click', closeDialog);
+            dialog.addEventListener('click', function (e) { if (e.target === dialog) closeDialog(); });
+
+            var initItem = new URLSearchParams(window.location.search).get('item');
+            if (initItem) {
+                var match = FEATURES.find(function (f) { return slugify(f.name) === initItem; });
+                if (match) { openFeature(match); }
+            }
+
+            function slugify(s) {
+                return s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+            }
 
             function openFeature(f) {
+                var params = new URLSearchParams(window.location.search);
+                params.set('item', slugify(f.name));
+                history.replaceState(null, '', '?' + params.toString());
                 dlgSyntax.textContent = f.syntax;
                 var rows = [
                     { key: 'Form', val: f.name, code: false },
@@ -2589,13 +2871,30 @@
                 } else if (!f.allowed && !f.replacedBy) {
                     rows.push({ key: 'Use instead', val: 'no direct replacement — construct is not needed', code: false });
                 }
-                dlgBody.innerHTML = rows.map(function (r) {
+                var html = rows.map(function (r) {
                     var v = r.code ? '<code>' + esc(r.val) + '</code>' : esc(r.val);
                     return '<div class="feat-dialog-row">' +
                         '<span class="feat-dialog-key">' + esc(r.key) + '</span>' +
                         '<span class="feat-dialog-val' + (r.cls ? ' ' + r.cls : '') + '">' + v + '</span>' +
                         '</div>';
                 }).join('');
+                if (!f.allowed && (f.example || f.fix)) {
+                    html += '<div class="feat-dialog-examples">';
+                    if (f.example) {
+                        html += '<div class="feat-dialog-example">' +
+                            '<div class="feat-dialog-example-label">Before</div>' +
+                            '<pre>' + esc(f.example) + '</pre>' +
+                            '</div>';
+                    }
+                    if (f.fix) {
+                        html += '<div class="feat-dialog-example">' +
+                            '<div class="feat-dialog-example-label">After</div>' +
+                            '<pre>' + esc(f.fix) + '</pre>' +
+                            '</div>';
+                    }
+                    html += '</div>';
+                }
+                dlgBody.innerHTML = html;
                 dialog.showModal();
             }
         })();
