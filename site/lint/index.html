@@ -814,6 +814,51 @@
                 margin-bottom: 0.5rem;
             }
 
+            /* ── Feature grid filters ── */
+            .feat-filters {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.35rem;
+                margin-bottom: 1rem;
+            }
+            .feat-filter-sep {
+                width: 1px;
+                background: var(--border);
+                align-self: stretch;
+                margin: 0 0.15rem;
+            }
+            .feat-filter-btn {
+                font-family: "SF Mono", "Fira Code", monospace;
+                font-size: 0.67rem;
+                letter-spacing: 0.05em;
+                padding: 0.25rem 0.65rem;
+                border-radius: 5px;
+                border: 1px solid var(--border);
+                background: var(--surface);
+                color: var(--muted);
+                cursor: pointer;
+                transition: color 0.12s, border-color 0.12s, background 0.12s;
+            }
+            .feat-filter-btn:hover {
+                color: var(--text);
+                border-color: rgba(200, 112, 42, 0.5);
+            }
+            .feat-filter-btn.active {
+                background: rgba(200, 112, 42, 0.1);
+                border-color: var(--accent);
+                color: var(--accent);
+            }
+            .feat-filter-btn.active-kept {
+                background: rgba(78, 201, 148, 0.1);
+                border-color: var(--green);
+                color: var(--green);
+            }
+            .feat-filter-btn.active-removed {
+                background: rgba(224, 92, 92, 0.08);
+                border-color: var(--red);
+                color: var(--red);
+            }
+
             /* ── Feature grid ── */
             .feat-grid-heading {
                 font-size: 1rem;
@@ -869,6 +914,8 @@
                 gap: 0.2rem;
                 transition: background 0.12s;
                 min-width: 0;
+                width: 100%;
+                overflow: hidden;
                 align-items: center;
             }
             .feat-card:hover {
@@ -890,6 +937,8 @@
                 overflow: hidden;
                 text-overflow: ellipsis;
                 display: block;
+                max-width: 100%;
+                width: 100%;
             }
             .feat-card.feat-banned .feat-syntax {
                 color: var(--muted);
@@ -1056,9 +1105,9 @@
 
         <div class="removed-section" id="syntax-reduction">
             <div class="section-label">What gets removed</div>
-            <h2>~79% of TypeScript's syntax surface, yeeted.</h2>
+            <h2>~73% of TypeScript's syntax surface, yeeted.</h2>
             <p class="section-desc">
-                By syntax construct count, ShotScript removes ~79% of what
+                By syntax construct count, ShotScript removes ~73% of what
                 TypeScript allows. We count every distinct way to express the
                 same thing — variable declaration forms, function syntaxes,
                 error-handling patterns — and reduce each category to one. Some
@@ -1140,6 +1189,18 @@
                     <span class="feat-legend-dot" style="background:var(--muted)"></span>
                     removed — click to see replacement
                 </span>
+            </div>
+            <div class="feat-filters" id="feat-filters">
+                <button class="feat-filter-btn active" data-filter="all">All</button>
+                <button class="feat-filter-btn" data-filter="kept">Kept</button>
+                <button class="feat-filter-btn" data-filter="removed">Removed</button>
+                <span class="feat-filter-sep" aria-hidden="true"></span>
+                <button class="feat-filter-btn" data-filter="types">Types</button>
+                <button class="feat-filter-btn" data-filter="functions">Functions</button>
+                <button class="feat-filter-btn" data-filter="flow">Control flow</button>
+                <button class="feat-filter-btn" data-filter="oop">OOP</button>
+                <button class="feat-filter-btn" data-filter="modules">Modules</button>
+                <button class="feat-filter-btn" data-filter="operators">Operators</button>
             </div>
             <div class="feat-grid" id="feat-grid"></div>
         </div>
@@ -2255,7 +2316,8 @@
                 { syntax: 'x ?? y', name: '?? nullish', category: 'Conditional branching', allowed: false, replacedBy: 'if / else' },
                 { syntax: 'x ??= y', name: '??= logical assign', category: 'Conditional branching', allowed: false, replacedBy: 'if / else' },
                 // Loop constructs
-                { syntax: 'for (;;)', name: 'for', category: 'Loop constructs', allowed: true, replacedBy: null },
+                { syntax: 'for (i=0; i<n; i++)', name: 'for (counted)', category: 'Loop constructs', allowed: true, replacedBy: null },
+                { syntax: 'for (;;)', name: 'for (infinite)', category: 'Loop constructs', allowed: false, replacedBy: 'while (true)' },
                 { syntax: 'for (k in obj)', name: 'for-in', category: 'Loop constructs', allowed: false, replacedBy: 'for (x of xs)' },
                 { syntax: 'for (x of xs)', name: 'for-of', category: 'Loop constructs', allowed: true, replacedBy: null },
                 { syntax: 'while (cond)', name: 'while', category: 'Loop constructs', allowed: true, replacedBy: null },
@@ -2433,15 +2495,80 @@
                 { syntax: '{ /* lone */ }', name: 'lone block', category: 'Misc operators', allowed: false, replacedBy: null },
             ];
 
+            var GROUP = {
+                'Variable declaration': 'flow',
+                'Function syntax': 'functions',
+                'Error handling': 'flow',
+                'Expressing nothing': 'types',
+                'Type shape definition': 'types',
+                'Type composition': 'types',
+                'Async sequencing': 'functions',
+                'Conditional branching': 'flow',
+                'Loop constructs': 'flow',
+                'Boolean coercion': 'operators',
+                'Number coercion': 'operators',
+                'String concatenation': 'operators',
+                'Object merging': 'operators',
+                'Type-safety escapes': 'types',
+                'Export style': 'modules',
+                'Module syntax': 'modules',
+                'Increment / decrement': 'operators',
+                'Array mutation': 'operators',
+                'OOP constructs': 'oop',
+                'Advanced types': 'types',
+                'Equality operators': 'operators',
+                'Legacy globals': 'operators',
+                'Optional chaining': 'operators',
+                'Destructuring': 'functions',
+                'Spread & rest': 'functions',
+                'Object literals': 'operators',
+                'Runtime operators': 'operators',
+                'Bitwise operators': 'operators',
+                'Enum': 'types',
+                'Namespace': 'modules',
+                'Type modifiers': 'types',
+                'Primitive types': 'types',
+                'Array types': 'types',
+                'Tagged templates': 'operators',
+                'Generators': 'functions',
+                'Tuple types': 'types',
+                'Type predicate': 'types',
+                'Utility types': 'types',
+                'Misc operators': 'operators',
+            };
+
             var grid = document.getElementById('feat-grid');
             FEATURES.forEach(function (f) {
                 var btn = document.createElement('button');
                 btn.className = 'feat-card ' + (f.allowed ? 'feat-allowed' : 'feat-banned');
+                btn.setAttribute('data-allowed', f.allowed ? 'true' : 'false');
+                btn.setAttribute('data-group', GROUP[f.category] || 'operators');
                 btn.innerHTML =
                     '<code class="feat-syntax">' + esc(f.syntax) + '</code>' +
                     '<span class="feat-name">' + esc(f.name) + '</span>';
                 btn.addEventListener('click', function () { openFeature(f); });
                 grid.appendChild(btn);
+            });
+
+            var activeFilter = 'all';
+            document.getElementById('feat-filters').addEventListener('click', function (e) {
+                var btn = e.target.closest('.feat-filter-btn');
+                if (!btn) return;
+                activeFilter = btn.getAttribute('data-filter');
+                document.querySelectorAll('.feat-filter-btn').forEach(function (b) {
+                    b.className = 'feat-filter-btn';
+                });
+                var cls = activeFilter === 'kept' ? 'active-kept'
+                        : activeFilter === 'removed' ? 'active-removed'
+                        : 'active';
+                btn.classList.add(cls);
+                document.querySelectorAll('.feat-card').forEach(function (card) {
+                    var show = activeFilter === 'all'
+                        || (activeFilter === 'kept'    && card.dataset.allowed === 'true')
+                        || (activeFilter === 'removed' && card.dataset.allowed === 'false')
+                        || card.dataset.group === activeFilter;
+                    card.style.display = show ? '' : 'none';
+                });
             });
 
             var dialog = document.getElementById('feat-dialog');
