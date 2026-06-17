@@ -8,7 +8,7 @@
  ShotScript — TypeScript, one way.
 ```
 
-JavaScript & TypeScript, without different ways of doing the same thing. Fewer decisions, less to learn, faster to review, and less for AI to get wrong.
+TypeScript with 73% less syntax. One way to do each thing — less for AI to get wrong, less to learn, and easier to review.
 
 ---
 

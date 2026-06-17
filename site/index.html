@@ -6,14 +6,14 @@
         <title>ShotScript — TypeScript, one way.</title>
         <meta
             name="description"
-            content="JavaScript & TypeScript, without different ways of doing the same thing. Fewer decisions, less to learn, faster to review, and less for AI to get wrong."
+            content="TypeScript with 73% less syntax. One way to do each thing — less for AI to get wrong, less to learn, and easier to review."
         />
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <meta property="og:type" content="website" />
         <meta property="og:title" content="ShotScript — TypeScript, one way." />
         <meta
             property="og:description"
-            content="JavaScript & TypeScript, without different ways of doing the same thing. Fewer decisions, less to learn, faster to review, and less for AI to get wrong."
+            content="TypeScript with 73% less syntax. One way to do each thing — less for AI to get wrong, less to learn, and easier to review."
         />
         <meta property="og:url" content="https://shotscript.dev/" />
         <meta property="og:image" content="https://shotscript.dev/og.svg" />
@@ -24,7 +24,7 @@
         />
         <meta
             name="twitter:description"
-            content="JavaScript & TypeScript, without different ways of doing the same thing. Fewer decisions, less to learn, faster to review, and less for AI to get wrong."
+            content="TypeScript with 73% less syntax. One way to do each thing — less for AI to get wrong, less to learn, and easier to review."
         />
         <meta name="twitter:image" content="https://shotscript.dev/og.svg" />
         <style>
@@ -865,9 +865,9 @@
                 </div>
                 <div class="hero-brand">ShotScript</div>
                 <p class="hero-desc">
-                    JavaScript &amp; TypeScript, without different ways of doing
-                    the same thing. Fewer decisions, less to learn, faster to
-                    review, and less for AI to get wrong.
+                    TypeScript with 73% less syntax. One way to do each thing
+                    — less for AI to get wrong, less to learn, and easier to
+                    review.
                 </p>
                 <div class="syntax-bars">
                     <div class="syntax-bar-row">
@@ -1061,6 +1061,16 @@
                         <code>any</code>, <code>!</code>,
                         <code>@ts-ignore</code>, <code>@ts-expect-error</code>,
                         <code>satisfies</code></span
+                    >
+                    <span class="reduction-arrow">→</span>
+                    <code class="reduction-result">banned</code>
+                </div>
+                <div class="reduction-item">
+                    <span class="reduction-count">6</span>
+                    <span class="reduction-label"
+                        >advanced type features — conditional types, mapped
+                        types, template literal types, <code>infer</code>,
+                        index signatures, variadic tuples</span
                     >
                     <span class="reduction-arrow">→</span>
                     <code class="reduction-result">banned</code>
@@ -1468,21 +1478,38 @@ STEP 5 — CONFIRM. Show me the final state of tsconfig.json and biome.json so I
                     { ts: 3, ss: 1 }, // type shape definition
                     { ts: 5, ss: 1 }, // type composition
                     { ts: 3, ss: 1 }, // async sequencing
-                    { ts: 6, ss: 1 }, // conditional / branching expression
-                    { ts: 6, ss: 3 }, // loop constructs
+                    { ts: 9, ss: 2 }, // conditional / branching expression
+                    { ts: 10, ss: 6 }, // loop constructs
                     { ts: 3, ss: 1 }, // boolean coercion
                     { ts: 4, ss: 1 }, // number coercion / parsing
                     { ts: 2, ss: 1 }, // string concatenation
                     { ts: 3, ss: 1 }, // object merging / update
                     { ts: 6, ss: 0 }, // type-safety escape hatches
                     { ts: 3, ss: 1 }, // export style
-                    { ts: 3, ss: 1 }, // module syntax
+                    { ts: 6, ss: 3 }, // module syntax
                     { ts: 4, ss: 2 }, // increment / decrement
                     { ts: 9, ss: 0 }, // in-place array mutation methods
-                    { ts: 7, ss: 0 }, // OOP constructs
+                    { ts: 12, ss: 0 }, // OOP constructs
                     { ts: 6, ss: 0 }, // advanced type-system features
                     { ts: 4, ss: 2 }, // equality operators
                     { ts: 5, ss: 0 }, // legacy / unsafe globals
+                    { ts: 3, ss: 0 }, // optional chaining
+                    { ts: 5, ss: 4 }, // destructuring
+                    { ts: 3, ss: 3 }, // spread & rest
+                    { ts: 2, ss: 1 }, // object literals
+                    { ts: 4, ss: 1 }, // runtime operators
+                    { ts: 7, ss: 0 }, // bitwise operators
+                    { ts: 2, ss: 0 }, // enum
+                    { ts: 2, ss: 0 }, // namespace
+                    { ts: 3, ss: 1 }, // type modifiers
+                    { ts: 6, ss: 3 }, // primitive types
+                    { ts: 4, ss: 2 }, // array types
+                    { ts: 6, ss: 1 }, // utility types
+                    { ts: 1, ss: 0 }, // tagged templates
+                    { ts: 2, ss: 0 }, // generators
+                    { ts: 2, ss: 2 }, // tuple types
+                    { ts: 2, ss: 1 }, // type predicate
+                    { ts: 4, ss: 0 }, // misc operators
                 ];
                 var tsTotal = REDUCTION_DATA.reduce(function (n, c) {
                     return n + c.ts;
