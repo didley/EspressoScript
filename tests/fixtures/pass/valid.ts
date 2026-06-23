@@ -6,7 +6,7 @@ export type User = {
     readonly email: string | null
 }
 
-export type Result<T> = [T | null, Error | null]
+export type Result<T> = [value: T | null, err: Error | null]
 
 export function divide(a: number, b: number): Result<number> {
     if (b === 0) {

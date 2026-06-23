@@ -1,6 +1,5 @@
 import type { Rule } from '../types.js'
 import { noArrowFunctions } from './no-arrow-functions.js'
-import { noLetOutsideFor } from './no-let-outside-for.js'
 import { noVar } from './no-var.js'
 import { noIncrementDecrement } from './no-increment-decrement.js'
 import { noUnaryPlus } from './no-unary-plus.js'
@@ -88,6 +87,7 @@ import { requireReadonlyArrays } from './require-readonly-arrays.js'
 import { requireExplicitReturnType } from './require-explicit-return-type.js'
 import { noSymbolType } from './no-symbol-type.js'
 import { noVariadicTuple } from './no-variadic-tuple.js'
+import { noAnonymousTuple } from './no-anonymous-tuple.js'
 import { noArrayGeneric } from './no-array-generic.js'
 import { noReadonlyWrapper } from './no-readonly-wrapper.js'
 import { noBannedUtilityTypes } from './no-banned-utility-types.js'
@@ -113,7 +113,6 @@ import { noPrototypeMethodCall } from './no-prototype-method-call.js'
 
 export const rules: readonly Rule[] = [
     noArrowFunctions,
-    noLetOutsideFor,
     noVar,
     noIncrementDecrement,
     noUnaryPlus,
@@ -194,6 +193,7 @@ export const rules: readonly Rule[] = [
     requireExplicitReturnType,
     noSymbolType,
     noVariadicTuple,
+    noAnonymousTuple,
     noArrayGeneric,
     noReadonlyWrapper,
     noBannedUtilityTypes,

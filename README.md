@@ -8,7 +8,7 @@
  ShotScript — TypeScript, one way.
 ```
 
-TypeScript with 73% less syntax. One way to do each thing — less for AI to get wrong, less to learn, and easier to review.
+TypeScript with 74% less syntax. One way to do each thing — less for AI to get wrong, less to learn, and easier to review.
 
 ---
 

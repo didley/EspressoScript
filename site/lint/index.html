@@ -1134,9 +1134,9 @@
 
         <div class="removed-section" id="syntax-reduction">
             <div class="section-label">What gets removed</div>
-            <h2>~73% of TypeScript's syntax surface, yeeted.</h2>
+            <h2>~74% of TypeScript's syntax surface, yeeted.</h2>
             <p class="section-desc">
-                By syntax construct count, ShotScript removes ~73% of what
+                By syntax construct count, ShotScript removes ~74% of what
                 TypeScript allows. We count every distinct way to express the
                 same thing — variable declaration forms, function syntaxes,
                 error-handling patterns — and reduce each category to one. Some
@@ -1490,14 +1490,6 @@
                         </div>
                     </div>
                     <div class="rule-item">
-                        <div class="rule-name">no-let-outside-for</div>
-                        <div class="rule-desc">
-                            <code>let</code> is only allowed inside
-                            <code>for</code> loop headers. Everything else is
-                            <code>const</code>.
-                        </div>
-                    </div>
-                    <div class="rule-item">
                         <div class="rule-name">no-multi-var-decl</div>
                         <div class="rule-desc">
                             Multiple declarators in one statement (<code
@@ -1824,6 +1816,14 @@
                         <div class="rule-desc">
                             Variadic tuple types (<code>[...T]</code>) are
                             banned.
+                        </div>
+                    </div>
+                    <div class="rule-item">
+                        <div class="rule-name">no-anonymous-tuple</div>
+                        <div class="rule-desc">
+                            Tuple elements must be named:
+                            <code>[value: T, err: E]</code> not
+                            <code>[T, E]</code>.
                         </div>
                     </div>
                     <div class="rule-item">
@@ -2306,9 +2306,7 @@
                 { syntax: 'var', name: 'var', category: 'Variable declaration', allowed: false, replacedBy: 'const',
                   example: "var name = 'Alice';\nvar count = 0;",
                   fix: "const name = 'Alice';\nconst count = 0;" },
-                { syntax: 'let', name: 'let', category: 'Variable declaration', allowed: false, replacedBy: 'const (or let inside for headers)',
-                  example: "let total = 0;\ntotal = total + price;",
-                  fix: "const total = 0 + price;\n// let is only allowed in for headers:\nfor (let i = 0; i < n; i++) { ... }" },
+                { syntax: 'let', name: 'let', category: 'Variable declaration', allowed: true, replacedBy: null },
                 { syntax: 'const', name: 'const', category: 'Variable declaration', allowed: true, replacedBy: null },
                 // Function syntax
                 { syntax: '() => {}', name: 'arrow function', category: 'Function syntax', allowed: false, replacedBy: 'function f() {}',
@@ -2671,8 +2669,10 @@
                   example: "function find(): User | undefined { ... }\nconst maybeId: string | undefined = getId();",
                   fix: "function find(): User | null { ... }\nconst maybeId: string | null = getId();" },
                 // Array types
-                { syntax: 'T[]', name: 'array type', category: 'Array types', allowed: true, replacedBy: null },
-                { syntax: 'Array<T>', name: 'Array<T> generic', category: 'Array types', allowed: false, replacedBy: 'T[]',
+                { syntax: 'T[]', name: 'mutable array', category: 'Array types', allowed: false, replacedBy: 'readonly T[]',
+                  example: "function getIds(): number[] { return ids; }",
+                  fix: "function getIds(): readonly number[] { return ids; }" },
+                { syntax: 'Array<T>', name: 'Array<T> generic', category: 'Array types', allowed: false, replacedBy: 'readonly T[]',
                   example: "const items: Array<string> = [];\nfunction process(list: Array<User>): Array<Result> { ... }",
                   fix: "const items: string[] = [];\nfunction process(list: User[]): Result[] { ... }" },
                 { syntax: 'readonly T[]', name: 'readonly array', category: 'Array types', allowed: true, replacedBy: null },
@@ -2710,7 +2710,9 @@
                 { syntax: 'async function*()', name: 'async generator', category: 'Generators', allowed: false, replacedBy: null,
                   example: "async function* streamLines(path: string) {\n  for await (const chunk of readStream(path)) { yield chunk; }\n}" },
                 // Tuple types
-                { syntax: '[A, B]', name: 'tuple type', category: 'Tuple types', allowed: true, replacedBy: null },
+                { syntax: '[A, B]', name: 'anonymous tuple', category: 'Tuple types', allowed: false, replacedBy: '[name: A, age: B]',
+                  example: "type Result = [string, number];\nfunction parse(): [string, number] { ... }",
+                  fix: "type Result = [value: string, index: number];\nfunction parse(): [value: string, index: number] { ... }" },
                 { syntax: '[name: A, age: B]', name: 'named tuple', category: 'Tuple types', allowed: true, replacedBy: null },
                 // Type predicate
                 { syntax: 'x is T', name: 'type predicate', category: 'Type predicate', allowed: true, replacedBy: null },

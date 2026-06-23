@@ -176,10 +176,6 @@ By syntax construct count, ShotScript removes approximately half of what TypeScr
 :::
 
 :::rule
-`no-let-outside-for` — `let` is only allowed inside `for` loop headers. Everything else is `const`.
-:::
-
-:::rule
 `no-multi-var-decl` — Multiple declarators in one statement (`const a = 1, b = 2`) are banned. One declaration per statement.
 :::
 
@@ -345,6 +341,10 @@ By syntax construct count, ShotScript removes approximately half of what TypeScr
 
 :::rule
 `no-variadic-tuple` — Variadic tuple types (`[...T]`) are banned.
+:::
+
+:::rule
+`no-anonymous-tuple` — Tuple elements must be named: `[value: T, err: E]` not `[T, E]`.
 :::
 
 :::rule

@@ -1,5 +1,5 @@
 // Valid: all async functions have a direct await
-export type Result<T> = [T, null] | [null, Error]
+export type Result<T> = [value: T, err: null] | [value: null, err: Error]
 export type PromiseResult<T> = Promise<Result<T>>
 
 export async function step1(x: string): PromiseResult<string> {
