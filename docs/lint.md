@@ -404,7 +404,7 @@ By syntax construct count, ShotScript removes approximately half of what TypeScr
 :::
 
 :::rule
-`no-symbol-type` — The `symbol` type is banned.
+`no-symbol-type` — `symbol` and `unique symbol` are banned. Their two practical uses — branded types and well-known symbols (`Symbol.iterator` etc.) — are both unavailable in ShotScript: branding uses a string phantom field (`{ readonly __brand: B }`), and generators/iterables are banned.
 :::
 
 :::rule

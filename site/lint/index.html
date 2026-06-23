@@ -1944,7 +1944,13 @@
                     <div class="rule-item">
                         <div class="rule-name">no-symbol-type</div>
                         <div class="rule-desc">
-                            The <code>symbol</code> type is banned.
+                            <code>symbol</code> and <code>unique symbol</code>
+                            are banned. Their two practical uses — branded types
+                            and well-known symbols (<code>Symbol.iterator</code>
+                            etc.) — are both unavailable in ShotScript: branding
+                            uses a string phantom field
+                            (<code>{ readonly __brand: B }</code>), and
+                            generators/iterables are banned.
                         </div>
                     </div>
                     <div class="rule-item">
