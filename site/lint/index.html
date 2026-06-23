@@ -2738,6 +2738,10 @@
                 { syntax: 'undefined', name: 'undefined (type)', category: 'Primitive types', allowed: false, replacedBy: 'T | null',
                   example: "function find(): User | undefined { ... }\nconst maybeId: string | undefined = getId();",
                   fix: "function find(): User | null { ... }\nconst maybeId: string | null = getId();" },
+                { syntax: 'symbol', name: 'symbol', category: 'Primitive types', allowed: false, replacedBy: null,
+                  example: "const id: symbol = Symbol('id');\nfunction tag(key: symbol): void { ... }" },
+                { syntax: 'unique symbol', name: 'unique symbol', category: 'Primitive types', allowed: false, replacedBy: null,
+                  example: "const KEY: unique symbol = Symbol();\ndeclare const id: unique symbol;" },
                 // Array types
                 { syntax: 'T[]', name: 'mutable array', category: 'Array types', allowed: false, replacedBy: 'readonly T[]',
                   example: "function getIds(): number[] { return ids; }",
