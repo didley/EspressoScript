@@ -125,7 +125,7 @@ By syntax construct count, ShotScript removes approximately half of what TypeScr
 
 {label} All rules
 
-### Functions — 4 rules
+### Functions — 5 rules
 
 :::rule
 `no-arrow-functions` — Arrow functions are banned. Use named `function` declarations or expressions — they show up in stack traces, are grep-able, and are testable in isolation.
@@ -177,7 +177,7 @@ By syntax construct count, ShotScript removes approximately half of what TypeScr
 `require-async-tuple-return` — Async functions must return `Promise<void>`, `PromiseResult<T, E>`, or an explicit tuple form. A bare `Promise<User>` hides the failure path.
 :::
 
-### Variables — 8 rules
+### Variables — 7 rules
 
 :::rule
 `no-var` — `var` is banned. Use `const`.
@@ -461,7 +461,7 @@ By syntax construct count, ShotScript removes approximately half of what TypeScr
 `no-dynamic-import` — Dynamic `import(...)` expressions are banned; use a static import.
 :::
 
-### Style & clarity — 26 rules
+### Style & clarity — 29 rules
 
 :::rule
 `prefer-template` — String concatenation with `+` is banned when a template literal would work. Use `` `hello ${name}` ``.
