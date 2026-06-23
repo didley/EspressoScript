@@ -1473,7 +1473,7 @@ STEP 5 — CONFIRM. Show me the final state of tsconfig.json and biome.json so I
                 var REDUCTION_DATA = [
                     { ts: 3, ss: 2 }, // variable declaration
                     { ts: 5, ss: 1 }, // function syntax
-                    { ts: 5, ss: 1 }, // error-handling patterns
+                    { ts: 11, ss: 1 }, // error-handling patterns
                     { ts: 4, ss: 1 }, // expressing absence / nothing
                     { ts: 3, ss: 1 }, // type shape definition
                     { ts: 5, ss: 1 }, // type composition
@@ -1510,6 +1510,8 @@ STEP 5 — CONFIRM. Show me the final state of tsconfig.json and biome.json so I
                     { ts: 2, ss: 1 }, // tuple types
                     { ts: 2, ss: 1 }, // type predicate
                     { ts: 4, ss: 0 }, // misc operators
+                    { ts: 4, ss: 2 }, // collection types
+                    { ts: 2, ss: 1 }, // condition truthiness
                 ];
                 var tsTotal = REDUCTION_DATA.reduce(function (n, c) {
                     return n + c.ts;

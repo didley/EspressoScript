@@ -143,7 +143,11 @@ By syntax construct count, ShotScript removes approximately half of what TypeScr
 `no-default-parameter` — Default parameters are banned. Accept `T | null` and handle the null branch explicitly inside the body.
 :::
 
-### Error handling — 6 rules
+:::rule
+`no-async-without-await` — An `async` function with no `await` is banned. Remove `async` and return `Result<T>` instead of `PromiseResult<T>`.
+:::
+
+### Error handling — 7 rules
 
 :::rule
 `no-throw` — Throwing is banned. Return `[null, new Error(...)]` — errors belong in the type signature, not in hidden control flow.
@@ -151,6 +155,10 @@ By syntax construct count, ShotScript removes approximately half of what TypeScr
 
 :::rule
 `no-try` — `try`/`catch` is banned. Wrap third-party throwing code with `toResult` or `toPromiseResult` from `shotscript/std`.
+:::
+
+:::rule
+`no-promise` — `new Promise()` and `Promise.resolve/reject/all/race/any/allSettled()` are banned. Use `toPromiseResult()` to wrap external Promise-returning functions.
 :::
 
 :::rule
@@ -199,7 +207,7 @@ By syntax construct count, ShotScript removes approximately half of what TypeScr
 `no-return-assign` — Assignment inside a `return` statement is banned.
 :::
 
-### Control flow — 15 rules
+### Control flow — 18 rules
 
 :::rule
 `no-ternary` — Ternary expressions are banned. Use `if`/`else` or extract a named function.
@@ -207,6 +215,18 @@ By syntax construct count, ShotScript removes approximately half of what TypeScr
 
 :::rule
 `no-and-shorthand` — `condition && doThing()` for side effects is banned. Use `if (condition === true) { doThing() }`.
+:::
+
+:::rule
+`no-or-shorthand` — `condition || doThing()` for side effects is banned. Use an `if` block.
+:::
+
+:::rule
+`no-implicit-truthy` — Conditions must be boolean-typed. Write `if (x !== null)`, not `if (x)` — implicit truthy is banned.
+:::
+
+:::rule
+`no-unnecessary-condition` — A `=== null` check on a value whose type can never be null is banned — dead code the type system can prove unreachable.
 :::
 
 :::rule
@@ -261,7 +281,7 @@ By syntax construct count, ShotScript removes approximately half of what TypeScr
 `no-return-await` — `return await x` is redundant; use `return x`. Since `no-try` bans try blocks, there is no case where `return await` changes behavior.
 :::
 
-### Types — 36 rules
+### Types — 37 rules
 
 :::rule
 `no-interface` — Interfaces are banned. Use `type` exclusively — one way to define a shape.
@@ -313,6 +333,10 @@ By syntax construct count, ShotScript removes approximately half of what TypeScr
 
 :::rule
 `require-readonly-arrays` — Array type annotations must use `readonly T[]`. Not `T[]`, not `Array<T>`.
+:::
+
+:::rule
+`require-readonly-collections` — `Map<K, V>` and `Set<T>` in type positions are banned. Use `ReadonlyMap<K, V>` and `ReadonlySet<T>`.
 :::
 
 :::rule
@@ -437,10 +461,14 @@ By syntax construct count, ShotScript removes approximately half of what TypeScr
 `no-dynamic-import` — Dynamic `import(...)` expressions are banned; use a static import.
 :::
 
-### Style & clarity — 25 rules
+### Style & clarity — 26 rules
 
 :::rule
 `prefer-template` — String concatenation with `+` is banned when a template literal would work. Use `` `hello ${name}` ``.
+:::
+
+:::rule
+`no-sparse-arrays` — Sparse array literals (`[1,,3]`) are banned. Use `null` for an explicit empty slot: `[1, null, 3]`.
 :::
 
 :::rule

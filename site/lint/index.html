@@ -1410,13 +1410,23 @@
                             explicitly inside the body.
                         </div>
                     </div>
+                    <div class="rule-item">
+                        <div class="rule-name">no-async-without-await</div>
+                        <div class="rule-desc">
+                            An <code>async</code> function with no
+                            <code>await</code> is banned. Remove
+                            <code>async</code> and return
+                            <code>Result&lt;T&gt;</code> instead of
+                            <code>PromiseResult&lt;T&gt;</code>.
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <div class="rules-category" id="error-handling">
                 <div class="rules-category-header">
                     <h3>Error handling</h3>
-                    <span class="rule-count">6 rules</span>
+                    <span class="rule-count">7 rules</span>
                 </div>
                 <div class="rule-list">
                     <div class="rule-item">
@@ -1435,6 +1445,16 @@
                             <code>toResult</code> or
                             <code>toPromiseResult</code> from
                             <code>shotscript/std</code>.
+                        </div>
+                    </div>
+                    <div class="rule-item">
+                        <div class="rule-name">no-promise</div>
+                        <div class="rule-desc">
+                            <code>new Promise()</code> and
+                            <code>Promise.resolve/reject/all/race/any/allSettled()</code>
+                            are banned. Use
+                            <code>toPromiseResult()</code> to wrap external
+                            Promise-returning functions.
                         </div>
                     </div>
                     <div class="rule-item">
@@ -1538,7 +1558,7 @@
             <div class="rules-category" id="control-flow">
                 <div class="rules-category-header">
                     <h3>Control flow</h3>
-                    <span class="rule-count">15 rules</span>
+                    <span class="rule-count">18 rules</span>
                 </div>
                 <div class="rule-list">
                     <div class="rule-item">
@@ -1555,6 +1575,30 @@
                             <code>condition &amp;&amp; doThing()</code> for side
                             effects is banned. Use
                             <code>if (condition === true) { doThing() }</code>.
+                        </div>
+                    </div>
+                    <div class="rule-item">
+                        <div class="rule-name">no-or-shorthand</div>
+                        <div class="rule-desc">
+                            <code>condition || doThing()</code> for side
+                            effects is banned. Use an
+                            <code>if</code> block.
+                        </div>
+                    </div>
+                    <div class="rule-item">
+                        <div class="rule-name">no-implicit-truthy</div>
+                        <div class="rule-desc">
+                            Conditions must be boolean-typed. Write
+                            <code>if (x !== null)</code>, not
+                            <code>if (x)</code> — implicit truthy is banned.
+                        </div>
+                    </div>
+                    <div class="rule-item">
+                        <div class="rule-name">no-unnecessary-condition</div>
+                        <div class="rule-desc">
+                            A <code>=== null</code> check on a value whose type
+                            can never be null is banned — it's dead code the
+                            type system can prove unreachable.
                         </div>
                     </div>
                     <div class="rule-item">
@@ -1664,7 +1708,7 @@
             <div class="rules-category" id="types">
                 <div class="rules-category-header">
                     <h3>Types</h3>
-                    <span class="rule-count">36 rules</span>
+                    <span class="rule-count">37 rules</span>
                 </div>
                 <div class="rule-list">
                     <div class="rule-item">
@@ -1765,6 +1809,15 @@
                             Array type annotations must use
                             <code>readonly T[]</code>. Not <code>T[]</code>, not
                             <code>Array&lt;T&gt;</code>.
+                        </div>
+                    </div>
+                    <div class="rule-item">
+                        <div class="rule-name">require-readonly-collections</div>
+                        <div class="rule-desc">
+                            <code>Map&lt;K, V&gt;</code> and
+                            <code>Set&lt;T&gt;</code> in type positions are
+                            banned. Use <code>ReadonlyMap&lt;K, V&gt;</code> and
+                            <code>ReadonlySet&lt;T&gt;</code>.
                         </div>
                     </div>
                     <div class="rule-item">
@@ -2003,7 +2056,7 @@
             <div class="rules-category" id="style--clarity">
                 <div class="rules-category-header">
                     <h3>Style &amp; clarity</h3>
-                    <span class="rule-count">25 rules</span>
+                    <span class="rule-count">26 rules</span>
                 </div>
                 <div class="rule-list">
                     <div class="rule-item">
@@ -2012,6 +2065,14 @@
                             String concatenation with <code>+</code> is banned
                             when a template literal would work. Use `<code
                             > </code>hello ${name}<code> </code>`.
+                        </div>
+                    </div>
+                    <div class="rule-item">
+                        <div class="rule-name">no-sparse-arrays</div>
+                        <div class="rule-desc">
+                            Sparse array literals (<code>[1,,3]</code>) are
+                            banned. Use <code>null</code> for an explicit empty
+                            slot: <code>[1, null, 3]</code>.
                         </div>
                     </div>
                     <div class="rule-item">
@@ -2328,6 +2389,12 @@
                 { syntax: 'try / catch', name: 'try/catch', category: 'Error handling', allowed: false, replacedBy: 'PromiseResult<T>',
                   example: "try {\n  const data = JSON.parse(raw);\n  process(data);\n} catch (e) {\n  console.error(e);\n}",
                   fix: "const [data, err] = jsonParse(raw);\nif (err) { return [null, err]; }\nprocess(data);" },
+                { syntax: 'new Promise()', name: 'Promise constructor', category: 'Error handling', allowed: false, replacedBy: 'toPromiseResult()',
+                  example: "return new Promise((resolve, reject) => {\n  setTimeout(() => resolve(42), 100);\n});",
+                  fix: "return toPromiseResult(function () { return externalFn(); });" },
+                { syntax: 'Promise.all/race/any()', name: 'Promise statics', category: 'Error handling', allowed: false, replacedBy: 'toPromiseResult()',
+                  example: "const results = await Promise.all([fetchA(), fetchB()]);\nconst first = await Promise.race([slow(), fast()]);",
+                  fix: "// wrap each call with toPromiseResult and sequence with await" },
                 { syntax: 'Promise.reject()', name: 'rejected Promise', category: 'Error handling', allowed: false, replacedBy: 'PromiseResult<T>',
                   example: "async function load(id: string) {\n  if (!id) { return Promise.reject(new Error('no id')); }\n}",
                   fix: "async function load(id: string): Promise<[Data, null] | [null, Error]> {\n  if (!id) { return [null, new Error('no id')]; }\n}" },
@@ -2410,6 +2477,9 @@
                   example: "outer: for (const row of rows) {\n  for (const cell of row) {\n    if (done(cell)) { break outer; }\n  }\n}",
                   fix: "// extract the inner loop to a function and use early return" },
                 // Boolean coercion
+                { syntax: 'if (x)', name: 'implicit truthy', category: 'Boolean coercion', allowed: false, replacedBy: 'if (x !== null)',
+                  example: "if (user) { sendEmail(user); }\nif (items.length) { process(items); }",
+                  fix: "if (user !== null) { sendEmail(user); }\nif (items.length > 0) { process(items); }" },
                 { syntax: '!!x', name: 'double negation', category: 'Boolean coercion', allowed: false, replacedBy: 'Boolean(x)',
                   example: "const isValid = !!value;\nconst hasItems = !!arr.length;",
                   fix: "const isValid = Boolean(value);\nconst hasItems = Boolean(arr.length);" },
@@ -2679,6 +2749,15 @@
                 { syntax: 'ReadonlyArray<T>', name: 'ReadonlyArray<T>', category: 'Array types', allowed: false, replacedBy: 'readonly T[]',
                   example: "function process(items: ReadonlyArray<string>): ReadonlyArray<number> { ... }",
                   fix: "function process(items: readonly string[]): readonly number[] { ... }" },
+                // Collection types
+                { syntax: 'Map<K, V>', name: 'mutable Map', category: 'Collection types', allowed: false, replacedBy: 'ReadonlyMap<K, V>',
+                  example: "const cache: Map<string, User> = new Map();\nfunction getIndex(): Map<string, number> { ... }",
+                  fix: "const cache: ReadonlyMap<string, User> = new Map();\nfunction getIndex(): ReadonlyMap<string, number> { ... }" },
+                { syntax: 'ReadonlyMap<K, V>', name: 'ReadonlyMap', category: 'Collection types', allowed: true, replacedBy: null },
+                { syntax: 'Set<T>', name: 'mutable Set', category: 'Collection types', allowed: false, replacedBy: 'ReadonlySet<T>',
+                  example: "const seen: Set<string> = new Set();\nfunction getIds(): Set<number> { ... }",
+                  fix: "const seen: ReadonlySet<string> = new Set();\nfunction getIds(): ReadonlySet<number> { ... }" },
+                { syntax: 'ReadonlySet<T>', name: 'ReadonlySet', category: 'Collection types', allowed: true, replacedBy: null },
                 // Type-only imports / exports
                 { syntax: 'import type { T }', name: 'type import', category: 'Module syntax', allowed: true, replacedBy: null },
                 { syntax: 'export type { T }', name: 'type export', category: 'Module syntax', allowed: true, replacedBy: null },
@@ -2792,6 +2871,7 @@
                 'Type modifiers': 'types',
                 'Primitive types': 'types',
                 'Array types': 'types',
+                'Collection types': 'types',
                 'Tagged templates': 'operators',
                 'Generators': 'functions',
                 'Tuple types': 'types',
